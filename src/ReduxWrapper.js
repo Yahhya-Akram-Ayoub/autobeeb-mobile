@@ -25,8 +25,9 @@ const middleware = [thunk];
 import reducers from './redux';
 // import {MySignalR} from './components';
 import setDefaultProps from 'react-native-simple-default-props';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+// import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {MySignalR, NotificationPermission} from './components';
+import { StackActions } from '@react-navigation/native';
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 
@@ -75,7 +76,7 @@ export default class ReduxWrapper extends React.Component {
     routeName,
     params,
     isReset = false,
-    subRouteName = undefined
+    subRouteName = undefined,
   ) => {
     const navigator = this.navigator;
     if (subRouteName == undefined) {
@@ -98,7 +99,7 @@ export default class ReduxWrapper extends React.Component {
           routeName: routeName,
           params: params,
           action: this.props.navigation.navigate(
-            subRouteName ? subRouteName : routeName
+            subRouteName ? subRouteName : routeName,
           ),
         });
 
@@ -120,7 +121,8 @@ export default class ReduxWrapper extends React.Component {
 
   render() {
     return (
-      <SafeAreaProvider>
+      <View>
+        {/* <SafeAreaProvider> */}
         <SafeAreaView style={{flex: 1}}>
           <Provider store={store}>
             <View style={Styles.app}>
@@ -133,7 +135,7 @@ export default class ReduxWrapper extends React.Component {
             </View>
           </Provider>
         </SafeAreaView>
-      </SafeAreaProvider>
+      </View>
     );
   }
 }
