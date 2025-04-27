@@ -1,0 +1,63 @@
+{
+  "_from": "react-native-otp",
+  "_id": "react-native-otp@1.0.0",
+  "_inBundle": false,
+  "_integrity": "sha512-9MPXwn6+3vORBgPzKXKf6kcYnEHcseHs7I/nbpxGxvGislJpUqhShiDLARuILJr3+JUn6RVw9pKo9vrMJWkENA==",
+  "_location": "/react-native-otp",
+  "_phantomChildren": {
+    "js-tokens": "3.0.2",
+    "object-assign": "4.1.1"
+  },
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "react-native-otp",
+    "name": "react-native-otp",
+    "escapedName": "react-native-otp",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/react-native-otp/-/react-native-otp-1.0.0.tgz",
+  "_shasum": "0f206b4506cf1b76793677b7ced793130a9e5eee",
+  "_spec": "react-native-otp",
+  "_where": "D:\\Kensoftware Work\\Apps\\Autobeeb",
+  "author": {
+    "name": "thuansb"
+  },
+  "bugs": {
+    "url": "https://github.com/thuansb/react-native-otp/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "prop-types": "^15.6.2"
+  },
+  "deprecated": false,
+  "description": "OTP Input component for React Native",
+  "homepage": "https://github.com/thuansb/react-native-otp#readme",
+  "keywords": [
+    "react-native",
+    "otp",
+    "otp",
+    "input",
+    "rn",
+    "otp"
+  ],
+  "license": "MIT",
+  "main": "src/index.js",
+  "name": "react-native-otp",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thuansb/react-native-otp.git"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "types": "src/index.d.ts",
+  "version": "1.0.0"
+}

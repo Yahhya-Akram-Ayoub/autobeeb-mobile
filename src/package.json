@@ -1,0 +1,9 @@
+{
+    "name":"@app",
+    "rnpm": {
+    "assets": [
+	"./assets/fonts/"
+    ]
+}
+}
+

@@ -1,0 +1,106 @@
+{
+  "_from": "react-native-country-picker-modal",
+  "_id": "react-native-country-picker-modal@2.0.0",
+  "_inBundle": false,
+  "_integrity": "sha512-0Mtw62QpVbJRO9GXt0lEFccoVjGfmDrb/4hpRBsuoepkyAeilXE4dboNqnql/ALny6/y6uza+Hz/WjEVU2Uw0Q==",
+  "_location": "/react-native-country-picker-modal",
+  "_phantomChildren": {
+    "hoist-non-react-statics": "2.3.1"
+  },
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "react-native-country-picker-modal",
+    "name": "react-native-country-picker-modal",
+    "escapedName": "react-native-country-picker-modal",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/react-native-country-picker-modal/-/react-native-country-picker-modal-2.0.0.tgz",
+  "_shasum": "bde8f9c1c50b67efed880bf3a1c455b96eced389",
+  "_spec": "react-native-country-picker-modal",
+  "_where": "D:\\Kensoftware Work\\Apps\\Autobeeb",
+  "author": {
+    "name": "Xavier Carpentier",
+    "email": "contact@xaviercarpentier.com",
+    "url": "http://xaviercarpentier.com/"
+  },
+  "bugs": {
+    "url": "https://github.com/xcarpentier/react-native-country-picker-modal/issues"
+  },
+  "dependencies": {
+    "fuse.js": "2.6.2",
+    "lodash": "4.12.0",
+    "node-emoji": "1.8.1",
+    "prop-types": "15.6.0",
+    "react": "19.0.0",
+    "react-native": "0.79.1",
+    "react-native-safe-area-view": "^0.7.0",
+    "world-countries": "1.8.0"
+  },
+  "deprecated": false,
+  "description": "Country picker",
+  "devDependencies": {
+    "@types/react-native": "^0.55.26",
+    "babel-cli": "6.14.0",
+    "babel-eslint": "6.1.2",
+    "babel-preset-react-native": "4.0.0",
+    "eslint-config-airbnb": "^10.0.0",
+    "eslint-plugin-async": "0.1.1",
+    "eslint-plugin-babel": "3.3.0",
+    "eslint-plugin-import": "^1.12.0",
+    "eslint-plugin-jsx-a11y": "^2.0.1",
+    "eslint-plugin-react": "^6.0.0",
+    "eslint-plugin-react-native": "2.0.0",
+    "flow-bin": "^0.57.3",
+    "react": "16.0.0",
+    "regenerator-runtime": "0.11.1",
+    "@types/react": "^19.0.0",
+    "babel-jest": "^29.6.3",
+    "eslint": "^8.19.0",
+    "jest": "^29.6.3",
+    "react-test-renderer": "19.0.0",
+    "typescript": "5.0.4"
+  },
+  "homepage": "https://github.com/xcarpentier/react-native-country-picker-modal#readme",
+  "jest": {
+    "preset": "react-native",
+    "modulePathIgnorePatterns": [
+      "<rootDir>/example/"
+    ]
+  },
+  "keywords": [
+    "react-native",
+    "components",
+    "country-picker",
+    "country",
+    "flag"
+  ],
+  "license": "MIT",
+  "main": "src/CountryPicker.js",
+  "name": "react-native-country-picker-modal-kensoftware",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xcarpentier/react-native-country-picker-modal.git"
+  },
+  "scripts": {
+    "bump-major-push": "yarn version --new-version `./scripts/version_increment.js major` && git push --follow-tags",
+    "bump-minor-push": "yarn version --new-version `./scripts/version_increment.js minor` && git push --follow-tags",
+    "bump-patch-push": "yarn version --new-version `./scripts/version_increment.js patch` && git push --follow-tags",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
+    "cleaning": "rm -rf node_modules && rm -f yarn.lock && yarn cache clean && yarn install && watchman watch-del-all && rm -fr $TMPDIR/react-*",
+    "flow": "./node_modules/flow-bin/cli.js",
+    "gendata": "rm -rf ./data/countries.json && babel-node ./scripts/transform-world-countries.js > ./data/countries.json",
+    "gendata-cca2": "rm -rf ./data/cca2.json && babel-node ./scripts/transform-world-countries.js --cca2 > ./data/cca2.json",
+    "gendata-emoji": "rm -rf ./data/countries-emoji.json && babel-node ./scripts/transform-world-countries.js --emoji > ./data/countries-emoji.json",
+    "lint": "eslint ./src",
+    "test": "node_modules/jest/bin/jest.js"
+  },
+  "types": "src/CountryPicker.d.ts",
+  "version": "2.0.0"
+}

@@ -1,0 +1,104 @@
+{
+  "project_info": {
+    "project_number": "409836146565",
+    "firebase_url": "https://autobeeb-b849d.firebaseio.com",
+    "project_id": "autobeeb-b849d",
+    "storage_bucket": "autobeeb-b849d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:409836146565:android:9ebfac0e0e186729087eec",
+        "android_client_info": {
+          "package_name": "com.autobeeb.autobeeb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "409836146565-tkbb60l8mivu86hi8lad18a9fdg2pe4h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.autobeeb.autobeeb",
+            "certificate_hash": "3e469cadce57616bbb716f3e0e12cb3a5f898c2a"
+          }
+        },
+        {
+          "client_id": "409836146565-a7ad69om2pvunat1smiiabpg5091pdav.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.autobeeb.autobeeb",
+            "certificate_hash": "a941c60e86bd1faa2c9842bf47f63719d881e2fe"
+          }
+        },
+        {
+          "client_id": "409836146565-dqk7n7fmv0pci7lfvtm0g7tsjvo5k60q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.autobeeb.autobeeb",
+            "certificate_hash": "7d79a6700b16091e4808a1cefc90718889ca5398"
+          }
+        },
+        {
+          "client_id": "409836146565-55l2d5eqofsmbm0v2n95ed4gdcgppbgo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.autobeeb.autobeeb",
+            "certificate_hash": "400e9ee562fcf8ef413570aacfdb1248dd83edab"
+          }
+        },
+        {
+          "client_id": "409836146565-163hmah7bctm7s9lt81vbpqlm3jfmnm5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.autobeeb.autobeeb",
+            "certificate_hash": "dad1fcbea7a7fa1a9ce56d02671e9fe6e5247a83"
+          }
+        },
+        {
+          "client_id": "409836146565-fdcfrv5dfv460thftop83ae2o9i01vgg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.autobeeb.autobeeb",
+            "certificate_hash": "55f352c43361ce53433af934a80f75492a860641"
+          }
+        },
+        {
+          "client_id": "409836146565-sgcuhqhoa24pu6jladkhm5un3ssqa2jg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.autobeeb.autobeeb",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "409836146565-6vk84khr54jnui21u6pbo6v1umk6mg6t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDZMswKR4ogsYZKPU1tLFKBb16c8U5mew"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "409836146565-lp6ifjgfue55fd76gv60k1g7c9g3mprh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "409836146565-eam3sed7de7uiqn3lprnb4bfov685502.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.autobeeb.autobeeb.ab",
+                "app_store_id": "1485874827"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
