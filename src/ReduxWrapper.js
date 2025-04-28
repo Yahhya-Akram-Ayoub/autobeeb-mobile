@@ -25,9 +25,9 @@ const middleware = [thunk];
 import reducers from './redux';
 // import {MySignalR} from './components';
 import setDefaultProps from 'react-native-simple-default-props';
-// import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {MySignalR, NotificationPermission} from './components';
-import { StackActions } from '@react-navigation/native';
+import {StackActions} from '@react-navigation/native';
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 
@@ -121,8 +121,7 @@ export default class ReduxWrapper extends React.Component {
 
   render() {
     return (
-      <View>
-        {/* <SafeAreaProvider> */}
+      <SafeAreaProvider>
         <SafeAreaView style={{flex: 1}}>
           <Provider store={store}>
             <View style={Styles.app}>
@@ -135,7 +134,7 @@ export default class ReduxWrapper extends React.Component {
             </View>
           </Provider>
         </SafeAreaView>
-      </View>
+      </SafeAreaProvider>
     );
   }
 }

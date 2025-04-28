@@ -14,7 +14,7 @@ import {isIphoneX} from 'react-native-iphone-x-helper';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import IconFa from 'react-native-vector-icons/FontAwesome';
-import CountryPicker from 'react-native-country-picker-modal-kensoftware';
+import CountryPicker from 'react-native-country-picker-modal';
 
 class NewHeader extends Component {
   constructor(props) {

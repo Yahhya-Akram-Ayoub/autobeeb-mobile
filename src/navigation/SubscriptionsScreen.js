@@ -24,10 +24,10 @@ import IconEn from 'react-native-vector-icons/Feather';
 import KS from '../services/KSAPI';
 
 import HTML, {IGNORED_TAGS} from 'react-native-render-html';
-import RNIap, {
-  purchaseErrorListener,
-  purchaseUpdatedListener,
-} from 'react-native-iap';
+// import RNIap, {
+//   purchaseErrorListener,
+//   purchaseUpdatedListener,
+// } from 'react-native-iap';
 import {isIphoneX} from 'react-native-iphone-x-helper';
 import {
   CommonActions,
@@ -332,32 +332,32 @@ const SubscriptionsScreen = ({storeUserData}) => {
       });
     }
 
-    if (false) {
-      // stop in app payment
-      RNIap?.getProducts?.(itemSkus)
-        .then(data => {
-          setInAppPurchases(data);
-        })
-        .catch(err => {
-          alert(JSON.stringify(err));
-        });
+    // if (false) {
+    //   // stop in app payment
+    //   RNIap?.getProducts?.(itemSkus)
+    //     .then(data => {
+    //       setInAppPurchases(data);
+    //     })
+    //     .catch(err => {
+    //       alert(JSON.stringify(err));
+    //     });
 
-      RNIap?.initConnection?.().then(() => {
-        // we make sure that "ghost" pending payment are removed
-        // (ghost = failed pending payment that are still marked as pending in Google's native Vending module cache)
-        RNIap.flushFailedPurchasesCachedAsPendingAndroid()
-          .catch(() => {
-            // exception can happen here if:
-            // - there are pending purchases that are still pending (we can't consume a pending purchase)
-            // in any case, you might not want to do anything special with the error
-          })
-          .then(() => {
-            purchaseErrorSubscription = purchaseErrorListener(error => {
-              console.warn('purchaseErrorListener', error);
-            });
-          });
-      });
-    }
+    //   RNIap?.initConnection?.().then(() => {
+    //     // we make sure that "ghost" pending payment are removed
+    //     // (ghost = failed pending payment that are still marked as pending in Google's native Vending module cache)
+    //     RNIap.flushFailedPurchasesCachedAsPendingAndroid()
+    //       .catch(() => {
+    //         // exception can happen here if:
+    //         // - there are pending purchases that are still pending (we can't consume a pending purchase)
+    //         // in any case, you might not want to do anything special with the error
+    //       })
+    //       .then(() => {
+    //         purchaseErrorSubscription = purchaseErrorListener(error => {
+    //           console.warn('purchaseErrorListener', error);
+    //         });
+    //       });
+    //   });
+    // }
     var tempPaymentMethods = [...PaymentMethods];
 
     KS.CountryGet({
@@ -471,7 +471,7 @@ const SubscriptionsScreen = ({storeUserData}) => {
             'pendingTransactionID',
             JSON.stringify(data.TransactionID),
           );
-          await RNIap.requestSubscription(inAppPurch.productId);
+        //  await RNIap.requestSubscription(inAppPurch.productId);
         }
       });
     }

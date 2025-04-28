@@ -13,8 +13,8 @@ import {
 import {Color, Languages, Styles, Constants} from '../common';
 import RNRestart from 'react-native-restart';
 import {connect} from 'react-redux';
-import {getAllCountries} from 'react-native-country-picker-modal-kensoftware';
-import CountryPicker from 'react-native-country-picker-modal-kensoftware';
+import {getAllCountries} from 'react-native-country-picker-modal';
+import CountryPicker from 'react-native-country-picker-modal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import KS from '../services/KSAPI';
 import {toast} from '../Omni';

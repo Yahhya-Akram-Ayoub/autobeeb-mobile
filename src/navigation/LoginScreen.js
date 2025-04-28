@@ -27,7 +27,7 @@ import PhoneInput from 'react-native-phone-input';
 import DeviceInfo from 'react-native-device-info';
 import IconEn from 'react-native-vector-icons/MaterialCommunityIcons';
 import Modal from 'react-native-modalbox';
-import CountryPicker from 'react-native-country-picker-modal-kensoftware';
+import CountryPicker from 'react-native-country-picker-modal';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {
   AppleButton,

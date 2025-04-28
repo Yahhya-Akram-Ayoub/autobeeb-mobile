@@ -19,8 +19,8 @@ import ReactNative, {
 import {connect} from 'react-redux';
 import {Color, Languages} from '../common';
 import {LogoSpinner, OTPModal, ImagePopUp, LocationSelect} from '../components';
-import {getAllCountries} from 'react-native-country-picker-modal-kensoftware';
-import CountryPicker from 'react-native-country-picker-modal-kensoftware';
+import {getAllCountries} from 'react-native-country-picker-modal';
+import CountryPicker from 'react-native-country-picker-modal';
 import {NewHeader} from '../containers';
 import KS from '../services/KSAPI';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';

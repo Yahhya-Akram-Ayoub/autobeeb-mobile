@@ -24,10 +24,10 @@ import IconEn from 'react-native-vector-icons/Feather';
 import KS from '../services/KSAPI';
 
 import HTML, {IGNORED_TAGS} from 'react-native-render-html';
-import RNIap, {
-  purchaseErrorListener,
-  purchaseUpdatedListener,
-} from 'react-native-iap';
+// import RNIap, {
+//   purchaseErrorListener,
+//   purchaseUpdatedListener,
+// } from 'react-native-iap';
 import {isIphoneX} from 'react-native-iphone-x-helper';
 import {NavigationActions, StackActions} from '@react-navigation/native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';

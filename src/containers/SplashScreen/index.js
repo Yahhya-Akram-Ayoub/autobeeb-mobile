@@ -67,7 +67,7 @@ class SplashScreen extends Component {
               Languages.langID,
               data,
               5,
-              this.props.ViewingCurrency.ID,
+              this.props.ViewingCurrency?.ID,
               () => {
                 this.setState({finishedLoadingHomescreen: true});
                 this.prepareData();
@@ -91,7 +91,7 @@ class SplashScreen extends Component {
                 Languages.langID,
                 data,
                 5,
-                curr.currency.ID,
+                curr.currency?.ID,
                 () => {
                   this.setState({finishedLoadingHomescreen: true});
                   Timer.setTimeout(this.prepareData, minDisplayTime);
