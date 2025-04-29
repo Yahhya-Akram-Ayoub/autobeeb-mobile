@@ -183,7 +183,7 @@ class ListingsScreen extends Component {
             item => item.ID === 4096 || item.ID === 2048
           ), // Board 4096 , Accessories 2048 => not incloud 2048 OR 4096,
         OnPress: () => {
-          this.refs.sectionModal.open();
+          this.sectionModal.open();
         },
       },
       {
@@ -202,7 +202,7 @@ class ListingsScreen extends Component {
           !this.state.MakesLoading &&
           !!this.state.FullMakes?.length,
         OnPress: () => {
-          this.refs.makeModal.open();
+          this.makeModal.open();
         },
       },
       {
@@ -248,7 +248,7 @@ class ListingsScreen extends Component {
               isModelLoading: false,
             });
           });
-          this.refs.modelModal.open();
+          this.modelModal.open();
         },
       },
       {
@@ -261,7 +261,7 @@ class ListingsScreen extends Component {
             this.state.Categories.length <= 1
           ) && !!this.state.Categories?.length,
         OnPress: () => {
-          this.refs.categoryModal.open();
+          this.categoryModal.open();
         },
       },
       {
@@ -292,14 +292,14 @@ class ListingsScreen extends Component {
             this.state.selectedSection[0].ID != 256) ||
           this.props.route.params?.ListingType?.ID != 32,
         OnPress: () => {
-          this.refs.yearModal.open();
+          this.yearModal.open();
         },
       },
       {
         Name: Languages.City,
         IsDisplay: this.props.ViewingCountry.cca2 != 'ALL',
         OnPress: () => {
-          this.refs.cityModal.open();
+          this.cityModal.open();
         },
       },
       {
@@ -362,7 +362,7 @@ class ListingsScreen extends Component {
               this.state.selectedSection[0].ID == 4096)
           ),
         OnPress: () => {
-          this.refs.PriceModal.open();
+          this.PriceModal.open();
         },
       },
       {
@@ -375,7 +375,7 @@ class ListingsScreen extends Component {
           this.props.route.params?.ListingType?.ID != 32 &&
           this.props.route.params?.ListingType?.ID != 16,
         OnPress: () => {
-          this.refs.MileageModal.open();
+          this.MileageModal.open();
         },
       },
       {
@@ -1657,7 +1657,7 @@ class ListingsScreen extends Component {
         onPress={() => {
           this.setState({sellType: SellType, page: 1, isLoading: true}, () => {
             this.ResetFilters();
-            this.refs.SellTypeModal.close();
+            this.SellTypeModal.close();
             KS.ListingsGet({
               typeID: this.props.route.params?.ListingType?.ID || '',
               langid: Languages.langID,
@@ -1751,7 +1751,7 @@ class ListingsScreen extends Component {
                   isLoading: false,
                 });
               }
-              this.refs.SellTypeModal.close();
+              this.SellTypeModal.close();
             });
           });
         }}>
@@ -1803,7 +1803,7 @@ class ListingsScreen extends Component {
           //  this.props.setViewingCurrency(Currency);
           this.setState({currency: Currency, page: 1, isLoading: true});
           //   this.ResetFilters();
-          this.refs.CurrencyModal.close();
+          this.CurrencyModal.close();
           KS.ListingsGet({
             asc: this.state.sortOption ? this.state.sortOption.asc : 'false', // if it was sent check the string for true or false because i don want it to resolve to true always
             sortBy: this.state.sortOption
@@ -1902,7 +1902,7 @@ class ListingsScreen extends Component {
                 isLoading: false,
               });
             }
-            this.refs.CurrencyModal.close();
+            this.CurrencyModal.close();
           });
         }}>
         <View
@@ -1946,7 +1946,7 @@ class ListingsScreen extends Component {
         onPress={() => {
           this.setState({sortOption: SortOption, page: 1});
           this.filterResults(false, SortOption.asc, SortOption.sortBy);
-          this.refs.SortModal.close();
+          this.SortModal.close();
         }}>
         <View
           style={{
@@ -2228,7 +2228,7 @@ class ListingsScreen extends Component {
         <TouchableOpacity
           style={styles.rangeBox}
           onPress={() => {
-            this.refs.PriceModal.open();
+            this.PriceModal.open();
           }}>
           <Text style={styles.rangeBoxText}>
             {this.state.selectedMinPrice
@@ -2239,7 +2239,7 @@ class ListingsScreen extends Component {
         <TouchableOpacity
           style={styles.rangeBox}
           onPress={() => {
-            this.refs.PriceModal.open();
+            this.PriceModal.open();
           }}>
           <Text style={styles.rangeBoxText}>
             {this.state.selectedMaxPrice
@@ -2263,7 +2263,7 @@ class ListingsScreen extends Component {
         <TouchableOpacity
           style={styles.rangeBox}
           onPress={() => {
-            this.refs.yearModal.open();
+            this.yearModal.open();
           }}>
           <Text style={styles.rangeBoxText}>
             {this.state.selectedMinYear
@@ -2274,7 +2274,7 @@ class ListingsScreen extends Component {
         <TouchableOpacity
           style={styles.rangeBox}
           onPress={() => {
-            this.refs.yearModal.open();
+            this.yearModal.open();
           }}>
           <Text style={styles.rangeBoxText}>
             {this.state.selectedMaxYear
@@ -2298,7 +2298,7 @@ class ListingsScreen extends Component {
         <TouchableOpacity
           style={styles.rangeBox}
           onPress={() => {
-            this.refs.MileageModal.open();
+            this.MileageModal.open();
           }}>
           <Text style={styles.rangeBoxText}>
             {this.state.selectedMinMileage
@@ -2309,7 +2309,7 @@ class ListingsScreen extends Component {
         <TouchableOpacity
           style={styles.rangeBox}
           onPress={() => {
-            this.refs.MileageModal.open();
+            this.MileageModal.open();
           }}>
           <Text style={styles.rangeBoxText}>
             {this.state.selectedMaxMileage
@@ -2381,7 +2381,7 @@ class ListingsScreen extends Component {
                   justifyContent: 'space-between',
                 }}
                 onPress={() => {
-                  this.refs.CurrencyModal.open();
+                  this.CurrencyModal.open();
                 }}>
                 <Text
                   numberOfLines={1}
@@ -2414,7 +2414,7 @@ class ListingsScreen extends Component {
                 </Pressable>
                 <Pressable
                   onPress={() => {
-                    this.refs.SortModal.open();
+                    this.SortModal.open();
                   }}
                   style={styles.filterIcon}>
                   <SortIcon />
@@ -3306,7 +3306,7 @@ class ListingsScreen extends Component {
                         .join(', ')) ||
                       Languages.AllSections,
                     () => {
-                      this.refs.sectionModal.open();
+                      this.sectionModal.open();
                     }
                   )}
                 </View>
@@ -3442,7 +3442,7 @@ class ListingsScreen extends Component {
                         Languages.AllMakes,
                       () => {
                         //    return alert(JSON.stringify(this.state.selectedMake));
-                        this.refs.makeModal.open();
+                        this.makeModal.open();
                       }
                     )}
                   </View>
@@ -3499,7 +3499,7 @@ class ListingsScreen extends Component {
                             isModelLoading: false,
                           });
                         });
-                        this.refs.modelModal.open();
+                        this.modelModal.open();
                       }
                     )}
                   </View>
@@ -3524,7 +3524,7 @@ class ListingsScreen extends Component {
                           .join(', ')) ||
                         Languages.AllCategories,
                       () => {
-                        this.refs.categoryModal.open();
+                        this.categoryModal.open();
                       }
                     )}
                   </View>
@@ -3542,7 +3542,7 @@ class ListingsScreen extends Component {
                         .join(', ')) ||
                       Languages.All,
                     () => {
-                      this.refs.cityModal.open();
+                      this.cityModal.open();
                     }
                   )}
                 </View>
@@ -3708,8 +3708,7 @@ class ListingsScreen extends Component {
           </View>
         </Modal>
         <Modal //make modal
-          ref="makeModal"
-          //  isOpen={true}
+          ref={instance => (this.makeModal = instance)}
           style={[styles.modelModal]}
           position="center"
           backButtonClose={true}
@@ -3863,11 +3862,11 @@ class ListingsScreen extends Component {
                   text: '',
                   Makes: this.state.FullMakes,
                 });
-                this.refs.makeModal.close();
+                this.makeModal.close();
               },
               () => {
                 this.setState({text: '', Makes: this.state.FullMakes});
-                this.refs.makeModal.close();
+                this.makeModal.close();
                 if (!this.filterModal.isOpen) {
                   this.filterResults();
                 }
@@ -3876,8 +3875,7 @@ class ListingsScreen extends Component {
           </View>
         </Modal>
         <Modal //selltype modal
-          ref="SortModal"
-          //  isOpen={true}
+          ref={instance => (this.SortModal = instance)}
           style={[styles.sellTypeModal]}
           position="center"
           backButtonClose={true}
@@ -3907,7 +3905,7 @@ class ListingsScreen extends Component {
                 activeOpacity={0.9}
                 style={styles.row}
                 onPress={() => {
-                  this.refs.SortModal.close();
+                  this.SortModal.close();
                 }}>
                 <Text
                   style={{
@@ -3923,8 +3921,7 @@ class ListingsScreen extends Component {
           </View>
         </Modal>
         <Modal //selltype modal
-          ref="SellTypeModal"
-          //  isOpen={true}
+          ref={instance => (this.SellTypeModal = instance)}
           style={[styles.sellTypeModal]}
           position="center"
           backButtonClose={true}
@@ -3953,7 +3950,7 @@ class ListingsScreen extends Component {
                 activeOpacity={0.9}
                 style={styles.row}
                 onPress={() => {
-                  this.refs.SellTypeModal.close();
+                  this.SellTypeModal.close();
                 }}>
                 <Text
                   style={{
@@ -3969,8 +3966,7 @@ class ListingsScreen extends Component {
           </View>
         </Modal>
         <Modal //currency modal
-          ref="CurrencyModal"
-          //  isOpen={true}
+          ref={instance => (this.CurrencyModal = instance)}
           style={[styles.sellTypeModal]}
           position="center"
           backButtonClose={true}
@@ -4002,7 +3998,7 @@ class ListingsScreen extends Component {
                 activeOpacity={0.9}
                 style={styles.row}
                 onPress={() => {
-                  this.refs.CurrencyModal.close();
+                  this.CurrencyModal.close();
                 }}>
                 <Text
                   style={{
@@ -4018,8 +4014,7 @@ class ListingsScreen extends Component {
           </View>
         </Modal>
         <Modal //section Modal
-          ref="sectionModal"
-          //  isOpen={true}
+          ref={instance => (this.sectionModal = instance)}
           style={[styles.modelModal]}
           position="center"
           backButtonClose={true}
@@ -4069,7 +4064,7 @@ class ListingsScreen extends Component {
                         selectedMake: [AllMakes],
                       },
                       () => {
-                        this.refs.sectionModal.close();
+                        this.sectionModal.close();
                       }
                     );
                   }}>
@@ -4124,7 +4119,7 @@ class ListingsScreen extends Component {
                           MakesLoading: true,
                         },
                         () => {
-                          this.refs.sectionModal.close();
+                          this.sectionModal.close();
 
                           KS.MakesGet({
                             langID: Languages.langID,
@@ -4210,8 +4205,7 @@ class ListingsScreen extends Component {
           </View>
         </Modal>
         <Modal //cateogry Modal
-          ref="categoryModal"
-          //  isOpen={true}
+          ref={instance => (this.categoryModal = instance)}
           style={[styles.modelModal]}
           position="center"
           backButtonClose={true}
@@ -4392,10 +4386,10 @@ class ListingsScreen extends Component {
             {this.renderOkCancelButton(
               () => {
                 this.setState({selectedCategory: [All]});
-                this.refs.categoryModal.close();
+                this.categoryModal.close();
               },
               () => {
-                this.refs.categoryModal.close();
+                this.categoryModal.close();
 
                 if (!this.filterModal.isOpen) {
                   this.filterResults();
@@ -4405,8 +4399,7 @@ class ListingsScreen extends Component {
           </View>
         </Modal>
         <Modal //model modal
-          ref="modelModal"
-          //  isOpen={true}
+          ref={instance => (this.modelModal = instance)}
           style={[styles.modelModal]}
           position="center"
           backButtonClose={true}
@@ -4526,11 +4519,11 @@ class ListingsScreen extends Component {
               {this.renderOkCancelButton(
                 () => {
                   this.setState({selectedModel: [All], modelSearch: ''});
-                  this.refs.modelModal.close();
+                  this.modelModal.close();
                 },
                 () => {
                   this.setState({modelSearch: ''});
-                  this.refs.modelModal.close();
+                  this.modelModal.close();
                   if (!this.filterModal.isOpen) {
                     this.filterResults();
                   }
@@ -4540,8 +4533,7 @@ class ListingsScreen extends Component {
           )}
         </Modal>
         <Modal //city modal
-          ref="cityModal"
-          //  isOpen={true}
+          ref={instance => (this.cityModal = instance)}
           style={[styles.modelModal]}
           position="center"
           backButtonClose={true}
@@ -4650,14 +4642,14 @@ class ListingsScreen extends Component {
                   citySearch: '',
                   Cities: this.state.fullCities,
                 });
-                this.refs.cityModal.close();
+                this.cityModal.close();
               },
               () => {
                 this.setState({
                   citySearch: '',
                   Cities: this.state.fullCities,
                 });
-                this.refs.cityModal.close();
+                this.cityModal.close();
 
                 if (!this.filterModal.isOpen) {
                   this.filterResults();
@@ -4667,8 +4659,7 @@ class ListingsScreen extends Component {
           </View>
         </Modal>
         <Modal //Year modal
-          ref="yearModal"
-          //  isOpen={true}
+          ref={instance => (this.yearModal = instance)}
           style={[styles.modelModal]}
           position="center"
           backButtonClose={true}
@@ -4799,7 +4790,7 @@ class ListingsScreen extends Component {
                   maxYearsList: this.state.FullmaxYearsList,
                   minYearsList: this.state.FullminYearsList,
                 });
-                this.refs.yearModal.close();
+                this.yearModal.close();
               },
               () => {
                 this.setState({
@@ -4810,7 +4801,7 @@ class ListingsScreen extends Component {
                   selectedMinYear: this.state.minYear,
                   selectedMaxYear: this.state.maxYear,
                 });
-                this.refs.yearModal.close();
+                this.yearModal.close();
 
                 if (!this.filterModal.isOpen) {
                   this.filterResults();
@@ -4820,8 +4811,7 @@ class ListingsScreen extends Component {
           </View>
         </Modal>
         <Modal //Price modal
-          ref="PriceModal"
-          //  isOpen={true}
+          ref={instance => (this.PriceModal = instance)}
           style={[styles.modelModal]}
           position="center"
           backButtonClose={true}
@@ -4946,7 +4936,7 @@ class ListingsScreen extends Component {
                   maxPricesList: this.state.FullmaxPricesList,
                   minPricesList: this.state.FullminPricesList,
                 });
-                this.refs.PriceModal.close();
+                this.PriceModal.close();
               },
               () => {
                 this.setState({
@@ -4957,7 +4947,7 @@ class ListingsScreen extends Component {
                   selectedMinPrice: this.state.minPrice,
                   selectedMaxPrice: this.state.maxPrice,
                 });
-                this.refs.PriceModal.close();
+                this.PriceModal.close();
 
                 if (!this.filterModal.isOpen) {
                   this.filterResults();
@@ -4967,8 +4957,7 @@ class ListingsScreen extends Component {
           </View>
         </Modal>
         <Modal //Mileage modal
-          ref="MileageModal"
-          //  isOpen={true}
+          ref={instance => (this.MileageModal = instance)}
           style={[styles.modelModal]}
           position="center"
           backButtonClose={true}
@@ -5097,7 +5086,7 @@ class ListingsScreen extends Component {
                   maxMileagesList: this.state.FullmaxMileagesList,
                   minMileagesList: this.state.FullminMileagesList,
                 });
-                this.refs.MileageModal.close();
+                this.MileageModal.close();
               },
               () => {
                 this.setState({
@@ -5108,7 +5097,7 @@ class ListingsScreen extends Component {
                   selectedMinMileage: this.state.minMileage,
                   selectedMaxMileage: this.state.maxMileage,
                 });
-                this.refs.MileageModal.close();
+                this.MileageModal.close();
 
                 if (!this.filterModal.isOpen) {
                   this.filterResults();

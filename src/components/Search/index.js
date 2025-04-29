@@ -90,8 +90,6 @@ class Search extends Component {
     };
     const searchInput = (
       <TextInput
-        ref="textInput"
-        //   autoFocus={this.state.focus}
         placeholder={Languages.SearchPlaceHolder}
         style={[styleTextInput]}
         value={this.state.text}

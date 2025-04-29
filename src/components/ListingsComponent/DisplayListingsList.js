@@ -139,26 +139,6 @@ const DisplayListingsList = ({
           type={this.props.route.params?.ListingType?.ID}
         />
       )}
-      {/* 
-      <FlatList
-        windowSize={16}
-        removeClippedSubviews
-       // ref="ListingsFlatlist2"
-        keyExtractor={(item, index) => `2-${keyExtractor(item, index)}`}
-        numColumns={1}
-        key={renderType}
-        data={FeaturedListings}
-        renderItem={({item, index}) => (
-          <RenderListingCard
-            item={item}
-            cca2={cca2}
-            selectedCity={selectedCity}
-            renderType={renderType}
-            key={`2-${index}-${item?.ID}`}
-          />
-        )}
-      /> */}
-
       <RecyclerListView
         style={styles.LoadingList}
         ref={recyclerRef}
@@ -176,32 +156,6 @@ const DisplayListingsList = ({
         forceNonDeterministicRendering={true}
         canChangeSize={true}
       />
-
-      {/* <RecyclerListView
-        windowSize={16}
-        removeClippedSubviews={true}
-        ref="ListingsFlatlist"
-        ListHeaderComponent={<></>}
-        keyExtractor={keyExtractor}
-        numColumns={renderType == 1 ? 2 : 1}
-        key={renderType}
-        ListEmptyComponent={<RenderEmptyComponent />}
-        data={Listings.filter(x => !x.IsSpecial)}
-        contentContainerStyle={styles.LoadingList}
-        renderItem={({item, index}) => (
-          <RenderListingCard
-            item={item}
-            cca2={cca2}
-            selectedCity={selectedCity}
-            key={`${index}-${item?.ID}`}
-            renderType={renderType}
-          />
-        )}
-        onEndReached={LoadListingsPage}
-        onEndReachedThreshold={0.4} //was 0.5
-        ListFooterComponent={<RenderListingsFooter />}
-        onScroll={onScrollHandler}
-      /> */}
     </>
   );
 };

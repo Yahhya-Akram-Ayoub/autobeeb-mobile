@@ -408,7 +408,6 @@ class RegisterScreen extends Component {
                         this.props.navigation.goBack();
                       }}>
                       <TextInput
-                        ref="email"
                         editable={false}
                         style={{
                           height: 40,

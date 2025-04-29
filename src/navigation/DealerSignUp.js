@@ -88,7 +88,7 @@ class DealerSignUp extends Component {
     try {
       const allCountries = await getAllCountries();
       const userCountry = allCountries.find(
-        country => country.cca2 === this.props.user?.ISOCode
+        country => country.cca2 === this.props.user?.ISOCode,
       );
       this.selectCountry(userCountry);
     } catch (error) {
@@ -151,9 +151,9 @@ class DealerSignUp extends Component {
           {BannerImage: data.Banners[data.Banners.length - 1]},
           () => {
             setTimeout(() => {
-              this.refs?.ImagePopUp?.open();
+              this.setState({openImagePopUp: true});
             }, 1000);
-          }
+          },
         );
       }
     });
@@ -201,13 +201,13 @@ class DealerSignUp extends Component {
             {
               selectedClassification: [data.Dealer.ClassificationID],
               selectedCompetence: data.Dealer.Competence.split(',').map(val =>
-                parseInt(val)
+                parseInt(val),
               ),
               selectedMakes: data.Dealer.Makes
                 ? data.Dealer.Makes.split(',').map(val => parseInt(val))
                 : undefined,
               selectedCity: this.props.user?.City.split(',').map(val =>
-                parseInt(val)
+                parseInt(val),
               ),
               vat: data.Dealer.Vat,
               Phone: this.extractLocalNumber(data.Dealer.Phone),
@@ -236,14 +236,14 @@ class DealerSignUp extends Component {
                 langid: Languages.langID,
                 sumIDs: this.state.selectedCompetence.reduce(
                   (a, b) => a + b,
-                  0
+                  0,
                 ),
               }).then(data => {
                 if (data && data.Success) {
                   this.setState({Makes: data.Makes});
                 }
               });
-            }
+            },
           );
         }
       });
@@ -301,7 +301,7 @@ class DealerSignUp extends Component {
       selectedCity: undefined,
       paidPlans: this.state.CountriesData
         ? this.state.CountriesData.find(
-            x => x.ISOCode.toLowerCase() == country.cca2.toLowerCase()
+            x => x.ISOCode.toLowerCase() == country.cca2.toLowerCase(),
           ).PaidPlans
         : false,
     });
@@ -311,7 +311,7 @@ class DealerSignUp extends Component {
         this.setState({
           paidPlans: this.state.CountriesData
             ? this.state.CountriesData.find(
-                x => x?.ISOCode.toLowerCase() == country?.cca2?.toLowerCase()
+                x => x?.ISOCode.toLowerCase() == country?.cca2?.toLowerCase(),
               )?.PaidPlans
             : false,
         });
@@ -467,8 +467,7 @@ class DealerSignUp extends Component {
         if (data.EmailConfirmed == true) {
           if (data.User) {
             _this.props.storeUserData(data.User, () => {
-              this.refs.EmailVerifyModal && this.refs.EmailVerifyModal.close();
-              this.setState({otp: ''});
+              this.setState({otp: '', openEmailVerifyModal: false});
             });
           }
           //
@@ -539,7 +538,7 @@ class DealerSignUp extends Component {
                   alert(Languages.SomethingWentWrong);
                 }
               });
-            }
+            },
           );
         })
         .catch(e => {
@@ -584,7 +583,7 @@ class DealerSignUp extends Component {
                   alert(Languages.SomethingWentWrong);
                 }
               });
-            }
+            },
           );
         })
         .catch(e => {
@@ -646,13 +645,12 @@ class DealerSignUp extends Component {
         style={{flex: 1}}>
         <ImagePopUp
           Banner={this.state.BannerImage}
-          ref="ImagePopUp"
-          navigation={this.props.navigation}
+          isOpen={this.state.openImagePopUp}
         />
 
         <NewHeader navigation={this.props.navigation} back />
         <Modal
-          ref="locationModal"
+          ref={instance => (this.locationModal = instance)}
           //  isOpen
           backButtonClose
           coverScreen={Platform.OS == 'android'}
@@ -683,7 +681,7 @@ class DealerSignUp extends Component {
                 });
               }}
               onClose={data => {
-                this.refs.locationModal.close();
+                this.photoModal.close();
               }}
               initialRegion={{
                 latitude: 40.697,
@@ -696,7 +694,7 @@ class DealerSignUp extends Component {
         </Modal>
         <Modal
           style={[styles.modalbox]}
-          ref={'PasswordModal'}
+          ref={instance => (this.PasswordModal = instance)}
           swipeToClose={true}
           backButtonClose>
           <View style={styles.modalContent}>
@@ -722,7 +720,7 @@ class DealerSignUp extends Component {
                   this.setState({
                     newPassword: '',
                   });
-                  this.refs.PasswordModal.close();
+                  this.PasswordModal.close();
                 }}>
                 <Text style={{color: 'grey', textAlign: 'center'}}>
                   {Languages.Cancel}
@@ -740,7 +738,7 @@ class DealerSignUp extends Component {
                       password: this.state.newPassword,
                     }).then(data => {
                       if (data.Success == 1) {
-                        this.refs.PasswordModal.close();
+                        this.PasswordModal.close();
                       } else {
                         toast(Languages.SomethingWentWrong, 2500);
                       }
@@ -757,7 +755,7 @@ class DealerSignUp extends Component {
           </View>
         </Modal>
         <OTPModal
-          ref="OTPModal"
+          isOpen={this.state.openOTPModal}
           OTPMessage={Languages.WeHaveSentTheOTP}
           EnterMessage={Languages.EnterToVerifyAccount}
           Username={
@@ -801,7 +799,7 @@ class DealerSignUp extends Component {
         />
 
         <OTPModal
-          ref="EmailVerifyModal"
+          isOpen={this.state.openEmailVerifyModal}
           OTPMessage={Languages.WeHaveSentTheOTP}
           EnterMessage={Languages.EnterToVerifyAccount}
           Username={this.state.email}
@@ -822,7 +820,7 @@ class DealerSignUp extends Component {
         />
 
         <Modal
-          ref="photoModal"
+          ref={instance => (this.photoModal = instance)}
           position="top"
           //   coverScreen
           style={{
@@ -844,7 +842,7 @@ class DealerSignUp extends Component {
             <TouchableOpacity
               style={{position: 'absolute', top: 5, right: 5, zIndex: 15}}
               onPress={() => {
-                this.refs.photoModal.close();
+                this.photoModal.close();
               }}>
               <IconMC name="close" size={22} color="#000" />
             </TouchableOpacity>
@@ -854,7 +852,7 @@ class DealerSignUp extends Component {
               }}
               onPress={() => {
                 this.pickSingleBase64('camera', this.state.bannerUploading);
-                this.refs.photoModal.close();
+                this.photoModal.close();
               }}>
               <Text style={styles.modalTextStyle}>{Languages.camera}</Text>
             </TouchableOpacity>
@@ -868,14 +866,14 @@ class DealerSignUp extends Component {
               style={{margin: 10}}
               onPress={() => {
                 this.pickSingleBase64('gallery', this.state.bannerUploading);
-                this.refs.photoModal.close();
+                this.photoModal.close();
               }}>
               <Text style={styles.modalTextStyle}>{Languages.Gallery}</Text>
             </TouchableOpacity>
           </View>
         </Modal>
         <ScrollView
-          ref="scrollView"
+          // ref={instance => (this.scrollViewRef = instance)}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
           style={[{flex: 1, backgroundColor: '#F3F3F3'}]}
@@ -914,7 +912,7 @@ class DealerSignUp extends Component {
             <TouchableOpacity
               onPress={() => {
                 this.setState({bannerUploading: true});
-                this.refs.photoModal.open();
+                this.photoModal.open();
               }}
               style={{
                 //   width: Dimensions.get("screen").width,
@@ -994,7 +992,7 @@ class DealerSignUp extends Component {
                 <TouchableOpacity
                   onPress={() => {
                     this.setState({bannerUploading: false});
-                    this.refs.photoModal.open();
+                    this.photoModal.open();
                   }}
                   style={{
                     position: 'relative',
@@ -1095,7 +1093,6 @@ class DealerSignUp extends Component {
               <View style={styles.inputWrap}>
                 <Text style={styles.header}>{Languages.Classification}</Text>
                 <SectionedMultiSelect
-                  ref="ClassificationMultiSelect"
                   items={this.state.Classifications}
                   single
                   selectedText={Languages.Selected}
@@ -1155,7 +1152,7 @@ class DealerSignUp extends Component {
               <Text style={styles.header}>{Languages.CompetenceOfCompany}</Text>
               <View>
                 <SectionedMultiSelect
-                  ref="CompetenceMultiSelect"
+                  ref={instance => (this.CompetenceMultiSelect = instance)}
                   selectedText={Languages.Selected}
                   items={this.state.Competences}
                   uniqueKey="ID"
@@ -1233,7 +1230,7 @@ class DealerSignUp extends Component {
                             backgroundColor: Color.secondary,
                           }}
                           onPress={() => {
-                            this.refs.CompetenceMultiSelect._submitSelection();
+                            this.CompetenceMultiSelect._submitSelection();
                           }}>
                           <Text
                             style={{
@@ -1257,7 +1254,7 @@ class DealerSignUp extends Component {
               <View style={styles.inputWrap}>
                 <Text style={styles.header}>{Languages.Makes}</Text>
                 <SectionedMultiSelect
-                  ref="MakesMultiSelect"
+                  ref={instance => (this.MakesMultiSelect = instance)}
                   selectedText={Languages.Selected}
                   items={this.state.Makes}
                   uniqueKey="ID"
@@ -1326,7 +1323,7 @@ class DealerSignUp extends Component {
                             // borderRadius: 5
                           }}
                           onPress={() => {
-                            this.refs.MakesMultiSelect._submitSelection();
+                            this.MakesMultiSelect._submitSelection();
                           }}>
                           <Text
                             style={{
@@ -1358,7 +1355,9 @@ class DealerSignUp extends Component {
             />
           </View>
 
-          <View style={styles.inputWrap} ref="descriptionParent">
+          <View
+            style={styles.inputWrap}
+            ref={ins => (this.descriptionParentRef = ins)}>
             <Text style={styles.header}>{Languages.AboutCompany}</Text>
             <TextInput
               placeholderTextColor="#C7C7CD"
@@ -1370,7 +1369,7 @@ class DealerSignUp extends Component {
               value={this.state.aboutCo}
               onFocus={() => {
                 const handle = ReactNative.findNodeHandle(
-                  this.refs.descriptionParent
+                  this.descriptionParentRef,
                 );
                 UIManager.measureLayoutRelativeToParent(
                   handle,
@@ -1378,12 +1377,12 @@ class DealerSignUp extends Component {
                     console.error(e);
                   },
                   (x, y, w, h) => {
-                    _this.refs.scrollView.scrollTo({
+                    this.scrollViewRef.scrollTo({
                       x: 0,
                       y: y,
                       animated: true,
                     });
-                  }
+                  },
                 );
               }}
             />
@@ -1507,7 +1506,7 @@ class DealerSignUp extends Component {
                     <TouchableOpacity
                       style={{}}
                       onPress={() => {
-                        this.refs.EmailVerifyModal.open();
+                        this.setState({openEmailVerifyModal: true});
                       }}>
                       <Text style={{}}>{Languages.VerifyNow}</Text>
                     </TouchableOpacity>
@@ -1599,7 +1598,7 @@ class DealerSignUp extends Component {
                   ) {
                     this.setState({mobile: ''});
                     this.refs.phone.selectCountry(
-                      this.state.selectedCountry.cca2.toLowerCase()
+                      this.state.selectedCountry.cca2.toLowerCase(),
                     );
                   }
                 }}
@@ -1694,7 +1693,7 @@ class DealerSignUp extends Component {
                   ) {
                     this.setState({Phone: ''});
                     this.refs.TellPhone.selectCountry(
-                      this.state.selectedCountry.cca2.toLowerCase()
+                      this.state.selectedCountry.cca2.toLowerCase(),
                     );
                   }
                 }}
@@ -1705,7 +1704,6 @@ class DealerSignUp extends Component {
             <View style={styles.inputWrap}>
               <Text style={styles.header}>{Languages.City}</Text>
               <SectionedMultiSelect
-                ref="CityMultiSelect"
                 selectedText={Languages.Selected}
                 items={this.state.cities}
                 single
@@ -1813,7 +1811,7 @@ class DealerSignUp extends Component {
                   backgroundColor: '#fff',
                 }}
                 onPress={region => {
-                  this.refs.locationModal.open();
+                  this.photoModal.open();
                   Keyboard.dismiss();
                 }}>
                 {this.state.userLocation && (
@@ -1828,7 +1826,7 @@ class DealerSignUp extends Component {
                   justifyContent: 'space-between',
                 }}
                 onPress={() => {
-                  this.refs.locationModal.open();
+                  this.photoModal.open();
                   Keyboard.dismiss();
                 }}>
                 <Text style={[styles.Textinput, {paddingHorizontal: 0}]}>
@@ -1855,7 +1853,7 @@ class DealerSignUp extends Component {
                     placeholder={Languages.EnterPassword}
                     onFocus={data => {
                       setTimeout(data => {
-                        this.refs.scrollView.scrollToEnd();
+                        this.scrollViewRef.scrollToEnd();
                       }, 500);
                     }}
                     style={[
@@ -1896,7 +1894,7 @@ class DealerSignUp extends Component {
             <TouchableOpacity
               style={{}}
               onPress={() => {
-                this.refs.PasswordModal.open();
+                this.PasswordModal.open();
               }}>
               <View style={styles.inputWrap}>
                 <Text style={styles.header}>{Languages.ChangePassword}</Text>
@@ -2070,7 +2068,7 @@ class DealerSignUp extends Component {
                               },
                             },
                           ],
-                          {cancelable: true}
+                          {cancelable: true},
                         );
                       } else if (data.PhoneInUse) {
                         Alert.alert(
@@ -2089,13 +2087,14 @@ class DealerSignUp extends Component {
                               },
                             },
                           ],
-                          {cancelable: true}
+                          {cancelable: true},
                         );
                         //      toast(Languages.NumberAlreadyTaken);
                       } else if (data.IsDealer == 1) {
                         //    alert(JSON.stringify(data));
                         this.props.storeUserData(data.CurrentUser, () => {
-                          if (data.Code == 1) this.refs.OTPModal.open();
+                          if (data.Code == 1)
+                            this.setState({openOTPModal: true});
                           else {
                             if (this.props.route.params?.Edit == 0) {
                               KS.PlansGet({

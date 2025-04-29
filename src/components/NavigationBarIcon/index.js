@@ -12,15 +12,16 @@ import * as Animatable from 'react-native-animatable';
 class NavigationBarIcon extends Component {
   constructor(props) {
     super(props);
+    this.menuRef = React.createRef();
   }
 
   componentWillReceiveProps(nextProps) {
     if (
       typeof this.props.number != 'undefined' &&
-      this.refs.menu &&
+      this.menuRef &&
       this.props.number != nextProps.number
     ) {
-      this.refs.menu.fadeInDown(600);
+      this.menuRef.fadeInDown(600);
     }
   }
 
@@ -43,7 +44,7 @@ class NavigationBarIcon extends Component {
           resizeMode="contain"
         />
         {!number ? null : (
-          <Animatable.View ref="menu" style={styles.numberWrap}>
+          <Animatable.View ref={this.menuRef} style={styles.numberWrap}>
             <Text style={styles.number}>{number}</Text>
           </Animatable.View>
         )}

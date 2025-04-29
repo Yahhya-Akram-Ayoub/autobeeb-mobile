@@ -20,13 +20,15 @@ class ListingEmail extends Component {
     this.state = {
       isValidEmail: false,
     };
+
+    this.emailRef = React.createRef();
   }
 
   componentDidMount() {
     this.props.FindStep();
     setTimeout(() => {
       this.setState({done: true}); // this is only to reinitalize the state so the phone input stays green even after leaving the page
-      this.refs.email && this.refs.email.focus();
+      this.emailRef?.focus();
       if (this.validateEmail(this.props.email)) {
         this.setState({isValidEmail: true});
       } else {
@@ -66,7 +68,7 @@ class ListingEmail extends Component {
                 marginHorizontal: 20,
               }}>
               <TextInput
-                ref="email"
+                ref={this.emailRef}
                 style={{
                   height: 40,
                   marginTop: 20,

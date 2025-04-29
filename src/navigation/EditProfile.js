@@ -99,16 +99,16 @@ class EditProfile extends Component {
       });
 
       if (!!this.props.route.params?.ChangePhone) {
-        this.refs.ChangePhoneModal.open();
+        this.ChangePhoneModal.open();
       }
       if (!!this.props.route.params?.ChangeEmail) {
-        this.refs.ChangeEmailModal.open();
+        this.ChangeEmailModal.open();
       }
       if (!!this.props.route.params?.VerifyPhone) {
-        this.refs.VerifyPhoneModal.open();
+        this.VerifyPhoneModal.open();
       }
       if (!!this.props.route.params?.VerifyEmail) {
-        this.refs.VerifyEmailModal.open();
+        this.VerifyEmailModal.open();
       }
 
       if (
@@ -301,12 +301,12 @@ class EditProfile extends Component {
               }
             } else {
               _this.props.storeUserData(data.User, () => {
-                this.refs.AddPhoneModal.close();
+                this.AddPhoneModal.close();
                 if (data.Code) {
                   this.resendInitCounter();
 
                   if (!ignoreOTP) {
-                    this.refs.VerifyPhoneModal.open();
+                    this.VerifyPhoneModal.open();
                   }
                 }
               });
@@ -332,8 +332,8 @@ class EditProfile extends Component {
 
     if (this.state.isPhone2Valid) {
       if (country && country.EmailRegister && !this.props.user.Email) {
-        this.refs.ChangePhoneModal.close();
-        this.refs.AddEmailModal.open();
+        this.ChangePhoneModal.close();
+        this.AddEmailModal.open();
         this.setState({changeMobileLoading: false});
       } else {
         KS.UpdateInfo({
@@ -355,11 +355,11 @@ class EditProfile extends Component {
                 }
               } else {
                 _this.props.storeUserData(data.User, () => {
-                  this.refs.ChangePhoneModal.close();
+                  this.ChangePhoneModal.close();
                   if (data.Code) {
                     this.resendInitCounter();
                     if (!ignoreOTP) {
-                      this.refs.VerifyPhoneModal.open();
+                      this.VerifyPhoneModal.open();
                     }
                   }
                 });
@@ -417,7 +417,7 @@ class EditProfile extends Component {
             <Modal
               //coverScreen
               style={[styles.modalbox]}
-              ref={'NameModal'}
+              ref={instance => (this.NameModal = instance)}
               swipeToClose={true}
               backButtonClose>
               <View style={styles.modalContent}>
@@ -443,7 +443,7 @@ class EditProfile extends Component {
                       this.setState({
                         newName: '',
                       });
-                      this.refs.NameModal.close();
+                      this.NameModal.close();
                     }}>
                     <Text style={{color: 'grey', textAlign: 'center'}}>
                       {Languages.Cancel}
@@ -461,7 +461,7 @@ class EditProfile extends Component {
                         }).then(data => {
                           if (data.Success == 1) {
                             _this.props.storeUserData(data.User);
-                            this.refs.NameModal.close();
+                            this.NameModal.close();
                           } else {
                             this.refs.toast.show(
                               Languages.SomethingWentWrong,
@@ -484,7 +484,7 @@ class EditProfile extends Component {
             <Modal
               //coverScreen
               style={[styles.modalbox]}
-              ref={'PasswordModal'}
+              ref={instance => (this.PasswordModal = instance)}
               swipeToClose={true}
               backButtonClose>
               <View style={styles.modalContent}>
@@ -535,7 +535,7 @@ class EditProfile extends Component {
                       this.setState({
                         newPassword: '',
                       });
-                      this.refs.PasswordModal.close();
+                      this.PasswordModal.close();
                     }}>
                     <Text style={{color: 'grey', textAlign: 'center'}}>
                       {Languages.Cancel}
@@ -559,7 +559,7 @@ class EditProfile extends Component {
                                 Languages.passwordChanged,
                                 1500
                               );
-                              this.refs.PasswordModal.close();
+                              this.PasswordModal.close();
                             } else {
                               this.refs.toast.show(
                                 Languages.SomethingWentWrong,
@@ -593,7 +593,7 @@ class EditProfile extends Component {
             <Modal
               //coverScreen
               style={[styles.modalbox]}
-              ref={'AddEmailModal'}
+              ref={instance => (this.AddEmailModal = instance)}
               swipeToClose={true}
               backButtonClose>
               <View style={styles.modalContent}>
@@ -629,7 +629,7 @@ class EditProfile extends Component {
                       this.setState({
                         newEmail: '',
                       });
-                      this.refs.AddEmailModal.close();
+                      this.AddEmailModal.close();
                     }}>
                     <Text style={{color: 'grey', textAlign: 'center'}}>
                       {Languages.Cancel}
@@ -659,11 +659,11 @@ class EditProfile extends Component {
                               }
                             } else {
                               _this.props.storeUserData(data.User, () => {
-                                this.refs.AddEmailModal.close();
+                                this.AddEmailModal.close();
                                 if (data.Code) {
                                   this.resendInitCounter();
 
-                                  this.refs.VerifyEmailModal.open();
+                                  this.VerifyEmailModal.open();
                                 }
                               });
                             }
@@ -689,7 +689,7 @@ class EditProfile extends Component {
             <Modal
               //coverScreen
               style={[styles.modalbox]}
-              ref={'AddPhoneModal'}
+              ref={instance => (this.AddPhoneModal = instance)}
               swipeToClose={true}
               backButtonClose>
               <View style={styles.modalContent}>
@@ -805,7 +805,7 @@ class EditProfile extends Component {
                       this.setState({
                         newEmail: '',
                       });
-                      this.refs.AddPhoneModal.close();
+                      this.AddPhoneModal.close();
                     }}>
                     <Text style={{color: 'grey', textAlign: 'center'}}>
                       {Languages.Cancel}
@@ -862,7 +862,7 @@ class EditProfile extends Component {
             <Modal
               //coverScreen
               style={[styles.modalbox]}
-              ref={'ChangePhoneModal'}
+              ref={instance => (this.ChangePhoneModal = instance)}
               swipeToClose={true}
               backButtonClose
               onClosed={data => {
@@ -1027,7 +1027,7 @@ class EditProfile extends Component {
                       this.setState({
                         newPhone: '',
                       });
-                      this.refs.ChangePhoneModal.close();
+                      this.ChangePhoneModal.close();
                     }}>
                     <Text style={{color: 'grey', textAlign: 'center'}}>
                       {Languages.Cancel}
@@ -1068,7 +1068,7 @@ class EditProfile extends Component {
             <Modal
               //coverScreen
               style={[styles.modalbox]}
-              ref={'ChangeEmailModal'}
+              ref={instance => (this.ChangeEmailModal = instance)}
               swipeToClose={true}
               backButtonClose>
               <View style={styles.modalContent}>
@@ -1107,7 +1107,7 @@ class EditProfile extends Component {
                       this.setState({
                         newEmail: '',
                       });
-                      this.refs.ChangeEmailModal.close();
+                      this.ChangeEmailModal.close();
                     }}>
                     <Text style={{color: 'grey', textAlign: 'center'}}>
                       {Languages.Cancel}
@@ -1138,11 +1138,11 @@ class EditProfile extends Component {
                                 }
                               } else {
                                 _this.props.storeUserData(data.User, () => {
-                                  this.refs.ChangeEmailModal.close();
+                                  this.ChangeEmailModal.close();
                                   if (data.Code) {
                                     this.resendInitCounter();
 
-                                    this.refs.VerifyEmailModal.open();
+                                    this.VerifyEmailModal.open();
                                   }
                                 });
                               }
@@ -1179,10 +1179,7 @@ class EditProfile extends Component {
             <Modal
               //coverScreen
               style={[styles.modalbox]}
-              ref={'VerifyEmailModal'}
-              // onOpened={() => {
-              //   this.resendInitCounter();
-              // }}
+              ref={instance => (this.VerifyEmailModal = instance)}
               onClosed={() => {
                 this.setState({
                   emailVerificationCode: '',
@@ -1194,7 +1191,7 @@ class EditProfile extends Component {
                 <TouchableOpacity
                   style={{position: 'absolute', top: 10, right: 10}}
                   onPress={() => {
-                    this.refs.VerifyEmailModal.close();
+                    this.VerifyEmailModal.close();
                   }}>
                   <Awesome name="close" size={20} color="red" style={{}} />
                 </TouchableOpacity>
@@ -1295,7 +1292,7 @@ class EditProfile extends Component {
                             if (data.Success == 1) {
                               if (data.OTPVerify) {
                                 _this.props.storeUserData(data.User);
-                                this.refs.VerifyEmailModal.close();
+                                this.VerifyEmailModal.close();
                                 if (
                                   data.User.MemberOf.filter(
                                     x =>
@@ -1349,7 +1346,7 @@ class EditProfile extends Component {
             <Modal
               //coverScreen
               style={[styles.modalbox]}
-              ref={'VerifyPhoneModal'}
+              ref={instance => (this.VerifyPhoneModal = instance)}
               onOpened={() => {
                 setTimeout(() => {
                   this.refs.verifyPhoneText &&
@@ -1367,7 +1364,7 @@ class EditProfile extends Component {
                 <TouchableOpacity
                   style={{position: 'absolute', top: 10, right: 10}}
                   onPress={() => {
-                    this.refs.VerifyPhoneModal.close();
+                    this.VerifyPhoneModal.close();
                   }}>
                   <Awesome name="close" size={20} color="red" style={{}} />
                 </TouchableOpacity>
@@ -1459,7 +1456,7 @@ class EditProfile extends Component {
                             if (data.Success == 1) {
                               if (data.OTPVerify) {
                                 _this.props.storeUserData(data.User);
-                                this.refs.VerifyPhoneModal.close();
+                                this.VerifyPhoneModal.close();
                                 if (
                                   data.User.MemberOf.filter(
                                     x =>
@@ -1512,7 +1509,7 @@ class EditProfile extends Component {
             </Modal>
 
             <Modal
-              ref="photoModal"
+              ref={instance => (this.photoModal = instance)}
               position="top"
               //      //coverScreen
               style={{
@@ -1534,7 +1531,7 @@ class EditProfile extends Component {
                 <TouchableOpacity
                   style={{position: 'absolute', top: 5, right: 5, zIndex: 15}}
                   onPress={() => {
-                    this.refs.photoModal.close();
+                    this.photoModal.close();
                   }}>
                   <MaterialCommunityIcons name="close" size={22} color="#000" />
                 </TouchableOpacity>
@@ -1544,7 +1541,7 @@ class EditProfile extends Component {
                   }}
                   onPress={() => {
                     this.pickSingleBase64('camera');
-                    this.refs.photoModal.close();
+                    this.photoModal.close();
                   }}>
                   <Text style={styles.modalTextStyle}>{Languages.camera}</Text>
                 </TouchableOpacity>
@@ -1558,7 +1555,7 @@ class EditProfile extends Component {
                   style={{margin: 10}}
                   onPress={() => {
                     this.pickSingleBase64('gallery');
-                    this.refs.photoModal.close();
+                    this.photoModal.close();
                   }}>
                   <Text style={styles.modalTextStyle}>{Languages.Gallery}</Text>
                 </TouchableOpacity>
@@ -1573,7 +1570,7 @@ class EditProfile extends Component {
               }}>
               <TouchableOpacity
                 onPress={() => {
-                  this.refs.photoModal.open();
+                  this.photoModal.open();
                 }}>
                 {!this.state.isUploadClicked && (
                   <Image
@@ -1638,7 +1635,7 @@ class EditProfile extends Component {
                 <TouchableOpacity
                   style={{}}
                   onPress={() => {
-                    this.refs.NameModal.open();
+                    this.NameModal.open();
                   }}>
                   <Text style={styles.textStyle} numberOfLines={1}>
                     {this.props.user && this.props.user?.Name}
@@ -1669,9 +1666,9 @@ class EditProfile extends Component {
                     style={{}}
                     onPress={() => {
                       if (this.props.user && this.props.user?.Email) {
-                        this.refs.ChangeEmailModal.open();
+                        this.ChangeEmailModal.open();
                       } else {
-                        this.refs.AddEmailModal.open();
+                        this.AddEmailModal.open();
                       }
                     }}>
                     <Text
@@ -1724,7 +1721,7 @@ class EditProfile extends Component {
                       onPress={() => {
                         this.resendInitCounter();
 
-                        this.refs.VerifyEmailModal.open();
+                        this.VerifyEmailModal.open();
                       }}>
                       <Text
                         style={{
@@ -1769,9 +1766,9 @@ class EditProfile extends Component {
                     style={{}}
                     onPress={() => {
                       if (this.props.user && this.props.user?.Phone) {
-                        this.refs.ChangePhoneModal.open();
+                        this.ChangePhoneModal.open();
                       } else {
-                        this.refs.AddPhoneModal.open();
+                        this.AddPhoneModal.open();
                       }
                     }}>
                     <Text
@@ -1827,7 +1824,7 @@ class EditProfile extends Component {
                           style={{}}
                           onPress={() => {
                             this.resendInitCounter();
-                            this.refs.VerifyPhoneModal.open();
+                            this.VerifyPhoneModal.open();
                           }}>
                           <Text
                             style={{
@@ -1855,7 +1852,7 @@ class EditProfile extends Component {
                 <TouchableOpacity
                   style={{}}
                   onPress={() => {
-                    this.refs.PasswordModal.open();
+                    this.PasswordModal.open();
                   }}>
                   <Text style={styles.textStyle}>
                     {Languages.ChangePassword}
@@ -1997,7 +1994,7 @@ class EditProfile extends Component {
                         onPress={() => {
                           this.resendInitCounter();
 
-                          this.refs.VerifyEmailModal.open();
+                          this.VerifyEmailModal.open();
                         }}>
                         <Text style={{color: '#fff', fontSize: 20}}>
                           {Languages.VerifyNow}
@@ -2029,7 +2026,7 @@ class EditProfile extends Component {
                         }}
                         onPress={() => {
                           this.resendInitCounter();
-                          this.refs.VerifyPhoneModal.open();
+                          this.VerifyPhoneModal.open();
                         }}>
                         <Text style={{color: '#fff', fontSize: 20}}>
                           {Languages.VerifyNow}

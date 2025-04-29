@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
 import {
   View,
@@ -10,65 +10,71 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
-  Keyboard,
   ActivityIndicator,
 } from 'react-native';
-
 import {Languages, Color} from '../common';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
 import Modal from 'react-native-modalbox';
 import {OTPInput} from './index';
 
 var delayCounter2;
-class OTPModal extends Component {
-  constructor(props) {
-    super(props);
-    this.otpRef = React.createRef();
-    this.state = {
-      resendResetCodeCounter: Languages.Resend,
-      disabledResetCode: false,
-    };
-  }
 
-  resendInitCounter = () => {
+const OTPModal = ({
+  isOpen,
+  ignoreResend,
+  onClosed,
+  onOpened,
+  onChange,
+  resendCode,
+  otp,
+  toast,
+  checkOTP,
+  OTPMessage,
+  Username,
+  pendingDelete,
+  EnterMessage,
+}) => {
+  const otpRef = useRef();
+  const [resendResetCodeCounter, setResendResetCodeCounter] = useState(
+    Languages.Resend,
+  );
+  const [disabledResetCode, setDisabledResetCode] = useState(false);
+  const [openOTPModal, setOpenOTPModal] = useState(false);
+  const [showOTP, setShowOTP] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setOpenOTPModal(isOpen);
+  }, [isOpen]);
+
+  const resendInitCounter = () => {
     let delay = 60000;
     let counter = 0;
-    this.setState({
-      disabledResetCode: true,
-    });
+    setDisabledResetCode(true);
     clearInterval(delayCounter2);
 
     delayCounter2 = setInterval(() => {
-      this.setState(
-        {
-          resendResetCodeCounter:
-            Languages.ResendAfter + (delay - counter * 1000) / 1000,
-        },
-        () => {
-          if (delay - counter * 1000 <= 0) {
-            counter = 0;
-
-            clearInterval(delayCounter2);
-            this.setState({
-              resendResetCodeCounter: Languages.Resend,
-            });
-            this.setState({
-              disabledResetCode: false,
-            });
-          }
-          counter++;
-        },
-      );
+      const _resendResetCodeCounter =
+        Languages.ResendAfter + (delay - counter * 1000) / 1000;
+      setResendResetCodeCounter(_resendResetCodeCounter);
+      if (delay - counter * 1000 <= 0) {
+        counter = 0;
+        clearInterval(delayCounter2);
+        setResendResetCodeCounter(Languages.Resend);
+        setDisabledResetCode(false);
+      }
+      counter++;
     }, 1000);
   };
 
-  open() {
-    this.refs.OTPModal.open();
-  }
-  close() {
-    this.refs.OTPModal.close();
-  }
-  convertToNumber(number) {
+  const open = () => {
+    setOpenOTPModal(true);
+  };
+  const close = () => {
+    setOpenOTPModal(false);
+  };
+
+  const convertToNumber = number => {
     if (number) {
       number = number + '';
       return number
@@ -86,183 +92,162 @@ class OTPModal extends Component {
         .replace(/٨/g, '8')
         .replace(/٩/g, '9');
     } else return '';
-  }
-  render() {
-    return (
-      <Modal
-        ref="OTPModal"
-        isOpen={this.props.isOpen ? this.props.isOpen : false}
-        style={[styles.modelModal]}
-        position="center"
-        onOpened={() => {
-          this.setState({showOTP: true});
-          if (this.props.onOpened) {
-            this.props.onOpened();
-          }
-          if (!this.props.ignoreResend) {
-            this.resendInitCounter();
-          }
-        }}
-        onClosed={() => {
-          this.setState({showOTP: false});
+  };
 
-          if (this.props.onClosed) {
-            this.props.onClosed();
-          }
-          this.props.onChange('');
+  return (
+    <Modal
+      isOpen={openOTPModal}
+      style={[styles.modelModal]}
+      position="center"
+      onOpened={() => {
+        setShowOTP(true);
 
-          clearInterval(delayCounter2);
-        }}
-        backButtonClose={true}
-        entry="bottom"
-        swipeToClose={false}
-        backdropOpacity={0.5}>
-        <KeyboardAvoidingView behavior="padding">
-          <View style={styles.modelContainer}>
-            <TouchableOpacity
+        if (onOpened) {
+          onOpened();
+        }
+
+        if (!ignoreResend) {
+          resendInitCounter();
+        }
+      }}
+      onClosed={() => {
+        setShowOTP(false);
+        onChange('');
+        clearInterval(delayCounter2);
+
+        if (onClosed) {
+          onClosed();
+        }
+      }}
+      backButtonClose={true}
+      entry="bottom"
+      swipeToClose={false}
+      backdropOpacity={0.5}>
+      <KeyboardAvoidingView behavior="padding">
+        <View style={styles.modelContainer}>
+          <TouchableOpacity
+            style={{
+              position: 'absolute',
+              top: 10,
+              zIndex: 10,
+              right: 10,
+            }}
+            onPress={() => {
+              close();
+            }}>
+            <IconMC name="close" size={30} color={Color.primary} />
+          </TouchableOpacity>
+
+          <View style={{flex: 1, justifyContent: 'center'}}>
+            <Text style={styles.fontStyle}>{OTPMessage}</Text>
+            <View
               style={{
-                position: 'absolute',
-                top: 10,
-                zIndex: 10,
-                right: 10,
-              }}
-              onPress={() => {
-                this.close();
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}>
-              <IconMC name="close" size={30} color={Color.primary} />
-            </TouchableOpacity>
-
-            <View style={{flex: 1, justifyContent: 'center'}}>
-              <Text style={styles.fontStyle}>{this.props.OTPMessage}</Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Text style={styles.fontStyle}>
-                  {' ' + this.props.Username}
+              <Text style={styles.fontStyle}>{' ' + Username}</Text>
+            </View>
+            {pendingDelete ? (
+              <View style={{}}>
+                <Text style={styles.fontStyle}>{Languages.EnterItNow}</Text>
+                <Text style={{color: 'red', textAlign: 'center'}}>
+                  {Languages.OrOfferDeleted}
                 </Text>
-                {this.props.change && false && (
-                  <TouchableOpacity
-                    style={{}}
-                    onPress={() => {
-                      this.props.onChangeClick();
-                    }}>
-                    <Text style={[styles.fontStyle, {color: Color.primary}]}>
-                      {' ' + Languages.Change}
-                    </Text>
-                  </TouchableOpacity>
-                )}
               </View>
-              {this.props.pendingDelete ? (
-                <View style={{}}>
-                  <Text style={styles.fontStyle}>{Languages.EnterItNow}</Text>
-
-                  <Text style={{color: 'red', textAlign: 'center'}}>
-                    {Languages.OrOfferDeleted}
-                  </Text>
-                </View>
-              ) : (
-                <Text style={styles.fontStyle}>{this.props.EnterMessage}</Text>
-              )}
-              {this.state.showOTP && (
-                <Pressable
-                  onPress={() => {
-                    this.otpRef.current?.textInput.focus();
-                  }}>
-                  <OTPInput
-                    ref={this.otpRef}
-                    value={this.props.otp}
-                    onChange={otp => {
-                      this.props.onChange(this.convertToNumber(otp));
-                    }}
-                    containerStyle={{
-                      padding: 10,
-                      flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
-                    }}
-                    editable={true}
-                    cellStyle={{backgroundColor: '#fff', color: '#000'}}
-                    tintColor="#FB6C6A"
-                    offTintColor="#fff"
-                    onSubmitEditing={() => {
-                      if (this.props.otp && this.props.otp.length > 4) {
-                        this.props.checkOTP();
-                      } else {
-                        this.props.toast(Languages.EnterFullOTP);
-                      }
-                    }}
-                    otpLength={5}
-                    autoFocus={true}
-                  />
-                </Pressable>
-              )}
-
-              <View
-                style={{
-                  flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-around',
+            ) : (
+              <Text style={styles.fontStyle}>{EnterMessage}</Text>
+            )}
+            {showOTP && (
+              <Pressable
+                onPress={() => {
+                  otpRef.current?.textInput.focus();
                 }}>
-                <TouchableOpacity
-                  disabled={this.state.disabledResetCode}
-                  style={{
-                    alignSelf: 'center',
-                    backgroundColor: this.state.disabledResetCode
-                      ? 'gray'
-                      : Color.secondary,
-                    paddingVertical: 10,
-                    paddingHorizontal: 20,
-                    marginTop: 20,
-                    borderRadius: 15,
+                <OTPInput
+                  ref={otpRef}
+                  value={otp}
+                  onChange={_otp => {
+                    onChange(convertToNumber(_otp));
                   }}
-                  onPress={() => {
-                    this.props.onChange('');
-                    this.props.resendCode();
-                    this.resendInitCounter();
-                  }}>
-                  <Text style={{color: '#fff'}}>
-                    {this.state.resendResetCodeCounter}
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    alignSelf: 'center',
-                    backgroundColor: Color.primary,
-
-                    paddingVertical: 10,
-                    paddingHorizontal: 20,
-                    marginTop: 20,
-                    borderRadius: 15,
+                  containerStyle={{
+                    padding: 10,
+                    flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
                   }}
-                  onPress={() => {
-                    if (this.props.otp && this.props.otp.length > 4) {
-                      this.setState({IsLoading: true});
-                      this.props.checkOTP();
-                      setTimeout(() => {
-                        this.setState({IsLoading: false});
-                      }, 2000);
+                  editable={true}
+                  cellStyle={{backgroundColor: '#fff', color: '#000'}}
+                  tintColor="#FB6C6A"
+                  offTintColor="#fff"
+                  onSubmitEditing={() => {
+                    if (otp && otp.length > 4) {
+                      checkOTP();
                     } else {
-                      this.props.toast(Languages.EnterFullOTP);
-                      //   toast(Languages.EnterFullOTP);
+                      toast(Languages.EnterFullOTP);
                     }
-                  }}>
-                  {this.state.IsLoading ? (
-                    <ActivityIndicator color={'#fff'} size={25} />
-                  ) : (
-                    <Text style={{fontFamily: 'Cairo-Bold', color: '#fff'}}>
-                      {Languages.Verify}
-                    </Text>
-                  )}
-                </TouchableOpacity>
-              </View>
+                  }}
+                  otpLength={5}
+                  autoFocus={true}
+                />
+              </Pressable>
+            )}
+
+            <View
+              style={{
+                flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
+                alignItems: 'center',
+                justifyContent: 'space-around',
+              }}>
+              <TouchableOpacity
+                disabled={disabledResetCode}
+                style={{
+                  alignSelf: 'center',
+                  backgroundColor: disabledResetCode ? 'gray' : Color.secondary,
+                  paddingVertical: 10,
+                  paddingHorizontal: 20,
+                  marginTop: 20,
+                  borderRadius: 15,
+                }}
+                onPress={() => {
+                  onChange('');
+                  resendCode();
+                  resendInitCounter();
+                }}>
+                <Text style={{color: '#fff'}}>{resendResetCodeCounter}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  alignSelf: 'center',
+                  backgroundColor: Color.primary,
+                  paddingVertical: 10,
+                  paddingHorizontal: 20,
+                  marginTop: 20,
+                  borderRadius: 15,
+                }}
+                onPress={() => {
+                  if (otp && otp.length > 4) {
+                    setIsLoading(true);
+                    checkOTP();
+                    setTimeout(() => {
+                      setIsLoading(false);
+                    }, 2000);
+                  } else {
+                    toast(Languages.EnterFullOTP);
+                  }
+                }}>
+                {isLoading ? (
+                  <ActivityIndicator color={'#fff'} size={25} />
+                ) : (
+                  <Text style={{fontFamily: 'Cairo-Bold', color: '#fff'}}>
+                    {Languages.Verify}
+                  </Text>
+                )}
+              </TouchableOpacity>
             </View>
           </View>
-        </KeyboardAvoidingView>
-      </Modal>
-    );
-  }
-}
+        </View>
+      </KeyboardAvoidingView>
+    </Modal>
+  );
+};
 
 const styles = StyleSheet.create({
   bottomBox: {

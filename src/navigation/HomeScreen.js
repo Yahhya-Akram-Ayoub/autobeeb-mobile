@@ -370,7 +370,6 @@ class HomeScreen extends Component {
         <ImagePopUp
           Banner={this.state.BannerImage}
           isOpen={this.state.openImagePopUp}
-          navigation={this.props.navigation}
         />
 
         <NewHeader

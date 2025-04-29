@@ -18,13 +18,14 @@ class ListingUserName extends Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.usernameRef = React.createRef();
   }
 
   componentDidMount() {
     this.props.FindStep();
     setTimeout(() => {
       this.setState({done: true}); // this is only to reinitalize the state so the phone input stays green even after leaving the page
-      this.refs.username && this.refs.username.focus();
+      this.usernameRef?.focus();
     }, 500);
   }
 
@@ -53,7 +54,7 @@ class ListingUserName extends Component {
                 marginHorizontal: 20,
               }}>
               <TextInput
-                ref="username"
+                ref={this.usernameRef}
                 style={{
                   height: 40,
                   marginTop: 20,

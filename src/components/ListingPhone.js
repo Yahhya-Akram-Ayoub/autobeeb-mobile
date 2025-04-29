@@ -27,6 +27,8 @@ class ListingPhone extends Component {
       cca2: null,
       countryPickerShown: false,
     };
+
+    this.phoneRef = React.createRef();
   }
 
   componentDidMount() {
@@ -41,7 +43,7 @@ class ListingPhone extends Component {
 
     setTimeout(() => {
       this.setState({done: true}); // this is only to reinitalize the state so the phone input stays green even after leaving the page
-      this.refs.phone && this.refs.phone.focus();
+      this.phoneRef?.focus();
     }, 500);
   }
 
@@ -50,7 +52,7 @@ class ListingPhone extends Component {
   }
 
   selectCountry(country) {
-    this.refs.phone.selectCountry(country.cca2.toLowerCase());
+    this.phoneRef.selectCountry(country.cca2.toLowerCase());
     this.setState({cca2: country.cca2});
   }
 
@@ -77,19 +79,15 @@ class ListingPhone extends Component {
                 style={{
                   borderWidth: 1,
                   borderRadius: 5,
-                  borderColor:
-                    this.refs.phone && this.refs.phone.isValidNumber()
-                      ? 'green'
-                      : '#eee',
-                  backgroundColor:
-                    this.refs.phone && this.refs.phone.isValidNumber()
-                      ? 'rgba(0,255,0,0.2)'
-                      : '#fff',
+                  borderColor: this.phoneRef.isValidNumber() ? 'green' : '#eee',
+                  backgroundColor: this.phoneRef.isValidNumber()
+                    ? 'rgba(0,255,0,0.2)'
+                    : '#fff',
                   paddingHorizontal: 5,
                   marginHorizontal: 20,
                 }}>
                 <PhoneInput
-                  ref="phone"
+                  ref={this.phoneRef}
                   initialCountry={this.state.cca2.toLowerCase()}
                   onPressFlag={data => {
                     if (
@@ -127,23 +125,23 @@ class ListingPhone extends Component {
                     if (
                       this.props.user &&
                       this.props.user.OTPConfirmed &&
-                      this.refs.phone.getISOCode() !=
+                      this.phoneRef.getISOCode() !=
                         this.props.user.ISOCode.toLowerCase()
                     ) {
-                      this.refs.phone.selectCountry(
+                      this.phoneRef.selectCountry(
                         this.props.user.ISOCode.toLowerCase(),
                       );
                     } else if (
                       //          !this.props.user &&
-                      this.refs.phone.getISOCode() !=
+                      this.phoneRef.getISOCode() !=
                       this.state.cca2.toLowerCase()
                     ) {
-                      this.refs.phone.selectCountry(
+                      this.phoneRef.selectCountry(
                         this.state.cca2.toLowerCase(),
                       );
                       Keyboard.dismiss();
                       setTimeout(() => {
-                        this.refs.phone.focus();
+                        this.phoneRef.focus();
                       }, 200);
                     } else {
                       this.props.onChangePhoneNumber(phone);
@@ -154,10 +152,9 @@ class ListingPhone extends Component {
             )}
             <TouchableOpacity
               style={{
-                backgroundColor:
-                  this.refs.phone && this.refs.phone.isValidNumber()
-                    ? 'green'
-                    : Color.secondary,
+                backgroundColor: this.phoneRef.isValidNumber()
+                  ? 'green'
+                  : Color.secondary,
                 alignSelf: 'center',
                 width: Dimensions.get('screen').width * 0.4,
                 paddingVertical: 10,
@@ -171,47 +168,44 @@ class ListingPhone extends Component {
                     this.props.CountriesData &&
                     this.props.CountriesData.find(
                       x =>
-                        x.ISOCode.toLowerCase() == this.refs.phone.getISOCode(),
+                        x.ISOCode.toLowerCase() == this.phoneRef.getISOCode(),
                     )
                       ? this.props.CountriesData.find(
                           x =>
                             x.ISOCode.toLowerCase() ==
-                            this.refs.phone.getISOCode(),
+                            this.phoneRef.getISOCode(),
                         )
                       : null;
 
                   if (selectedCountry.EmailRegister) {
-                    if (this.refs.phone && this.refs.phone.isValidNumber()) {
+                    if (this.phoneRef.isValidNumber()) {
                       if (this.props.isEditing) {
                         this.props.onEditingDone(
-                          this.refs.phone.getValue(),
-                          this.refs.phone.getISOCode(),
+                          this.phoneRef.getValue(),
+                          this.phoneRef.getISOCode(),
                           true,
                         );
                       } else {
                         this.props.onDone(
-                          this.refs.phone.getValue(),
-                          this.refs.phone.getISOCode(),
+                          this.phoneRef.getValue(),
+                          this.phoneRef.getISOCode(),
                         );
                       }
                     } else {
                       toast(Languages.InvalidNumber);
                     }
                   } else {
-                    if (
-                      this.refs.phone &&
-                      this.refs.phone.getValue().length > 9
-                    ) {
+                    if (this.phoneRef.getValue().length > 9) {
                       if (this.props.isEditing) {
                         this.props.onEditingDone(
-                          this.refs.phone.getValue(),
-                          this.refs.phone.getISOCode(),
+                          this.phoneRef.getValue(),
+                          this.phoneRef.getISOCode(),
                           false,
                         );
                       } else {
                         this.props.onDone(
-                          this.refs.phone.getValue(),
-                          this.refs.phone.getISOCode(),
+                          this.phoneRef.getValue(),
+                          this.phoneRef.getISOCode(),
                         );
                       }
                     } else {

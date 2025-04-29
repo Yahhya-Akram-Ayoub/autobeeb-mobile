@@ -236,7 +236,7 @@ class DealerProfileScreen extends Component {
           global.ViewingCurrency = Currency;
           this.setState({currency: Currency, page: 1});
           //   this.ResetFilters();
-          this.refs.CurrencyModal.close();
+          this.CurrencyModal.close();
 
           KS.UserListings({
             langid: Languages.langID,
@@ -500,7 +500,7 @@ class DealerProfileScreen extends Component {
         contentContainerStyle={{flex: 1}}
         style={{backgroundColor: '#eee'}}>
         <Modal //currency modal
-          ref="CurrencyModal"
+          ref={instance => (this.CurrencyModal = instance)}
           //  isOpen={true}
           style={styles.sellTypeModal}
           position="center"
@@ -528,7 +528,7 @@ class DealerProfileScreen extends Component {
                 activeOpacity={0.9}
                 style={styles.row}
                 onPress={() => {
-                  this.refs.CurrencyModal.close();
+                  this.CurrencyModal.close();
                 }}>
                 <Text
                   style={{
@@ -559,7 +559,7 @@ class DealerProfileScreen extends Component {
               elevation: 5,
             }}
             onPress={data => {
-              this.refs.CurrencyModal.open();
+              this.CurrencyModal.open();
             }}>
             <Text
               style={{

@@ -18,6 +18,7 @@ class ListingMileage extends Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.mileageRef = React.createRef();
   }
 
   componentDidMount() {
@@ -25,7 +26,7 @@ class ListingMileage extends Component {
 
     setTimeout(() => {
       this.setState({done: true}); // this is only to reinitalize the state so the phone input stays green even after leaving the page
-      this.refs.mileage && this.refs.mileage.focus();
+      this.mileageRef?.focus();
     }, 500);
   }
 
@@ -49,7 +50,7 @@ class ListingMileage extends Component {
                 marginHorizontal: 20,
               }}>
               <TextInput
-                ref="mileage"
+                ref={this.mileageRef}
                 style={{
                   fontFamily: 'Cairo-Regular',
                   height: 40,

@@ -57,7 +57,10 @@ class LoginScreen extends Component {
       modalVisible: false,
       cca2: null,
       hidePhone: this.props.route.params?.skippable ?? false,
+      openEmailModal: false,
     };
+
+    this.scrollviewRef = React.createRef();
   }
 
   // resetData = {
@@ -274,7 +277,7 @@ class LoginScreen extends Component {
       paddingBottom: Platform.select({ios: 250, android: 100}),
     });
     setTimeout(() => {
-      this.refs.scrollview && this.refs.scrollview.scrollToEnd();
+      this.scrollviewRef?.scrollToEnd();
     }, 200);
   }
 
@@ -296,7 +299,7 @@ class LoginScreen extends Component {
     return (
       <View style={{flex: 1}}>
         <Modal
-          ref="emailModal"
+          isOpen={this.state.openEmailModal}
           style={[styles.modelModal]}
           position="center"
           entry="bottom"
@@ -362,7 +365,7 @@ class LoginScreen extends Component {
                   }}>
                   <TouchableOpacity
                     onPress={() => {
-                      this.refs.emailModal.close();
+                      this.setState({openEmailModal: true});
                     }}
                     style={{
                       backgroundColor: 'red',
@@ -422,7 +425,7 @@ class LoginScreen extends Component {
         </Modal>
 
         <ScrollView
-          ref="scrollview"
+          ref={this.scrollviewRef}
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={{
             flex: 1,
@@ -726,7 +729,6 @@ class LoginScreen extends Component {
               </View>
               {this.state.emailShown && (
                 <TextInput
-                  ref="email"
                   style={{
                     height: 40,
                     fontFamily: 'Cairo-Regular',
@@ -1112,7 +1114,6 @@ const styles = StyleSheet.create({
   fontStyle: {
     fontSize: 18,
     color: '#383737',
-
   },
   socialButton: {
     width: '97%',

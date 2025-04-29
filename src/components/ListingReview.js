@@ -61,6 +61,10 @@ class ListingReview extends Component {
       mainImageFromGallery: false, // when editing we want to know if the user uploaded any new pics
       hideEmail: false,
     };
+
+    this.imagesEditListRef = React.createRef();
+    this.imagesListRef = React.createRef();
+    this.scrollviewRef = React.createRef();
   }
 
   componentWillMount() {
@@ -98,7 +102,7 @@ class ListingReview extends Component {
   _keyboardDidShow() {
     if (Platform.OS == 'ios') {
       setTimeout(() => {
-        this.refs.scrollview.scrollToEnd();
+        this.scrollviewRef.scrollToEnd();
       }, 100);
     }
     this.setState({paddingBottom: Platform.select({ios: 0, android: 50})});
@@ -125,7 +129,7 @@ class ListingReview extends Component {
       });
     }
     setTimeout(() => {
-      this.refs.scrollview && this.refs.scrollview.scrollToEnd();
+      this.scrollviewRef?.scrollToEnd();
     }, 500);
 
     let _CountriesData = this.props.CountriesData;
@@ -390,10 +394,8 @@ class ListingReview extends Component {
     return (
       <TouchableOpacity
         onPress={() => {
-          if (this.refs.imagesList) {
-            //   this.refs.imagesList.scrollTo({ x: 0, y: 0, animated: true });
-
-            this.refs.imagesList.scrollToOffset({
+          if (this.imagesListRef) {
+            this.imagesListRef.scrollToOffset({
               animated: true,
               offset: 0,
             });
@@ -460,16 +462,12 @@ class ListingReview extends Component {
     return (
       <TouchableOpacity
         onPress={() => {
-          if (this.refs.imagesEditList) {
-            //   this.refs.imagesList.scrollTo({ x: 0, y: 0, animated: true });
-            this.refs.imagesEditList.scrollToOffset({
+          if (this.imagesEditListRef) {
+            this.imagesEditListRef.scrollToOffset({
               animated: true,
               offset: 0,
             });
           }
-          // var oldmain = this.state.images[0];
-          //    this.state.images[0] = this.state.images[index];
-          //    this.state.images[index] = oldmain;
 
           let img = this.state.imagesEdit[index];
           this.state.imagesEdit.splice(index, 1);
@@ -578,11 +576,10 @@ class ListingReview extends Component {
             {
               flexDirection: 'row',
               alignItems: 'center',
-              justifyContent : 'space-between'
+              justifyContent: 'space-between',
             },
           ]}>
           <TextInput
-            ref="priceInput"
             placeholderTextColor={'#38373770'}
             style={[
               {
@@ -591,8 +588,8 @@ class ListingReview extends Component {
                 fontFamily: 'Cairo-Regular',
                 textAlign: I18nManager.isRTL ? 'right' : 'left',
                 color: '#383737',
-                width : 'auto',
-                minWidth : '25%',
+                width: 'auto',
+                minWidth: '25%',
               },
             ]}
             placeholder={Languages.EnterPrice}
@@ -792,7 +789,6 @@ class ListingReview extends Component {
       >
         <Text style={{textAlign: 'left'}}>{Languages.Description}</Text>
         <TextInput
-          ref="description"
           nestedScrollEnabled
           contextMenuHidden={false}
           style={{
@@ -816,8 +812,7 @@ class ListingReview extends Component {
           placeholder={Languages.EnterDescription}
           placeholderTextColor={'#383737'}
           onChangeText={text => {
-            this.refs.scrollview &&
-              this.refs.scrollview.scrollToEnd({animated: true});
+            this.scrollviewRef?.scrollToEnd({animated: true});
             this.props.onChangeDesc(text);
           }}
           value={this.props.description}
@@ -854,7 +849,7 @@ class ListingReview extends Component {
             }}>
             {this.state.editListing && this.state.imagesEdit && (
               <FlatList
-                ref="imagesEditList"
+                ref={this.imagesEditListRef}
                 keyExtractor={(item, index) => index.toString()}
                 extraData={this.state}
                 data={this.state.imagesEdit}
@@ -972,7 +967,7 @@ class ListingReview extends Component {
 
           {this.state.images && (
             <FlatList
-              ref="imagesList"
+              ref={this.imagesListRef}
               keyExtractor={(item, index) => index.toString()}
               extraData={this.state.images}
               data={this.state.images}
@@ -1291,7 +1286,7 @@ class ListingReview extends Component {
             <ScrollView
               nestedScrollEnabled
               keyboardShouldPersistTaps="never"
-              ref="scrollview"
+              ref={this.scrollviewRef}
               style={{backgroundColor: '#eee'}}
               contentContainerStyle={{
                 // flex: 1,
@@ -1368,7 +1363,7 @@ class ListingReview extends Component {
                       textAlign: 'center',
                       fontSize: 12,
                       paddingHorizontal: 30,
-                       color: '#383737'
+                      color: '#383737',
                     }}>
                     {Languages.ByPostingAd}
                     <Text style={{color: Color.primary, fontSize: 12}}>

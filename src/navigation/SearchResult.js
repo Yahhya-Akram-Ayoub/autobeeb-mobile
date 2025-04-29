@@ -64,7 +64,7 @@ class SearchResult extends Component {
       renderType: 1,
       PageNum: 1,
       isLoading: true,
-
+      openCurrencyModal: false,
       currency: global.ViewingCurrency
         ? global.ViewingCurrency
         : this.props.ViewingCurrency || {
@@ -90,7 +90,7 @@ class SearchResult extends Component {
     this.filterHieght = new Animated.Value(FILTER_HEADER_HEIGHT);
     this.widthToFull = new Animated.Value(SCREEN_WIDTH / 2);
     this.headerSpace = new Animated.Value(
-      Constants.listingsHeaderHiegth + FILTER_HEADER_HEIGHT
+      Constants.listingsHeaderHiegth + FILTER_HEADER_HEIGHT,
     ); // initially visible
     this.lastScrollY = 0; // Keep this as a number!
   }
@@ -171,7 +171,7 @@ class SearchResult extends Component {
         this.countListingsViews(
           data.Listings.map(x => x.ID),
           this.state.PageNum,
-          data.Pages
+          data.Pages,
         );
 
         this.setState({
@@ -200,7 +200,7 @@ class SearchResult extends Component {
             this.state.Banners?.map(item => {
               KS.BannerViewed(item.ID);
             });
-          }
+          },
         );
       }
     });
@@ -457,9 +457,11 @@ class SearchResult extends Component {
         key={Currency.ID}
         onPress={() => {
           global.ViewingCurrency = Currency;
-          this.setState({currency: Currency, PageNum: 1});
-          //   this.ResetFilters();
-          this.refs.CurrencyModal.close();
+          this.setState({
+            currency: Currency,
+            PageNum: 1,
+            openCurrencyModal: false,
+          });
 
           KS.FreeSearch({
             searchFor: this.props.route.params?.query ?? '',
@@ -492,7 +494,7 @@ class SearchResult extends Component {
               this.countListingsViews(
                 data.Listings.map(x => x.ID),
                 1,
-                data.Pages
+                data.Pages,
               );
 
               this.setState({
@@ -559,10 +561,9 @@ class SearchResult extends Component {
               PageNum: 1,
               footerLoading: false,
               isLoading: true,
+              openSellTypeModal: false,
             },
             () => {
-              this.refs.SellTypeModal.close();
-
               KS.FreeSearch({
                 searchFor: this.props.route.params?.query ?? '',
                 makeID: this.props.route.params?.MakeID ?? '',
@@ -579,7 +580,7 @@ class SearchResult extends Component {
                   this.countListingsViews(
                     data.Listings.map(x => x.ID),
                     this.state.PageNum,
-                    data.Pages
+                    data.Pages,
                   );
 
                   this.setState({
@@ -593,7 +594,7 @@ class SearchResult extends Component {
                   this.similarAdsFlag = false;
                 }
               });
-            }
+            },
           );
         }}>
         <View
@@ -641,18 +642,21 @@ class SearchResult extends Component {
         activeOpacity={0.9}
         style={styles.row}
         onPress={() => {
-          this.setState({ListingType: MainType}, () => {
-            if (this.state.goToFilter) {
-              this.refs.MainTypesModal.close();
-              this.props.navigation.navigate('SellTypeScreen', {
-                ListingType: MainType,
-                cca2: this.props.ViewingCountry?.cca2 || 'us',
-              });
-            } else {
-              this.refs.MainTypesModal.close();
-              this.refs.SellTypeModal.open();
-            }
-          });
+          this.setState(
+            {openMainTypesModal: false, ListingType: MainType},
+            () => {
+              if (this.state.goToFilter) {
+                this.props.navigation.navigate('SellTypeScreen', {
+                  ListingType: MainType,
+                  cca2: this.props.ViewingCountry?.cca2 || 'us',
+                });
+              } else {
+                this.setState({
+                  openSellTypeModal: true,
+                });
+              }
+            },
+          );
         }}>
         <View
           style={{
@@ -744,7 +748,7 @@ class SearchResult extends Component {
                     this.countListingsViews(
                       data.Listings.map(x => x.ID),
                       this.state.PageNum,
-                      data.Pages
+                      data.Pages,
                     );
 
                     this.setState({
@@ -758,7 +762,7 @@ class SearchResult extends Component {
                     this.similarAdsFlag = false;
                   }
                 });
-              }
+              },
             );
           });
         }}>
@@ -806,7 +810,12 @@ class SearchResult extends Component {
         style={styles.row}
         onPress={() => {
           this.setState(
-            {sortOption: SortOption, PageNum: 1, isLoading: true},
+            {
+              sortOption: SortOption,
+              PageNum: 1,
+              isLoading: true,
+              openSortModal: false,
+            },
             () => {
               KS.FreeSearch({
                 searchFor: this.props.route.params?.query ?? '',
@@ -832,7 +841,7 @@ class SearchResult extends Component {
                   this.countListingsViews(
                     data.Listings.map(x => x.ID),
                     this.state.PageNum,
-                    data.Pages
+                    data.Pages,
                   );
 
                   this.setState({
@@ -846,10 +855,8 @@ class SearchResult extends Component {
                   this.similarAdsFlag = false;
                 }
               });
-            }
+            },
           );
-
-          this.refs.SortModal.close();
         }}>
         <View
           style={{
@@ -881,8 +888,7 @@ class SearchResult extends Component {
   }
 
   openMainTypesModal(fromFilter) {
-    this.setState({goToFilter: fromFilter});
-    this.refs.MainTypesModal.open(); // to navigate to sell tpyes
+    this.setState({goToFilter: fromFilter, openMainTypesModal: true});
   }
 
   Filters() {
@@ -904,7 +910,7 @@ class SearchResult extends Component {
                   justifyContent: 'space-between',
                 }}
                 onPress={() => {
-                  this.refs.CurrencyModal.open();
+                  this.setState({openCurrencyModal: true});
                 }}>
                 <Text
                   numberOfLines={1}
@@ -952,7 +958,7 @@ class SearchResult extends Component {
                 </Pressable>
                 <Pressable
                   onPress={() => {
-                    this.refs.SortModal.open();
+                    this.setState({openSortModal: true});
                   }}
                   style={styles.filterIcon}>
                   <SortIcon />
@@ -1073,7 +1079,7 @@ class SearchResult extends Component {
               this.countListingsViews(
                 data.Listings.map(x => x.ID),
                 this.state.PageNum,
-                data.Pages
+                data.Pages,
               );
 
               let concattedListings = this.state.Listings;
@@ -1109,7 +1115,7 @@ class SearchResult extends Component {
                   setTimeout(() => {
                     this.setState({footerLoading: false});
                   }, 1000);
-                }
+                },
               );
             }
           });
@@ -1350,7 +1356,7 @@ class SearchResult extends Component {
                       this.countListingsViews(
                         data.Listings.map(x => x.ID),
                         1,
-                        data.Pages
+                        data.Pages,
                       );
 
                       this.setState({
@@ -1364,7 +1370,7 @@ class SearchResult extends Component {
                       this.similarAdsFlag = false;
                     }
                   });
-                }
+                },
               );
             }}
           />
@@ -1387,7 +1393,6 @@ class SearchResult extends Component {
           />
         ) : (
           <FlatList
-            ref="ListingsFlatlist"
             keyExtractor={(item, index) => index.toString()}
             numColumns={this.state.renderType == 1 ? 2 : 1}
             contentContainerStyle={styles.LoadingList}
@@ -1402,7 +1407,7 @@ class SearchResult extends Component {
                 {[
                   ...this.state.Listings.filter(
                     x =>
-                      x.IsSpecial && x.CountryID == `${this.state.Country?.ID}`
+                      x.IsSpecial && x.CountryID == `${this.state.Country?.ID}`,
                   ),
                 ].length == 0 &&
                   !this.state.NoRelatedOffers &&
@@ -1473,22 +1478,18 @@ class SearchResult extends Component {
           <BottomNavigationBar />
         </Animated.View>
 
-        <Modal //currency modal
-          ref="CurrencyModal"
-          //  isOpen={true}
+        <Modal
+          isOpen={this.state.openCurrencyModal}
           style={[styles.sellTypeModal]}
           position="center"
           backButtonClose={true}
           entry="bottom"
           swipeToClose={true}
-          // backdropPressToClose
           coverscreen={false}
           backdropOpacity={0.5}>
           <View
             style={{
               height: Dimensions.get('screen').height * 0.7,
-              // justifyContent: 'center',
-              // alignItems:"center",
               alignSelf: 'center',
               justifyContent: 'center',
               width: Dimensions.get('screen').width * 0.8,
@@ -1497,13 +1498,13 @@ class SearchResult extends Component {
               style={{backgroundColor: 'white', padding: 5, borderRadius: 10}}>
               {this.state.PrimaryCurrencies &&
                 this.state.PrimaryCurrencies.map(type =>
-                  this.renderCurrencyRow(type)
+                  this.renderCurrencyRow(type),
                 )}
               <TouchableOpacity
                 activeOpacity={0.9}
                 style={styles.row}
                 onPress={() => {
-                  this.refs.CurrencyModal.close();
+                  this.setState({openCurrencyModal: false});
                 }}>
                 <Text
                   style={{
@@ -1520,8 +1521,7 @@ class SearchResult extends Component {
         </Modal>
 
         <Modal //sort modal
-          ref="SortModal"
-          //  isOpen={true}
+          isOpen={this.state.openSortModal}
           style={[styles.sellTypeModal]}
           position="center"
           backButtonClose={true}
@@ -1547,7 +1547,7 @@ class SearchResult extends Component {
                 activeOpacity={0.9}
                 style={styles.row}
                 onPress={() => {
-                  this.refs.SortModal.close();
+                  this.setState({openSortModal: false});
                 }}>
                 <Text
                   style={{
@@ -1563,9 +1563,8 @@ class SearchResult extends Component {
           </View>
         </Modal>
 
-        <Modal //selltype modal
-          ref="SellTypeModal"
-          //  isOpen={true}
+        <Modal
+          isOpen={this.state.openSellTypeModal}
           style={[styles.sellTypeModal]}
           position="center"
           backButtonClose={true}
@@ -1590,7 +1589,7 @@ class SearchResult extends Component {
                 activeOpacity={0.9}
                 style={styles.row}
                 onPress={() => {
-                  this.refs.SellTypeModal.close();
+                  this.setState({openSellTypeModal: false});
                 }}>
                 <Text
                   style={{
@@ -1607,8 +1606,7 @@ class SearchResult extends Component {
         </Modal>
 
         <Modal //maintypes modal
-          ref="MainTypesModal"
-          //  isOpen={true}
+          isOpen={this.state.openMainTypesModal}
           style={[styles.sellTypeModal]}
           position="center"
           backButtonClose={true}
@@ -1637,13 +1635,13 @@ class SearchResult extends Component {
                 {Languages.SelectDesiredSection}
               </Text>
               {this.props.homePageData.MainTypes.map(type =>
-                this.renderMainTypesRow(type)
+                this.renderMainTypesRow(type),
               )}
               <TouchableOpacity
                 activeOpacity={0.9}
                 style={styles.row}
                 onPress={() => {
-                  this.refs.MainTypesModal.close();
+                  this.setState({openMainTypesModal: false});
                 }}>
                 <Text
                   style={{

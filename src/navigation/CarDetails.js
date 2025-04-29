@@ -206,7 +206,7 @@ class CarDetails extends Component {
           if (!!_item && _item.includes(this.state.Listing?.ID ?? '')) {
             AsyncStorage.setItem(
               'ItemNeedSharePoup',
-              _item.replace(`${this.state.Listing?.ID},`, '')
+              _item.replace(`${this.state.Listing?.ID},`, ''),
             );
             this.setState({IsSharePopup: true});
           }
@@ -254,7 +254,7 @@ class CarDetails extends Component {
   componentDidMount() {
     this.backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
-      this.handleBackPress
+      this.handleBackPress,
     );
     const item = this.props?.route?.params?.item;
 
@@ -280,7 +280,7 @@ class CarDetails extends Component {
                   if (!!this.props?.route?.params?.showFeatures == true) {
                     this.setState({isFeaturesModalOpen: true});
                   }
-                }
+                },
               );
             } else {
               if (!!this.props?.route?.params?.isNewUser == true) {
@@ -356,7 +356,7 @@ class CarDetails extends Component {
               },
               () => {
                 KS.BannerViewed(this.state.AutobeebBanner.ID);
-              }
+              },
             );
           }
         });
@@ -365,11 +365,11 @@ class CarDetails extends Component {
 
     this.keyboardWillShowSub = Keyboard.addListener(
       Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
-      this._keyboardDidShow
+      this._keyboardDidShow,
     );
     this.keyboardWillHideSub = Keyboard.addListener(
       Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
-      this._keyboardDidHide
+      this._keyboardDidHide,
     );
   }
 
@@ -400,10 +400,10 @@ class CarDetails extends Component {
                 let selectedCountry =
                   this.state.CountriesData &&
                   this.state.CountriesData.find(
-                    x => x.ISOCode.toLowerCase() == data.toLowerCase()
+                    x => x.ISOCode.toLowerCase() == data.toLowerCase(),
                   )
                     ? this.state.CountriesData.find(
-                        x => x.ISOCode.toLowerCase() == data.toLowerCase()
+                        x => x.ISOCode.toLowerCase() == data.toLowerCase(),
                       )
                     : null;
                 callback(selectedCountry.EmailRegister);
@@ -624,7 +624,7 @@ class CarDetails extends Component {
         this.state.Listing?.Images?.length -
         1 -
         Math.round(
-          event.nativeEvent.contentOffset.x / Dimensions.get('screen').width
+          event.nativeEvent.contentOffset.x / Dimensions.get('screen').width,
         );
 
       this.setState({imageIndex: Math.round(page) + 1});
@@ -1122,7 +1122,7 @@ class CarDetails extends Component {
           </LinearGradient>
 
           <Modal //the full view
-            ref="modalPhoto"
+            ref={instance => (this.modalPhoto = instance)}
             isOpen={this.state.modalPhotoOpen}
             swipeToClose={false}
             animationDuration={200}
@@ -1212,7 +1212,7 @@ class CarDetails extends Component {
       <View style={{flex: 1, backgroundColor: '#fff'}}>
         {this.state.firstLoad && (
           <Modal
-            ref="WarningPopup"
+            ref={instance => (this.WarningPopup = instance)}
             isOpen={this.state.firstLoad}
             style={[styles.modelModal]}
             position="center"
@@ -1292,7 +1292,7 @@ class CarDetails extends Component {
           }}
         />
         <Modal
-          ref="FeaturesModal"
+          ref={instance => (this.FeaturesModal = instance)}
           isOpen={this.state.isFeaturesModalOpen}
           //    onLayout={e => this.props.onLayout(e)}
           style={[styles.modelModal]}
@@ -1377,7 +1377,7 @@ class CarDetails extends Component {
                                 backgroundColor:
                                   this.state.selectedFeatures &&
                                   this.state.selectedFeatures.filter(
-                                    model => model.ID == item.ID
+                                    model => model.ID == item.ID,
                                   ).length > 0
                                     ? Color.primary
                                     : '#fff',
@@ -1387,11 +1387,11 @@ class CarDetails extends Component {
                               if (
                                 this.state.selectedFeatures &&
                                 this.state.selectedFeatures.filter(
-                                  model => model.ID == item.ID
+                                  model => model.ID == item.ID,
                                 ).length > 0 //model is already selected
                               ) {
                                 let models = this.state.selectedFeatures.filter(
-                                  model => model.ID != item.ID //remove model
+                                  model => model.ID != item.ID, //remove model
                                 );
 
                                 this.setState({
@@ -1414,7 +1414,7 @@ class CarDetails extends Component {
                               tintColor={
                                 this.state.selectedFeatures &&
                                 this.state.selectedFeatures.filter(
-                                  model => model.ID == item.ID
+                                  model => model.ID == item.ID,
                                 ).length > 0
                                   ? '#FFF'
                                   : Color.secondary
@@ -1433,7 +1433,7 @@ class CarDetails extends Component {
                                 color:
                                   this.state.selectedFeatures &&
                                   this.state.selectedFeatures.filter(
-                                    model => model.ID == item.ID
+                                    model => model.ID == item.ID,
                                   ).length > 0
                                     ? '#FFF'
                                     : Color.secondary,
@@ -1467,7 +1467,7 @@ class CarDetails extends Component {
                             onPress={() => {
                               let SingleFeature =
                                 this.state.FeaturesDropDown.find(
-                                  x => x.ID == item.FeatureID
+                                  x => x.ID == item.FeatureID,
                                 );
                               SingleFeature.Value = item.ID; // this set the state of the item
 
@@ -1475,7 +1475,7 @@ class CarDetails extends Component {
                                 this.state.selectedDropdownFeatures;
                               if (
                                 selectedDropdownFeatures.filter(
-                                  x => x.ID == item.FeatureID
+                                  x => x.ID == item.FeatureID,
                                 ).length == 0
                               ) {
                                 //already selected value for this
@@ -1488,7 +1488,7 @@ class CarDetails extends Component {
                               var mapped = selectedDropdownFeatures.map(
                                 item => ({
                                   [item.ID]: item.Value,
-                                })
+                                }),
                               );
                               let newObj = Object.assign({}, ...mapped);
 
@@ -1504,7 +1504,7 @@ class CarDetails extends Component {
                                 marginLeft: 10,
                                 color:
                                   this.state.selectedDropdownFeatures.filter(
-                                    x => x.Value == item.ID
+                                    x => x.Value == item.ID,
                                   ).length > 0
                                     ? Color.primary
                                     : 'black',
@@ -1538,7 +1538,7 @@ class CarDetails extends Component {
             </ScrollView>
             {this.renderOkCancelButton(
               () => {
-                this.refs.FeaturesModal.close();
+                this.FeaturesModal.close();
               },
               () => {
                 this.setState({isFeaturesModalLoading: true}, () => {
@@ -1576,19 +1576,19 @@ class CarDetails extends Component {
                             toast(Languages.SomethingWentWrong);
                           }
                         });
-                        this.refs.FeaturesModal.close();
+                        this.FeaturesModal.close();
                       }
                     })
                     .finally(() => {
                       this.setState({isFeaturesModalLoading: false});
                     });
                 });
-              }
+              },
             )}
           </View>
         </Modal>
         <Modal
-          ref="SpecialPlansModal"
+          ref={instance => (this.SpecialPlansModal = instance)}
           isOpen={this.state.isSpecialPlansModal}
           style={[styles.modelModal]}
           position="center"
@@ -2083,7 +2083,7 @@ class CarDetails extends Component {
                         fontSize: 15,
                         fontWeight: '600',
                         color: this.sellTypes.find(
-                          val => val.ID == Listing.SellType
+                          val => val.ID == Listing.SellType,
                         ).backgroundColor,
                       }}>
                       {
@@ -2166,7 +2166,7 @@ class CarDetails extends Component {
                   <Text style={styles.sectionValue}>
                     {
                       this.offerCondition.find(
-                        val => val.ID == Listing.Condition
+                        val => val.ID == Listing.Condition,
                       ).Name
                     }
                   </Text>
@@ -2525,7 +2525,7 @@ class CarDetails extends Component {
                 ]}
                 onPress={() => {
                   if (this.props.userData) {
-                    this.refs.reportPopup.open();
+                    this.reportPopup.open();
                   } else {
                     Alert.alert('', Languages.YouNeedToLoginFirst, [
                       {
@@ -2611,7 +2611,7 @@ class CarDetails extends Component {
               </TouchableOpacity>
             </View>
             <Modal
-              ref="reportPopup"
+              ref={instance => (this.reportPopup = instance)}
               backButtonClose
               swipeToClose={false}
               animationDuration={350}
@@ -2647,7 +2647,7 @@ class CarDetails extends Component {
                       marginHorizontal: 10,
                       alignSelf: I18nManager.isRTL ? 'flex-start' : 'flex-end',
                     }}
-                    onPress={() => this.refs.reportPopup.close()}
+                    onPress={() => this.reportPopup.close()}
                   />
 
                   <Text
@@ -2694,7 +2694,7 @@ class CarDetails extends Component {
                           {d.icon(
                             reportData.typeId === d.type
                               ? Color.primary
-                              : '#555'
+                              : '#555',
                           )}
                           <Text
                             numberOfLines={2}
@@ -2772,7 +2772,7 @@ class CarDetails extends Component {
 
                           KS.ReportListing(reportData).then(data => {
                             if (data && data?.Success == 1) {
-                              this.refs.reportPopup.close();
+                              this.reportPopup.close();
                               Alert.alert('', Languages.ReportedSuccessfully);
                               reportData.typeId = '';
                               reportData.message = '';
@@ -2991,7 +2991,7 @@ class CarDetails extends Component {
                           }}>
                           {Languages.MemberSince +
                             Moment(this.state.Owner.RegistrationDate).format(
-                              'YYYY-MM-DD'
+                              'YYYY-MM-DD',
                             )}
                         </Text>
                       )}
@@ -3057,10 +3057,10 @@ class CarDetails extends Component {
                   liteMode
                   region={{
                     latitude: parseFloat(
-                      this.state.Dealer?.LatLng.split(',')[0]
+                      this.state.Dealer?.LatLng.split(',')[0],
                     ),
                     longitude: parseFloat(
-                      this.state.Dealer?.LatLng.split(',')[1]
+                      this.state.Dealer?.LatLng.split(',')[1],
                     ),
                     latitudeDelta: 0.002,
                     longitudeDelta: 0.002,
@@ -3068,10 +3068,10 @@ class CarDetails extends Component {
                   onPress={() => {
                     this.handleGetDirections({
                       latitude: parseFloat(
-                        this.state.Dealer?.LatLng.split(',')[0]
+                        this.state.Dealer?.LatLng.split(',')[0],
                       ),
                       longitude: parseFloat(
-                        this.state.Dealer?.LatLng.split(',')[1]
+                        this.state.Dealer?.LatLng.split(',')[1],
                       ),
                     });
                   }}
@@ -3086,19 +3086,19 @@ class CarDetails extends Component {
                       onPress={() => {
                         this.handleGetDirections({
                           latitude: parseFloat(
-                            this.state.Dealer?.LatLng.split(',')[0]
+                            this.state.Dealer?.LatLng.split(',')[0],
                           ),
                           longitude: parseFloat(
-                            this.state.Dealer?.LatLng.split(',')[1]
+                            this.state.Dealer?.LatLng.split(',')[1],
                           ),
                         });
                       }}
                       coordinate={{
                         latitude: parseFloat(
-                          this.state.Dealer?.LatLng.split(',')[0]
+                          this.state.Dealer?.LatLng.split(',')[0],
                         ),
                         longitude: parseFloat(
-                          this.state.Dealer?.LatLng.split(',')[1]
+                          this.state.Dealer?.LatLng.split(',')[1],
                         ),
                       }}
                     />
@@ -3130,7 +3130,7 @@ class CarDetails extends Component {
                     if (!!screen) {
                       this.props.navigation.navigate(
                         screen,
-                        !!params && params
+                        !!params && params,
                       );
                     } else {
                       Linking.openURL(url);
@@ -3383,7 +3383,7 @@ class CarDetails extends Component {
         )}
 
         <Modal
-          ref="modalPhoto"
+          ref={instance => (this.modalPhoto = instance)}
           isOpen={this.state.modalPhotoOpen}
           swipeToClose={false}
           animationDuration={200}
@@ -3451,6 +3451,7 @@ class CarDetails extends Component {
         </Modal>
 
         <Modal
+          ref={instance => (this.IsSharePopup = instance)}
           backButtonClose
           swipeToClose={true}
           animationDuration={350}
@@ -3464,7 +3465,6 @@ class CarDetails extends Component {
           }}
           useNativeDriver={true}
           coverScreen
-          ref="IsSharePopup"
           isOpen={this.state.IsSharePopup}>
           <View
             style={{
