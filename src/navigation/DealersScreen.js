@@ -44,7 +44,7 @@ class DealersScreen extends Component {
 
   xx = async () => {
     const da = await getAllCountries().find(
-      country => country.cca2 == props?.ViewingCountry.cca2
+      country => country.cca2 == props?.ViewingCountry.cca2,
     );
     this.setState({userCountryData: da});
   };
@@ -102,11 +102,11 @@ class DealersScreen extends Component {
               if (!!this.props.route.params?.ListingType) {
                 this.setState({
                   selectedCompetence: this.state.Competences.find(
-                    item => item.ID == this.props.route.params?.ListingType?.ID
+                    item => item.ID == this.props.route.params?.ListingType?.ID,
                   ),
                 });
               }
-            }
+            },
           );
         }
       });
@@ -125,7 +125,7 @@ class DealersScreen extends Component {
               this.state.Banners?.map(item => {
                 KS.BannerViewed(item.ID);
               });
-            }
+            },
           );
         }
       });
@@ -142,7 +142,7 @@ class DealersScreen extends Component {
             let selectedClassification = data.Classifications.find(
               classification =>
                 classification.ID ==
-                (this.props.route.params?.Classification ?? 2)
+                (this.props.route.params?.Classification ?? 2),
             );
             this.setState({selectedClassification});
           }
@@ -203,7 +203,7 @@ class DealersScreen extends Component {
           onPress={async () => {
             let url = item.BannerDetails.Link;
             if (!url) return;
-            
+
             KS.BannerClick({
               bannerID: item.BannerDetails.ID,
             });
@@ -398,7 +398,7 @@ class DealersScreen extends Component {
           !this.state.ClassificationsLoading && (
             <View style={{flexDirection: 'row'}}>
               <SectionedMultiSelect
-                ref="CompetenceMultiSelect"
+                ref={ins => (this.CompetenceMultiSelect = ins)}
                 selectedText={Languages.Selected}
                 items={this.state.Competences}
                 single
@@ -482,7 +482,7 @@ class DealersScreen extends Component {
                           backgroundColor: Color.secondary,
                         }}
                         onPress={() => {
-                          this.refs.CompetenceMultiSelect._submitSelection();
+                          this.CompetenceMultiSelect._submitSelection();
                         }}>
                         <Text
                           style={{
@@ -499,7 +499,7 @@ class DealersScreen extends Component {
                 }}
               />
               <SectionedMultiSelect
-                ref="ClassificationMultiSelect"
+                ref={ins => (this.ClassificationMultiSelect = ins)}
                 items={this.state.Classifications}
                 single
                 selectedText={Languages.Selected}
@@ -611,7 +611,7 @@ class DealersScreen extends Component {
                           backgroundColor: Color.secondary,
                         }}
                         onPress={() => {
-                          this.refs.ClassificationMultiSelect._submitSelection();
+                          this.ClassificationMultiSelect._submitSelection();
                         }}>
                         <Text
                           style={{
@@ -638,7 +638,7 @@ class DealersScreen extends Component {
                   borderRightColor: Color.secondary,
                 }}
                 onPress={() => {
-                  this.refs.ClassificationMultiSelect._toggleSelector();
+                  this.ClassificationMultiSelect._toggleSelector();
                 }}>
                 <Text
                   style={{
@@ -670,7 +670,7 @@ class DealersScreen extends Component {
                   borderRightColor: Color.secondary,
                 }}
                 onPress={() => {
-                  this.refs.CompetenceMultiSelect._toggleSelector();
+                  this.CompetenceMultiSelect._toggleSelector();
                 }}>
                 {false && (
                   <IconFa
@@ -713,7 +713,7 @@ class DealersScreen extends Component {
               !this.props.user?.IsDealer &&
               this.props.user?.MemberOf &&
               this.props.user?.MemberOf.filter(
-                x => x.ID == '33333333-3333-3333-3333-333333333333'
+                x => x.ID == '33333333-3333-3333-3333-333333333333',
               ).length > 0) ? (
               <></>
             ) : (
@@ -738,7 +738,7 @@ class DealersScreen extends Component {
                       !this.props.user.IsDealer &&
                       this.props.user.MemberOf &&
                       this.props.user.MemberOf.filter(
-                        x => x.ID == '33333333-3333-3333-3333-333333333333'
+                        x => x.ID == '33333333-3333-3333-3333-333333333333',
                       ).length == 0,
                   });
                 }}>
