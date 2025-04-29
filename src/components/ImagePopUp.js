@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Dimensions,
@@ -8,129 +8,122 @@ import {
   Image,
   Linking,
 } from 'react-native';
-
 import {Color, ExtractScreenObjFromUrl} from '../common';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
 import Modal from 'react-native-modalbox';
 import KS from '../services/KSAPI';
-class ImagePopUp extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoading: true,
-    };
-  }
+import {useNavigation} from '@react-navigation/native';
 
-  open() {
-    this.refs?.ImagePopUp.open();
-  }
-  close() {
-    this.refs?.ImagePopUp.close();
-  }
-  componentDidMount() {
-    if (!!this.props.Banner?.ID) {
-      KS.BannerViewed(this.props.Banner?.ID);
+
+const ImagePopUp = ({isOpen, onOpened, onClosed, Banner}) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [Open, setOpen] = useState(false);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    setOpen(isOpen);
+
+    if (!!Banner?.ID) {
+      KS.BannerViewed(Banner?.ID);
     }
-  }
+  }, []);
 
-  render() {
-    return (
-      <Modal
-        ref="ImagePopUp"
-        isOpen={this.props.isOpen}
-        //  isOpen={true}
-        //    onLayout={e => this.props.onLayout(e)}
+  open = () => {
+    setOpen(true);
+  };
+  close = () => {
+    setOpen(false);
+  };
 
-        style={[
-          styles.modelModal,
-          this.state.isLoading && {backgroundColor: 'transparent'},
-        ]}
-        position="center"
-        onOpened={() => {
-          if (this.props.onOpened) {
-            this.props.onOpened();
-          }
-        }}
-        onClosed={() => {
-          if (this.props.onClosed) {
-            this.props.onClosed();
-          }
-        }}
-        backButtonClose
-        entry="bottom"
-        swipeToClose={true}
-        backdropPressToClose
-        coverScreen={Platform.OS == 'android'}
-        backdropOpacity={0.7}>
-        <TouchableOpacity
-          style={styles.modelContainer}
-          disabled={!this.props.Banner?.Link || this.props.Banner?.Link == ''}
-          onPress={async () => {
-            if (!!this.props.Banner?.Link) {
-              this.close();
-              let url = this.props.Banner.Link;
-              if (!url) return;
+  return (
+    <Modal
+      isOpen={Open}
+      style={[styles.modelModal, isLoading && {backgroundColor: 'transparent'}]}
+      position="center"
+      onOpened={() => {
+        if (onOpened) {
+          onOpened();
+        }
+      }}
+      onClosed={() => {
+        if (onClosed) {
+          onClosed();
+        }
+      }}
+      backButtonClose
+      entry="bottom"
+      swipeToClose={true}
+      backdropPressToClose
+      coverScreen={Platform.OS == 'android'}
+      backdropOpacity={0.7}>
+      <TouchableOpacity
+        style={styles.modelContainer}
+        disabled={!Banner?.Link || Banner?.Link == ''}
+        onPress={async () => {
+          if (!!Banner?.Link) {
+            close();
+            let url = Banner.Link;
+            if (!url) return;
 
-              KS.BannerClick({
-                bannerID: this.props.Banner.ID,
-              });
-              
-              const {screen, params} = await ExtractScreenObjFromUrl(url);
-              if (!!screen) {
-                this.props.navigation.navigate(screen, !!params && params);
-              } else {
-                Linking.openURL(url);
-              }
+            KS.BannerClick({
+              bannerID: Banner.ID,
+            });
+
+            const {screen, params} = await ExtractScreenObjFromUrl(url);
+            if (!!screen) {
+              navigation.navigate(screen, !!params && params);
+            } else {
+              Linking.openURL(url);
             }
-          }}>
-          {!this.state.isLoading && (
-            <TouchableOpacity
-              style={{
-                position: 'absolute',
-                top: 10,
-                zIndex: 10,
-                right: 10,
-                padding: 10,
-                //  backgroundColor: "rgba(0,0,0,0.4)",
-              }}
-              onPress={() => {
-                this.close();
-              }}>
-              <View
-                style={{
-                  backgroundColor: Color.primary,
-                  borderWidth: 1,
-                  borderColor: Color.primary,
-                  borderRadius: 50,
-                  elevation: 1,
-                  padding: 5,
-                }}>
-                <IconMC name="close" size={30} color={'#fff'} />
-              </View>
-            </TouchableOpacity>
-          )}
-
-          <Image
+          }
+        }}>
+        {!isLoading && (
+          <TouchableOpacity
             style={{
-              width: Dimensions.get('screen').width * 0.85,
-              height: (Dimensions.get('screen').width * 0.85) / 0.6,
+              position: 'absolute',
+              top: 10,
+              zIndex: 10,
+              right: 10,
+              padding: 10,
+              //  backgroundColor: "rgba(0,0,0,0.4)",
             }}
-            onError={() => {
-              this.refs.ImagePopUp?.close();
-            }}
-            onLoad={() => {
-              this.setState({isLoading: false});
-            }}
-            resizeMode="contain"
-            source={{
-              uri: `https://autobeeb.com/${this.props.Banner?.FullImagePath}_635x811.jpg`,
-            }}
-          />
-        </TouchableOpacity>
-      </Modal>
-    );
-  }
-}
+            onPress={() => {
+              close();
+            }}>
+            <View
+              style={{
+                backgroundColor: Color.primary,
+                borderWidth: 1,
+                borderColor: Color.primary,
+                borderRadius: 50,
+                elevation: 1,
+                padding: 5,
+              }}>
+              <IconMC name="close" size={30} color={'#fff'} />
+            </View>
+          </TouchableOpacity>
+        )}
+
+        <Image
+          style={{
+            width: Dimensions.get('screen').width * 0.85,
+            height: (Dimensions.get('screen').width * 0.85) / 0.6,
+          }}
+          onError={() => {
+            close();
+          }}
+          onLoad={() => {
+            setIsLoading(false);
+          }}
+          resizeMode="contain"
+          source={{
+            uri: `https://autobeeb.com/${Banner?.FullImagePath}_635x811.jpg`,
+          }}
+        />
+      </TouchableOpacity>
+    </Modal>
+  );
+};
 
 const styles = StyleSheet.create({
   bottomBox: {

@@ -46,6 +46,7 @@ class HomeScreen extends Component {
       autoplay: true,
       position: 1,
       refreshing: false,
+      openImagePopUp: false,
     };
     this.renderItem = this.renderItem.bind(this);
   }
@@ -93,7 +94,7 @@ class HomeScreen extends Component {
         : undefined,
       () => {
         this.setState({refreshing: false});
-      }
+      },
     );
 
     this.setState({dealersLoading: true});
@@ -164,7 +165,7 @@ class HomeScreen extends Component {
       !this.props.userData?.IsDealer &&
       this.props.userData?.MemberOf &&
       this.props.userData?.MemberOf.filter(
-        x => x.ID == '33333333-3333-3333-3333-333333333333'
+        x => x.ID == '33333333-3333-3333-3333-333333333333',
       ).length > 0
     ) {
       KS.UserGet({
@@ -216,9 +217,9 @@ class HomeScreen extends Component {
             () => {
               setTimeout(() => {
                 global.ShowedHomePopUp = true;
-                this.refs?.ImagePopUp?.open();
+                this.setState({openImagePopUp: true});
               }, 1000);
-            }
+            },
           );
         }
       });
@@ -236,10 +237,10 @@ class HomeScreen extends Component {
                 let selectedCountry =
                   this.state.CountriesData &&
                   this.state.CountriesData.find(
-                    x => x.ISOCode.toLowerCase() == data.toLowerCase()
+                    x => x.ISOCode.toLowerCase() == data.toLowerCase(),
                   )
                     ? this.state.CountriesData.find(
-                        x => x.ISOCode.toLowerCase() == data.toLowerCase()
+                        x => x.ISOCode.toLowerCase() == data.toLowerCase(),
                       )
                     : null;
                 callback(selectedCountry.EmailRegister);
@@ -267,7 +268,7 @@ class HomeScreen extends Component {
         !this.props.userData?.IsDealer &&
         this.props.userData?.MemberOf &&
         this.props.userData?.MemberOf.filter(
-          x => x.ID == '33333333-3333-3333-3333-333333333333'
+          x => x.ID == '33333333-3333-3333-3333-333333333333',
         ).length > 0
       ) {
         KS.PlansGet({
@@ -355,7 +356,7 @@ class HomeScreen extends Component {
                   ? global.ViewingCurrency.ID
                   : this.props.ViewingCurrency
                   ? this.props.ViewingCurrency.ID
-                  : undefined
+                  : undefined,
               );
             }}
           />
@@ -368,7 +369,7 @@ class HomeScreen extends Component {
       <View style={{backgroundColor: '#f0f0f0', flex: 1}}>
         <ImagePopUp
           Banner={this.state.BannerImage}
-          ref="ImagePopUp"
+          isOpen={this.state.openImagePopUp}
           navigation={this.props.navigation}
         />
 
@@ -386,7 +387,7 @@ class HomeScreen extends Component {
                 ? global.ViewingCurrency.ID
                 : this.props.ViewingCurrency
                 ? this.props.ViewingCurrency.ID
-                : undefined
+                : undefined,
             );
           }}
         />
@@ -402,14 +403,12 @@ class HomeScreen extends Component {
           {this.props.homePageData && this.props.homePageData.NewBanners && (
             <Swiper
               showsPagination={false}
-              ref="swiper"
               height={Dimensions.get('window').width / 2.5}
               width={Dimensions.get('screen').width}
               autoplay={this.state.autoplay}
               onIndexChanged={this.handleIndexChanged}
               autoplayTimeout={5}
               loop
-              // showsButtons={true}
             >
               {this.props.homePageData.NewBanners.map((banner, index) => {
                 this.handleIndexChanged(0);
@@ -427,12 +426,12 @@ class HomeScreen extends Component {
                         });
 
                         const {screen, params} = await ExtractScreenObjFromUrl(
-                          url
+                          url,
                         );
                         if (!!screen) {
                           this.props.navigation.navigate(
                             screen,
-                            !!params && params
+                            !!params && params,
                           );
                         } else {
                           Linking.openURL(url);
@@ -548,7 +547,7 @@ class HomeScreen extends Component {
                       this.props.navigation.navigate('ListingsScreen', {
                         cca2: this.props.ViewingCountry?.cca2 || 'us',
                         ListingType: this.props.homePageData.MainTypes.find(
-                          x => x.ID == item.ID
+                          x => x.ID == item.ID,
                         ),
                         ...item,
                       });
@@ -1019,12 +1018,12 @@ class HomeScreen extends Component {
                                         ListingType:
                                           _this.props.homePageData.MainTypes.find(
                                             mainType =>
-                                              mainType.ID == item.TypeID
+                                              mainType.ID == item.TypeID,
                                           ),
                                         SellType: this.SaleObject,
                                         selectedMake: item,
                                         Makes: data,
-                                      }
+                                      },
                                     );
                                   });
                                 } else {
@@ -1054,7 +1053,7 @@ class HomeScreen extends Component {
                                         ListingType:
                                           _this.props.homePageData.MainTypes.find(
                                             mainType =>
-                                              mainType.ID == item.TypeID
+                                              mainType.ID == item.TypeID,
                                           ),
                                         CategoryID:
                                           item.TypeID == 32 ? '' : item.ID,
@@ -1083,7 +1082,7 @@ class HomeScreen extends Component {
                                         SellType: this.SaleObject,
                                         selectedMake: AllMakes,
                                         Makes: data,
-                                      }
+                                      },
                                     );
                                   });
                                 }
@@ -1227,7 +1226,7 @@ class HomeScreen extends Component {
                 ? global.ViewingCurrency.ID
                 : this.props.ViewingCurrency
                 ? this.props.ViewingCurrency.ID
-                : undefined
+                : undefined,
             );
           }}
         />
@@ -1313,7 +1312,7 @@ const mapDispatchToProps = dispatch => {
         listingsCount,
         cur,
         callback,
-        userID
+        userID,
       );
     },
     storeUserData: (user, callback) =>

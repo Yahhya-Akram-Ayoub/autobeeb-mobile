@@ -52,7 +52,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import {CommonActions} from '@react-navigation/native';
 import {StackActions} from '@react-navigation/native';
 import {DealerPlusRenewal} from '../components/DealerPlusRenewal';
-import {ID} from 'react-native-country-picker-modal-kensoftware/src/countryFlags';
 import {actions} from '../redux/UserRedux';
 import messaging from '@react-native-firebase/messaging';
 import KS from '../services/KSAPI';
