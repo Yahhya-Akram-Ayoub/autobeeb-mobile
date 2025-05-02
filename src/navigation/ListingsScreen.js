@@ -2983,7 +2983,6 @@ class ListingsScreen extends Component {
           <FlatList
             windowSize={16}
             removeClippedSubviews
-            ref="ListingsFlatlist"
             ListHeaderComponent={
               <>
                 {[
@@ -3008,7 +3007,6 @@ class ListingsScreen extends Component {
                 <FlatList
                   windowSize={16}
                   removeClippedSubviews
-                  ref="ListingsFlatlist2"
                   keyExtractor={this.keyExtractor}
                   numColumns={1}
                   key={this.state.renderType}
@@ -3074,7 +3072,6 @@ class ListingsScreen extends Component {
             //     <FlatList
             //       windowSize={16}
             //       removeClippedSubviews
-            //       ref="ListingsFlatlist2"
             //       keyExtractor={`2-${this.keyExtractor()}`}
             //       numColumns={1}
             //       key={this.state.renderType}
@@ -3104,7 +3101,6 @@ class ListingsScreen extends Component {
             onScroll={this.onScrollHandler}
             windowSize={16}
             removeClippedSubviews={true}
-            ref="ListingsFlatlist"
             keyExtractor={this.keyExtractor}
           />
 */}

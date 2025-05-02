@@ -1,4 +1,4 @@
-import React, {useEffect, useState, createRef} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
   View,
   ScrollView,
@@ -12,6 +12,7 @@ import {
   Image,
   ActivityIndicator,
   Alert,
+  BackHandler,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {Languages, Color, Constants} from '../common';
@@ -268,9 +269,9 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
   const [Refresh, setRefresh] = useState(false);
   const [loader, setLoader] = useState(true);
   const [selectedGateway, setSelectedGateway] = useState(null);
-  const PaymentMethodModalRef = createRef(null);
-  const PaymentModal = createRef(null);
-  const plansListRef = createRef(null);
+  const PaymentMethodModalRef = useRef(null);
+  const PaymentModal = useRef(null);
+  const plansListRef = useRef(null);
   const Offer = !pOffer ? route?.params?.Offer : pOffer;
   const User = !pUser ? route?.params?.User : pUser;
   const Currency = !pCurrency ? route?.params?.Currency : pCurrency;
@@ -289,7 +290,7 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
             ...plan,
             FormatedPrice: Currency.Format.replace(
               '{0}',
-              `${Math.ceil(plan.Price * Currency.Ratio).toFixed(0)}`
+              `${Math.ceil(plan.Price * Currency.Ratio).toFixed(0)}`,
             ),
           };
         });
@@ -340,14 +341,14 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
         if (NonPayssionCountries.includes(country.ID)) {
           tempPaymentMethods = [
             ...tempPaymentMethods.filter(
-              x => x.Name !== 'Unionpay' && x.Name !== 'alipay'
+              x => x.Name !== 'Unionpay' && x.Name !== 'alipay',
             ),
           ];
         }
         if (NonCardCountries.includes(country.ID)) {
           tempPaymentMethods = [
             ...tempPaymentMethods.filter(
-              x => x.Name !== 'Visa' && x.Name !== 'Mastercard'
+              x => x.Name !== 'Visa' && x.Name !== 'Mastercard',
             ),
           ];
         }
@@ -369,6 +370,20 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
         setPaymentMethods([...tempPaymentMethods]);
       }
     });
+  }, []);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        PaymentMethodModalRef.current?.close();
+        return true; // Prevent default behavior
+      },
+    );
+
+    return () => {
+      backHandler.remove(); // Correct way to remove listener
+    };
   }, []);
 
   function handlePaymentMethod(PaymentMethod) {
@@ -406,7 +421,7 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
     fetch(
       `https://autobeeb.com/${lang}/special-do-pay/${Offer.ID}/${
         selectedPlan?.Id
-      }/${'15'}?userID=${User.ID}&id=${User.ID}`
+      }/${'15'}?userID=${User.ID}&id=${User.ID}`,
     ).then(res => {});
 
     // navigation.goBack();
@@ -425,7 +440,7 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
             Platform.select({
               ios: selectedPlan.AppStoreProductId,
               android: selectedPlan.GoogleProductId,
-            })
+            }),
         );
 
     if (inAppPurch) {
@@ -442,7 +457,7 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
           if (data && data.Success == 1) {
             await AsyncStorage.setItem(
               'pendingTransactionID',
-              JSON.stringify(data.TransactionID)
+              JSON.stringify(data.TransactionID),
             );
 
             try {
@@ -535,7 +550,7 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
                     InAppPurchases.some(
                       x =>
                         x.productId == item.GoogleProductId ||
-                        x.productId == item.AppStoreProductId
+                        x.productId == item.AppStoreProductId,
                     ) &&
                     PaymentMethods.filter(PM => PM.ID == 4).length == 0
                   ) {
@@ -545,7 +560,7 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
                     !InAppPurchases.some(
                       x =>
                         x.productId == item.GoogleProductId ||
-                        x.productId == item.AppStoreProductId
+                        x.productId == item.AppStoreProductId,
                     )
                   ) {
                     let tempPaymentMethods = [...PaymentMethods];
@@ -565,9 +580,6 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
         ref={PaymentMethodModalRef}
         coverScreen
         statusBarTranslucent
-        backdropPressToClose
-        useNativeDriver={false}
-        backButtonClose
         swipeToClose={false}
         style={styles.modalStyle}>
         {!!selectedPlan && (
@@ -633,8 +645,8 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
                         {`${global.ViewingCurrency.Format}`.replace(
                           '{0}',
                           Math.ceil(
-                            selectedPlan.Price * global.ViewingCurrency.Ratio
-                          )
+                            selectedPlan.Price * global.ViewingCurrency.Ratio,
+                          ),
                         )}
                       </Text>
                     </View>
@@ -734,8 +746,7 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
         ref={PaymentModal}
         coverScreen
         statusBarTranslucent
-        backdropPressToClose
-        backButtonClose
+        backButtonClose={Platform.OS == 'android'}
         swipeToClose={false}
         style={styles.modalStyle}>
         <View

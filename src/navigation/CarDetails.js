@@ -438,7 +438,7 @@ class CarDetails extends Component {
       this.setState({modalPhotoOpen: false}, () => {
         setTimeout(() => {
           if (this.state.scrollToImage) {
-            this.refs.imagesList?.scrollToIndex({
+            this.imagesListRef.scrollToIndex({
               animated: true,
               index: this.state.scrollToImage,
             });
@@ -692,7 +692,7 @@ class CarDetails extends Component {
         this.state.Listing.Images &&
         this.state.Listing.Images.length > 0 ? (
           <FlatList
-            ref="imagesList"
+            ref={ins => (this.imagesListRef = ins)}
             style={{
               height: Dimensions.get('screen').width / 1.2,
               width: Dimensions.get('screen').width,
@@ -1129,7 +1129,6 @@ class CarDetails extends Component {
             style={styles.modalBoxWrap}
             useNativeDriver={true}>
             <FlatList
-              ref="imagesListView"
               style={{
                 height: Dimensions.get('screen').width / 1.2,
                 width: Dimensions.get('screen').width,

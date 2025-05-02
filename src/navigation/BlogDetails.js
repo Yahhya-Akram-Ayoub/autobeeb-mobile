@@ -101,7 +101,7 @@ const Images = ({Blog, updateImageIndex, ImageIndex}) => {
           Blog?.ImageList?.length > 0
             ? Blog.ImageList.map(
                 image =>
-                  `https://autobeeb.com/${Blog.FullImagePath}${image}_1024x683.jpg`
+                  `https://autobeeb.com/${Blog.FullImagePath}${image}_1024x683.jpg`,
               )
             : [`https://autobeeb.com/${Blog.FullImagePath}_1024x683.jpg`]
         }
@@ -249,12 +249,10 @@ const BlogDetails = props => {
               }}
               automaticallyAdjustContentInsets={false}
               scrollEnabled={false}
-              /* onMessage={(event) => {
-                setwebHeight(parseInt(event.nativeEvent.data));
-              }}*/
               javaScriptEnabled={true}
               injectedJavaScript={webViewScript}
-              domStorageEnabled={true}></AutoHeightWebView>
+              domStorageEnabled={true}
+            />
           </View>
         </ScrollView>
       )}
