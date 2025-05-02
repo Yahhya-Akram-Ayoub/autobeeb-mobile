@@ -13,12 +13,11 @@ import {
 import {Color, Languages, Styles, Constants} from '../common';
 import RNRestart from 'react-native-restart';
 import {connect} from 'react-redux';
-import {getAllCountries} from 'react-native-country-picker-modal';
-import CountryPicker from 'react-native-country-picker-modal';
+import {getAllCountries} from 'react-native-country-picker-modal-kensoftware';
+import CountryPicker from 'react-native-country-picker-modal-kensoftware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import KS from '../services/KSAPI';
 import {toast} from '../Omni';
-import DeviceInfo from 'react-native-device-info';
 import CarrierInfo from 'react-native-carrier-info';
 
 let ArabicLanguageList = [
@@ -129,14 +128,11 @@ let LangaugesList = [
 class LanguageSelector extends Component {
   constructor(props) {
     super(props);
-    let userLocaleCountryCode = DeviceInfo.getDeviceCountry(); //omar abu alhija
+    // let userLocaleCountryCode = DeviceInfo.getDeviceCountry(); //omar abu alhija
     this.state = {
-      cca2: userLocaleCountryCode,
+      cca2: 'US',
       countryName: 'United States',
-
-      country: getAllCountries().then(da =>
-        da.find(i => i.cca2 == this.state.cca2),
-      ),
+      country: null,
       loadingCountry: true,
       countries: {},
       selectedLanguage: {

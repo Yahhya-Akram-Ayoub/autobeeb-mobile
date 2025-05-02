@@ -26,7 +26,7 @@ import KS from '../services/KSAPI';
 import Toast, {DURATION} from 'react-native-easy-toast';
 import Modal from 'react-native-modalbox';
 import PhoneInput from '../components/react-native-phone-input/lib/index';
-import CountryPicker from 'react-native-country-picker-modal';
+import CountryPicker from 'react-native-country-picker-modal-kensoftware';
 import * as Animatable from 'react-native-animatable';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';

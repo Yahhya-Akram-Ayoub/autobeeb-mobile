@@ -32,7 +32,7 @@ import DeviceInfo from 'react-native-device-info';
 
 import CountryPicker, {
   getAllCountries,
-} from 'react-native-country-picker-modal';
+} from 'react-native-country-picker-modal-kensoftware';
 
 //GoogleSignin.configure ();
 

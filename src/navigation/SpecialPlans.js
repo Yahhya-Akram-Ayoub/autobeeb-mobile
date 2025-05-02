@@ -13,11 +13,11 @@ import {
   ActivityIndicator,
   Alert,
   BackHandler,
+  Modal,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {Languages, Color, Constants} from '../common';
 import {LogoSpinner} from '../components';
-import Modal from 'react-native-modalbox';
 import HTML, {IGNORED_TAGS} from 'react-native-render-html';
 import {isIphoneX} from 'react-native-iphone-x-helper';
 import {WebView} from 'react-native-webview';
@@ -267,9 +267,9 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
     },
   ]);
   const [Refresh, setRefresh] = useState(false);
+  const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [loader, setLoader] = useState(true);
   const [selectedGateway, setSelectedGateway] = useState(null);
-  const PaymentMethodModalRef = useRef(null);
   const PaymentModal = useRef(null);
   const plansListRef = useRef(null);
   const Offer = !pOffer ? route?.params?.Offer : pOffer;
@@ -370,20 +370,6 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
         setPaymentMethods([...tempPaymentMethods]);
       }
     });
-  }, []);
-
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      () => {
-        PaymentMethodModalRef.current?.close();
-        return true; // Prevent default behavior
-      },
-    );
-
-    return () => {
-      backHandler.remove(); // Correct way to remove listener
-    };
   }, []);
 
   function handlePaymentMethod(PaymentMethod) {
@@ -533,7 +519,9 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
               index={index}
               item={item}
               setSelectedPlan={setSelectedPlan}
-              PaymentMethodModalRef={PaymentMethodModalRef}
+              setOpenPaymentModal={flag => {
+                setOpenPaymentModal(flag);
+              }}
               onSelectPlan={() => {
                 if (false) {
                   // stop in app payment
@@ -577,8 +565,8 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
       </ScrollView>
 
       <Modal
-        ref={PaymentMethodModalRef}
         coverScreen
+        visible={openPaymentModal}
         statusBarTranslucent
         swipeToClose={false}
         style={styles.modalStyle}>
@@ -604,7 +592,7 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
               }}
               onPress={() => {
                 setSelectedPlan(null);
-                PaymentMethodModalRef.current.close();
+                setOpenPaymentModal(false);
               }}>
               <Text
                 style={{
@@ -744,6 +732,7 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
 
       <Modal
         ref={PaymentModal}
+        visible={false}
         coverScreen
         statusBarTranslucent
         backButtonClose={Platform.OS == 'android'}
@@ -781,7 +770,7 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
           javaScriptEnabled={true}
           style={{flex: 1}}
           onMessage={event => {
-            PaymentMethodModalRef.current.close();
+            setOpenPaymentModal(false);
             PaymentModal.current.close();
             navigation.navigate('HomeScreen');
           }}
@@ -810,7 +799,7 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
 const RenderPlan2 = ({
   item,
   index,
-  PaymentMethodModalRef,
+  setOpenPaymentModal,
   setSelectedPlan,
   onSelectPlan,
 }) => {
@@ -828,7 +817,7 @@ const RenderPlan2 = ({
       onPress={() => {
         onSelectPlan();
         setSelectedPlan({...item});
-        PaymentMethodModalRef.current.open();
+        setOpenPaymentModal(true);
       }}>
       <Text style={[styles.planName, {textAlign: 'center'}]}>{item.Name}</Text>
       {item.WithFacebook && (
@@ -1085,22 +1074,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({user, menu}) => ({
-  userData: user.user,
-  ViewingCountry: menu.ViewingCountry,
-});
-
-const mapDispatchToProps = dispatch => {
-  const UserActions = require('../redux/UserRedux');
-  const {actions} = require('../redux/RecentListingsRedux');
-
-  return {
-    storeUserData: (user, callback) =>
-      UserActions.actions.storeUserData(dispatch, user, callback),
-    updateRecentlySeenListings: (listing, callback) => {
-      actions.updateRecentlySeenListings(dispatch, listing, callback);
-    },
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(SpecialPlans);
+export default SpecialPlans;

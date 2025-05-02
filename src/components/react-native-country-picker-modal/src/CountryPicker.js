@@ -1,3 +1,6 @@
+// @flow
+/* eslint import/newline-after-import: 0 */
+
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -57,7 +60,6 @@ export const getAllCountries = () =>
   cca2List.map(cca2 => ({...countries[cca2], cca2}));
 
 export default class CountryPicker extends Component {
-  
   static propTypes = {
     cca2: PropTypes.string.isRequired,
     translation: PropTypes.string,

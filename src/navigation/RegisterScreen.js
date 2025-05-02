@@ -23,7 +23,7 @@ import messaging from '@react-native-firebase/messaging';
 import PhoneInput from 'react-native-phone-input';
 import DeviceInfo from 'react-native-device-info';
 import {toast} from '../Omni';
-import CountryPicker from 'react-native-country-picker-modal';
+import CountryPicker from 'react-native-country-picker-modal-kensoftware';
 import IconEn from 'react-native-vector-icons/Feather';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
 

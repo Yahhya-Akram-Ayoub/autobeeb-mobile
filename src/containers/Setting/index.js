@@ -18,7 +18,7 @@ import LanguagePicker from './LanguagePicker';
 import {Color, Languages} from '../../common';
 import {PickerSelectModal} from '../../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import CountryPicker from 'react-native-country-picker-modal';
+import CountryPicker from 'react-native-country-picker-modal-kensoftware';
 import Entypo from 'react-native-vector-icons/Entypo';
 import KS from '../../services/KSAPI';
 import RNRestart from 'react-native-restart';

@@ -429,9 +429,7 @@ class CarDetails extends Component {
 
   handleBackPress = () => {
     if (this.state.isSpecialPlansModal) {
-      this.setState({
-        isSpecialPlansModal: false,
-      });
+      this.SpecialPlansModal.close();
     } else if (!!this.state.openedImage) {
       this.setState({openedImage: null});
     } else if (this.state.modalPhotoOpen) {
@@ -807,9 +805,7 @@ class CarDetails extends Component {
           if (data.User) {
             _this.props.storeUserData(data.User, () => {
               this.refs.OTPModal.close();
-              this.setState({
-                isSpecialPlansModal: true,
-              });
+              this.SpecialPlansModal.open();
             });
           }
           //
@@ -1318,9 +1314,7 @@ class CarDetails extends Component {
               this.props?.route?.params?.item?.TypeID != '32' &&
               `${this.props?.route?.params?.item?.SellType}` != '4'
             ) {
-              this.setState({
-                isSpecialPlansModal: true,
-              });
+              this.SpecialPlansModal.open();
             }
           }}
           backButtonClose={true}
@@ -1588,7 +1582,6 @@ class CarDetails extends Component {
         </Modal>
         <Modal
           ref={instance => (this.SpecialPlansModal = instance)}
-          isOpen={this.state.isSpecialPlansModal}
           style={[styles.modelModal]}
           position="center"
           onClosed={() => {
@@ -1596,7 +1589,12 @@ class CarDetails extends Component {
               isSpecialPlansModal: false,
             });
           }}
-          backButtonClose={true}
+          onOpened={() => {
+            this.setState({
+              isSpecialPlansModal: true,
+            });
+          }}
+          // backButtonClose={true}
           entry="bottom"
           swipeToClose={false}
           // backdropPressToClose
@@ -1617,9 +1615,7 @@ class CarDetails extends Component {
               pUser={!!this.props.userData ? {...this.props.userData} : null}
               pCurrency={global.ViewingCurrency || this.props.ViewingCurrency}
               pOnClose={() => {
-                this.setState({
-                  isSpecialPlansModal: false,
-                });
+                this.SpecialPlansModal.close();
               }}
             />
           </View>

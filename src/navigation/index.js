@@ -69,8 +69,9 @@ const styles = StyleSheet.create({
   ActiveIcon: {
     backgroundColor: 'rgba(179, 157, 219, 0.45)',
     borderRadius: 15,
-    paddingHorizontal: 15,
     paddingVertical: 2,
+    width: 50,
+    alignItems: 'center',
   },
 });
 
@@ -85,7 +86,7 @@ const AppStack = ({route, navigation}) => {
       const {screen, params} = await ExtractScreenObjFromUrl(url);
       navigation.navigate(screen, params ?? undefined);
     },
-    [navigation]
+    [navigation],
   );
 
   useEffect(() => {
@@ -97,9 +98,9 @@ const AppStack = ({route, navigation}) => {
     };
     checkInitialUrl();
 
-    Linking.addEventListener('url', handleOpenURL);
+    const _linkHandler = Linking.addEventListener('url', handleOpenURL);
     return () => {
-      Linking.removeEventListener('url', handleOpenURL);
+      _linkHandler.remove();
     };
   }, [handleOpenURL]);
 

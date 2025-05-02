@@ -20,7 +20,7 @@ import IconFa from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 import CountryPicker, {
   getAllCountries,
-} from 'react-native-country-picker-modal';
+} from 'react-native-country-picker-modal-kensoftware';
 
 class DealersScreen extends Component {
   constructor(props) {
