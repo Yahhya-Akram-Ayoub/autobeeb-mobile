@@ -14,7 +14,6 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Modal from 'react-native-modalbox';
 import {connect} from 'react-redux';
 import {AppIcon, Color} from '../common';
 import Constants from '../common/Constants';
@@ -37,6 +36,7 @@ import {
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {WebView} from 'react-native-webview';
 import {useRoute, useNavigation} from '@react-navigation/native';
+import {AutobeebModal} from '../components';
 
 const ActivityIndicatorElement = () => {
   return (
@@ -440,7 +440,7 @@ const SubscriptionsScreen = ({storeUserData}) => {
         Languages.langID
       }&pmid=${pmid}`,
     ).then(res => {});
-  //  navigation.goBack();
+    //  navigation.goBack();
     navigation.navigate('CliQScreen', {
       Price: selectedType.Price,
       PlanName: selectedType.Name,
@@ -471,7 +471,7 @@ const SubscriptionsScreen = ({storeUserData}) => {
             'pendingTransactionID',
             JSON.stringify(data.TransactionID),
           );
-        //  await RNIap.requestSubscription(inAppPurch.productId);
+          //  await RNIap.requestSubscription(inAppPurch.productId);
         }
       });
     }
@@ -509,7 +509,7 @@ const SubscriptionsScreen = ({storeUserData}) => {
 
       <NewHeader navigation={navigation} back></NewHeader>
 
-      <Modal
+      <AutobeebModal
         ref={PaymentMethodModalRef}
         coverScreen
         statusBarTranslucent
@@ -715,7 +715,7 @@ const SubscriptionsScreen = ({storeUserData}) => {
             </ScrollView>
           </View>
         )}
-        <Modal
+        <AutobeebModal
           ref={PaymentModal}
           coverScreen
           //isOpen
@@ -797,8 +797,8 @@ const SubscriptionsScreen = ({storeUserData}) => {
             )}
             startInLoadingState={true}
           />
-        </Modal>
-      </Modal>
+        </AutobeebModal>
+      </AutobeebModal>
 
       <FlatList
         ListHeaderComponent={() => {

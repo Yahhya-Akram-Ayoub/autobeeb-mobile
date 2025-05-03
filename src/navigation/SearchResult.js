@@ -13,6 +13,7 @@ import {
   Linking,
   Pressable,
   Animated,
+  Modal,
 } from 'react-native';
 import {NewHeader} from '../containers';
 import {
@@ -30,7 +31,6 @@ import IconFa from 'react-native-vector-icons/FontAwesome';
 import IconEn from 'react-native-vector-icons/Entypo';
 import {Color, ExtractScreenObjFromUrl} from '../common';
 import IconIon from 'react-native-vector-icons/Ionicons';
-import Modal from 'react-native-modalbox';
 import Languages from '../common/Languages';
 import KS from '../services/KSAPI';
 import Constants from '../common/Constants';
@@ -1479,7 +1479,7 @@ class SearchResult extends Component {
         </Animated.View>
 
         <Modal
-          isOpen={this.state.openCurrencyModal}
+          visible={this.state.openCurrencyModal}
           style={[styles.sellTypeModal]}
           position="center"
           backButtonClose={true}
@@ -1521,7 +1521,7 @@ class SearchResult extends Component {
         </Modal>
 
         <Modal //sort modal
-          isOpen={this.state.openSortModal}
+          visible={this.state.openSortModal}
           style={[styles.sellTypeModal]}
           position="center"
           backButtonClose={true}
@@ -1564,7 +1564,7 @@ class SearchResult extends Component {
         </Modal>
 
         <Modal
-          isOpen={this.state.openSellTypeModal}
+          visible={this.state.openSellTypeModal}
           style={[styles.sellTypeModal]}
           position="center"
           backButtonClose={true}
@@ -1606,7 +1606,7 @@ class SearchResult extends Component {
         </Modal>
 
         <Modal //maintypes modal
-          isOpen={this.state.openMainTypesModal}
+          visible={this.state.openMainTypesModal}
           style={[styles.sellTypeModal]}
           position="center"
           backButtonClose={true}

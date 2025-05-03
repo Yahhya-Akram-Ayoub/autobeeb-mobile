@@ -32,6 +32,7 @@ import {
   OTPModal,
   SpecialSVG,
   BottomNavigationBar,
+  AutobeebModal,
 } from '../components';
 import Moment from 'moment';
 import LinearGradient from 'react-native-linear-gradient';
@@ -55,7 +56,6 @@ import getDirections from 'react-native-google-maps-directions';
 import MapView, {Marker} from 'react-native-maps';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ButtonIndex, AskListingOwner} from '../components';
-import Modal from 'react-native-modalbox';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
 import SpecialPlans from './SpecialPlans';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -1117,7 +1117,7 @@ class CarDetails extends Component {
             </View>
           </LinearGradient>
 
-          <Modal //the full view
+          <AutobeebModal //the full view
             ref={instance => (this.modalPhoto = instance)}
             isOpen={this.state.modalPhotoOpen}
             swipeToClose={false}
@@ -1198,7 +1198,7 @@ class CarDetails extends Component {
                 renderImage={props => <Image {...props} resizeMode="cover" />}
               />
             )}
-          </Modal>
+          </AutobeebModal>
         </View>
       );
     }
@@ -1206,7 +1206,7 @@ class CarDetails extends Component {
     return (
       <View style={{flex: 1, backgroundColor: '#fff'}}>
         {this.state.firstLoad && (
-          <Modal
+          <AutobeebModal
             ref={instance => (this.WarningPopup = instance)}
             isOpen={this.state.firstLoad}
             style={[styles.modelModal]}
@@ -1248,7 +1248,7 @@ class CarDetails extends Component {
                 </Text>
               </TouchableOpacity>
             </View>
-          </Modal>
+          </AutobeebModal>
         )}
         {this.state.isLoading && <LogoSpinner fullStretch={true} />}
         <OTPModal
@@ -1286,7 +1286,7 @@ class CarDetails extends Component {
             this.resendCode();
           }}
         />
-        <Modal
+        <AutobeebModal
           ref={instance => (this.FeaturesModal = instance)}
           isOpen={this.state.isFeaturesModalOpen}
           //    onLayout={e => this.props.onLayout(e)}
@@ -1579,8 +1579,8 @@ class CarDetails extends Component {
               },
             )}
           </View>
-        </Modal>
-        <Modal
+        </AutobeebModal>
+        <AutobeebModal
           ref={instance => (this.SpecialPlansModal = instance)}
           style={[styles.modelModal]}
           position="center"
@@ -1619,7 +1619,7 @@ class CarDetails extends Component {
               }}
             />
           </View>
-        </Modal>
+        </AutobeebModal>
         <View
           style={{
             position: 'absolute',
@@ -2605,7 +2605,7 @@ class CarDetails extends Component {
                 </View>
               </TouchableOpacity>
             </View>
-            <Modal
+            <AutobeebModal
               ref={instance => (this.reportPopup = instance)}
               backButtonClose
               swipeToClose={false}
@@ -2797,7 +2797,7 @@ class CarDetails extends Component {
                   </View>
                 )}
               </KeyboardAvoidingView>
-            </Modal>
+            </AutobeebModal>
             {!!this.props.userData &&
               !!this.state.userCountry &&
               this.state.userCountry.WithFee && (
@@ -3377,7 +3377,7 @@ class CarDetails extends Component {
           </ScrollView>
         )}
 
-        <Modal
+        <AutobeebModal
           ref={instance => (this.modalPhoto = instance)}
           isOpen={this.state.modalPhotoOpen}
           swipeToClose={false}
@@ -3443,9 +3443,9 @@ class CarDetails extends Component {
             }
             renderImage={props => <Image {...props} resizeMode="cover" />}
           />
-        </Modal>
+        </AutobeebModal>
 
-        <Modal
+        <AutobeebModal
           ref={instance => (this.IsSharePopup = instance)}
           backButtonClose
           swipeToClose={true}
@@ -3573,7 +3573,7 @@ class CarDetails extends Component {
               </Text>
             </View>
           )}
-        </Modal>
+        </AutobeebModal>
 
         <Animated.View
           style={{

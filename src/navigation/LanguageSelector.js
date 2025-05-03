@@ -9,12 +9,13 @@ import {
   Platform,
   I18nManager,
   FlatList,
+  Alert,
 } from 'react-native';
 import {Color, Languages, Styles, Constants} from '../common';
 import RNRestart from 'react-native-restart';
 import {connect} from 'react-redux';
-import {getAllCountries} from 'react-native-country-picker-modal-kensoftware';
-import CountryPicker from 'react-native-country-picker-modal-kensoftware';
+import {getAllCountries} from '../components/CountryModal/CountryPickerModal';
+import CountryPicker from '../components/CountryModal/CountryPickerModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import KS from '../services/KSAPI';
 import {toast} from '../Omni';
@@ -270,6 +271,7 @@ class LanguageSelector extends Component {
             closeable
             transparent
             onChange={value => {
+              console.log('=================44==');
               this.setState(
                 {
                   cca2: value.cca2,
@@ -282,6 +284,7 @@ class LanguageSelector extends Component {
               );
             }}
             onSelect={value => {
+              console.log('=================22==');
               this.setState(
                 {
                   cca2: value.cca2,
@@ -323,6 +326,7 @@ class LanguageSelector extends Component {
                 closeable
                 transparent
                 onSelect={value => {
+                  console.log('=================11==');
                   this.setState(
                     {
                       cca2: value.cca2,

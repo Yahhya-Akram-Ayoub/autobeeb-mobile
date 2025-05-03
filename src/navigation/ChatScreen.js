@@ -830,7 +830,6 @@ class ChatScreen extends Component {
           </View>
         ) : (
           <GiftedChat
-            ref="Chat"
             disableComposer={this.state.isSystem}
             messages={
               !this.state.messages

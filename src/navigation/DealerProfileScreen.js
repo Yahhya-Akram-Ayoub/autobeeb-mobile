@@ -24,13 +24,13 @@ import {
   DealersBanner,
   BannerListingsComponent,
   FeatueredListingCard,
+  AutobeebModal,
 } from '../components';
 import LinearGradient from 'react-native-linear-gradient';
 import IconEV from 'react-native-vector-icons/EvilIcons';
 import IconMa from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MapView, {Marker} from 'react-native-maps';
-import Modal from 'react-native-modalbox';
 import {connect} from 'react-redux';
 import getDirections from 'react-native-google-maps-directions';
 
@@ -499,7 +499,7 @@ class DealerProfileScreen extends Component {
       <ScrollView
         contentContainerStyle={{flex: 1}}
         style={{backgroundColor: '#eee'}}>
-        <Modal //currency modal
+        <AutobeebModal //currency modal
           ref={instance => (this.CurrencyModal = instance)}
           //  isOpen={true}
           style={styles.sellTypeModal}
@@ -542,7 +542,7 @@ class DealerProfileScreen extends Component {
               </TouchableOpacity>
             </View>
           </View>
-        </Modal>
+        </AutobeebModal>
 
         {this.state.currency && this.state.active && (
           <TouchableOpacity

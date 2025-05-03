@@ -27,6 +27,7 @@ import {
   SkeletonCard,
   BottomNavigationBar,
   SkeletonTabFilter,
+  AutobeebModal,
 } from '../components';
 import AddButton from '../components/AddAdvButton';
 import AddAdvButtonSquare from '../components/AddAdvButtonSquare';
@@ -36,7 +37,7 @@ import IconEn from 'react-native-vector-icons/Entypo';
 import {Color, ExtractScreenObjFromUrl} from '../common';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
 import {isIphoneX} from 'react-native-iphone-x-helper';
-import Modal from 'react-native-modalbox';
+
 import Languages from '../common/Languages';
 import KS from '../services/KSAPI';
 import Constants from '../common/Constants';
@@ -58,13 +59,6 @@ import {
   StatusModal,
 } from '../components/Modals';
 import FeatueredListingsCards from '../components/ListingsComponent/FeatueredListingsCards';
-import RenderListingCard from '../components/ListingsComponent/RenderListingCard';
-import {
-  RecyclerListView,
-  GridLayoutProvider,
-  DataProvider,
-} from 'recyclerlistview';
-import DisplayListingsList from '../components/ListingsComponent/DisplayListingsList';
 
 const BOTTOM_NAVIGATION_BAR_HEIGHT = 70;
 const FILTER_HEADER_HEIGHT = 113;
@@ -180,7 +174,7 @@ class ListingsScreen extends Component {
           this.state.Sections &&
           this.state.Sections.length > 0 &&
           !this.state.selectedSection?.some(
-            item => item.ID === 4096 || item.ID === 2048
+            item => item.ID === 4096 || item.ID === 2048,
           ), // Board 4096 , Accessories 2048 => not incloud 2048 OR 4096,
         OnPress: () => {
           this.sectionModal.open();
@@ -384,7 +378,7 @@ class ListingsScreen extends Component {
           this.props.route.params?.ListingType?.ID >= 32 &&
           !!this.state.Sections?.length &&
           !this.state.selectedSection?.some(
-            item => item.ID === 4096 || item.ID === 2048
+            item => item.ID === 4096 || item.ID === 2048,
           ), // Board 4096 , Accessories 2048 => not incloud 2048 OR 4096
         OnPress: () => {
           this.setState({OpenPartNumberModal: true});
@@ -415,7 +409,7 @@ class ListingsScreen extends Component {
             case 'S':
               newState = {
                 selectedSection: prevState.selectedSection.filter(
-                  item => item.ID !== Id
+                  item => item.ID !== Id,
                 ),
               };
               if (!newState.selectedSection?.length)
@@ -424,7 +418,7 @@ class ListingsScreen extends Component {
             case 'M':
               newState = {
                 selectedMake: prevState.selectedMake.filter(
-                  item => item.ID !== Id
+                  item => item.ID !== Id,
                 ),
               };
               if (!newState.selectedMake?.length)
@@ -433,7 +427,7 @@ class ListingsScreen extends Component {
             case 'T':
               newState = {
                 selectedCategory: prevState.selectedCategory.filter(
-                  item => item.ID !== Id
+                  item => item.ID !== Id,
                 ),
               };
               if (!newState.selectedCategory?.length)
@@ -442,7 +436,7 @@ class ListingsScreen extends Component {
             case 'O':
               newState = {
                 selectedRentPeriod: prevState.selectedRentPeriod.filter(
-                  item => item.ID !== Id
+                  item => item.ID !== Id,
                 ),
               };
               if (!newState.selectedRentPeriod?.length)
@@ -451,7 +445,7 @@ class ListingsScreen extends Component {
             case 'D':
               newState = {
                 selectedModel: prevState.selectedModel.filter(
-                  item => item.ID !== Id
+                  item => item.ID !== Id,
                 ),
               };
               if (!newState.selectedModel?.length)
@@ -460,7 +454,7 @@ class ListingsScreen extends Component {
             case 'C':
               newState = {
                 selectedCity: prevState.selectedCity.filter(
-                  item => item.ID !== Id
+                  item => item.ID !== Id,
                 ),
               };
               if (!newState.selectedCity?.length)
@@ -469,7 +463,7 @@ class ListingsScreen extends Component {
             case 'G':
               newState = {
                 selectedGearBox: prevState.selectedGearBox.filter(
-                  item => item.ID !== Id
+                  item => item.ID !== Id,
                 ),
               };
               if (!newState.selectedGearBox?.length)
@@ -478,7 +472,7 @@ class ListingsScreen extends Component {
             case 'F':
               newState = {
                 selectedFuelType: prevState.selectedFuelType.filter(
-                  item => item.ID !== Id
+                  item => item.ID !== Id,
                 ),
               };
               if (!newState.selectedFuelType?.length)
@@ -487,7 +481,7 @@ class ListingsScreen extends Component {
             case 'P':
               newState = {
                 selectedPaymentMethod: prevState.selectedPaymentMethod.filter(
-                  item => item.ID !== Id
+                  item => item.ID !== Id,
                 ),
               };
               if (!newState.selectedPaymentMethod?.length)
@@ -496,7 +490,7 @@ class ListingsScreen extends Component {
             case 'R':
               newState = {
                 selectedColor: prevState.selectedColor.filter(
-                  item => item.ID !== Id
+                  item => item.ID !== Id,
                 ),
               };
               if (!newState.selectedColor?.length)
@@ -527,7 +521,7 @@ class ListingsScreen extends Component {
         },
         () => {
           this.filterResults();
-        }
+        },
       );
     }
   };
@@ -691,7 +685,7 @@ class ListingsScreen extends Component {
         this.countListingsViews(
           data.Listings.map(x => x.ID),
           1,
-          data.Pages
+          data.Pages,
         );
 
         this.setState({
@@ -729,7 +723,7 @@ class ListingsScreen extends Component {
             this.state.Banners?.map(item => {
               KS.BannerViewed(item.ID);
             });
-          }
+          },
         );
       }
     });
@@ -857,13 +851,13 @@ class ListingsScreen extends Component {
         partNumber: this.state.PartNumber,
       },
       null,
-      this.filterController?.signal
+      this.filterController?.signal,
     ).then(data => {
       if (data.Success) {
         this.countListingsViews(
           data.Listings.map(x => x.ID),
           _page,
-          data.Pages
+          data.Pages,
         );
 
         if (onEndReached) {
@@ -1100,7 +1094,7 @@ class ListingsScreen extends Component {
           let maxPrices = this.state.FullmaxPricesList;
 
           maxPrices = maxPrices.filter(
-            Price => parseInt(Price) > parseInt(item)
+            Price => parseInt(Price) > parseInt(item),
           );
           // alert(JSON.stringify(maxPrices));
           this.setState({maxPricesList: maxPrices});
@@ -1138,7 +1132,7 @@ class ListingsScreen extends Component {
           let maxMileages = this.state.FullmaxMileagesList;
 
           maxMileages = maxMileages.filter(
-            Mileage => parseInt(Mileage) > parseInt(item)
+            Mileage => parseInt(Mileage) > parseInt(item),
           );
           // alert(JSON.stringify(maxMileages));
           this.setState({maxMileagesList: maxMileages});
@@ -1210,7 +1204,7 @@ class ListingsScreen extends Component {
           let minPrices = this.state.FullminPricesList;
 
           minPrices = minPrices.filter(
-            Price => parseInt(Price) < parseInt(item)
+            Price => parseInt(Price) < parseInt(item),
           );
           // alert(JSON.stringify(minPrices));
           this.setState({minPricesList: minPrices});
@@ -1246,7 +1240,7 @@ class ListingsScreen extends Component {
           let minMileages = this.state.FullminMileagesList;
 
           minMileages = minMileages.filter(
-            Mileage => parseInt(Mileage) < parseInt(item)
+            Mileage => parseInt(Mileage) < parseInt(item),
           );
           // alert(JSON.stringify(minMileages));
           this.setState({minMileagesList: minMileages});
@@ -1460,7 +1454,7 @@ class ListingsScreen extends Component {
                     .length > 0 //make is already selected
                 ) {
                   let makes = this.state.selectedGearBox.filter(
-                    make => make.ID != item.ID
+                    make => make.ID != item.ID,
                   );
                   if (makes.length == 0) {
                     // if resut is zero , make all the selected
@@ -1471,7 +1465,7 @@ class ListingsScreen extends Component {
                   });
                 } else {
                   let makes = this.state.selectedGearBox.filter(
-                    make => make.ID > 0
+                    make => make.ID > 0,
                   );
                   makes.push(item);
                   this.setState({
@@ -1534,7 +1528,7 @@ class ListingsScreen extends Component {
                     .length > 0 //make is already selected
                 ) {
                   let makes = this.state.selectedFuelType.filter(
-                    make => make.ID != item.ID
+                    make => make.ID != item.ID,
                   );
                   if (makes.length == 0) {
                     // if resut is zero , make all the selected
@@ -1545,7 +1539,7 @@ class ListingsScreen extends Component {
                   });
                 } else {
                   let makes = this.state.selectedFuelType.filter(
-                    make => make.ID > 0
+                    make => make.ID > 0,
                   );
                   makes.push(item);
                   this.setState({
@@ -1604,11 +1598,11 @@ class ListingsScreen extends Component {
                   this.setState({selectedRentPeriod: [item]});
                 } else if (
                   this.state.selectedRentPeriod.filter(
-                    make => make.ID == item.ID
+                    make => make.ID == item.ID,
                   ).length > 0 //make is already selected
                 ) {
                   let makes = this.state.selectedRentPeriod.filter(
-                    make => make.ID != item.ID
+                    make => make.ID != item.ID,
                   );
                   if (makes.length == 0) {
                     // if resut is zero , make all the selected
@@ -1619,7 +1613,7 @@ class ListingsScreen extends Component {
                   });
                 } else {
                   let makes = this.state.selectedRentPeriod.filter(
-                    make => make.ID > 0
+                    make => make.ID > 0,
                   );
                   makes.push(item);
                   this.setState({
@@ -1631,7 +1625,7 @@ class ListingsScreen extends Component {
                 style={[
                   {color: '#000', fontSize: 16},
                   this.state.selectedRentPeriod.filter(
-                    make => make.ID == item.ID
+                    make => make.ID == item.ID,
                   ).length > 0 && {
                     color: 'white',
                   },
@@ -1738,7 +1732,7 @@ class ListingsScreen extends Component {
                 this.countListingsViews(
                   data.Listings.map(x => x.ID),
                   1,
-                  data.Pages
+                  data.Pages,
                 );
 
                 this.setState({
@@ -1889,7 +1883,7 @@ class ListingsScreen extends Component {
               this.countListingsViews(
                 data.Listings.map(x => x.ID),
                 1,
-                data.Pages
+                data.Pages,
               );
 
               this.setState({
@@ -2011,7 +2005,7 @@ class ListingsScreen extends Component {
                     .length > 0 //make is already selected
                 ) {
                   let makes = this.state.selectedStatus.filter(
-                    make => make.ID != item.ID
+                    make => make.ID != item.ID,
                   );
                   if (makes.length == 0) {
                     // if resut is zero , make all the selected
@@ -2022,7 +2016,7 @@ class ListingsScreen extends Component {
                   });
                 } else {
                   let makes = this.state.selectedStatus.filter(
-                    make => make.ID > 0
+                    make => make.ID > 0,
                   );
                   makes.push(item);
                   this.setState({
@@ -2068,7 +2062,7 @@ class ListingsScreen extends Component {
                     .length > 0 //make is already selected
                 ) {
                   let makes = this.state.selectedColor.filter(
-                    make => make.ID != item.ID
+                    make => make.ID != item.ID,
                   );
                   if (makes.length == 0) {
                     // if resut is zero , make all the selected
@@ -2079,7 +2073,7 @@ class ListingsScreen extends Component {
                   });
                 } else {
                   let makes = this.state.selectedColor.filter(
-                    make => make.ID > 0
+                    make => make.ID > 0,
                   );
                   makes.push(item);
                   this.setState({
@@ -2165,7 +2159,7 @@ class ListingsScreen extends Component {
                   marginRight: 5,
                 },
                 this.state.selectedPaymentMethod.filter(
-                  make => make.ID == item.ID
+                  make => make.ID == item.ID,
                 ).length > 0 && {
                   backgroundColor: Color.secondary,
                 },
@@ -2175,11 +2169,11 @@ class ListingsScreen extends Component {
                   this.setState({selectedPaymentMethod: [item]});
                 } else if (
                   this.state.selectedPaymentMethod.filter(
-                    make => make.ID == item.ID
+                    make => make.ID == item.ID,
                   ).length > 0 //make is already selected
                 ) {
                   let makes = this.state.selectedPaymentMethod.filter(
-                    make => make.ID != item.ID
+                    make => make.ID != item.ID,
                   );
                   if (makes.length == 0) {
                     // if resut is zero , make all the selected
@@ -2190,7 +2184,7 @@ class ListingsScreen extends Component {
                   });
                 } else {
                   let makes = this.state.selectedPaymentMethod.filter(
-                    make => make.ID > 0
+                    make => make.ID > 0,
                   );
                   makes.push(item);
                   this.setState({
@@ -2202,7 +2196,7 @@ class ListingsScreen extends Component {
                 style={[
                   {color: '#000', fontSize: 16},
                   this.state.selectedPaymentMethod.filter(
-                    make => make.ID == item.ID
+                    make => make.ID == item.ID,
                   ).length > 0 && {
                     color: 'white',
                   },
@@ -2362,7 +2356,7 @@ class ListingsScreen extends Component {
         if (callback) {
           callback();
         }
-      }
+      },
     );
   }
 
@@ -2498,7 +2492,7 @@ class ListingsScreen extends Component {
                 !!this.props.route.params?.SellType.ID &&
                   this.props.route.params?.SellType.ID != 7 &&
                   !this.state.selectedSection?.some(
-                    item => item.ID === 4096 || item.ID === 2048 // Board 4096 , Accessories 2048 => not incloud 2048 OR 4096,
+                    item => item.ID === 4096 || item.ID === 2048, // Board 4096 , Accessories 2048 => not incloud 2048 OR 4096,
                   ) && {
                     Name: `${this.props.route.params?.ListingType?.Name} ${this.props.route.params?.SellType.Name}`,
                     Id: this.props.route.params?.SellType.ID,
@@ -2597,7 +2591,7 @@ class ListingsScreen extends Component {
           await this.filterResults(
             true,
             (this.state.sortOption && this.state.sortOption.asc) || false,
-            (this.state.sortOption && this.state.sortOption.sortBy) || false
+            (this.state.sortOption && this.state.sortOption.sortBy) || false,
           );
         } else if (this.state.page > this.state.maximumPages) {
           if (
@@ -2990,7 +2984,7 @@ class ListingsScreen extends Component {
                     x =>
                       x.IsSpecial &&
                       `${x.ISOCode}`.toLowerCase() ==
-                        `${this.props.ViewingCountry?.cca2}`.toLowerCase()
+                        `${this.props.ViewingCountry?.cca2}`.toLowerCase(),
                   ),
                 ].length == 0 &&
                   `${this.props.ViewingCountry?.cca2}`.toLowerCase() !=
@@ -3014,7 +3008,7 @@ class ListingsScreen extends Component {
                     x =>
                       x.IsSpecial &&
                       `${x.ISOCode}`.toLowerCase() ==
-                        `${this.props.ViewingCountry?.cca2}`.toLowerCase()
+                        `${this.props.ViewingCountry?.cca2}`.toLowerCase(),
                   )}
                   renderItem={this.renderItem.bind(this)}
                 />
@@ -3220,7 +3214,7 @@ class ListingsScreen extends Component {
             });
           }}
         />
-        <Modal
+        <AutobeebModal
           ref={instance => (this.filterModal = instance)}
           //  isOpen={true}
           style={[styles.filterModal]}
@@ -3303,7 +3297,7 @@ class ListingsScreen extends Component {
                       Languages.AllSections,
                     () => {
                       this.sectionModal.open();
-                    }
+                    },
                   )}
                 </View>
               )}
@@ -3351,7 +3345,7 @@ class ListingsScreen extends Component {
                                 backgroundColor: '#e6e6e6',
                               },
                               this.state.selectedMake.filter(
-                                make => make.ID == item.ID
+                                make => make.ID == item.ID,
                               ).length > 0 && {
                                 borderWidth: 2,
                                 borderColor: '#1C7EA5',
@@ -3362,11 +3356,11 @@ class ListingsScreen extends Component {
                                 this.setState({selectedMake: [item]});
                               } else if (
                                 this.state.selectedMake.filter(
-                                  make => make.ID == item.ID
+                                  make => make.ID == item.ID,
                                 ).length > 0 //make is already selected
                               ) {
                                 let makes = this.state.selectedMake.filter(
-                                  make => make.ID != item.ID
+                                  make => make.ID != item.ID,
                                 );
                                 if (makes.length == 0) {
                                   // if resut is zero , make all the selected
@@ -3378,7 +3372,7 @@ class ListingsScreen extends Component {
                                 });
                               } else {
                                 let makes = this.state.selectedMake.filter(
-                                  make => make.ID > 0
+                                  make => make.ID > 0,
                                 );
                                 makes.push(item);
                                 this.setState({
@@ -3388,7 +3382,7 @@ class ListingsScreen extends Component {
                               }
                             }}>
                             {this.state.selectedMake.filter(
-                              make => make.ID == item.ID
+                              make => make.ID == item.ID,
                             ).length > 0 && (
                               <View
                                 style={{
@@ -3439,7 +3433,7 @@ class ListingsScreen extends Component {
                       () => {
                         //    return alert(JSON.stringify(this.state.selectedMake));
                         this.makeModal.open();
-                      }
+                      },
                     )}
                   </View>
                 )}
@@ -3496,7 +3490,7 @@ class ListingsScreen extends Component {
                           });
                         });
                         this.modelModal.open();
-                      }
+                      },
                     )}
                   </View>
                 )}
@@ -3521,7 +3515,7 @@ class ListingsScreen extends Component {
                         Languages.AllCategories,
                       () => {
                         this.categoryModal.open();
-                      }
+                      },
                     )}
                   </View>
                 )}
@@ -3539,7 +3533,7 @@ class ListingsScreen extends Component {
                       Languages.All,
                     () => {
                       this.cityModal.open();
-                    }
+                    },
                   )}
                 </View>
               )}
@@ -3634,7 +3628,7 @@ class ListingsScreen extends Component {
                     {this.renderSectionHeader(
                       this.props.route.params?.ListingType?.ID == 4
                         ? Languages.Hours
-                        : Languages.Mileage + ':'
+                        : Languages.Mileage + ':',
                     )}
                     {this.renderMileageSelect()}
                   </View>
@@ -3642,7 +3636,7 @@ class ListingsScreen extends Component {
 
               {this.props.route.params?.ListingType?.ID >= 32 &&
                 !this.state.selectedSection?.some(
-                  item => item.ID === 4096 || item.ID === 2048
+                  item => item.ID === 4096 || item.ID === 2048,
                 ) && // Board 4096 , Accessories 2048 => not incloud 2048 OR 4096
                 !!this.state.Sections?.length && (
                   <View style={styles.filterSectionContainer}>
@@ -3702,8 +3696,8 @@ class ListingsScreen extends Component {
               </TouchableOpacity>
             </View>
           </View>
-        </Modal>
-        <Modal //make modal
+        </AutobeebModal>
+        <AutobeebModal //make modal
           ref={instance => (this.makeModal = instance)}
           style={[styles.modelModal]}
           position="center"
@@ -3727,7 +3721,7 @@ class ListingsScreen extends Component {
                 placeholder={Languages.Search}
                 onChangeText={text => {
                   let tempMakes = JSON.parse(
-                    JSON.stringify(this.state.FullMakes)
+                    JSON.stringify(this.state.FullMakes),
                   ); // take value instead of ref
                   let filteredMakes = tempMakes.filter(item => {
                     return item.Name.toUpperCase().includes(text.toUpperCase());
@@ -3755,11 +3749,11 @@ class ListingsScreen extends Component {
                           this.setState({selectedMake: [item]});
                         } else if (
                           this.state.selectedMake.filter(
-                            make => make.ID == item.ID
+                            make => make.ID == item.ID,
                           ).length > 0 //make is already selected
                         ) {
                           let makes = this.state.selectedMake.filter(
-                            make => make.ID != item.ID
+                            make => make.ID != item.ID,
                           );
                           if (makes.length == 0) {
                             // if resut is zero , make all the selected
@@ -3771,7 +3765,7 @@ class ListingsScreen extends Component {
                           });
                         } else {
                           let makes = this.state.selectedMake.filter(
-                            make => make.ID > 0
+                            make => make.ID > 0,
                           );
                           makes.push(item);
                           this.setState({
@@ -3837,7 +3831,7 @@ class ListingsScreen extends Component {
                         <IconMC
                           name={
                             this.state.selectedMake.filter(
-                              make => make.ID == item.ID
+                              make => make.ID == item.ID,
                             ).length > 0
                               ? 'checkbox-marked'
                               : 'checkbox-blank-outline'
@@ -3866,11 +3860,11 @@ class ListingsScreen extends Component {
                 if (!this.filterModal.isOpen) {
                   this.filterResults();
                 }
-              }
+              },
             )}
           </View>
-        </Modal>
-        <Modal //selltype modal
+        </AutobeebModal>
+        <AutobeebModal //selltype modal
           ref={instance => (this.SortModal = instance)}
           style={[styles.sellTypeModal]}
           position="center"
@@ -3915,8 +3909,8 @@ class ListingsScreen extends Component {
               </TouchableOpacity>
             </View>
           </View>
-        </Modal>
-        <Modal //selltype modal
+        </AutobeebModal>
+        <AutobeebModal //selltype modal
           ref={instance => (this.SellTypeModal = instance)}
           style={[styles.sellTypeModal]}
           position="center"
@@ -3960,8 +3954,8 @@ class ListingsScreen extends Component {
               </TouchableOpacity>
             </View>
           </View>
-        </Modal>
-        <Modal //currency modal
+        </AutobeebModal>
+        <AutobeebModal //currency modal
           ref={instance => (this.CurrencyModal = instance)}
           style={[styles.sellTypeModal]}
           position="center"
@@ -3988,7 +3982,7 @@ class ListingsScreen extends Component {
               }}>
               {this.state.PrimaryCurrencies &&
                 this.state.PrimaryCurrencies.map(type =>
-                  this.renderCurrencyRow(type)
+                  this.renderCurrencyRow(type),
                 )}
               <TouchableOpacity
                 activeOpacity={0.9}
@@ -4008,8 +4002,8 @@ class ListingsScreen extends Component {
               </TouchableOpacity>
             </View>
           </View>
-        </Modal>
-        <Modal //section Modal
+        </AutobeebModal>
+        <AutobeebModal //section Modal
           ref={instance => (this.sectionModal = instance)}
           style={[styles.modelModal]}
           position="center"
@@ -4061,7 +4055,7 @@ class ListingsScreen extends Component {
                       },
                       () => {
                         this.sectionModal.close();
-                      }
+                      },
                     );
                   }}>
                   <View
@@ -4099,7 +4093,7 @@ class ListingsScreen extends Component {
                         backgroundColor:
                           this.state.selectedSection &&
                           this.state.selectedSection.filter(
-                            model => model.ID == item.ID
+                            model => model.ID == item.ID,
                           ).length > 0
                             ? Color.secondary
                             : '#fff',
@@ -4147,7 +4141,7 @@ class ListingsScreen extends Component {
                           if (!this.filterModal.isOpen) {
                             this.filterResults();
                           }
-                        }
+                        },
                       );
                     }}>
                     <View
@@ -4165,7 +4159,7 @@ class ListingsScreen extends Component {
                           tintColor={
                             this.state.selectedSection &&
                             this.state.selectedSection.filter(
-                              model => model.ID == item.ID
+                              model => model.ID == item.ID,
                             ).length > 0
                               ? '#FFF'
                               : Color.secondary
@@ -4184,7 +4178,7 @@ class ListingsScreen extends Component {
                           color:
                             this.state.selectedSection &&
                             this.state.selectedSection.filter(
-                              model => model.ID == item.ID
+                              model => model.ID == item.ID,
                             ).length > 0
                               ? '#FFF'
                               : Color.secondary,
@@ -4199,8 +4193,8 @@ class ListingsScreen extends Component {
               }}
             />
           </View>
-        </Modal>
-        <Modal //cateogry Modal
+        </AutobeebModal>
+        <AutobeebModal //cateogry Modal
           ref={instance => (this.categoryModal = instance)}
           style={[styles.modelModal]}
           position="center"
@@ -4245,7 +4239,7 @@ class ListingsScreen extends Component {
                       backgroundColor:
                         this.state.selectedCategory &&
                         this.state.selectedCategory.filter(
-                          model => model.ID == All.ID
+                          model => model.ID == All.ID,
                         ).length > 0
                           ? Color.secondary
                           : '#fff',
@@ -4264,7 +4258,7 @@ class ListingsScreen extends Component {
                         color:
                           this.state.selectedCategory &&
                           this.state.selectedCategory.filter(
-                            model => model.ID == All.ID
+                            model => model.ID == All.ID,
                           ).length > 0
                             ? '#FFF'
                             : Color.secondary,
@@ -4296,7 +4290,7 @@ class ListingsScreen extends Component {
                         backgroundColor:
                           this.state.selectedCategory &&
                           this.state.selectedCategory.filter(
-                            model => model.ID == item.ID
+                            model => model.ID == item.ID,
                           ).length > 0
                             ? Color.secondary
                             : '#fff',
@@ -4308,11 +4302,11 @@ class ListingsScreen extends Component {
                       } else if (
                         this.state.selectedCategory &&
                         this.state.selectedCategory.filter(
-                          model => model.ID == item.ID
+                          model => model.ID == item.ID,
                         ).length > 0 //model is already selected
                       ) {
                         let models = this.state.selectedCategory.filter(
-                          model => model.ID != item.ID //remove model
+                          model => model.ID != item.ID, //remove model
                         );
                         if (models.length == 0) {
                           models.unshift(All);
@@ -4323,7 +4317,7 @@ class ListingsScreen extends Component {
                       } else {
                         let models = [];
                         models = this.state.selectedCategory.filter(
-                          item => !item.All
+                          item => !item.All,
                         );
                         models.push(item);
                         this.setState({
@@ -4346,7 +4340,7 @@ class ListingsScreen extends Component {
                           tintColor={
                             this.state.selectedCategory &&
                             this.state.selectedCategory.filter(
-                              model => model.ID == item.ID
+                              model => model.ID == item.ID,
                             ).length > 0
                               ? '#FFF'
                               : Color.secondary
@@ -4365,7 +4359,7 @@ class ListingsScreen extends Component {
                           color:
                             this.state.selectedCategory &&
                             this.state.selectedCategory.filter(
-                              model => model.ID == item.ID
+                              model => model.ID == item.ID,
                             ).length > 0
                               ? '#FFF'
                               : Color.secondary,
@@ -4390,11 +4384,11 @@ class ListingsScreen extends Component {
                 if (!this.filterModal.isOpen) {
                   this.filterResults();
                 }
-              }
+              },
             )}
           </View>
-        </Modal>
-        <Modal //model modal
+        </AutobeebModal>
+        <AutobeebModal //model modal
           ref={instance => (this.modelModal = instance)}
           style={[styles.modelModal]}
           position="center"
@@ -4434,7 +4428,7 @@ class ListingsScreen extends Component {
                   onChangeText={text => {
                     let tempMakes = this.state.FullModels.filter(item => {
                       return item.Name.toUpperCase().includes(
-                        text.toUpperCase()
+                        text.toUpperCase(),
                       );
                     });
                     this.setState({Models: tempMakes, modelSearch: text});
@@ -4461,11 +4455,11 @@ class ListingsScreen extends Component {
                           } else if (
                             this.state.selectedModel &&
                             this.state.selectedModel.filter(
-                              model => model.ID == item.ID
+                              model => model.ID == item.ID,
                             ).length > 0 //model is already selected
                           ) {
                             let models = this.state.selectedModel.filter(
-                              model => model.ID != item.ID //remove model
+                              model => model.ID != item.ID, //remove model
                             );
                             if (models.length == 0) {
                               models.unshift(All);
@@ -4476,7 +4470,7 @@ class ListingsScreen extends Component {
                           } else {
                             let models = [];
                             models = this.state.selectedModel.filter(
-                              item => !item.All
+                              item => !item.All,
                             );
                             models.push(item);
                             this.setState({
@@ -4497,7 +4491,7 @@ class ListingsScreen extends Component {
                             name={
                               this.state.selectedModel &&
                               this.state.selectedModel.filter(
-                                model => model.ID == item.ID
+                                model => model.ID == item.ID,
                               ).length > 0
                                 ? 'checkbox-marked'
                                 : 'checkbox-blank-outline'
@@ -4523,12 +4517,12 @@ class ListingsScreen extends Component {
                   if (!this.filterModal.isOpen) {
                     this.filterResults();
                   }
-                }
+                },
               )}
             </View>
           )}
-        </Modal>
-        <Modal //city modal
+        </AutobeebModal>
+        <AutobeebModal //city modal
           ref={instance => (this.cityModal = instance)}
           style={[styles.modelModal]}
           position="center"
@@ -4580,11 +4574,11 @@ class ListingsScreen extends Component {
                         } else if (
                           !!this.state.selectedCity &&
                           this.state.selectedCity?.filter(
-                            model => model.ID == item.ID
+                            model => model.ID == item.ID,
                           ).length > 0 //model is already selected
                         ) {
                           let models = this.state.selectedCity?.filter(
-                            model => model.ID != item.ID //remove model
+                            model => model.ID != item.ID, //remove model
                           );
                           if (models?.length == 0) {
                             models.unshift(All);
@@ -4595,7 +4589,7 @@ class ListingsScreen extends Component {
                         } else {
                           let models = [];
                           models = this.state.selectedCity?.filter(
-                            item => !item.All
+                            item => !item.All,
                           );
                           models?.push(item);
                           this.setState({
@@ -4616,7 +4610,7 @@ class ListingsScreen extends Component {
                           name={
                             this.state.selectedCity &&
                             this.state.selectedCity.filter(
-                              model => model.ID == item.ID
+                              model => model.ID == item.ID,
                             ).length > 0
                               ? 'checkbox-marked'
                               : 'checkbox-blank-outline'
@@ -4650,11 +4644,11 @@ class ListingsScreen extends Component {
                 if (!this.filterModal.isOpen) {
                   this.filterResults();
                 }
-              }
+              },
             )}
           </View>
-        </Modal>
-        <Modal //Year modal
+        </AutobeebModal>
+        <AutobeebModal //Year modal
           ref={instance => (this.yearModal = instance)}
           style={[styles.modelModal]}
           position="center"
@@ -4802,11 +4796,11 @@ class ListingsScreen extends Component {
                 if (!this.filterModal.isOpen) {
                   this.filterResults();
                 }
-              }
+              },
             )}
           </View>
-        </Modal>
-        <Modal //Price modal
+        </AutobeebModal>
+        <AutobeebModal //Price modal
           ref={instance => (this.PriceModal = instance)}
           style={[styles.modelModal]}
           position="center"
@@ -4948,11 +4942,11 @@ class ListingsScreen extends Component {
                 if (!this.filterModal.isOpen) {
                   this.filterResults();
                 }
-              }
+              },
             )}
           </View>
-        </Modal>
-        <Modal //Mileage modal
+        </AutobeebModal>
+        <AutobeebModal //Mileage modal
           ref={instance => (this.MileageModal = instance)}
           style={[styles.modelModal]}
           position="center"
@@ -5098,10 +5092,10 @@ class ListingsScreen extends Component {
                 if (!this.filterModal.isOpen) {
                   this.filterResults();
                 }
-              }
+              },
             )}
           </View>
-        </Modal>
+        </AutobeebModal>
       </View>
     );
   }
@@ -5237,8 +5231,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     height: Dimensions.get('screen').height,
     width: Dimensions.get('screen').width,
-    padding: 0,
-    elevation: 10,
   },
 
   filterModal: {

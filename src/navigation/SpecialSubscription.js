@@ -14,7 +14,6 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Modal from 'react-native-modalbox';
 import {connect} from 'react-redux';
 import {AppIcon, Color} from '../common';
 import Constants from '../common/Constants';

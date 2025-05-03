@@ -24,9 +24,8 @@ import {Color, Languages, Styles, Constants} from '../common';
 import {NewHeader} from '../containers';
 import KS from '../services/KSAPI';
 import Toast, {DURATION} from 'react-native-easy-toast';
-import Modal from 'react-native-modalbox';
 import PhoneInput from '../components/react-native-phone-input/lib/index';
-import CountryPicker from 'react-native-country-picker-modal-kensoftware';
+import CountryPicker from 'react-native-country-picker-modal';
 import * as Animatable from 'react-native-animatable';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -34,6 +33,7 @@ import {NavigationActions, StackActions} from '@react-navigation/native';
 //
 import {toast} from '../Omni';
 import ImagePicker from 'react-native-image-crop-picker';
+import { AutobeebModal } from '../components';
 
 const WIDTH = Dimensions.get('screen').width;
 const {height, width} = Dimensions.get('screen');
@@ -414,7 +414,7 @@ class EditProfile extends Component {
               style={{backgroundColor: Color.primary}}
             />
 
-            <Modal
+            <AutobeebModal 
               //coverScreen
               style={[styles.modalbox]}
               ref={instance => (this.NameModal = instance)}
@@ -479,9 +479,9 @@ class EditProfile extends Component {
                   </TouchableOpacity>
                 </View>
               </View>
-            </Modal>
+            </AutobeebModal>
 
-            <Modal
+            <AutobeebModal
               //coverScreen
               style={[styles.modalbox]}
               ref={instance => (this.PasswordModal = instance)}
@@ -588,9 +588,9 @@ class EditProfile extends Component {
                   </TouchableOpacity>
                 </View>
               </View>
-            </Modal>
+            </AutobeebModal>
 
-            <Modal
+            <AutobeebModal 
               //coverScreen
               style={[styles.modalbox]}
               ref={instance => (this.AddEmailModal = instance)}
@@ -684,9 +684,9 @@ class EditProfile extends Component {
                   </TouchableOpacity>
                 </View>
               </View>
-            </Modal>
+            </AutobeebModal>
 
-            <Modal
+            <AutobeebModal 
               //coverScreen
               style={[styles.modalbox]}
               ref={instance => (this.AddPhoneModal = instance)}
@@ -858,8 +858,8 @@ class EditProfile extends Component {
                   </TouchableOpacity>
                 </View>
               </View>
-            </Modal>
-            <Modal
+            </AutobeebModal>
+            <AutobeebModal 
               //coverScreen
               style={[styles.modalbox]}
               ref={instance => (this.ChangePhoneModal = instance)}
@@ -1063,9 +1063,9 @@ class EditProfile extends Component {
                   </TouchableOpacity>
                 </View>
               </View>
-            </Modal>
+            </AutobeebModal>
 
-            <Modal
+            <AutobeebModal 
               //coverScreen
               style={[styles.modalbox]}
               ref={instance => (this.ChangeEmailModal = instance)}
@@ -1174,9 +1174,9 @@ class EditProfile extends Component {
                   </TouchableOpacity>
                 </View>
               </View>
-            </Modal>
+            </AutobeebModal>
 
-            <Modal
+            <AutobeebModal 
               //coverScreen
               style={[styles.modalbox]}
               ref={instance => (this.VerifyEmailModal = instance)}
@@ -1341,9 +1341,9 @@ class EditProfile extends Component {
                   </TouchableOpacity>
                 </View>
               </View>
-            </Modal>
+            </AutobeebModal>
 
-            <Modal
+            <AutobeebModal 
               //coverScreen
               style={[styles.modalbox]}
               ref={instance => (this.VerifyPhoneModal = instance)}
@@ -1506,9 +1506,9 @@ class EditProfile extends Component {
                   </TouchableOpacity>
                 </View>
               </View>
-            </Modal>
+            </AutobeebModal>
 
-            <Modal
+            <AutobeebModal 
               ref={instance => (this.photoModal = instance)}
               position="top"
               //      //coverScreen
@@ -1560,7 +1560,7 @@ class EditProfile extends Component {
                   <Text style={styles.modalTextStyle}>{Languages.Gallery}</Text>
                 </TouchableOpacity>
               </View>
-            </Modal>
+            </AutobeebModal>
 
             <View
               style={{

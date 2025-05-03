@@ -14,7 +14,7 @@ import {isIphoneX} from 'react-native-iphone-x-helper';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import IconFa from 'react-native-vector-icons/FontAwesome';
-import CountryPicker from 'react-native-country-picker-modal-kensoftware';
+import CountryPicker from '../../components/CountryModal/CountryPickerModal';
 
 class NewHeader extends Component {
   constructor(props) {
@@ -180,7 +180,7 @@ class NewHeader extends Component {
               justifyContent: 'space-evenly',
             }}
             onPress={() => {
-              this?.refs?.countryPicker?.openModal();
+              this.countryPicker?.openModal();
             }}>
             <View
               style={{
@@ -190,7 +190,7 @@ class NewHeader extends Component {
                 <CountryPicker
                   filterPlaceholder={Languages.Search}
                   hideAlphabetFilter
-                  ref="countryPicker"
+                  ref={listView => (this.countryPicker = listView)}
                   filterable
                   AllCountries
                   autoFocusFilter={false}
@@ -216,7 +216,7 @@ class NewHeader extends Component {
                         () => {
                           this.props.setViewingCountry(value);
                           this.props.onCountryChange(value);
-                        }
+                        },
                       );
                     } else {
                       this.setState(
@@ -226,7 +226,7 @@ class NewHeader extends Component {
                         },
                         () => {
                           this.props.setViewingCountry(value);
-                        }
+                        },
                       );
                     }
                   }}

@@ -9,12 +9,11 @@ import {
   TextInput,
   I18nManager,
   Platform,
+  Modal,
 } from 'react-native';
 
 import {Color} from '../common';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
-
-import Modal from 'react-native-modalbox';
 import Languages from '../common/Languages';
 
 const PickerSelectModal = ({
@@ -141,7 +140,7 @@ const PickerSelectModal = ({
 
   return (
     <Modal
-      isOpen={openPickerModal}
+      visible={openPickerModal}
       style={[styles.optionModal]}
       position="center"
       backButtonClose={true}

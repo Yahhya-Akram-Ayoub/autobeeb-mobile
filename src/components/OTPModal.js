@@ -11,10 +11,10 @@ import {
   Platform,
   Pressable,
   ActivityIndicator,
+  Modal,
 } from 'react-native';
 import {Languages, Color} from '../common';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
-import Modal from 'react-native-modalbox';
 import {OTPInput} from './index';
 
 var delayCounter2;
@@ -96,7 +96,7 @@ const OTPModal = ({
 
   return (
     <Modal
-      isOpen={openOTPModal}
+      visible={openOTPModal}
       style={[styles.modelModal]}
       position="center"
       onOpened={() => {

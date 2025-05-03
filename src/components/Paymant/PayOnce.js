@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 import {connect} from 'react-redux';
 import {Languages, Color, Constants} from '../../common';
-import Modal from 'react-native-modalbox';
 import HTML, {IGNORED_TAGS} from 'react-native-render-html';
 import {
   NavigationActions,
@@ -24,6 +23,7 @@ import {
 import {isIphoneX} from 'react-native-iphone-x-helper';
 import {WebView} from 'react-native-webview';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AutobeebModal from '../Modals/AutobeebModal';
 
 const screenWidth = Dimensions.get('screen').width;
 
@@ -341,7 +341,7 @@ const PayOnce = ({
   return (
     <View>
       {isModal ? (
-        <Modal
+        <AutobeebModal
           ref={PaymentMethodModalRef}
           coverScreen
           statusBarTranslucent
@@ -510,7 +510,7 @@ const PayOnce = ({
               </ScrollView>
             </View>
           )}
-        </Modal>
+        </AutobeebModal>
       ) : (
         <View
           style={{
@@ -625,7 +625,7 @@ const PayOnce = ({
         </View>
       )}
 
-      <Modal
+      <AutobeebModal
         ref={PaymentModal}
         coverScreen
         statusBarTranslucent
@@ -694,7 +694,7 @@ const PayOnce = ({
           )}
           startInLoadingState={true}
         />
-      </Modal>
+      </AutobeebModal>
     </View>
   );
 };

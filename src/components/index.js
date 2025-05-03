@@ -59,8 +59,8 @@ import HorizontalSwiper from './HorizontalSwiper';
 import LocationSelect from './LocationSelect';
 export {ImagePopUp, HorizontalSwiper, LocationSelect};
 
-
 export {default as TagsFilter} from './ListingsComponent/TagsFilter.js';
 export {default as SkeletonCard} from './ListingsComponent/SkeletonCard.js';
 export {default as SkeletonTabFilter} from './ListingsComponent/SkeletonTabFilter.js';
 export {default as BottomNavigationBar} from './ListingsComponent/BottomNavigationBar.js';
+export {default as AutobeebModal} from './Modals/AutobeebModal.js';

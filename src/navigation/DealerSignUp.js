@@ -18,9 +18,9 @@ import ReactNative, {
 } from 'react-native';
 import {connect} from 'react-redux';
 import {Color, Languages} from '../common';
-import {LogoSpinner, OTPModal, ImagePopUp, LocationSelect} from '../components';
-import {getAllCountries} from 'react-native-country-picker-modal-kensoftware';
-import CountryPicker from 'react-native-country-picker-modal-kensoftware';
+import {LogoSpinner, OTPModal, ImagePopUp, LocationSelect, AutobeebModal} from '../components';
+import {getAllCountries} from 'react-native-country-picker-modal';
+import CountryPicker from 'react-native-country-picker-modal';
 import {NewHeader} from '../containers';
 import KS from '../services/KSAPI';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
@@ -29,7 +29,6 @@ import DeviceInfo from 'react-native-device-info';
 import {toast} from '../Omni';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Modal from 'react-native-modalbox';
 import MapView, {Marker} from 'react-native-maps';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImageCropPicker from 'react-native-image-crop-picker';
@@ -649,7 +648,7 @@ class DealerSignUp extends Component {
         />
 
         <NewHeader navigation={this.props.navigation} back />
-        <Modal
+        <AutobeebModal 
           ref={instance => (this.locationModal = instance)}
           //  isOpen
           backButtonClose
@@ -691,8 +690,8 @@ class DealerSignUp extends Component {
               }}
             />
           </View>
-        </Modal>
-        <Modal
+        </AutobeebModal>
+        <AutobeebModal 
           style={[styles.modalbox]}
           ref={instance => (this.PasswordModal = instance)}
           swipeToClose={true}
@@ -753,7 +752,7 @@ class DealerSignUp extends Component {
               </TouchableOpacity>
             </View>
           </View>
-        </Modal>
+        </AutobeebModal>
         <OTPModal
           isOpen={this.state.openOTPModal}
           OTPMessage={Languages.WeHaveSentTheOTP}
@@ -819,7 +818,7 @@ class DealerSignUp extends Component {
           }}
         />
 
-        <Modal
+        <AutobeebModal
           ref={instance => (this.photoModal = instance)}
           position="top"
           //   coverScreen
@@ -871,7 +870,7 @@ class DealerSignUp extends Component {
               <Text style={styles.modalTextStyle}>{Languages.Gallery}</Text>
             </TouchableOpacity>
           </View>
-        </Modal>
+        </AutobeebModal>
         <ScrollView
           // ref={instance => (this.scrollViewRef = instance)}
           showsVerticalScrollIndicator={false}

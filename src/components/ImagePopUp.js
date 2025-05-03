@@ -7,13 +7,12 @@ import {
   Platform,
   Image,
   Linking,
+  Modal,
 } from 'react-native';
 import {Color, ExtractScreenObjFromUrl} from '../common';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
-import Modal from 'react-native-modalbox';
 import KS from '../services/KSAPI';
 import {useNavigation} from '@react-navigation/native';
-
 
 const ImagePopUp = ({isOpen, onOpened, onClosed, Banner}) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -37,7 +36,7 @@ const ImagePopUp = ({isOpen, onOpened, onClosed, Banner}) => {
 
   return (
     <Modal
-      isOpen={Open}
+      visible={Open}
       style={[styles.modelModal, isLoading && {backgroundColor: 'transparent'}]}
       position="center"
       onOpened={() => {

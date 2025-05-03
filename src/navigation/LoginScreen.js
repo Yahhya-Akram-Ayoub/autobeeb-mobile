@@ -15,6 +15,7 @@ import {
   Platform,
   I18nManager,
   ActivityIndicator,
+  Modal,
 } from 'react-native';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -26,8 +27,7 @@ import messaging from '@react-native-firebase/messaging';
 import PhoneInput from 'react-native-phone-input';
 import DeviceInfo from 'react-native-device-info';
 import IconEn from 'react-native-vector-icons/MaterialCommunityIcons';
-import Modal from 'react-native-modalbox';
-import CountryPicker from 'react-native-country-picker-modal-kensoftware';
+import CountryPicker from 'react-native-country-picker-modal';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {
   AppleButton,
@@ -52,7 +52,6 @@ class LoginScreen extends Component {
       isLoading: false,
       logInFB: false,
       userInfo: null,
-      logInFB: false,
       loading: false,
       modalVisible: false,
       cca2: null,
@@ -299,7 +298,7 @@ class LoginScreen extends Component {
     return (
       <View style={{flex: 1}}>
         <Modal
-          isOpen={this.state.openEmailModal}
+          visible={this.state.openEmailModal}
           style={[styles.modelModal]}
           position="center"
           entry="bottom"

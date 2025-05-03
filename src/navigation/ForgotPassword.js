@@ -24,7 +24,7 @@ import KS from '../services/KSAPI';
 import messaging from '@react-native-firebase/messaging';
 import PhoneInput from 'react-native-phone-input';
 import {toast} from '../Omni';
-import CountryPicker from 'react-native-country-picker-modal-kensoftware';
+import CountryPicker from 'react-native-country-picker-modal';
 import IconEn from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
