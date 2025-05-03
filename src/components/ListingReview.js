@@ -129,7 +129,7 @@ class ListingReview extends Component {
       });
     }
     setTimeout(() => {
-      this.scrollviewRef?.scrollToEnd();
+      this.scrollviewRef.current?.scrollToEnd();
     }, 500);
 
     let _CountriesData = this.props.CountriesData;
@@ -812,7 +812,7 @@ class ListingReview extends Component {
           placeholder={Languages.EnterDescription}
           placeholderTextColor={'#383737'}
           onChangeText={text => {
-            this.scrollviewRef?.scrollToEnd({animated: true});
+            this.scrollviewRef.current?.scrollToEnd({animated: true});
             this.props.onChangeDesc(text);
           }}
           value={this.props.description}

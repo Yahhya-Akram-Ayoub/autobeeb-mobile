@@ -276,7 +276,7 @@ class LoginScreen extends Component {
       paddingBottom: Platform.select({ios: 250, android: 100}),
     });
     setTimeout(() => {
-      this.scrollviewRef?.scrollToEnd();
+      this.scrollviewRef.current?.scrollToEnd();
     }, 200);
   }
 

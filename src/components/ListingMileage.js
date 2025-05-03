@@ -26,8 +26,8 @@ class ListingMileage extends Component {
 
     setTimeout(() => {
       this.setState({done: true}); // this is only to reinitalize the state so the phone input stays green even after leaving the page
-      this.mileageRef?.focus();
-    }, 500);
+      this.mileageRef.current?.focus();
+33    }, 500);
   }
 
   render() {
