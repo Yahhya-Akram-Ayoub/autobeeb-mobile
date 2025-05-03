@@ -383,6 +383,7 @@ const BottomNavigation = () => {
                 />
               </View>
             ),
+            
           };
         }}
       />
