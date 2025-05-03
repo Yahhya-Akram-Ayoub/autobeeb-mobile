@@ -23,8 +23,6 @@ import KS from '../services/KSAPI';
 import {isIphoneX} from 'react-native-iphone-x-helper';
 import IconEn from 'react-native-vector-icons/Feather';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
-import {requestCameraPermission} from '../ultils/Permission';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {NavigationActions, StackActions} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Icon, toast} from '../Omni';
@@ -449,79 +447,6 @@ class ChatScreen extends Component {
       );
     });
   }
-  renderActions(props) {
-    return (
-      <Fragment>
-        <Actions
-          {...props}
-          options={{
-            [Languages.Gallery]: () => this.openGallery(),
-            [Languages.camera]: () => this.openCamera(),
-          }}
-          icon={() => <Icon name={'camera'} size={20} color={Color.primary} />}
-          onSend={messages => console.log(messages)}
-        />
-        {!this.state.text && this.renderMic(props)}
-      </Fragment>
-    );
-  }
-  openGallery() {
-    const options = {
-      mediaType: 'photo',
-      includeBase64: true,
-    };
-
-    launchImageLibrary(options, res => {
-      const obj = res.assets[0];
-      if (res.didCancel) {
-        return;
-      }
-      const base64Image = `data:${obj.type};base64,${obj.base64}`;
-      this.sendImage(base64Image);
-    });
-  }
-  async openCamera() {
-    const IsPermission = await requestCameraPermission();
-    if (!IsPermission) {
-      return;
-    }
-
-    const options = {
-      mediaType: 'photo',
-      includeBase64: true,
-    };
-
-    launchCamera(options, res => {
-      const obj = res.assets[0];
-      if (res.didCancel) {
-        return;
-      }
-      const base64Image = `data:${obj.type};base64,${obj.base64}`;
-      this.sendImage(base64Image);
-    });
-  }
-  sendImage(base64Image) {
-    KS.SendMessage({
-      senderID: this.props.user && this.props.user.ID,
-      receiverID:
-        this.props.route.params.targetID ?? this.props.route.params?.targetID,
-      sessionID: this.state.sessionID,
-      image: base64Image,
-    })
-      .then(res => {
-        this.state.signalRChat.invoke(
-          'sendMessageToUser',
-          this.props.user.ID,
-          this.state.sessionID,
-          res.message,
-          this.props.route.params.userTo ?? this.props.route.params?.targetID
-        );
-      })
-      .catch(err => {
-        console.log({err});
-      });
-  }
-
   renderSend(props) {
     return (
       <Send {...props}>

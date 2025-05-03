@@ -337,6 +337,7 @@ class ListingReview extends Component {
   }
 
   async pickSingleWithCamera() {
+    console.log({data: '=============='});
     const IsPermission = await requestCameraPermission();
     if (!IsPermission) {
       return;

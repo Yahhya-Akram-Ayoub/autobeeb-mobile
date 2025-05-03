@@ -24,6 +24,7 @@ import {
   FeatueredListingCard,
   BottomNavigationBar,
   SkeletonCard,
+  AutobeebModal,
 } from '../components';
 import AddAdvButtonSquare from '../components/AddAdvButtonSquare';
 import IconMa from 'react-native-vector-icons/MaterialIcons';
@@ -64,7 +65,6 @@ class SearchResult extends Component {
       renderType: 1,
       PageNum: 1,
       isLoading: true,
-      openCurrencyModal: false,
       currency: global.ViewingCurrency
         ? global.ViewingCurrency
         : this.props.ViewingCurrency || {
@@ -460,9 +460,8 @@ class SearchResult extends Component {
           this.setState({
             currency: Currency,
             PageNum: 1,
-            openCurrencyModal: false,
           });
-
+          this.openCurrencyModal.close();
           KS.FreeSearch({
             searchFor: this.props.route.params?.query ?? '',
             makeID: this.props.route.params?.MakeID ?? '',
@@ -555,13 +554,13 @@ class SearchResult extends Component {
         activeOpacity={0.9}
         style={styles.row}
         onPress={() => {
+          this.openSellTypeModal.close();
           this.setState(
             {
               sellType: SellType,
               PageNum: 1,
               footerLoading: false,
               isLoading: true,
-              openSellTypeModal: false,
             },
             () => {
               KS.FreeSearch({
@@ -642,21 +641,17 @@ class SearchResult extends Component {
         activeOpacity={0.9}
         style={styles.row}
         onPress={() => {
-          this.setState(
-            {openMainTypesModal: false, ListingType: MainType},
-            () => {
-              if (this.state.goToFilter) {
-                this.props.navigation.navigate('SellTypeScreen', {
-                  ListingType: MainType,
-                  cca2: this.props.ViewingCountry?.cca2 || 'us',
-                });
-              } else {
-                this.setState({
-                  openSellTypeModal: true,
-                });
-              }
-            },
-          );
+          this.mainTypesModal.close();
+          this.setState({ListingType: MainType}, () => {
+            if (this.state.goToFilter) {
+              this.props.navigation.navigate('SellTypeScreen', {
+                ListingType: MainType,
+                cca2: this.props.ViewingCountry?.cca2 || 'us',
+              });
+            } else {
+              this.openSellTypeModal.open();
+            }
+          });
         }}>
         <View
           style={{
@@ -814,9 +809,9 @@ class SearchResult extends Component {
               sortOption: SortOption,
               PageNum: 1,
               isLoading: true,
-              openSortModal: false,
             },
             () => {
+              this.openSortModal.close();
               KS.FreeSearch({
                 searchFor: this.props.route.params?.query ?? '',
                 makeID: this.props.route.params?.MakeID ?? '',
@@ -888,7 +883,8 @@ class SearchResult extends Component {
   }
 
   openMainTypesModal(fromFilter) {
-    this.setState({goToFilter: fromFilter, openMainTypesModal: true});
+    this.mainTypesModal.open();
+    this.setState({goToFilter: fromFilter});
   }
 
   Filters() {
@@ -910,7 +906,7 @@ class SearchResult extends Component {
                   justifyContent: 'space-between',
                 }}
                 onPress={() => {
-                  this.setState({openCurrencyModal: true});
+                  this.openCurrencyModal.open();
                 }}>
                 <Text
                   numberOfLines={1}
@@ -943,7 +939,7 @@ class SearchResult extends Component {
                         query: this.props.route.params?.query || 0,
                       });
                     } else {
-                      this.openMainTypesModal(true);
+                      this.mainTypesModal.open();
                     }
                   }}
                   style={styles.filterIcon}>
@@ -958,7 +954,7 @@ class SearchResult extends Component {
                 </Pressable>
                 <Pressable
                   onPress={() => {
-                    this.setState({openSortModal: true});
+                    this.openSortModal.open();
                   }}
                   style={styles.filterIcon}>
                   <SortIcon />
@@ -1478,8 +1474,8 @@ class SearchResult extends Component {
           <BottomNavigationBar />
         </Animated.View>
 
-        <Modal
-          visible={this.state.openCurrencyModal}
+        <AutobeebModal
+          ref={instance => (this.openCurrencyModal = instance)}
           style={[styles.sellTypeModal]}
           position="center"
           backButtonClose={true}
@@ -1504,7 +1500,7 @@ class SearchResult extends Component {
                 activeOpacity={0.9}
                 style={styles.row}
                 onPress={() => {
-                  this.setState({openCurrencyModal: false});
+                  this.openCurrencyModal.close();
                 }}>
                 <Text
                   style={{
@@ -1518,10 +1514,10 @@ class SearchResult extends Component {
               </TouchableOpacity>
             </View>
           </View>
-        </Modal>
+        </AutobeebModal>
 
-        <Modal //sort modal
-          visible={this.state.openSortModal}
+        <AutobeebModal //sort modal
+          ref={instance => (this.openSortModal = instance)}
           style={[styles.sellTypeModal]}
           position="center"
           backButtonClose={true}
@@ -1547,7 +1543,7 @@ class SearchResult extends Component {
                 activeOpacity={0.9}
                 style={styles.row}
                 onPress={() => {
-                  this.setState({openSortModal: false});
+                  this.openSortModal.close();
                 }}>
                 <Text
                   style={{
@@ -1561,10 +1557,10 @@ class SearchResult extends Component {
               </TouchableOpacity>
             </View>
           </View>
-        </Modal>
+        </AutobeebModal>
 
-        <Modal
-          visible={this.state.openSellTypeModal}
+        <AutobeebModal
+          ref={instance => (this.openSellTypeModal = instance)}
           style={[styles.sellTypeModal]}
           position="center"
           backButtonClose={true}
@@ -1589,7 +1585,7 @@ class SearchResult extends Component {
                 activeOpacity={0.9}
                 style={styles.row}
                 onPress={() => {
-                  this.setState({openSellTypeModal: false});
+                  this.openSellTypeModal.close();
                 }}>
                 <Text
                   style={{
@@ -1603,10 +1599,10 @@ class SearchResult extends Component {
               </TouchableOpacity>
             </View>
           </View>
-        </Modal>
+        </AutobeebModal>
 
-        <Modal //maintypes modal
-          visible={this.state.openMainTypesModal}
+        <AutobeebModal //maintypes modal
+          ref={instance => (this.mainTypesModal = instance)}
           style={[styles.sellTypeModal]}
           position="center"
           backButtonClose={true}
@@ -1618,8 +1614,6 @@ class SearchResult extends Component {
           <View
             style={{
               height: Dimensions.get('screen').height * 0.7,
-              // justifyContent: 'center',
-              // alignItems:"center",
               alignSelf: 'center',
               justifyContent: 'center',
               width: Dimensions.get('screen').width * 0.8,
@@ -1641,7 +1635,7 @@ class SearchResult extends Component {
                 activeOpacity={0.9}
                 style={styles.row}
                 onPress={() => {
-                  this.setState({openMainTypesModal: false});
+                  this.mainTypesModal.close();
                 }}>
                 <Text
                   style={{
@@ -1655,7 +1649,7 @@ class SearchResult extends Component {
               </TouchableOpacity>
             </View>
           </View>
-        </Modal>
+        </AutobeebModal>
         <View
           style={{
             borderBottomWidth: 1,
@@ -1808,9 +1802,8 @@ const styles = StyleSheet.create({
     zIndex: 20,
     alignSelf: 'center',
     backgroundColor: 'transparent',
-    // alignItems: "center",
     justifyContent: 'center',
-
+    height: '100%',
     flex: 1,
   },
   sortContainerText: {

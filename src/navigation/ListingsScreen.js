@@ -3221,8 +3221,7 @@ class ListingsScreen extends Component {
           backButtonClose={true}
           entry="bottom"
           swipeToClose={false}
-          // backdropPressToClose
-          //   coverscreen={Platform.OS == "android"}
+          fullScreen={true}
           onOpened={() => {
             this.setState({AddShown: false});
             this.props.navigation.setParams({tabBarVisible: false});
@@ -3236,7 +3235,7 @@ class ListingsScreen extends Component {
             style={[
               styles.modal,
               {
-                //  flex: 1,
+                  flex: 1,
                 //    justifyContent: "space-between",
                 borderTopRightRadius: 10,
                 borderTopLeftRadius: 10,
@@ -3656,7 +3655,6 @@ class ListingsScreen extends Component {
 
             <View
               style={{
-                marginBottom: BOTTOM_NAVIGATION_BAR_HEIGHT,
                 flexDirection: 'row',
                 //    position: "absolute",
                 //   backgroundColor: "red",

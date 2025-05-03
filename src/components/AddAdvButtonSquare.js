@@ -33,10 +33,10 @@ const AddAdvButtonSquare = ({_user}) => {
               const CountriesData = CountriesData.Countries;
 
               let selectedCountry = !!CountriesData?.some(
-                x => x.ISOCode.toLowerCase() == data.toLowerCase()
+                x => x.ISOCode.toLowerCase() == data.toLowerCase(),
               )
                 ? CountriesData.find(
-                    x => x.ISOCode.toLowerCase() == data.toLowerCase()
+                    x => x.ISOCode.toLowerCase() == data.toLowerCase(),
                   )
                 : null;
               setEmailBasedCountry(selectedCountry.EmailRegister);
@@ -58,7 +58,7 @@ const AddAdvButtonSquare = ({_user}) => {
           duration: 600,
           useNativeDriver: true,
         }),
-      ])
+      ]),
     );
 
     blinkAnimation.start();
@@ -78,17 +78,20 @@ const AddAdvButtonSquare = ({_user}) => {
 
   return (
     <TouchableOpacity style={styles.MainContainer} onPress={navigateToScreen}>
+      {/* Show image on appropriate side based on language direction */}
+      <Text numberOfLines={1} style={styles.TextAddOffer}>
+        {Languages.PostOfferButton}
+      </Text>
+
+      <Animated.Text style={[styles.TextFree, {opacity: fadeAnim}]}>
+        {' ' + Languages.Free}
+      </Animated.Text>
+
       <Image
         style={styles.Image}
         resizeMode="contain"
         source={require('../images/postOfferIcon.png')}
       />
-      <Text numberOfLines={1} style={styles.TextAddOffer}>
-        {Languages.PostOfferButton}
-      </Text>
-      <Animated.Text style={[styles.TextFree, {opacity: fadeAnim}]}>
-        {' ' + Languages.Free}
-      </Animated.Text>
     </TouchableOpacity>
   );
 };
@@ -102,7 +105,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.primary,
     alignItems: 'center',
     justifyContent: 'center',
-    flexDirection: 'row-reverse',
+    flexDirection: 'row',
     borderWidth: 0,
     width: width / 2.0,
     height: 40,
@@ -111,20 +114,24 @@ const styles = StyleSheet.create({
     bottom: 5,
     right: width / 4,
     paddingEnd: 10,
+    paddingStart: 10,
   },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#2c3e50',
+  TextAddOffer: {
+    color: '#fff',
+    fontSize: 14,
+    fontFamily: 'Cairo-Bold',
+    textAlign: 'center',
   },
   TextFree: {
     color: '#fff',
     fontSize: 14,
     fontFamily: 'Cairo-Bold',
   },
-  TextAddOffer: {color: '#fff', fontSize: 14, fontFamily: 'Cairo-Bold'},
-  Image: {width: 28, height: 28, marginEnd: 10},
+  Image: {
+    width: 28,
+    height: 28,
+    marginHorizontal: 8,
+  },
 });
 
 const MemoizedAddAdvButtonSquare = React.memo(AddAdvButtonSquare);

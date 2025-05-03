@@ -151,7 +151,7 @@ class DealerSignUp extends Component {
       langID: Languages.langID,
       placementID: 6,
     }).then(data => {
-      if (data?.Banners && data?.Banners.length > 0) {
+      if (data?.Banners && !!data?.Banners.length) {
         this.setState(
           {BannerImage: data.Banners[data.Banners.length - 1]},
           () => {
@@ -648,10 +648,12 @@ class DealerSignUp extends Component {
         behavior={Platform.select({ios: 'padding', android: ''})}
         contentContainerStyle={{flex: 1}}
         style={{flex: 1}}>
-        <ImagePopUp
-          Banner={this.state.BannerImage}
-          isOpen={this.state.openImagePopUp}
-        />
+        {!!this.state.BannerImage && (
+          <ImagePopUp
+            Banner={this.state.BannerImage}
+            isOpen={this.state.openImagePopUp}
+          />
+        )}
 
         <NewHeader navigation={this.props.navigation} back />
         <AutobeebModal

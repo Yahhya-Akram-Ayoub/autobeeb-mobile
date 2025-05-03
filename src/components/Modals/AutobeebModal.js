@@ -28,6 +28,7 @@ const AutobeebModal = forwardRef((props, ref) => {
     backButtonClose = true,
     swipeToClose = false, // Not implemented in this version
     entry = 'bottom',
+    fullScreen,
   } = props;
 
   const [visible, setVisible] = useState(false);
@@ -47,7 +48,7 @@ const AutobeebModal = forwardRef((props, ref) => {
     close: () => {
       Animated.timing(animatedValue, {
         toValue: 0,
-        duration: 300,
+        duration: 100,
         useNativeDriver: true,
       }).start(() => {
         setVisible(false);
@@ -56,41 +57,40 @@ const AutobeebModal = forwardRef((props, ref) => {
     },
   }));
 
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      () => {
-        if (visible && backButtonClose) {
-          ref?.current?.close();
-          return true;
-        }
-        return false;
-      },
-    );
-    return () => backHandler.remove();
-  }, [visible]);
-
-  const translateY = animatedValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: [SCREEN_HEIGHT, 0],
-  });
-
-  if (!visible) return null;
-
   return (
     <Modal
       visible={visible}
       transparent
       animationType="none"
       onRequestClose={() => {
-        if (backButtonClose) ref?.current?.close();
-      }}>
-      <TouchableWithoutFeedback onPress={() => ref?.current?.close()}>
-        <View style={[styles.backdrop, {opacity: backdropOpacity}]} />
-      </TouchableWithoutFeedback>
+        if (!!ref?.current) ref?.current?.close();
+        else {
+          Animated.timing(animatedValue, {
+            toValue: 0,
+            duration: 100,
+            useNativeDriver: true,
+          }).start(() => {
+            setVisible(false);
+            if (onClosed) onClosed();
+          });
+        }
+      }}
+      backButtonClose={true}
+      entry="bottom"
+      backdropPressToClose
+      swipeToClose={false}>
+      {!fullScreen && (
+        <TouchableWithoutFeedback onPress={() => ref?.current?.close()}>
+          <View style={[styles.backdrop, {opacity: backdropOpacity}]} />
+        </TouchableWithoutFeedback>
+      )}
 
       <Animated.View
-        style={[styles.modalContainer, style]}>
+        style={[
+          styles.modalContainer,
+          style,
+          fullScreen && {maxHeight: SCREEN_HEIGHT},
+        ]}>
         {children}
       </Animated.View>
     </Modal>

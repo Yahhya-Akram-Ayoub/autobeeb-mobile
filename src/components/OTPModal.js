@@ -321,14 +321,13 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   modelModal: {
-    // backgroundColor: "red",
     zIndex: 5000,
     flex: 1,
     backgroundColor: 'transparent',
     alignSelf: 'center',
-    // alignItems: "center",
     justifyContent: 'center',
     borderRadius: 10,
+    minHeight: '100%',
   },
   modelContainer: {
     borderRadius: 10,
