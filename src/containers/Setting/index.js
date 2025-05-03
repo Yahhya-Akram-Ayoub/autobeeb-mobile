@@ -18,7 +18,7 @@ import LanguagePicker from './LanguagePicker';
 import {Color, Languages} from '../../common';
 import {PickerSelectModal} from '../../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import CountryPicker from 'react-native-country-picker-modal';
+import CountryPicker from '../../components/CountryModal/CountryPickerModal';
 import Entypo from 'react-native-vector-icons/Entypo';
 import KS from '../../services/KSAPI';
 import RNRestart from 'react-native-restart';
@@ -110,7 +110,7 @@ class Setting extends Component {
         setTimeout(() => {
           RNRestart.Restart();
         }, 500);
-      }
+      },
     );
   }
 
@@ -151,7 +151,7 @@ class Setting extends Component {
                         }, 2000);
                       },
                     },
-                  ]
+                  ],
                 );
               }
             }}
@@ -165,7 +165,7 @@ class Setting extends Component {
             <TouchableOpacity
               onPress={() => {
                 Linking.openURL(
-                  'mailto:info@autobeeb.com?subject=Autobeeb: Customer Service '
+                  'mailto:info@autobeeb.com?subject=Autobeeb: Customer Service ',
                 );
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>

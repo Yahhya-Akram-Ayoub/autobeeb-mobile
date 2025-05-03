@@ -18,9 +18,15 @@ import ReactNative, {
 } from 'react-native';
 import {connect} from 'react-redux';
 import {Color, Languages} from '../common';
-import {LogoSpinner, OTPModal, ImagePopUp, LocationSelect, AutobeebModal} from '../components';
-import {getAllCountries} from 'react-native-country-picker-modal';
-import CountryPicker from 'react-native-country-picker-modal';
+import {
+  LogoSpinner,
+  OTPModal,
+  ImagePopUp,
+  LocationSelect,
+  AutobeebModal,
+} from '../components';
+import {getAllCountries} from '../components/CountryModal/CountryPickerModal';
+import CountryPicker from '../components/CountryModal/CountryPickerModal';
 import {NewHeader} from '../containers';
 import KS from '../services/KSAPI';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
@@ -316,13 +322,13 @@ class DealerSignUp extends Component {
         });
       }, 500);
     }
-    if (this.refs.phone) {
-      this.refs.phone.selectCountry(country.cca2.toLowerCase(), () => {
+    if (this.phoneRef) {
+      this.phoneRef.selectCountry(country.cca2.toLowerCase(), () => {
         this.forceUpdate();
       });
     }
-    if (this.refs.TellPhone) {
-      this.refs.TellPhone.selectCountry(country.cca2.toLowerCase(), () => {
+    if (this.TellPhoneRef) {
+      this.TellPhoneRef.selectCountry(country.cca2.toLowerCase(), () => {
         this.forceUpdate();
       });
     }
@@ -346,17 +352,17 @@ class DealerSignUp extends Component {
     if (this.state.dealerData.ConfirmAndUpdate) {
       KS.ConfirmOTPAndUpdate({
         otpcode: otp,
-        isocode: this.refs.phone && this.refs.phone.getISOCode(),
+        isocode: this.phoneRef && this.phoneRef.getISOCode(),
         userid: this.props.user?.ID,
         username:
           (this.state.dealerData.NewPhone || !this.props.user?.OTPConfirmed) &&
           !this.props.user.EmailRegister
-            ? (this.refs.phone && this.refs.phone.getValue()) ||
+            ? (this.phoneRef && this.phoneRef.getValue()) ||
               this.props.user?.Phone
             : (this.state.dealerData && this.state.dealerData.NewEmail) ||
               !this.props.user?.EmailConfirmed
             ? this.state.email
-            : (this.refs.phone && this.refs.phone.getValue()) ||
+            : (this.phoneRef && this.phoneRef.getValue()) ||
               this.props.user?.Phone,
       }).then(data => {
         if (data.OTPVerify) {
@@ -382,12 +388,12 @@ class DealerSignUp extends Component {
         username:
           (this.state.dealerData.NewPhone || !this.props.user?.OTPConfirmed) &&
           !this.props.user.EmailRegister
-            ? (this.refs.phone && this.refs.phone.getValue()) ||
+            ? (this.phoneRef && this.phoneRef.getValue()) ||
               this.props.user?.Phone
             : (this.state.dealerData && this.state.dealerData.NewEmail) ||
               !this.props.user?.EmailConfirmed
             ? this.state.email
-            : (this.refs.phone && this.refs.phone.getValue()) ||
+            : (this.phoneRef && this.phoneRef.getValue()) ||
               this.props.user?.Phone,
       }).then(data => {
         // console.log(data);
@@ -437,12 +443,12 @@ class DealerSignUp extends Component {
       username:
         (this.state.dealerData.NewPhone || !this.props.user?.OTPConfirmed) &&
         !this.props.user.EmailRegister
-          ? (this.refs.phone && this.refs.phone.getValue()) ||
+          ? (this.phoneRef && this.phoneRef.getValue()) ||
             this.props.user?.Phone
           : (this.state.dealerData && this.state.dealerData.NewEmail) ||
             !this.props.user?.EmailConfirmed
           ? this.state.email
-          : (this.refs.phone && this.refs.phone.getValue()) ||
+          : (this.phoneRef && this.phoneRef.getValue()) ||
             this.props.user?.Phone,
     }).then(data => {
       if (data.Success == 1) {
@@ -620,7 +626,7 @@ class DealerSignUp extends Component {
         !this.validateEmail(this.state.email))
     ) {
       toast(Languages.InvalidEmail);
-    } else if (!(this.refs.phone && this.refs.phone.isValidNumber())) {
+    } else if (!(this.phoneRef && this.phoneRef.isValidNumber())) {
       toast(Languages.InvalidNumber);
     } else if (this.state.password && this.state.password.length < 6) {
       toast(Languages.passwordTooShort);
@@ -648,7 +654,7 @@ class DealerSignUp extends Component {
         />
 
         <NewHeader navigation={this.props.navigation} back />
-        <AutobeebModal 
+        <AutobeebModal
           ref={instance => (this.locationModal = instance)}
           //  isOpen
           backButtonClose
@@ -691,7 +697,7 @@ class DealerSignUp extends Component {
             />
           </View>
         </AutobeebModal>
-        <AutobeebModal 
+        <AutobeebModal
           style={[styles.modalbox]}
           ref={instance => (this.PasswordModal = instance)}
           swipeToClose={true}
@@ -764,12 +770,12 @@ class DealerSignUp extends Component {
             (this.props.user &&
               !this.props.user?.OTPConfirmed &&
               !this.props.user?.EmailRegister)
-              ? (this.refs.phone && this.refs.phone.getValue()) ||
+              ? (this.phoneRef && this.phoneRef.getValue()) ||
                 this.props.user?.Phone
               : (this.state.dealerData && this.state.dealerData.NewEmail) ||
                 (this.props.user && !this.props.user?.EmailConfirmed)
               ? this.state.email
-              : (this.refs.phone && this.refs.phone.getValue()) ||
+              : (this.phoneRef && this.phoneRef.getValue()) ||
                 (this.props.user && this.props.user?.Phone)
           }
           otp={this.state.otp}
@@ -1554,7 +1560,7 @@ class DealerSignUp extends Component {
                 )}
               </View>
               <PhoneInput
-                ref="phone"
+                ref={instance => (this.phoneRef = instance)}
                 initialCountry={this.state.selectedCountry?.cca2?.toLowerCase()}
                 onPressFlag={() => {
                   // this.countryPicker.openModal();
@@ -1571,7 +1577,7 @@ class DealerSignUp extends Component {
                   height: 50,
                   borderBottomWidth: 1,
                   borderBottomColor:
-                    (this.refs.phone && this.refs.phone.isValidNumber()) ||
+                    (this.phoneRef && this.phoneRef.isValidNumber()) ||
                     (this.props.route.params?.BecomeADealer &&
                       this.state.mobile &&
                       this.state.mobile.length > 0 &&
@@ -1592,23 +1598,23 @@ class DealerSignUp extends Component {
                   this.setState({mobile, phoneNotEdited: false});
 
                   if (
-                    this.refs.phone.getISOCode() !=
+                    this.phoneRef.getISOCode() !=
                     this.state.selectedCountry.cca2.toLowerCase()
                   ) {
                     this.setState({mobile: ''});
-                    this.refs.phone.selectCountry(
+                    this.phoneRef.selectCountry(
                       this.state.selectedCountry.cca2.toLowerCase(),
                     );
                   }
                 }}
               />
               {!!this.state.Phone?.length &&
-                !!this.refs.TellPhone?.isValidNumber() && (
+                !!this.TellPhoneRef?.isValidNumber() && (
                   <TouchableOpacity
                     disabled={
                       !this.state.Phone ||
                       !this.state.Phone.length ||
-                      !this.refs.TellPhone?.isValidNumber()
+                      !this.TellPhoneRef?.isValidNumber()
                     }
                     onPress={() => {
                       this.setState({hideMobile: !this.state.hideMobile});
@@ -1639,14 +1645,14 @@ class DealerSignUp extends Component {
                 <Text style={styles.header}>{Languages.Phone2}</Text>
                 {(!this.state.Phone?.length ||
                   (!!this.state.Phone?.length &&
-                    !this.refs.TellPhone?.isValidNumber())) && (
+                    !this.TellPhoneRef?.isValidNumber())) && (
                   <Text style={{fontSize: 10}}>
                     {' ' + Languages.EnterYourPhoneOptional}
                   </Text>
                 )}
               </View>
               <PhoneInput
-                ref="TellPhone"
+                ref={instance => (this.TellPhoneRef = instance)}
                 key={`${this.state.selectedCountry?.cca2}-${this.state.PhoneRenderKey}`}
                 placeholder={Languages.EnterYourPhoneOptional}
                 initialCountry={this.state.selectedCountry?.cca2?.toLowerCase()}
@@ -1670,7 +1676,7 @@ class DealerSignUp extends Component {
                   //   this.state.Phone !=
                   //     `+${this.state.selectedCountry.callingCode[0] ?? ''}` &&
                   //   !!this.state.Phone?.length &&
-                  //   !this.refs.TellPhone?.isValidNumber()
+                  //   !this.TellPhoneRef?.isValidNumber()
                   //     ? 'red'
                   //     : 'green',
                 }}
@@ -1687,11 +1693,11 @@ class DealerSignUp extends Component {
                   this.setState({Phone});
 
                   if (
-                    this.refs.TellPhone.getISOCode() !=
+                    this.TellPhoneRef.getISOCode() !=
                     this.state.selectedCountry.cca2.toLowerCase()
                   ) {
                     this.setState({Phone: ''});
-                    this.refs.TellPhone.selectCountry(
+                    this.TellPhoneRef.selectCountry(
                       this.state.selectedCountry.cca2.toLowerCase(),
                     );
                   }
@@ -1967,8 +1973,8 @@ class DealerSignUp extends Component {
                 this.state.isEmailRegisterCountry
                   ? this.validateEmail(this.state.email)
                   : true) &&
-                this.refs.phone &&
-                this.refs.phone.isValidNumber() &&
+                this.phoneRef &&
+                this.phoneRef.isValidNumber() &&
                 this.state.selectedCity &&
                 (!this.props.route.params?.BecomeADealer &&
                 !this.props.route.params?.Edit
@@ -1982,9 +1988,9 @@ class DealerSignUp extends Component {
             ]}
             onPress={() => {
               if (
-                // (this.refs.TellPhone?.getValue()?.length < 5 ||
-                //   (!!this.refs.TellPhone?.getValue() &&
-                //     this.refs.TellPhone?.isValidNumber())) &&
+                // (this.TellPhoneRef?.getValue()?.length < 5 ||
+                //   (!!this.TellPhoneRef?.getValue() &&
+                //     this.TellPhoneRef?.isValidNumber())) &&
                 this.state.CompanyName &&
                 this.state.CompanyName.length >= 3 &&
                 this.state.selectedClassification &&
@@ -2000,8 +2006,8 @@ class DealerSignUp extends Component {
                 this.state.isEmailRegisterCountry
                   ? this.validateEmail(this.state.email)
                   : true) &&
-                this.refs.phone &&
-                this.refs.phone.isValidNumber() &&
+                this.phoneRef &&
+                this.phoneRef.isValidNumber() &&
                 this.state.selectedCity &&
                 (!this.props.route.params?.BecomeADealer &&
                 !this.props.route.params?.Edit
@@ -2012,10 +2018,10 @@ class DealerSignUp extends Component {
                 KS.BecomeADealer({
                   phone2:
                     !!this.state.Phone?.length &&
-                    this.refs.TellPhone?.isValidNumber()
-                      ? this.refs.TellPhone?.getValue()
+                    this.TellPhoneRef?.isValidNumber()
+                      ? this.TellPhoneRef?.getValue()
                       : '',
-                  phone: this.refs.phone.getValue(),
+                  phone: this.phoneRef.getValue(),
                   name: this.state.CompanyName,
                   billingfirstname: this.state.BillingFirstName,
                   billinglastname: this.state.BillingLastName,
@@ -2033,7 +2039,7 @@ class DealerSignUp extends Component {
                   country: this.state.selectedCountry.cca2,
                   doHide: this.state.hideMobile
                     ? !!this.state.Phone?.length &&
-                      !!this.refs.TellPhone?.isValidNumber() &&
+                      !!this.TellPhoneRef?.isValidNumber() &&
                       this.state.hideMobile
                     : this.state.hideMobile,
                   langid: Languages.langID,
@@ -2041,7 +2047,7 @@ class DealerSignUp extends Component {
                   dealerID: this.props.route.params?.Edit
                     ? this.props.user?.ID
                     : '',
-                  deviceID: DeviceInfo.getUniqueID(),
+                  deviceID: DeviceInfo.getUniqueId(),
                   latLng: this.state.userLocation
                     ? `${this.state.userLocation.latitude},${this.state.userLocation.longitude}`
                     : '',

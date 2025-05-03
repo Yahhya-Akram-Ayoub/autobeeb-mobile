@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import {Languages, Color} from '../common';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
-import {OTPInput} from './index';
+import {AutobeebModal, OTPInput} from './index';
 
 var delayCounter2;
 
@@ -39,12 +39,14 @@ const OTPModal = ({
     Languages.Resend,
   );
   const [disabledResetCode, setDisabledResetCode] = useState(false);
-  const [openOTPModal, setOpenOTPModal] = useState(false);
+  const OTPModalRef = useRef(null);
   const [showOTP, setShowOTP] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    setOpenOTPModal(isOpen);
+    if (isOpen) {
+      OTPModalRef.current?.open();
+    }
   }, [isOpen]);
 
   const resendInitCounter = () => {
@@ -68,10 +70,10 @@ const OTPModal = ({
   };
 
   const open = () => {
-    setOpenOTPModal(true);
+    OTPModalRef.current?.open();
   };
   const close = () => {
-    setOpenOTPModal(false);
+    OTPModalRef.current?.close();
   };
 
   const convertToNumber = number => {
@@ -95,8 +97,8 @@ const OTPModal = ({
   };
 
   return (
-    <Modal
-      visible={openOTPModal}
+    <AutobeebModal
+      ref={OTPModalRef}
       style={[styles.modelModal]}
       position="center"
       onOpened={() => {
@@ -245,7 +247,7 @@ const OTPModal = ({
           </View>
         </View>
       </KeyboardAvoidingView>
-    </Modal>
+    </AutobeebModal>
   );
 };
 

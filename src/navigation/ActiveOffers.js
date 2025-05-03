@@ -106,11 +106,11 @@ class ActiveOffers extends Component {
   componentDidMount() {
     this.focusListener = this.props.navigation.addListener(
       'focus',
-      this.handleFocus
+      this.handleFocus,
     );
     this.blurListener = this.props.navigation.addListener(
       'blur',
-      this.handleBlur
+      this.handleBlur,
     );
     this.fetchUserListings();
     this.fetchFeaturedListings();
@@ -217,7 +217,7 @@ class ActiveOffers extends Component {
             refreshing: false,
           });
         });
-      }
+      },
     );
   }
 
@@ -310,7 +310,9 @@ class ActiveOffers extends Component {
                 borderRadius: 5,
               }}
               onPress={() => {
-                this.props.navigation.navigate('LoginScreen');
+                this.props.navigation.navigate('DrawerStack', {
+                  screen: 'LoginScreen',
+                });
               }}>
               <Text style={{color: '#fff', fontSize: 18}}>
                 {Languages.LoginNow}
@@ -549,7 +551,7 @@ class ActiveOffers extends Component {
                               KS.DeleteOffer({
                                 listingID: item.ID,
                                 kensoftware: md5(
-                                  item.ID + 'KhaledYazeedMohammad'
+                                  item.ID + 'KhaledYazeedMohammad',
                                 ),
                                 userid: this.props.user?.ID,
                               }).then(data => {
@@ -558,7 +560,7 @@ class ActiveOffers extends Component {
                                   //  alert(JSON.stringify(data));
                                   let formattedListings =
                                     this.state.Listings.filter(
-                                      x => x.id != item.ID
+                                      x => x.id != item.ID,
                                     );
                                   this.setState({
                                     Listings: formattedListings,
@@ -579,7 +581,7 @@ class ActiveOffers extends Component {
                             },
                           },
                         ],
-                        {cancelable: true}
+                        {cancelable: true},
                       );
                     }}
                     onDeactivate={item => {
@@ -616,7 +618,7 @@ class ActiveOffers extends Component {
                             style: 'cancel',
                           },
                         ],
-                        {cancelable: true}
+                        {cancelable: true},
                       );
                     }}
                     onActivate={item => {
@@ -681,10 +683,10 @@ class ActiveOffers extends Component {
                     if (this.state.NextPage <= this.state.TotalPages) {
                       this.getUserListings(
                         this.state.active ? 16 : -1,
-                        this.state.NextPage
+                        this.state.NextPage,
                       );
                     }
-                  }
+                  },
                 );
               }}
               onEndReachedThreshold={0.9}

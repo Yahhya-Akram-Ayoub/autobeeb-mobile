@@ -25,7 +25,7 @@ import {NewHeader} from '../containers';
 import KS from '../services/KSAPI';
 import Toast, {DURATION} from 'react-native-easy-toast';
 import PhoneInput from '../components/react-native-phone-input/lib/index';
-import CountryPicker from 'react-native-country-picker-modal';
+import CountryPicker from '../components/CountryModal/CountryPickerModal';
 import * as Animatable from 'react-native-animatable';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -33,7 +33,7 @@ import {NavigationActions, StackActions} from '@react-navigation/native';
 //
 import {toast} from '../Omni';
 import ImagePicker from 'react-native-image-crop-picker';
-import { AutobeebModal } from '../components';
+import {AutobeebModal} from '../components';
 
 const WIDTH = Dimensions.get('screen').width;
 const {height, width} = Dimensions.get('screen');
@@ -200,7 +200,7 @@ class EditProfile extends Component {
                   alert(Languages.SomethingWentWrong);
                 }
               });
-            }
+            },
           );
         })
         .catch(e => {
@@ -238,7 +238,7 @@ class EditProfile extends Component {
                   alert(Languages.SomethingWentWrong);
                 }
               });
-            }
+            },
           );
         })
         .catch(e => {
@@ -276,7 +276,7 @@ class EditProfile extends Component {
             });
           }
           counter++;
-        }
+        },
       );
     }, 1000);
   };
@@ -327,7 +327,7 @@ class EditProfile extends Component {
     this.setState({changeMobileLoading: true});
     const _this = this;
     let country = this.state.CountriesData.find(
-      cntry => cntry?.ISOCode?.toLowerCase() == this.phone2.getISOCode()
+      cntry => cntry?.ISOCode?.toLowerCase() == this.phone2.getISOCode(),
     );
 
     if (this.state.isPhone2Valid) {
@@ -390,7 +390,7 @@ class EditProfile extends Component {
       this.props.user.Country != null;
     let country = this.state.CountriesData
       ? this.state.CountriesData.find(
-          cntry => cntry?.ID == this.props.user?.Country
+          cntry => cntry?.ID == this.props.user?.Country,
         )
       : null;
     return (
@@ -414,7 +414,7 @@ class EditProfile extends Component {
               style={{backgroundColor: Color.primary}}
             />
 
-            <AutobeebModal 
+            <AutobeebModal
               //coverScreen
               style={[styles.modalbox]}
               ref={instance => (this.NameModal = instance)}
@@ -465,7 +465,7 @@ class EditProfile extends Component {
                           } else {
                             this.refs.toast.show(
                               Languages.SomethingWentWrong,
-                              2500
+                              2500,
                             );
                           }
                         });
@@ -557,13 +557,13 @@ class EditProfile extends Component {
                               _this.props.storeUserData(data.User);
                               this.refs.toast.show(
                                 Languages.passwordChanged,
-                                1500
+                                1500,
                               );
                               this.PasswordModal.close();
                             } else {
                               this.refs.toast.show(
                                 Languages.SomethingWentWrong,
-                                2500
+                                2500,
                               );
                             }
                           })
@@ -590,7 +590,7 @@ class EditProfile extends Component {
               </View>
             </AutobeebModal>
 
-            <AutobeebModal 
+            <AutobeebModal
               //coverScreen
               style={[styles.modalbox]}
               ref={instance => (this.AddEmailModal = instance)}
@@ -650,11 +650,11 @@ class EditProfile extends Component {
                             if (data.Error) {
                               if (data.Error == -1)
                                 this.refs.toast.show(
-                                  Languages.NumberAlreadyTaken
+                                  Languages.NumberAlreadyTaken,
                                 );
                               else {
                                 this.refs.toast.show(
-                                  Languages.EmailAlreadyTaken
+                                  Languages.EmailAlreadyTaken,
                                 );
                               }
                             } else {
@@ -670,7 +670,7 @@ class EditProfile extends Component {
                           } else {
                             this.refs.toast.show(
                               Languages.SomethingWentWrong,
-                              2500
+                              2500,
                             );
                           }
                         });
@@ -686,7 +686,7 @@ class EditProfile extends Component {
               </View>
             </AutobeebModal>
 
-            <AutobeebModal 
+            <AutobeebModal
               //coverScreen
               style={[styles.modalbox]}
               ref={instance => (this.AddPhoneModal = instance)}
@@ -736,7 +736,7 @@ class EditProfile extends Component {
                         ) {
                           setTimeout(() => {
                             this.phone.selectCountry(
-                              this.state.cca2.toLowerCase()
+                              this.state.cca2.toLowerCase(),
                             );
                           }, 100);
 
@@ -818,7 +818,7 @@ class EditProfile extends Component {
                         let country = this.state.CountriesData.find(
                           cntry =>
                             cntry?.ISOCode?.toLowerCase() ==
-                            this.phone.getISOCode()
+                            this.phone.getISOCode(),
                         );
                         if (country && country.EmailRegister) {
                           Alert.alert(
@@ -837,7 +837,7 @@ class EditProfile extends Component {
                                 },
                               },
                             ],
-                            {cancelable: false}
+                            {cancelable: false},
                           );
                         } else {
                           this.onAddPhone();
@@ -859,7 +859,7 @@ class EditProfile extends Component {
                 </View>
               </View>
             </AutobeebModal>
-            <AutobeebModal 
+            <AutobeebModal
               //coverScreen
               style={[styles.modalbox]}
               ref={instance => (this.ChangePhoneModal = instance)}
@@ -947,7 +947,7 @@ class EditProfile extends Component {
                             //   console.log(this.props.user?.ISOCode);
                             setTimeout(() => {
                               this.phone2.selectCountry(
-                                this.props.user?.ISOCode.toLowerCase()
+                                this.props.user?.ISOCode.toLowerCase(),
                               );
                             }, 100);
                             if (Platform.OS == 'ios') {
@@ -1040,7 +1040,7 @@ class EditProfile extends Component {
                         let country = this.state.CountriesData.find(
                           cntry =>
                             cntry?.ISOCode?.toLowerCase() ==
-                            this.phone2.getISOCode()
+                            this.phone2.getISOCode(),
                         );
                         if (country && country.EmailRegister) {
                           this.onChangePhone(true);
@@ -1065,7 +1065,7 @@ class EditProfile extends Component {
               </View>
             </AutobeebModal>
 
-            <AutobeebModal 
+            <AutobeebModal
               //coverScreen
               style={[styles.modalbox]}
               ref={instance => (this.ChangeEmailModal = instance)}
@@ -1129,11 +1129,11 @@ class EditProfile extends Component {
                               if (data.Error) {
                                 if (data.Error == -1)
                                   this.refs.toast.show(
-                                    Languages.NumberAlreadyTaken
+                                    Languages.NumberAlreadyTaken,
                                   );
                                 else {
                                   this.refs.toast.show(
-                                    Languages.EmailAlreadyTaken
+                                    Languages.EmailAlreadyTaken,
                                   );
                                 }
                               } else {
@@ -1149,7 +1149,7 @@ class EditProfile extends Component {
                             } else {
                               this.refs.toast.show(
                                 Languages.SomethingWentWrong,
-                                2500
+                                2500,
                               );
                             }
                           })
@@ -1176,7 +1176,7 @@ class EditProfile extends Component {
               </View>
             </AutobeebModal>
 
-            <AutobeebModal 
+            <AutobeebModal
               //coverScreen
               style={[styles.modalbox]}
               ref={instance => (this.VerifyEmailModal = instance)}
@@ -1217,7 +1217,7 @@ class EditProfile extends Component {
                   onChangeText={emailVerificationCode => {
                     this.setState({
                       emailVerificationCode: this.convertToNumber(
-                        emailVerificationCode
+                        emailVerificationCode,
                       ),
                     });
                   }}
@@ -1297,7 +1297,7 @@ class EditProfile extends Component {
                                   data.User.MemberOf.filter(
                                     x =>
                                       x.ID ==
-                                      '33333333-3333-3333-3333-333333333333'
+                                      '33333333-3333-3333-3333-333333333333',
                                   ).length > 0 &&
                                   data.User.PaidPlans
                                 ) {
@@ -1307,7 +1307,7 @@ class EditProfile extends Component {
                                       ISOCode: this.props.user.ISOCode,
                                       User: this.props.user,
                                       Plans: this.state.Plans,
-                                    }
+                                    },
                                   );
                                 }
                               } else {
@@ -1316,7 +1316,7 @@ class EditProfile extends Component {
                             } else {
                               this.refs.toast.show(
                                 Languages.SomethingWentWrong,
-                                2500
+                                2500,
                               );
                             }
                           })
@@ -1343,7 +1343,7 @@ class EditProfile extends Component {
               </View>
             </AutobeebModal>
 
-            <AutobeebModal 
+            <AutobeebModal
               //coverScreen
               style={[styles.modalbox]}
               ref={instance => (this.VerifyPhoneModal = instance)}
@@ -1391,7 +1391,7 @@ class EditProfile extends Component {
                   onChangeText={phoneVerificationCode => {
                     this.setState({
                       phoneVerificationCode: this.convertToNumber(
-                        phoneVerificationCode
+                        phoneVerificationCode,
                       ),
                     });
                   }}
@@ -1461,7 +1461,7 @@ class EditProfile extends Component {
                                   data.User.MemberOf.filter(
                                     x =>
                                       x.ID ==
-                                      '33333333-3333-3333-3333-333333333333'
+                                      '33333333-3333-3333-3333-333333333333',
                                   ).length > 0 &&
                                   data.User.PaidPlans
                                 ) {
@@ -1471,7 +1471,7 @@ class EditProfile extends Component {
                                       ISOCode: this.props.user.ISOCode,
                                       User: this.props.user,
                                       Plans: this.state.Plans,
-                                    }
+                                    },
                                   );
                                 }
                               } else {
@@ -1480,7 +1480,7 @@ class EditProfile extends Component {
                             } else {
                               this.refs.toast.show(
                                 Languages.SomethingWentWrong,
-                                2500
+                                2500,
                               );
                             }
                           })
@@ -1508,7 +1508,7 @@ class EditProfile extends Component {
               </View>
             </AutobeebModal>
 
-            <AutobeebModal 
+            <AutobeebModal
               ref={instance => (this.photoModal = instance)}
               position="top"
               //      //coverScreen
@@ -1864,7 +1864,7 @@ class EditProfile extends Component {
               !this.props.user?.IsDealer &&
               this.props.user?.MemberOf &&
               this.props.user?.MemberOf.filter(
-                x => x.ID == '33333333-3333-3333-3333-333333333333'
+                x => x.ID == '33333333-3333-3333-3333-333333333333',
               ).length > 0 &&
               !isEmailPendingApproval && (
                 <View style={{flex: 1}}>

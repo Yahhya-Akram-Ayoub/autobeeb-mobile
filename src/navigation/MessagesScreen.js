@@ -44,7 +44,7 @@ class MessagesScreen extends Component {
   componentDidMount = () => {
     this.focusListener = this.props.navigation.addListener(
       'focus',
-      this.handleFocus
+      this.handleFocus,
     );
 
     AppState.addEventListener('change', this._handleAppStateChange);
@@ -123,7 +123,7 @@ class MessagesScreen extends Component {
         hub.invoke('JoinChat', this.props.user && this.props.user.ID);
         let onlineUsers = await hub.invoke('GetUsersOnline');
         this.setState({onlineUsers: onlineUsers?.split(',')});
-      }.bind(this)
+      }.bind(this),
     );
   };
 
@@ -204,7 +204,7 @@ class MessagesScreen extends Component {
   setupNotification() {
     const _this = this;
     _this.notificationDisplayedListener = messaging().onMessage(
-      async remoteMessage => {}
+      async remoteMessage => {},
     );
     //App in foreground
     _this.notificationListener = messaging().onMessage(async remoteMessage => {
@@ -262,7 +262,9 @@ class MessagesScreen extends Component {
                 borderRadius: 5,
               }}
               onPress={() => {
-                this.props.navigation.navigate('LoginScreen');
+                this.props.navigation.navigate('DrawerStack', {
+                  screen: 'LoginScreen',
+                });
               }}>
               <Text style={{color: '#fff', fontSize: 18}}>
                 {Languages.LoginNow}
@@ -332,7 +334,7 @@ class MessagesScreen extends Component {
                   onPress={() => {
                     this.setState({
                       sessions: this.state.sessions.filter(
-                        x => x.ID != item.item.ID
+                        x => x.ID != item.item.ID,
                       ),
                     });
                     KS.hideCommunication({
@@ -348,7 +350,7 @@ class MessagesScreen extends Component {
                   onPress={() => {
                     this.props.OpenChatRedux(
                       item.item.ID,
-                      item.item.UnreadCount ?? 0
+                      item.item.UnreadCount ?? 0,
                     );
                     this.props.navigation.navigate('ChatScreen', {
                       sessionID: item.item.ID,
@@ -367,7 +369,7 @@ class MessagesScreen extends Component {
                     this.state.onlineUsers.includes(item.item.SecondParty)) ||
                     (item.item.FirstParty != this.props.user.ID &&
                       this.state.onlineUsers.includes(
-                        item.item.FirstParty
+                        item.item.FirstParty,
                       ))) && <View style={styles.greenPoint} />}
                   <Image
                     style={{width: 50, height: 50, borderRadius: 100}}
@@ -543,7 +545,7 @@ const mapDispatchToProps = dispatch => {
         targetID,
         sessionID,
         entityID,
-        callback
+        callback,
       );
     },
 

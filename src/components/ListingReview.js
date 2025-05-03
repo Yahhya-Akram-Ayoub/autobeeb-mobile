@@ -1063,7 +1063,7 @@ class ListingReview extends Component {
       subCategoryID,
       email,
     } = this.props.data;
-    let deviceID = DeviceInfo.getUniqueID();
+    let deviceID = DeviceInfo.getUniqueId();
     this.setState({disablePublish: true, openSwearModal: false});
     this.props.DoAddListing(
       {

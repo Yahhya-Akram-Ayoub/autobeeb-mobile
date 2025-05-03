@@ -15,9 +15,6 @@ import {
 import {Color, Images, Styles, Constants, Languages, Icons} from '../common';
 import {toast} from '../Omni';
 import PhoneInput from 'react-native-phone-input';
-import CountryPicker, {
-  getAllCountries,
-} from 'react-native-country-picker-modal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class ListingPhone extends Component {

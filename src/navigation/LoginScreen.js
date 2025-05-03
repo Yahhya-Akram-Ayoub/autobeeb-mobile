@@ -27,7 +27,7 @@ import messaging from '@react-native-firebase/messaging';
 import PhoneInput from 'react-native-phone-input';
 import DeviceInfo from 'react-native-device-info';
 import IconEn from 'react-native-vector-icons/MaterialCommunityIcons';
-import CountryPicker from 'react-native-country-picker-modal';
+import CountryPicker from '../components/CountryModal/CountryPickerModal';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {
   AppleButton,
@@ -885,7 +885,7 @@ class LoginScreen extends Component {
                 disabled={this.state.ButtonDisabled}
                 onPress={async () => {
                   this.setState({ButtonDisabled: true});
-                  let deviceID = DeviceInfo.getUniqueID();
+                  let deviceID = DeviceInfo.getUniqueId();
                   if (this.state.emailShown) {
                     if (this.validateEmail(this.state.email)) {
                       KS.AuthStart({
@@ -920,7 +920,7 @@ class LoginScreen extends Component {
                         deviceID: deviceID,
                       }).then(data => {
                         this.setState({ButtonDisabled: false});
-
+                   
                         if (data && data.Success == 1) {
                           this.props.navigation.navigate('RegisterScreen', {
                             AuthData: data,

@@ -13,7 +13,8 @@ import {
   TouchableOpacity,
   I18nManager,
   Platform,
-  Keyboard,ActivityIndicator
+  Keyboard,
+  ActivityIndicator,
 } from 'react-native';
 import {connect} from 'react-redux';
 
@@ -24,7 +25,7 @@ import KS from '../services/KSAPI';
 import messaging from '@react-native-firebase/messaging';
 import PhoneInput from 'react-native-phone-input';
 import {toast} from '../Omni';
-import CountryPicker from 'react-native-country-picker-modal';
+import CountryPicker from '../components/CountryModal/CountryPickerModal';
 import IconEn from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 

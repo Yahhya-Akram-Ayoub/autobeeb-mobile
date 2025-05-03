@@ -1,10 +1,3 @@
-import {
-  GiftedChat,
-  Bubble,
-  Actions,
-  Send,
-  Message,
-} from 'react-native-gifted-chat';
 //import liraries
 import React, {Component, Fragment} from 'react';
 import {
@@ -38,6 +31,13 @@ import {Icon, toast} from '../Omni';
 import RNFS from 'react-native-fs';
 import '@nois/react-native-signalr';
 import BlockButton from '../components/Chat/BlockButton';
+import {
+  GiftedChat,
+  Bubble,
+  Actions,
+  Send,
+  Message,
+} from 'react-native-gifted-chat';
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {

@@ -413,6 +413,7 @@ class LanguageSelector extends Component {
                     source={{uri: item.flag}}
                   />
                   <Text
+                    numberOfLines={1}
                     style={[
                       this.state.selectedLanguage &&
                       this.state.selectedLanguage.ID === item.ID

@@ -30,9 +30,7 @@ import messaging from '@react-native-firebase/messaging';
 import PhoneInput from 'react-native-phone-input';
 import DeviceInfo from 'react-native-device-info';
 
-import CountryPicker, {
-  getAllCountries,
-} from 'react-native-country-picker-modal';
+import CountryPicker from '../components/CountryModal/CountryPickerModal';
 
 //GoogleSignin.configure ();
 
@@ -321,7 +319,7 @@ class PasswordScreen extends Component {
                 text={Languages.SignUp}
                 containerStyle={styles.loginButton}
                 onPress={() => {
-                  let deviceID = DeviceInfo.getUniqueID();
+                  let deviceID = DeviceInfo.getUniqueId();
                   let AuthData = this.props.route.params?.AuthData ?? 0;
                   KS.LoginUser({
                     username: this.state.username,

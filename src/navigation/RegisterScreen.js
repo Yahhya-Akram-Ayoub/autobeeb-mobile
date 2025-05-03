@@ -14,7 +14,7 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import {connect} from 'react-redux';
-import { CommonActions } from '@react-navigation/native';
+import {CommonActions} from '@react-navigation/native';
 import {Color, Languages, Styles, Constants} from '../common';
 import {ButtonIndex, OTPModal} from '../components';
 import Toast from 'react-native-root-toast';
@@ -23,7 +23,6 @@ import messaging from '@react-native-firebase/messaging';
 import PhoneInput from 'react-native-phone-input';
 import DeviceInfo from 'react-native-device-info';
 import {toast} from '../Omni';
-import CountryPicker from 'react-native-country-picker-modal';
 import IconEn from 'react-native-vector-icons/Feather';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -159,8 +158,8 @@ class RegisterScreen extends Component {
             this.props.navigation.dispatch(
               CommonActions.reset({
                 index: 0,
-                routes: [{ name: 'DrawerStack' }], // Replace 'DrawerStack' with the name of your desired screen
-              })
+                routes: [{name: 'DrawerStack'}], // Replace 'DrawerStack' with the name of your desired screen
+              }),
             );
           });
         }
@@ -184,7 +183,7 @@ class RegisterScreen extends Component {
         if (data.Status == 1) {
           //       alert(JSON.stringify(data));
 
-          this.refs.OTPModal?.open();
+          this.setState({openVerifyModal: true});
         } else {
           toast(Languages.PleaseCheckYourInput);
         }
@@ -197,7 +196,7 @@ class RegisterScreen extends Component {
     return (
       <View style={styles.containerTopLevel}>
         <OTPModal
-          ref="OTPModal"
+          isOpen={this.state.openVerifyModal}
           OTPMessage={Languages.WeHaveSentTheOTP}
           EnterMessage={Languages.EnterToVerifyAccount}
           Username={AuthData.Username}
@@ -598,7 +597,7 @@ class RegisterScreen extends Component {
                       } else {
                         this.setState({ButtonDisabled: true});
 
-                        let deviceID = DeviceInfo.getUniqueID();
+                        let deviceID = DeviceInfo.getUniqueId();
 
                         this.setState({isLoading: true});
 
@@ -625,7 +624,7 @@ class RegisterScreen extends Component {
                                     !AuthData.OTPConfirmed &&
                                     !AuthData.EmailConfirmed
                                   ) {
-                                    this.refs.OTPModal?.open();
+                                    this.setState({openVerifyModal: true});
                                   } else if (
                                     AuthData.OTPConfirmed ||
                                     AuthData.EmailConfirmed
