@@ -1,12 +1,15 @@
 import React, {useCallback, useEffect} from 'react';
 import {
+  createNavigationContainerRef,
   getFocusedRouteNameFromRoute,
   NavigationContainer,
   useNavigation,
 } from '@react-navigation/native';
-import {Text, StyleSheet, View, Linking} from 'react-native';
-import {createStackNavigator} from '@react-navigation/stack';
-import {createMaterialBottomTabNavigator} from 'react-native-paper/react-navigation';
+import {Text, StyleSheet, View, Linking, Pressable} from 'react-native';
+import {
+  CardStyleInterpolators,
+  createStackNavigator,
+} from '@react-navigation/stack';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
 import {SplashScreen} from '../containers';
 import LoginScreen from './LoginScreen';
@@ -110,6 +113,7 @@ const AppStack = ({route, navigation}) => {
         headerShown: false,
         animationEnabled: false,
         initialRouteName: 'HomeScreen',
+        cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
       }}>
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="SellTypeScreen" component={SellTypeScreen} />
@@ -179,6 +183,7 @@ const DrawerStack = () => {
         cardShadowEnabled: false,
         tabBarStyle: {display: 'none'},
         initialRouteName: 'Drawer',
+        cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
       }}>
       <Stack.Screen name="Drawer" component={Drawer} />
       <Stack.Screen name="SettingScreen" component={SettingScreen} />
@@ -234,6 +239,7 @@ const ChatStack = () => {
         cardShadowEnabled: false,
         tabBarStyle: {display: 'none'},
         initialRouteName: 'MessagesScreen',
+        cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
       }}>
       <Stack.Screen name="MessagesScreen" component={MessagesScreen} />
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
@@ -256,6 +262,7 @@ const MyOffersStack = () => {
         animationEnabled: false,
         cardShadowEnabled: false,
         tabBarStyle: {display: 'none'},
+        cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
       }}
       navigationOptions={{
         headerVisible: false,
@@ -278,6 +285,7 @@ const MyOffersStack = () => {
   );
 };
 
+const navigationRef = createNavigationContainerRef();
 const hideOnScreens = ['ListingsScreen', 'CarDetails', 'SearchResult'];
 const BottomNavigation = () => {
   let {unreadMessages} = useSelector(state => state?.chat);
@@ -329,13 +337,7 @@ const BottomNavigation = () => {
 
   setupNotification();
 
-  const handleResetStack = ({screen_name}) => {
-    try {
-      navigation.dispatch(StackActions.popToTop());
-    } catch (err) {
-      // no things
-    }
-  };
+  const handleResetStack = (event, stackName, screenName) => {};
 
   return (
     <Tab.Navigator
@@ -358,8 +360,8 @@ const BottomNavigation = () => {
         name="HomeScreen"
         component={AppStack}
         listeners={{
-          tabPress: () => {
-            handleResetStack('HomeScreen');
+          tabPress: e => {
+            handleResetStack(e, 'HomeScreen', 'HomeScreen');
           },
         }}
         options={({route}) => {
@@ -383,7 +385,14 @@ const BottomNavigation = () => {
                 />
               </View>
             ),
-            
+            tabBarButton: props => (
+              <Pressable
+                onPress={props.onPress}
+                style={props.style}
+                android_ripple={null}>
+                {props.children}
+              </Pressable>
+            ),
           };
         }}
       />
@@ -391,8 +400,8 @@ const BottomNavigation = () => {
         name="MessagesScreen"
         component={ChatStack}
         listeners={{
-          tabPress: () => {
-            handleResetStack('MessagesScreen');
+          tabPress: e => {
+            handleResetStack(e, 'MessagesScreen', 'MessagesScreen');
           },
         }}
         options={({route}) => {
@@ -440,6 +449,14 @@ const BottomNavigation = () => {
                 )}
               </View>
             ),
+            tabBarButton: props => (
+              <Pressable
+                onPress={props.onPress}
+                style={props.style}
+                android_ripple={null}>
+                {props.children}
+              </Pressable>
+            ),
           };
         }}
       />
@@ -447,8 +464,8 @@ const BottomNavigation = () => {
         name="ActiveOffers"
         component={MyOffersStack}
         listeners={{
-          tabPress: () => {
-            handleResetStack('ActiveOffers');
+          tabPress: e => {
+            handleResetStack(e, 'ActiveOffers', 'ActiveOffers');
           },
         }}
         options={({route}) => {
@@ -472,6 +489,14 @@ const BottomNavigation = () => {
                 />
               </View>
             ),
+            tabBarButton: props => (
+              <Pressable
+                onPress={props.onPress}
+                style={props.style}
+                android_ripple={null}>
+                {props.children}
+              </Pressable>
+            ),
           };
         }}
       />
@@ -479,8 +504,8 @@ const BottomNavigation = () => {
         name="DrawerStack"
         component={DrawerStack}
         listeners={{
-          tabPress: () => {
-            handleResetStack('DrawerStack');
+          tabPress: e => {
+            handleResetStack(e, 'DrawerStack', 'Drawer');
           },
         }}
         options={({route}) => {
@@ -504,6 +529,14 @@ const BottomNavigation = () => {
                 />
               </View>
             ),
+            tabBarButton: props => (
+              <Pressable
+                onPress={props.onPress}
+                style={props.style}
+                android_ripple={null}>
+                {props.children}
+              </Pressable>
+            ),
           };
         }}
       />
@@ -513,10 +546,11 @@ const BottomNavigation = () => {
 
 const AppNavigator = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
+          cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
         }}>
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen

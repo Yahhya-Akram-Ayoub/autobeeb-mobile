@@ -64,9 +64,6 @@ class ChatScreen extends Component {
     text: '',
     canDelete: false,
     appState: AppState.currentState,
-    audioPath: '',
-    recordMode: false,
-    recordTime: '00:00:00',
   };
 
   Logout() {
@@ -79,7 +76,7 @@ class ChatScreen extends Component {
     KS.makeMessageReade({targetID: senderID, userID, sessionid, isOpened}).then(
       res => {
         __DEV__ && console.log({res});
-      }
+      },
     );
   }
 
@@ -96,7 +93,7 @@ class ChatScreen extends Component {
       langid: Languages.langID,
     }).then(data => {
       const _session = data.Sessions.find(
-        session => session.ID == this.props.route.params.sessionID
+        session => session.ID == this.props.route.params.sessionID,
       );
       if (!!_session) {
         this.setState({
@@ -144,10 +141,10 @@ class ChatScreen extends Component {
               sessionID: data.SessionID,
               isListingActive: data?.IsListingActive,
               isSystem: `${data?.RelatedEntity}`.includes(
-                '"FullImagePath":"wsImages/chat_logo"'
+                '"FullImagePath":"wsImages/chat_logo"',
               ),
             });
-          }
+          },
         );
       }
     } else {
@@ -158,7 +155,7 @@ class ChatScreen extends Component {
           index: 0,
           key: null,
           actions: [NavigationActions.navigate({routeName: 'App'})],
-        })
+        }),
       );
     }
 
@@ -185,10 +182,10 @@ class ChatScreen extends Component {
             loading: false,
             sessionID: data.SessionID,
             isSystem: `${item.RelatedEntity}`.includes(
-              '"FullImagePath":"wsImages/chat_logo"'
+              '"FullImagePath":"wsImages/chat_logo"',
             ),
           });
-        }
+        },
       );
 
     /*Chat SignalR*/
@@ -282,7 +279,7 @@ class ChatScreen extends Component {
         hub.invoke('messageOpened', _sessionId, _targetId);
         let onlineUsers = await hub.invoke('GetUsersOnline');
         this.setState({isOninle: onlineUsers.includes(_targetId)});
-      }.bind(this)
+      }.bind(this),
     );
     /**/
   };
@@ -348,7 +345,7 @@ class ChatScreen extends Component {
               isListingActive: data?.IsListingActive,
               loading: false,
             });
-          }
+          },
         );
       }
     }
@@ -393,7 +390,7 @@ class ChatScreen extends Component {
               //   isListingActive: data?.IsListingActive,
               //   loading: false,
               // });
-            }
+            },
           );
         }
       }
@@ -420,7 +417,7 @@ class ChatScreen extends Component {
               isListingActive: data?.IsListingActive,
               loading: false,
             });
-          }
+          },
         );
       }
     });
@@ -443,7 +440,7 @@ class ChatScreen extends Component {
         this.props.user.ID,
         this.state.sessionID,
         res.message,
-        this.props.route.params.userTo ?? this.props.route.params?.targetID
+        this.props.route.params.userTo ?? this.props.route.params?.targetID,
       );
     });
   }
@@ -486,7 +483,7 @@ class ChatScreen extends Component {
               this.state.sessionID,
               res.message,
               this.props.route.params.userTo ??
-                this.props.route.params?.targetID
+                this.props.route.params?.targetID,
             );
           })
           .catch(err => {
@@ -594,7 +591,7 @@ class ChatScreen extends Component {
                   this.state.signalRChat.invoke(
                     'doBlockUser',
                     this.props.user.ID,
-                    this.props.route.params.targetID
+                    this.props.route.params.targetID,
                   );
                 }}
               />
@@ -710,34 +707,6 @@ class ChatScreen extends Component {
           </View>
         )}
 
-        {this.state.recordMode && (
-          <View style={styles.recordDiv}>
-            <TouchableOpacity
-              style={styles.recordingClose}
-              onPress={event => {
-                //  event.stopPropagation();
-                this.setState({recordMode: !this.state.recordMode});
-                this.stopAndDeleteRecording();
-              }}>
-              <Icon name={'trash-can-outline'} size={20} color={'red'} />
-            </TouchableOpacity>
-            <View>
-              <Icon name={'record-circle-outline'} size={40} color={'red'} />
-              <Text style={styles.recordingTime}>
-                {this.state.recordTime.substring(0, 5)}
-              </Text>
-            </View>
-            <TouchableOpacity
-              style={styles.recordingSend}
-              onPress={event => {
-                // event.stopPropagation();
-                this.setState({recordMode: !this.state.recordMode});
-                this.stopRecording();
-              }}>
-              <Icon name={'send'} size={27} color={'#146ba1'} />
-            </TouchableOpacity>
-          </View>
-        )}
         {this.state.isBlocked || this.state.isUnAvailable ? (
           <View
             style={{
@@ -761,21 +730,7 @@ class ChatScreen extends Component {
                 ? []
                 : [
                     ...this.state.messages?.map(x => {
-                      if (!!x.text && x.text.startsWith('Chat_Image=')) {
-                        x.image = `${KS.url
-                          .replaceAll('/v2/', '')
-                          .replaceAll('api.', '')}/content/chat/${
-                          this.state.sessionID
-                        }/${x.text.split('=')[1]}.png`;
-                        x.text = null;
-                      } else if (!!x.text && x.text.startsWith('Chat_Audio=')) {
-                        x.audio = `${KS.url
-                          .replaceAll('/v2/', '')
-                          .replaceAll('api.', '')}/content/chat/${
-                          this.state.sessionID
-                        }/${x.text.split('=')[1]}.mp3`;
-                        x.text = null;
-                      } else if (!!x.text && x.text == 'WantedText') {
+                      if (!!x.text && x.text == 'WantedText') {
                         x.audio = 'WantedText';
                         x.text = null;
                       }
@@ -931,7 +886,7 @@ const mapDispatchToProps = dispatch => {
         targetID,
         sessionID,
         entityID,
-        callback
+        callback,
       );
     },
   };
