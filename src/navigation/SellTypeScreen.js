@@ -11,6 +11,7 @@ import {
   FlatList,
   ScrollView,
   Linking,
+  Platform,
 } from 'react-native';
 import NewHeader from '../containers/NewHeader';
 import {Constants, Color, Languages} from '../common';
@@ -251,7 +252,7 @@ class componentName extends Component {
                             'DealerProfileScreen',
                             {
                               userid: URL.split('/')[URL.split('/').length - 1],
-                            }
+                            },
                           );
                         } else if (URL.includes('blog')) {
                           this.props.navigation.navigate('BlogDetails', {

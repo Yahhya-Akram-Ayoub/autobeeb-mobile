@@ -72,9 +72,7 @@ const MySignalR = () => {
       hub.invoke('JoinChat', userId);
       KS.UpdateLastLogin({UserId: userId, AppLangId: Languages.langID});
       let _onlineUsers = await hub.invoke('GetUsersOnline');
-      console.log({
-        _onlineUsers: _onlineUsers?.split(',').filter(u => u != userId),
-      });
+     
       if (!!_onlineUsers) {
         dispatch({
           type: 'ONLINE_USERS',

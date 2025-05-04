@@ -4,6 +4,7 @@ import {
   getFocusedRouteNameFromRoute,
   NavigationContainer,
   useNavigation,
+  useNavigationContainerRef,
 } from '@react-navigation/native';
 import {Text, StyleSheet, View, Linking, Pressable} from 'react-native';
 import {
@@ -285,9 +286,8 @@ const MyOffersStack = () => {
   );
 };
 
-const navigationRef = createNavigationContainerRef();
 const hideOnScreens = ['ListingsScreen', 'CarDetails', 'SearchResult'];
-const BottomNavigation = () => {
+const BottomNavigation = ({navigationRef}) => {
   let {unreadMessages} = useSelector(state => state?.chat);
   const navigation = useNavigation();
 
@@ -337,7 +337,15 @@ const BottomNavigation = () => {
 
   setupNotification();
 
-  const handleResetStack = (event, stackName, screenName) => {};
+  const handleResetStack = (event, stackName, screenName) => {
+    event.preventDefault();
+    navigationRef.current.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{name: stackName, state: {routes: [{name: screenName}]}}],
+      }),
+    );
+  };
 
   return (
     <Tab.Navigator
@@ -545,6 +553,7 @@ const BottomNavigation = () => {
 };
 
 const AppNavigator = () => {
+  const navigationRef = useNavigationContainerRef();
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
@@ -568,7 +577,10 @@ const AppNavigator = () => {
           }}
         />
         <Stack.Screen name="LanguageSelector" component={LanguageSelector} />
-        <Stack.Screen name="App" component={BottomNavigation} />
+        <Stack.Screen
+          name="App"
+          component={() => <BottomNavigation navigationRef={navigationRef} />}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

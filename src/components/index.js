@@ -64,3 +64,4 @@ export {default as SkeletonCard} from './ListingsComponent/SkeletonCard.js';
 export {default as SkeletonTabFilter} from './ListingsComponent/SkeletonTabFilter.js';
 export {default as BottomNavigationBar} from './ListingsComponent/BottomNavigationBar.js';
 export {default as AutobeebModal} from './Modals/AutobeebModal.js';
+export {default as Message} from './Chat/Message.js';

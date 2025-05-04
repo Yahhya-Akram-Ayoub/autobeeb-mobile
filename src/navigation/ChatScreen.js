@@ -14,6 +14,9 @@ import {
   LayoutAnimation,
   UIManager,
   Pressable,
+  FlatList,
+  KeyboardAvoidingView,
+  TextInput,
 } from 'react-native';
 import {Color, Languages, Constants} from '../common';
 import {connect} from 'react-redux';
@@ -29,19 +32,7 @@ import {Icon, toast} from '../Omni';
 import RNFS from 'react-native-fs';
 import '@nois/react-native-signalr';
 import BlockButton from '../components/Chat/BlockButton';
-import {
-  GiftedChat,
-  Bubble,
-  Actions,
-  Send,
-  Message,
-} from 'react-native-gifted-chat';
-
-if (Platform.OS === 'android') {
-  if (UIManager.setLayoutAnimationEnabledExperimental) {
-    UIManager.setLayoutAnimationEnabledExperimental(true);
-  }
-}
+import {Message} from '../components';
 
 // create a component
 class ChatScreen extends Component {
@@ -50,7 +41,6 @@ class ChatScreen extends Component {
     this.timer = null;
 
     this.UpdateMessagesState = this.UpdateMessagesState.bind(this);
-    this.AddMessageToState = this.AddMessageToState.bind(this);
   }
 
   static navigationOptions = ({navigation}) => ({
@@ -78,6 +68,47 @@ class ChatScreen extends Component {
         __DEV__ && console.log({res});
       },
     );
+  }
+  formatDateLabel(isoString) {
+    const date = new Date(isoString);
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+
+    if (date.toDateString() === today.toDateString()) return 'Today';
+    if (date.toDateString() === yesterday.toDateString()) return 'Yesterday';
+
+    return date.toLocaleDateString(undefined, {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  }
+
+  insertDateSeparators(messages) {
+    const result = [];
+    let lastDateStr = null;
+
+    messages.forEach(msg => {
+      const date = new Date(msg.createdAt);
+      const currentDateStr = date.toDateString(); // "Mon Apr 28 2025"
+
+      if (currentDateStr !== lastDateStr) {
+        if (lastDateStr != null) {
+          result.push({
+            _id: `separator-${lastDateStr}`,
+            type: 'separator',
+            createdAt: lastDateStr.toString(),
+          });
+        }
+        lastDateStr = currentDateStr;
+      }
+
+      result.push({...msg, type: 'message'});
+    });
+
+    return result;
   }
 
   componentDidMount = async () => {
@@ -220,8 +251,12 @@ class ChatScreen extends Component {
       ) {
         let _messages = [...this.state.messages];
         this.UpdateMessagesState([
-          ...[..._messages]?.map(m => {
-            return {...m, dateRead: new Date()};
+          ..._messages?.map(m => {
+            if (!m.dateRead) {
+              return {...m, dateRead: new Date()};
+            } else {
+              return m;
+            }
           }),
         ]);
       }
@@ -236,8 +271,12 @@ class ChatScreen extends Component {
       ) {
         let _messages = [...this.state.messages];
         this.UpdateMessagesState([
-          ...[..._messages]?.map(m => {
-            return {...m, reserved: true, sent: true};
+          ..._messages?.map(m => {
+            if (!m.reserved) {
+              return {...m, reserved: true, sent: true};
+            } else {
+              return m;
+            }
           }),
         ]);
       }
@@ -301,25 +340,25 @@ class ChatScreen extends Component {
 
   AddMessageToState = ({userId, sessionId, message}) => {
     this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, [
+      messages: [
+        ...previousState.messages,
         {
           createdAt: new Date(),
           dateRead: new Date(),
           extraInfo: null,
-          received: true,
           reserved: true,
           sent: true,
           text: message,
           user: {_id: userId},
           _id: `${Math.random() * 10000}`,
         },
-      ]),
+      ],
     }));
   };
 
   UpdateMessagesState = Messages => {
     this.setState(() => ({
-      messages: GiftedChat.append([...Messages], []),
+      messages: [...Messages],
     }));
   };
 
@@ -424,15 +463,15 @@ class ChatScreen extends Component {
     //App closed in background
   }
 
-  onSend(messages = []) {
+  onSend(message) {
     this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, messages),
+      messages: [message, ...previousState.messages],
     }));
 
     KS.SendMessage({
       senderID: this.props.user && this.props.user.ID,
       receiverID: this.props.route.params.targetID,
-      message: messages[0].text,
+      message: message.text,
       sessionID: this.state.sessionID,
     }).then(res => {
       this.state.signalRChat.invoke(
@@ -444,109 +483,26 @@ class ChatScreen extends Component {
       );
     });
   }
-  renderSend(props) {
-    return (
-      <Send {...props}>
-        <View style={{marginRight: 10, marginBottom: 5}}>
-          <IconMC
-            name={'send'}
-            size={25}
-            style={
-              I18nManager.isRTL
-                ? {transform: [{rotate: '180deg'}], marginBottom: 5}
-                : {}
-            }
-            color={Color.secondary}
-          />
-        </View>
-      </Send>
-    );
-  }
+  // renderSend(props) {
+  //   return (
+  //     <Send {...props}>
+  //       <View style={{marginRight: 10, marginBottom: 5}}>
+  //         <IconMC
+  //           name={'send'}
+  //           size={25}
+  //           style={
+  //             I18nManager.isRTL
+  //               ? {transform: [{rotate: '180deg'}], marginBottom: 5}
+  //               : {}
+  //           }
+  //           color={Color.secondary}
+  //         />
+  //       </View>
+  //     </Send>
+  //   );
+  // }
 
   /**End recording */
-
-  onSendVoice(voice) {
-    RNFS.readFile(voice, 'base64')
-      .then(base64Data => {
-        KS.SendMessage({
-          senderID: this.props.user && this.props.user.ID,
-          receiverID:
-            this.props.route.params.targetID ??
-            this.props.route.params?.targetID,
-          audioBase64: base64Data,
-          sessionID: this.state.sessionID,
-        })
-          .then(res => {
-            this.state.signalRChat.invoke(
-              'sendMessageToUser',
-              this.props.user.ID,
-              this.state.sessionID,
-              res.message,
-              this.props.route.params.userTo ??
-                this.props.route.params?.targetID,
-            );
-          })
-          .catch(err => {
-            console.log({err});
-          });
-      })
-      .catch(error => {
-        console.log({error});
-      });
-
-    const message = {
-      audio: voice,
-      text: null,
-      sent: true,
-      _id: Math.random(),
-      createdAt: new Date(),
-      user: {
-        _id: this.props.user.ID,
-        name: '',
-        avatar: '',
-      },
-    };
-
-    this.setState({
-      messages: [message, ...this.state.messages],
-    });
-  }
-
-  customRenderTicks(message) {
-    if (this.props.user.ID != message.user._id) return null;
-
-    if (message.seen) {
-      return <Text style={[styles.checkIcon, {color: '#fb5201'}]}>✓✓</Text>;
-    } else if (message.received) {
-      return <Text style={[styles.checkIcon, {color: '#fff'}]}>✓✓</Text>;
-    } else if (message.sent) {
-      return <Text style={[styles.checkIcon, {color: '#fff'}]}>✓</Text>;
-    }
-    return null;
-  }
-
-  CustomMessage(props) {
-    return (
-      <Message
-        {...props}
-        renderTicks={message => this.customRenderTicks(message)}
-      />
-    );
-  }
-
-  renderMic(props) {
-    return (
-      <TouchableOpacity
-        {...props}
-        onPress={event => {
-          event.stopPropagation();
-          this.startRecording();
-        }}
-        style={styles.microphone}>
-        <Icon name={'microphone'} size={20} color={Color.primary} />
-      </TouchableOpacity>
-    );
-  }
 
   render() {
     if (this.state.loading) {
@@ -723,6 +679,126 @@ class ChatScreen extends Component {
             </Text>
           </View>
         ) : (
+          <>
+            <KeyboardAvoidingView
+              style={{flex: 1}}
+              behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+              keyboardVerticalOffset={100}>
+              <FlatList
+                ref={ref => (this.flatListRef = ref)}
+                data={this.insertDateSeparators(this.state.messages)}
+                keyExtractor={item => item._id?.toString()}
+                inverted
+                renderItem={({item, index}) => {
+                  if (item.type === 'separator') {
+                    return (
+                      <View style={{alignItems: 'center', marginVertical: 8}}>
+                        <Text
+                          style={{
+                            backgroundColor: '#ddd',
+                            paddingHorizontal: 12,
+                            paddingVertical: 4,
+                            borderRadius: 12,
+                            fontSize: 13,
+                            color: '#333',
+                          }}>
+                          {this.formatDateLabel(item.createdAt)}
+                        </Text>
+                      </View>
+                    );
+                  }
+
+                  return (
+                    <Message
+                      key={`${item._id}`}
+                      item={item}
+                      index={index}
+                      isOwined={
+                        `${this.props.user && this.props.user.ID}` ===
+                        item.user?._id
+                      }
+                    />
+                  );
+                }}
+                contentContainerStyle={{paddingVertical: 10}}
+                keyboardShouldPersistTaps="handled"
+              />
+
+              {!this.state.isSystem && (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    backgroundColor: '#fff',
+                    borderRadius: 25,
+                    margin: 10,
+                    paddingHorizontal: 10,
+                    elevation: 2, // Android shadow
+                    shadowColor: '#000',
+                    shadowOffset: {width: 0, height: 1},
+                    shadowOpacity: 0.1,
+                    shadowRadius: 2,
+                  }}>
+                  <TextInput
+                    style={{
+                      flex: 1,
+                      fontSize: 16,
+                      paddingVertical: 8,
+                      paddingHorizontal: 10,
+                      fontFamily: 'Cairo-Regular',
+                      color: '#000',
+                    }}
+                    placeholder={`${Languages.TypeHere}...`}
+                    placeholderTextColor="#888"
+                    multiline
+                    value={this.state.text}
+                    onChangeText={text => {
+                      this.setState({text});
+                    }}
+                  />
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (this.state.text.trim()) {
+                        this.onSend({
+                          createdAt: new Date(),
+                          dateRead: null,
+                          extraInfo: null,
+                          reserved: false,
+                          sent: true,
+                          text: this.state.text.trim(),
+                          user: {
+                            _id: `${this.props.user && this.props.user.ID}`,
+                          },
+                          _id: `${Math.random() * 10000}`,
+                        });
+                        this.setState({text: ''});
+                      }
+                    }}
+                    disabled={!this.state.text.trim()}
+                    style={{padding: 5}}>
+                    <IconMC
+                      name="send"
+                      size={24}
+                      color={Color.secondary}
+                      style={
+                        I18nManager.isRTL
+                          ? {transform: [{rotate: '180deg'}]}
+                          : {}
+                      }
+                    />
+                  </TouchableOpacity>
+                </View>
+              )}
+            </KeyboardAvoidingView>
+          </>
+        )}
+      </View>
+    );
+  }
+}
+/*
+
+: (
           <GiftedChat
             disableComposer={this.state.isSystem}
             messages={
@@ -801,12 +877,8 @@ class ChatScreen extends Component {
               }
             }}
           />
-        )}
-      </View>
-    );
-  }
-}
-
+        )
+*/
 // define your styles
 const styles = StyleSheet.create({
   container: {

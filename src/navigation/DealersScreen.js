@@ -342,7 +342,9 @@ class DealersScreen extends Component {
             <CountryPicker
               filterPlaceholder={Languages.Search}
               hideAlphabetFilter
-              ref="countryPicker"
+              ref={ref => {
+                this.countryPicker = ref;
+              }}
               filterable
               AllCountries
               autoFocusFilter={false}
