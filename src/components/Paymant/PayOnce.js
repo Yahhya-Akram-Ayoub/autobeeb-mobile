@@ -290,7 +290,7 @@ const PayOnce = ({
       Unionpay: 17,
       Tap: 18,
     });
-    console.log(PaymentMethod, ' /PaymentMethod.ID');
+   
 
     switch (PaymentMethod.ID) {
       case 1:

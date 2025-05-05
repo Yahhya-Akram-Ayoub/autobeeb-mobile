@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 import {connect} from 'react-redux';
 import {Languages, Color, Constants} from '../common';
-import {LogoSpinner} from '../components';
+import {AutobeebModal, LogoSpinner} from '../components';
 import HTML, {IGNORED_TAGS} from 'react-native-render-html';
 import {isIphoneX} from 'react-native-iphone-x-helper';
 import {WebView} from 'react-native-webview';
@@ -703,6 +703,7 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
                           },
                         ]}
                         onPress={() => {
+                          console.log('===============');
                           handlePaymentMethod(item);
                         }}>
                         <Image
@@ -730,15 +731,17 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
         )}
       </Modal>
 
-      <Modal
+      <AutobeebModal
         ref={PaymentModal}
-        visible={false}
-        coverScreen
-        statusBarTranslucent
-        backButtonClose={Platform.OS == 'android'}
-        swipeToClose={false}
-        style={styles.modalStyle}>
-        <View
+        style={[styles.modelModal]}
+        position="center"
+        backButtonClose
+        entry="bottom"
+        swipeToClose={true}
+        backdropPressToClose
+        coverScreen={Platform.OS == 'android'}
+        backdropOpacity={0.9}>
+        {/* <View
           style={{
             zIndex: 200,
             minHeight: 50,
@@ -755,18 +758,18 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
               paddingTop: 20,
               justifyContent: 'space-between',
             }}></View>
-        </View>
+        </View> */}
         <WebView
           thirdPartyCookiesEnabled={true}
           originWhitelist={['*']}
           mixedContentMode={'always'}
           domStorageEnabled={true}
           allowUniversalAccessFromFileURLs={true}
-          // onLoadStart={() => {
-          //   console.log(
-          //     `https://autobeeb.com/${lang}/special-do-pay/${Offer.ID}/${selectedPlan?.Id}/${selectedGateway}`,
-          //   );
-          // }}
+          onLoadStart={() => {
+            console.log(
+              `https://autobeeb.com/${lang}/special-do-pay/${Offer.ID}/${selectedPlan?.Id}/${selectedGateway}?userID=${User.ID}&id=${User.ID}`,
+            );
+          }}
           javaScriptEnabled={true}
           style={{flex: 1}}
           onMessage={event => {
@@ -791,7 +794,7 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
           )}
           startInLoadingState={true}
         />
-      </Modal>
+      </AutobeebModal>
     </View>
   );
 };

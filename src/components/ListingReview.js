@@ -337,7 +337,6 @@ class ListingReview extends Component {
   }
 
   async pickSingleWithCamera() {
-    console.log({data: '=============='});
     const IsPermission = await requestCameraPermission();
     if (!IsPermission) {
       return;
@@ -968,7 +967,7 @@ class ListingReview extends Component {
 
           {this.state.images && (
             <FlatList
-              ref={this.imagesListRef}
+              ref={ins => (this.imagesListRef = ins)}
               keyExtractor={(item, index) => index.toString()}
               extraData={this.state.images}
               data={this.state.images}

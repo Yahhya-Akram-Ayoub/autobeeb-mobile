@@ -67,14 +67,14 @@ const styles = StyleSheet.create({
     left: Styles.width / 20,
     right: Styles.width / 20, // padding horizontal
     alignItems: 'center',
-    zIndex: 1000,
+    zIndex: 5000,
   },
   textWrap: {
     backgroundColor: 'rgba(60,60,60,0.9)',
     padding: 10,
     paddingHorizontal: 20,
     borderRadius: 20,
-    zIndex: 1000,
+    zIndex: 5000,
     marginTop: 5,
   },
   text: {

@@ -24,8 +24,6 @@ class ListingPhone extends Component {
       cca2: null,
       countryPickerShown: false,
     };
-
-    this.phoneRef = React.createRef();
   }
 
   componentDidMount() {
@@ -76,15 +74,19 @@ class ListingPhone extends Component {
                 style={{
                   borderWidth: 1,
                   borderRadius: 5,
-                  borderColor: this.phoneRef.isValidNumber() ? 'green' : '#eee',
-                  backgroundColor: this.phoneRef.isValidNumber()
-                    ? 'rgba(0,255,0,0.2)'
-                    : '#fff',
+                  borderColor:
+                    !!this.phoneRef && this.phoneRef?.isValidNumber?.()
+                      ? 'green'
+                      : '#eee',
+                  backgroundColor:
+                    !!this.phoneRef && this.phoneRef?.isValidNumber?.()
+                      ? 'rgba(0,255,0,0.2)'
+                      : '#fff',
                   paddingHorizontal: 5,
                   marginHorizontal: 20,
                 }}>
                 <PhoneInput
-                  ref={this.phoneRef}
+                  ref={ins => (this.phoneRef = ins)}
                   initialCountry={this.state.cca2.toLowerCase()}
                   onPressFlag={data => {
                     if (
@@ -149,9 +151,10 @@ class ListingPhone extends Component {
             )}
             <TouchableOpacity
               style={{
-                backgroundColor: this.phoneRef.isValidNumber()
-                  ? 'green'
-                  : Color.secondary,
+                backgroundColor:
+                  !!this.phoneRef && this.phoneRef?.isValidNumber?.()
+                    ? 'green'
+                    : Color.secondary,
                 alignSelf: 'center',
                 width: Dimensions.get('screen').width * 0.4,
                 paddingVertical: 10,
@@ -175,7 +178,7 @@ class ListingPhone extends Component {
                       : null;
 
                   if (selectedCountry.EmailRegister) {
-                    if (this.phoneRef.isValidNumber()) {
+                    if (!!this.phoneRef && this.phoneRef?.isValidNumber?.()) {
                       if (this.props.isEditing) {
                         this.props.onEditingDone(
                           this.phoneRef.getValue(),

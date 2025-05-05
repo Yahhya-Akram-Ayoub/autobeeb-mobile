@@ -627,8 +627,6 @@ class ChatScreen extends Component {
                 style={{
                   textAlign: 'left',
                   fontSize: 16,
-                  lineHeight: 22,
-                  flex: 1,
                   color: Color.primary,
                 }}>
                 {this.props.route.params?.ownerName ??

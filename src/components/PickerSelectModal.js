@@ -1,4 +1,10 @@
-import React, {Component, useEffect, useState} from 'react';
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 import {
   View,
   Text,
@@ -11,37 +17,38 @@ import {
   Platform,
   Modal,
 } from 'react-native';
-
 import {Color} from '../common';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
 import Languages from '../common/Languages';
+import AutobeebModal from './Modals/AutobeebModal';
 
-const PickerSelectModal = ({
-  data,
-  SelectedOptions,
-  onOkPress,
-  cancelEnabled,
-  onSelectOption,
-  multiSelect,
-  ModalStyle,
-}) => {
-  const [options, setOptions] = useState(data);
+const PickerSelectModal = forwardRef((props, ref) => {
+  const {
+    data,
+    SelectedOptions,
+    onOkPress,
+    cancelEnabled,
+    onSelectOption,
+    multiSelect,
+    ModalStyle,
+  } = props;
+  const ModalRef = useRef(null);
+  const [options, setOptions] = useState([]);
   const [searchInput, setSearchInput] = useState('');
-  const [fullOptions, setFullOptions] = useState(data);
+  const [fullOptions, setFullOptions] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState(SelectedOptions || []);
-  const [openPickerModal, setOpenPickerModal] = useState(false);
 
   useEffect(() => {
+    if (!options?.length) {
+      setOptions(data);
+    }
     setFullOptions(data);
   }, [data]);
 
-  const open = () => {
-    setOpenPickerModal(true);
-  };
-
-  const close = () => {
-    setOpenPickerModal(false);
-  };
+  useImperativeHandle(ref, () => ({
+    open: () => ModalRef.current?.open(),
+    close: () => ModalRef.current?.close(),
+  }));
 
   const RenderOkCancelButton = (onCancelPress, onOkPress) => {
     return (
@@ -100,7 +107,7 @@ const PickerSelectModal = ({
     );
   };
 
-  const RenderOkButton = onPress => {
+  const RenderOkButton = ({onPress}) => {
     return (
       <View
         style={{
@@ -139,8 +146,8 @@ const PickerSelectModal = ({
   };
 
   return (
-    <Modal
-      visible={openPickerModal}
+    <AutobeebModal
+      ref={ModalRef}
       style={[styles.optionModal]}
       position="center"
       backButtonClose={true}
@@ -205,7 +212,7 @@ const PickerSelectModal = ({
                       setSelectedOptions([item]);
                       setSearchInput('');
                       setOptions(fullOptions);
-                      setOpenPickerModal(false);
+                      ModalRef.current?.close();
                       !!onSelectOption && onSelectOption(item);
                     }
                   }}>
@@ -246,12 +253,12 @@ const PickerSelectModal = ({
               setSelectedOptions([]);
               setSearchInput('');
               setOptions(fullOptions);
-              setOpenPickerModal(false);
+              ModalRef.current?.close();
             }}
             onOkPress={() => {
               setSearchInput('');
               setOptions(fullOptions);
-              setOpenPickerModal(false);
+              ModalRef.current?.close();
             }}
           />
         )}
@@ -262,14 +269,14 @@ const PickerSelectModal = ({
               setSearchInput('');
               setOptions(fullOptions);
               !!onOkPress && onOkPress(this.state.selectedOptions);
-              setOpenPickerModal(false);
+              ModalRef.current?.close();
             }}
           />
         )}
       </View>
-    </Modal>
+    </AutobeebModal>
   );
-};
+});
 
 const styles = StyleSheet.create({
   optionModal: {

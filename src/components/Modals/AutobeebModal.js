@@ -79,11 +79,11 @@ const AutobeebModal = forwardRef((props, ref) => {
       entry="bottom"
       backdropPressToClose
       swipeToClose={false}>
-      {!fullScreen && (
+      {
         <TouchableWithoutFeedback onPress={() => ref?.current?.close()}>
           <View style={[styles.backdrop, {opacity: backdropOpacity}]} />
         </TouchableWithoutFeedback>
-      )}
+      }
 
       <Animated.View
         style={[

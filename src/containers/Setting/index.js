@@ -62,6 +62,7 @@ class Setting extends Component {
     KS.CurrenciesGet({
       langid: Languages.langID,
     }).then(data => {
+      console.log({data});
       if (data && data.Currencies) {
         this.setState({Currencies: data.Currencies});
       }
@@ -126,40 +127,37 @@ class Setting extends Component {
     return (
       <View style={{flex: 1}}>
         <NewHeader navigation={this.props.navigation} back />
-        {this.state.Currencies && (
-          <PickerSelectModal
-            ref={'PickerSelectModal'}
-            data={this.state.Currencies}
-            onSelectOption={data => {
-              if (data) {
-                //    alert(JSON.stringify(data));
-
-                Alert.alert(
-                  Languages.ConfirmLanguage,
-                  Languages.SwitchCurrencyConfirm,
-                  [
-                    {
-                      text: Languages.CancelLanguage,
-                      onPress: () => undefined,
+        <PickerSelectModal
+          ref={ins => (this.PickerSelectModalRef = ins)}
+          data={this.state.Currencies}
+          onSelectOption={data => {
+            if (data) {
+              Alert.alert(
+                Languages.ConfirmLanguage,
+                Languages.SwitchCurrencyConfirm,
+                [
+                  {
+                    text: Languages.CancelLanguage,
+                    onPress: () => undefined,
+                  },
+                  {
+                    text: Languages.okLanguage,
+                    onPress: async () => {
+                      this.props.setViewingCurrency(data);
+                      setTimeout(() => {
+                        RNRestart.Restart();
+                      }, 2000);
                     },
-                    {
-                      text: Languages.okLanguage,
-                      onPress: async () => {
-                        this.props.setViewingCurrency(data);
-                        setTimeout(() => {
-                          RNRestart.Restart();
-                        }, 2000);
-                      },
-                    },
-                  ],
-                );
-              }
-            }}
-            ModalStyle={{
-              width: Dimensions.get('screen').width * 0.7,
-            }}
-            SelectedOptions={[this.props.ViewingCurrency]}></PickerSelectModal>
-        )}
+                  },
+                ],
+              );
+            }
+          }}
+          ModalStyle={{
+            width: Dimensions.get('screen').width * 0.7,
+          }}
+          SelectedOptions={[this.props.ViewingCurrency]}
+        />
         <ScrollView style={[{backgroundColor: '#FFF'}]}>
           <View style={styles.inputWrap}>
             <TouchableOpacity
@@ -269,9 +267,8 @@ class Setting extends Component {
           >
             <TouchableOpacity
               onPress={() => {
-                if (this.refs.PickerSelectModal) {
-                  this.refs.PickerSelectModal.open();
-                }
+                !!this.state.Currencies?.length &&
+                  this.PickerSelectModalRef?.open();
               }}
               style={{
                 flexDirection: 'row',

@@ -102,7 +102,7 @@ class Drawer extends Component {
     if (!!this.props.navigation)
       this.focusListener = this.props.navigation.addListener(
         'focus',
-        this.handleFocus
+        this.handleFocus,
       );
 
     if (this.props.user) {
@@ -141,7 +141,7 @@ class Drawer extends Component {
                 () => {
                   //console.log("active" + data.ActiveListings);
                   // console.log("inactive" + data.InActiveListings);
-                }
+                },
               );
             });
           }
@@ -534,8 +534,8 @@ class Drawer extends Component {
                   {Languages.SubscriptionExpiry} {'\n'}
                   {Moment(
                     this.props.user.MemberOf.find(
-                      x => x.ID == '33333333-3333-3333-3333-333333333333'
-                    ).EndDate
+                      x => x.ID == '33333333-3333-3333-3333-333333333333',
+                    ).EndDate,
                   ).format('YYYY-MM-DD')}
                 </Text>
               </View>
@@ -645,7 +645,7 @@ class Drawer extends Component {
             !this.props.user.IsDealer &&
             this.props.user.MemberOf &&
             this.props.user.MemberOf.filter(
-              x => x.ID == '33333333-3333-3333-3333-333333333333'
+              x => x.ID == '33333333-3333-3333-3333-333333333333',
             ).length == 0 && (
               <TouchableOpacity
                 style={styles.rowStyle}
@@ -871,7 +871,9 @@ class Drawer extends Component {
             <TouchableOpacity
               style={styles.rowStyle}
               onPress={() => {
-                this.props.navigation.navigate('BlogsScreen');
+                this.props.navigation.navigate('HomeScreen', {
+                  screen: 'BlogsScreen',
+                });
               }}>
               <View
                 style={{
@@ -921,7 +923,9 @@ class Drawer extends Component {
               <TouchableOpacity
                 style={styles.rowStyle}
                 onPress={() => {
-                  this.props.navigation.navigate('RecentlyViewedScreen');
+                  this.props.navigation.navigate('HomeScreen', {
+                    screen: 'RecentlyViewedScreen',
+                  });
                 }}>
                 <View
                   style={{

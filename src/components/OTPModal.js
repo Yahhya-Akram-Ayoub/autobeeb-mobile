@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   modelModal: {
-    zIndex: 5000,
+    zIndex: 2000,
     flex: 1,
     backgroundColor: 'transparent',
     alignSelf: 'center',

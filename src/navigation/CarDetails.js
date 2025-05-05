@@ -208,7 +208,7 @@ class CarDetails extends Component {
               'ItemNeedSharePoup',
               _item.replace(`${this.state.Listing?.ID},`, ''),
             );
-            this.setState({IsSharePopup: true});
+            this.IsSharePopup.open();
           }
         });
       }
@@ -278,7 +278,7 @@ class CarDetails extends Component {
                 },
                 () => {
                   if (!!this.props?.route?.params?.showFeatures == true) {
-                    this.setState({isFeaturesModalOpen: true});
+                    this.FeaturesModal.open();
                   }
                 },
               );
@@ -804,7 +804,7 @@ class CarDetails extends Component {
           //  Alert.alert('DONE!!');
           if (data.User) {
             _this.props.storeUserData(data.User, () => {
-              this.refs.OTPModal.close();
+              this.setState({OtpOpen: false});
               this.SpecialPlansModal.open();
             });
           }
@@ -1288,9 +1288,8 @@ class CarDetails extends Component {
         />
         <AutobeebModal
           ref={instance => (this.FeaturesModal = instance)}
-          isOpen={this.state.isFeaturesModalOpen}
-          //    onLayout={e => this.props.onLayout(e)}
           style={[styles.modelModal]}
+          fullScreen={true}
           position="center"
           onClosed={() => {
             if (!!this.props?.route?.params?.isNewUser == true) {
@@ -1582,7 +1581,11 @@ class CarDetails extends Component {
         </AutobeebModal>
         <AutobeebModal
           ref={instance => (this.SpecialPlansModal = instance)}
-          style={[styles.modelModal]}
+          style={[
+            styles.modelModal,
+            {flexDirection: 'column', justifyContent: 'flex-end'},
+          ]}
+          fullScreen={true}
           position="center"
           onClosed={() => {
             this.setState({
@@ -1594,10 +1597,10 @@ class CarDetails extends Component {
               isSpecialPlansModal: true,
             });
           }}
-          // backButtonClose={true}
+          backButtonClose={true}
           entry="bottom"
           swipeToClose={false}
-          // backdropPressToClose
+          backdropPressToClose
           coverScreen={true}
           backdropOpacity={0.5}>
           <View
@@ -1605,9 +1608,10 @@ class CarDetails extends Component {
               styles.modelContainer,
               {
                 backgroundColor: '#fff',
-                maxHeight: Dimensions.get('screen').height * 0.9,
-                height: Dimensions.get('screen').height * 0.9,
+                height: Dimensions.get('screen').height * 0.93,
                 width: Dimensions.get('screen').width * 0.9,
+                bottom: 0,
+                alignItems: 'center',
               },
             ]}>
             <SpecialPlans
@@ -1791,7 +1795,7 @@ class CarDetails extends Component {
                 <TouchableOpacity
                   style={{}}
                   onPress={() => {
-                    this.refs.OTPModal.open();
+                    this.setState({OtpOpen: true});
                   }}>
                   <Text style={{color: '#000', textAlign: 'left'}}>
                     {Languages.UnpublishedOffer}
@@ -2006,7 +2010,7 @@ class CarDetails extends Component {
                 onPress={() => {
                   if (this.state.Owner?.ID === this.props.userData?.ID) {
                     if (notOtpConfirmed || notEmailConfirmed) {
-                      this.refs.OTPModal.open();
+                      this.setState({OtpOpen: true});
                     } else {
                       this.props.navigation.navigate('SpecialPlans', {
                         Offer: Listing,
@@ -2610,6 +2614,7 @@ class CarDetails extends Component {
               backButtonClose
               swipeToClose={false}
               animationDuration={350}
+              fullScreen={true}
               style={{
                 backgroundColor: '#fff',
                 width: '100%',
@@ -2622,6 +2627,9 @@ class CarDetails extends Component {
                 style={{
                   width: '100%',
                   flex: 1,
+                  height: Dimensions.get('screen').height,
+                  alignItems:'center',
+                  justifyContent :'center',
                   paddingTop:
                     Platform.OS === 'android'
                       ? StatusBar.currentHeight + 10
@@ -2767,7 +2775,7 @@ class CarDetails extends Component {
 
                           KS.ReportListing(reportData).then(data => {
                             if (data && data?.Success == 1) {
-                              this.reportPopup.close();
+                              this.reportPopup?.close?.();
                               Alert.alert('', Languages.ReportedSuccessfully);
                               reportData.typeId = '';
                               reportData.message = '';
@@ -2776,7 +2784,6 @@ class CarDetails extends Component {
                               this.setState({reportDetailError: false});
                             }
                             this.setState({loadingReport: false});
-                            __DEV__ && alert(JSON.stringify(data));
                           });
                         }
                       }}
@@ -3459,8 +3466,7 @@ class CarDetails extends Component {
             alignContent: 'center',
           }}
           useNativeDriver={true}
-          coverScreen
-          isOpen={this.state.IsSharePopup}>
+          coverScreen>
           <View
             style={{
               backgroundColor: '#fff',
@@ -3478,7 +3484,7 @@ class CarDetails extends Component {
                 top: -5,
               }}
               onPress={() => {
-                this.setState({IsSharePopup: false});
+                this.IsSharePopup.close();
               }}>
               <IconEV name="close" size={25} color={Color.primary} />
             </TouchableOpacity>
@@ -3514,7 +3520,7 @@ class CarDetails extends Component {
                   }}
                   onPress={() => {
                     this.shareOnSocial('facebook');
-                    this.setState({IsSharePopup: false});
+                    this.IsSharePopup.close();
                   }}>
                   <Text style={{color: '#fff'}}>{Languages.Ok}</Text>
                 </Pressable>
@@ -3535,7 +3541,7 @@ class CarDetails extends Component {
                   }}
                   onPress={() => {
                     this.shareOnSocial('facebook');
-                    this.setState({IsSharePopup: false});
+                    this.IsSharePopup.close();
                   }}>
                   <IconEn name={'facebook'} size={28} color={'#3b5998'} />
                 </Pressable>
@@ -3547,7 +3553,7 @@ class CarDetails extends Component {
                   }}
                   onPress={() => {
                     this.shareOnSocial('twitter');
-                    this.setState({IsSharePopup: false});
+                    this.IsSharePopup.close();
                   }}>
                   {this.XIconSVG({size: 24, color: 'black'})}
                 </Pressable>
@@ -3770,6 +3776,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     borderRadius: 10,
+    height: Dimensions.get('screen').height,
   },
   modelContainer: {
     borderRadius: 10,
@@ -3778,6 +3785,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#eee',
     padding: 5,
     borderRadius: 10,
+    height: Dimensions.get('screen').height,
   },
   socialBox: {
     flex: 1,
