@@ -593,23 +593,23 @@ class CarDetails extends Component {
   resendCode() {
     this.setState({otp: ''});
     KS.ResendOTP({
-      userID: this.props?.route?.params?.User?.ID,
-      otpType: this.props?.route?.params?.User?.EmailRegister ? 2 : 1,
+      userID:
+        this.props?.route?.params?.UserID ??
+        (this.props.userData && this.props.userData.ID),
+      otpType: this.props.userData?.EmailRegister ? 2 : 0,
     }).then(data => {
       if (data.Success == 1) {
-        //     alert(JSON.stringify(data));
       } else {
         alert('something went wrong');
       }
       //
     });
   }
-
   openPhoto = index => {
     this.setState({
       index: index,
-      modalPhotoOpen: true,
     });
+    this.modalPhoto.open();
   };
   closePhoto = () =>
     this.setState({
@@ -776,63 +776,45 @@ class CarDetails extends Component {
   checkOTP() {
     const _this = this;
     const otp = this.state.otp;
-    {
-      KS.UserVerifyOTP({
-        otpcode: otp,
-        userid:
-          this.props?.route?.params?.UserID ||
-          (this.props.userData && this.props.userData.ID),
-        username:
-          !!this.props?.route?.params?.isEmailRegister ||
-          (this.props.userData &&
-            this.props.userData.EmailRegister &&
-            this.props.userData.EmailConfirmed == false)
-            ? this.props?.route?.params?.Email || this.props.userData?.Email
-            : this.props?.route?.params?.Phone ||
-              (this.props.userData && this.props.userData.Phone),
-      }).then(data => {
-        if (data.OTPVerified == true || data.EmailConfirmed == true) {
-          if (this.state.pendingDelete)
-            KS.TransferListing({
-              userid:
-                this.props?.route?.params?.UserID ??
-                (this.props.userData && this.props.userData.ID),
-              listingID: this.state.Listing.ID,
-            });
-
-          toast(Languages.PublishSuccess, 3500);
-          //  Alert.alert('DONE!!');
-          if (data.User) {
-            _this.props.storeUserData(data.User, () => {
-              this.setState({OtpOpen: false});
-              this.SpecialPlansModal.open();
-            });
-          }
-          //
-        } else {
-          toast(Languages.WrongOTP);
-
-          setTimeout(() => {
-            this.setState({otp: ''});
-          }, 1800);
-        }
-      });
-    }
-  }
-  resendCode() {
-    this.setState({otp: ''});
-    KS.ResendOTP({
-      userID:
-        this.props?.route?.params?.UserID ??
+    KS.UserVerifyOTP({
+      otpcode: otp,
+      userid:
+        this.props?.route?.params?.UserID ||
         (this.props.userData && this.props.userData.ID),
-      otpType: this.props.userData?.EmailRegister ? 2 : 0,
+      username:
+        !!this.props?.route?.params?.isEmailRegister ||
+        (this.props.userData &&
+          this.props.userData.EmailRegister &&
+          this.props.userData.EmailConfirmed == false)
+          ? this.props?.route?.params?.Email || this.props.userData?.Email
+          : this.props?.route?.params?.Phone ||
+            (this.props.userData && this.props.userData.Phone),
     }).then(data => {
-      if (data.Success == 1) {
-        //    alert(JSON.stringify(data));
+      if (data.OTPVerified == true || data.EmailConfirmed == true) {
+        if (this.state.pendingDelete)
+          KS.TransferListing({
+            userid:
+              this.props?.route?.params?.UserID ??
+              (this.props.userData && this.props.userData.ID),
+            listingID: this.state.Listing.ID,
+          });
+
+        toast(Languages.PublishSuccess, 3500);
+        //  Alert.alert('DONE!!');
+        if (data.User) {
+          _this.props.storeUserData(data.User, () => {
+            this.setState({OtpOpen: false});
+            this.SpecialPlansModal.open();
+          });
+        }
+        //
       } else {
-        alert('something went wrong');
+        toast(Languages.WrongOTP);
+
+        setTimeout(() => {
+          this.setState({otp: ''});
+        }, 1800);
       }
-      //
     });
   }
 
@@ -1089,7 +1071,6 @@ class CarDetails extends Component {
                 alignItems: 'center',
                 paddingTop: 5,
                 justifyContent: 'space-between',
-                alignItems: 'center',
               }}>
               <TouchableOpacity
                 style={{marginRight: 15}}
@@ -1116,89 +1097,6 @@ class CarDetails extends Component {
               </TouchableOpacity>
             </View>
           </LinearGradient>
-
-          <AutobeebModal //the full view
-            ref={instance => (this.modalPhoto = instance)}
-            isOpen={this.state.modalPhotoOpen}
-            swipeToClose={false}
-            animationDuration={200}
-            style={styles.modalBoxWrap}
-            useNativeDriver={true}>
-            <FlatList
-              style={{
-                height: Dimensions.get('screen').width / 1.2,
-                width: Dimensions.get('screen').width,
-              }}
-              contentContainerStyle={{
-                gap: 15,
-                paddingBottom: 175,
-              }}
-              keyExtractor={(item, index) => index.toString()}
-              showsHorizontalScrollIndicator={false}
-              initialNumToRender={16}
-              numColumns={0}
-              data={this.state.Listing.Images}
-              renderItem={({item, index}) => {
-                return (
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.setState({
-                        openedImage: `https://autobeeb.com/${this.state.Listing.ImageBasePath}${item}_1024x853.jpg`,
-                      });
-                    }}>
-                    <FastImage
-                      style={{
-                        height: Dimensions.get('screen').width / 1.2,
-                        width: Dimensions.get('screen').width,
-                      }}
-                      resizeMode="cover"
-                      source={{
-                        uri: `https://autobeeb.com/${this.state.Listing.ImageBasePath}${item}_1024x853.jpg`,
-                      }}
-                    />
-                  </TouchableOpacity>
-                );
-              }}
-            />
-            {!!this.state.openedImage && (
-              <ImageViewer
-                renderIndicator={data => {
-                  return <></>;
-                }}
-                backgroundColor="#D2E5EC"
-                onChange={index => {
-                  this.setState({
-                    openedImage: null,
-                  });
-                }}
-                pageAnimateTime={100}
-                enablePreload
-                style={{
-                  zIndex: 50,
-                  width: Dimensions.get('screen').width,
-                  height: Dimensions.get('screen').height,
-                  position: 'absolute',
-                }}
-                index={this.state.index}
-                saveToLocalByLongPress={false}
-                enableImageZoom={true}
-                enableSwipeDown={true}
-                horizontal={true}
-                onCancel={() => {
-                  this.setState({
-                    openedImage: null,
-                  });
-                }}
-                imageUrls={[
-                  {
-                    width: Dimensions.get('screen').width,
-                    url: this.state.openedImage,
-                  },
-                ]}
-                renderImage={props => <Image {...props} resizeMode="cover" />}
-              />
-            )}
-          </AutobeebModal>
         </View>
       );
     }
@@ -1252,7 +1150,6 @@ class CarDetails extends Component {
         )}
         {this.state.isLoading && <LogoSpinner fullStretch={true} />}
         <OTPModal
-          ref="OTPModal"
           isOpen={this.state.OtpOpen}
           OTPMessage={Languages.WeHaveSentTheOTP}
           EnterMessage={Languages.EnterItNow}
@@ -1623,6 +1520,43 @@ class CarDetails extends Component {
               }}
             />
           </View>
+        </AutobeebModal>
+        <AutobeebModal //the full view
+          ref={instance => (this.modalPhoto = instance)}
+          swipeToClose={false}
+          fullScreen={true}
+          animationDuration={200}
+          style={styles.modalBoxWrap}
+          useNativeDriver={true}>
+          <FlatList
+            style={{
+              height: Dimensions.get('screen').width / 1.2,
+              width: Dimensions.get('screen').width,
+            }}
+            contentContainerStyle={{
+              gap: 15,
+              paddingBottom: 20,
+            }}
+            keyExtractor={(item, index) => index.toString()}
+            showsHorizontalScrollIndicator={false}
+            initialNumToRender={16}
+            numColumns={0}
+            data={this.state.Listing.Images}
+            renderItem={({item, index}) => {
+              return (
+                <FastImage
+                  style={{
+                    height: Dimensions.get('screen').width / 1.2,
+                    width: Dimensions.get('screen').width,
+                  }}
+                  resizeMode="cover"
+                  source={{
+                    uri: `https://autobeeb.com/${this.state.Listing.ImageBasePath}${item}.jpg`,
+                  }}
+                />
+              );
+            }}
+          />
         </AutobeebModal>
         <View
           style={{
@@ -2628,8 +2562,8 @@ class CarDetails extends Component {
                   width: '100%',
                   flex: 1,
                   height: Dimensions.get('screen').height,
-                  alignItems:'center',
-                  justifyContent :'center',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   paddingTop:
                     Platform.OS === 'android'
                       ? StatusBar.currentHeight + 10
@@ -3385,74 +3319,6 @@ class CarDetails extends Component {
         )}
 
         <AutobeebModal
-          ref={instance => (this.modalPhoto = instance)}
-          isOpen={this.state.modalPhotoOpen}
-          swipeToClose={false}
-          animationDuration={200}
-          style={styles.modalBoxWrap}>
-          <ImageViewer
-            renderIndicator={data => {
-              if (this.state.Listing?.Images?.length)
-                return (
-                  <Text
-                    style={{
-                      textAlign: 'center',
-                      backgroundColor: 'rgba(0,0,0,0.6)',
-                      color: 'white',
-                      position: 'absolute',
-                      zIndex: 100,
-                      top: 25,
-                      //    right: 0,
-                      alignSelf: 'center',
-                      paddingHorizontal: 5,
-                      fontSize: 19,
-                      borderRadius: 8,
-                    }}>{`${this.state.index} / ${this.state.Listing.Images.length}`}</Text>
-                );
-            }}
-            backgroundColor="#D2E5EC"
-            onChange={index => {
-              this.setState({
-                index: index,
-              });
-            }}
-            pageAnimateTime={100}
-            enablePreload
-            // onClick={() => {
-            //   this.openPhoto(this.state.index);
-            // }}
-            style={{zIndex: 50}}
-            index={this.state.index}
-            //   saveToLocalByLongPress={Platform.OS == "android"}
-            // onSave={url => {
-            //   SaveImage.downloadImage(url, "soogah");
-            // }}
-            saveToLocalByLongPress={false}
-            enableImageZoom={true}
-            enableSwipeDown
-            onSwipeDown={() => {
-              this.setState({
-                modalPhotoOpen: false,
-              });
-            }}
-            imageUrls={
-              this.state.Listing &&
-              this.state.Listing.Images &&
-              this.state.Listing.Images.map(image => ({
-                url:
-                  'https://autobeeb.com/' +
-                  this.state.Listing.ImageBasePath +
-                  image +
-                  '_635x811.jpg',
-                width: Dimensions.get('screen').width,
-                //   height: Dimensions.get("screen").width / 1.77
-              }))
-            }
-            renderImage={props => <Image {...props} resizeMode="cover" />}
-          />
-        </AutobeebModal>
-
-        <AutobeebModal
           ref={instance => (this.IsSharePopup = instance)}
           backButtonClose
           swipeToClose={true}
@@ -3667,11 +3533,9 @@ const styles = StyleSheet.create({
   },
   modalBoxWrap: {
     position: 'absolute',
-    // borderRadius: 2,
     flex: 1,
     width: Dimensions.get('screen').width,
     height: Dimensions.get('screen').height,
-    zIndex: 9999,
   },
   iconZoom: {
     position: 'absolute',

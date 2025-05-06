@@ -770,6 +770,11 @@ class ListingsScreen extends Component {
     if (!onEndReached) {
       this.filterModal.close();
     }
+    console.log({
+      curr: this.state.currency?.ID || '',
+      minPrice: this.state.selectedMinPrice || '',
+      maxPrice: this.state.selectedMaxPrice || '',
+    });
     KS.ListingsGet(
       {
         asc: asc ? (asc == 'false' ? false : true) : false, // if it was sent check the string for true or false because i don want it to resolve to true always
@@ -3235,7 +3240,7 @@ class ListingsScreen extends Component {
             style={[
               styles.modal,
               {
-                  flex: 1,
+                flex: 1,
                 //    justifyContent: "space-between",
                 borderTopRightRadius: 10,
                 borderTopLeftRadius: 10,
@@ -3853,11 +3858,12 @@ class ListingsScreen extends Component {
                 this.makeModal.close();
               },
               () => {
-                this.setState({text: '', Makes: this.state.FullMakes});
                 this.makeModal.close();
-                if (!this.filterModal.isOpen) {
-                  this.filterResults();
-                }
+                this.setState({text: '', Makes: this.state.FullMakes}, () => {
+                  if (!this.filterModal.isOpen) {
+                    this.filterResults();
+                  }
+                });
               },
             )}
           </View>
@@ -4633,15 +4639,18 @@ class ListingsScreen extends Component {
                 this.cityModal.close();
               },
               () => {
-                this.setState({
-                  citySearch: '',
-                  Cities: this.state.fullCities,
-                });
                 this.cityModal.close();
-
-                if (!this.filterModal.isOpen) {
-                  this.filterResults();
-                }
+                this.setState(
+                  {
+                    citySearch: '',
+                    Cities: this.state.fullCities,
+                  },
+                  () => {
+                    if (!this.filterModal.isOpen) {
+                      this.filterResults();
+                    }
+                  },
+                );
               },
             )}
           </View>
@@ -4781,19 +4790,22 @@ class ListingsScreen extends Component {
                 this.yearModal.close();
               },
               () => {
-                this.setState({
-                  minYear: '',
-                  maxYear: '',
-                  maxYearsList: this.state.FullmaxYearsList,
-                  minYearsList: this.state.FullminYearsList,
-                  selectedMinYear: this.state.minYear,
-                  selectedMaxYear: this.state.maxYear,
-                });
                 this.yearModal.close();
-
-                if (!this.filterModal.isOpen) {
-                  this.filterResults();
-                }
+                this.setState(
+                  {
+                    minYear: '',
+                    maxYear: '',
+                    maxYearsList: this.state.FullmaxYearsList,
+                    minYearsList: this.state.FullminYearsList,
+                    selectedMinYear: this.state.minYear,
+                    selectedMaxYear: this.state.maxYear,
+                  },
+                  () => {
+                    if (!this.filterModal.isOpen) {
+                      this.filterResults();
+                    }
+                  },
+                );
               },
             )}
           </View>
@@ -4918,28 +4930,31 @@ class ListingsScreen extends Component {
             </View>
             {this.renderOkCancelButton(
               () => {
+                this.PriceModal.close();
                 this.setState({
                   minPrice: '',
                   maxPrice: '',
                   maxPricesList: this.state.FullmaxPricesList,
                   minPricesList: this.state.FullminPricesList,
                 });
-                this.PriceModal.close();
               },
               () => {
-                this.setState({
-                  minPrice: '',
-                  maxPrice: '',
-                  maxPricesList: this.state.FullmaxPricesList,
-                  minPricesList: this.state.FullminPricesList,
-                  selectedMinPrice: this.state.minPrice,
-                  selectedMaxPrice: this.state.maxPrice,
-                });
                 this.PriceModal.close();
-
-                if (!this.filterModal.isOpen) {
-                  this.filterResults();
-                }
+                this.setState(
+                  {
+                    minPrice: '',
+                    maxPrice: '',
+                    maxPricesList: this.state.FullmaxPricesList,
+                    minPricesList: this.state.FullminPricesList,
+                    selectedMinPrice: this.state.minPrice,
+                    selectedMaxPrice: this.state.maxPrice,
+                  },
+                  () => {
+                    if (!this.filterModal.isOpen) {
+                      this.filterResults();
+                    }
+                  },
+                );
               },
             )}
           </View>
@@ -5077,6 +5092,7 @@ class ListingsScreen extends Component {
                 this.MileageModal.close();
               },
               () => {
+                this.MileageModal.close();
                 this.setState({
                   minMileage: '',
                   maxMileage: '',
@@ -5084,12 +5100,11 @@ class ListingsScreen extends Component {
                   minMileagesList: this.state.FullminMileagesList,
                   selectedMinMileage: this.state.minMileage,
                   selectedMaxMileage: this.state.maxMileage,
+                } ,()=>{
+                  if (!this.filterModal.isOpen) {
+                    this.filterResults();
+                  }
                 });
-                this.MileageModal.close();
-
-                if (!this.filterModal.isOpen) {
-                  this.filterResults();
-                }
               },
             )}
           </View>

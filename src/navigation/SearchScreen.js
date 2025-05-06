@@ -271,13 +271,12 @@ export class SearchScreen extends Component {
 
                 <FlatList
                   //  contentContainerStyle={{ flex: 1 }}
-                  style={{
-                    flexGrow: 0,
-                    width: '100%',
-                  }}
                   keyExtractor={(item, index) => index.toString()}
                   horizontal
-                  contentContainerStyle={{paddingHorizontal: 4}}
+                  contentContainerStyle={{
+                    paddingHorizontal: 4,
+                    width: '100%',
+                  }}
                   keyboardShouldPersistTaps="handled"
                   showsHorizontalScrollIndicator={false}
                   data={this.props.recentSearched}
@@ -362,15 +361,10 @@ export class SearchScreen extends Component {
                   </Text>
 
                   <FlatList
-                    //  contentContainerStyle={{ flex: 1 }}
-                    style={{
-                      flexGrow: 0,
-                      width: '100%',
-                    }}
                     keyExtractor={(item, index) => index.toString()}
                     horizontal
                     //   inverted={I18nManager.isRTL}
-                    contentContainerStyle={{paddingHorizontal: 2}}
+                    contentContainerStyle={{paddingHorizontal: 2 ,     width: '100%'}}
                     keyboardShouldPersistTaps="handled"
                     showsHorizontalScrollIndicator={false}
                     data={this.state.recentSeenListings}
@@ -380,7 +374,7 @@ export class SearchScreen extends Component {
                           <TouchableOpacity
                             onPress={() => {
                               this.props.navigation.navigate(
-                                'RecentlyViewedScreen'
+                                'RecentlyViewedScreen',
                               );
                             }}
                             style={{

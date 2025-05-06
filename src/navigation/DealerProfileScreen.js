@@ -95,23 +95,33 @@ class DealerProfileScreen extends Component {
         if (result && result.Success) {
           //   alert(JSON.stringify(result));
 
-          this.setState({PrimaryCurrencies: result.Currencies});
+          this.setState(prevState => ({
+            ...prevState,
+            PrimaryCurrencies: result.Currencies,
+          }));
           result.Currencies &&
             result.Currencies.forEach(cur => {
               if (global?.ViewingCurrency) {
                 if (cur.ID == global?.ViewingCurrency?.ID) {
-                  this.setState({currency: cur});
+                  this.setState(prevState => ({
+                    ...prevState,
+                    currency: cur,
+                  }));
                 }
               } else {
                 if (cur.ID == this.props.ViewingCurrency?.ID) {
                   global.ViewingCurrency = cur;
-                  this.setState({currency: cur});
+                  this.setState(prevState => ({
+                    ...prevState,
+                    currency: cur,
+                  }));
                 }
               }
             });
         } else {
           //should never happen, in case something goes wrong ill have fallback currencies
-          this.setState({
+          this.setState(prevState => ({
+            ...prevState,
             PrimaryCurrencies: [
               {
                 ID: 2,
@@ -136,7 +146,7 @@ class DealerProfileScreen extends Component {
                 Primary: true,
               },
             ],
-          });
+          }));
         }
       })
       .catch(err => {});
@@ -147,7 +157,8 @@ class DealerProfileScreen extends Component {
         langid: Languages.langID,
       }).then(data => {
         if (data && data.Success) {
-          this.setState({
+          this.setState(prevState => ({
+            ...prevState,
             Dealer: data.Dealer,
             Competences: data.Competences,
             Makes: data.Makes,
@@ -158,7 +169,7 @@ class DealerProfileScreen extends Component {
             Address: data.Dealer.Address,
             hideMobile: data.Dealer.HideMobile,
             DealerLoading: false,
-          });
+          }));
         }
       });
 
@@ -172,16 +183,20 @@ class DealerProfileScreen extends Component {
       }).then(data => {
         //    alert(JSON.stringify(data));
         if (data && data.Success) {
-          this.setState({
+          this.setState(prevState => ({
+            ...prevState,
             Listings: data.Listings,
             TotalPages: data.TotalPages,
-          });
+          }));
         }
-        this.setState({ListingsLoading: false});
+        this.setState(prevState => ({
+          ...prevState,
+          ListingsLoading: false,
+        }));
       });
     } catch (e) {
       alert(JSON.stringify(e));
-      //    this.setState({ ListingsLoading: false, UserLoading: false });
+      //    this.setState(prevState => ({  ...prevState, ListingsLoading: false, UserLoading: false }));
     }
 
     KS.BannersGet({
@@ -198,14 +213,18 @@ class DealerProfileScreen extends Component {
             this.state.Banners.map(item => {
               KS.BannerViewed(item.ID);
             });
-          }
+          },
         );
       }
     });
   }
 
   _onRefresh = () => {
-    this.setState({refreshing: true, ListingsLoading: true});
+    this.setState(prevState => ({
+      ...prevState,
+      refreshing: true,
+      ListingsLoading: true,
+    }));
     KS.UserListings({
       langid: Languages.langID,
       page: 1,
@@ -216,14 +235,18 @@ class DealerProfileScreen extends Component {
     }).then(data => {
       //    alert(JSON.stringify(data));
       if (data && data.Success) {
-        this.setState({
+        this.setState(prevState => ({
+          ...prevState,
           Listings: data.Listings,
           refreshing: false,
           TotalPages: data.TotalPages,
           page: 1,
-        });
+        }));
       }
-      this.setState({ListingsLoading: false});
+      this.setState(prevState => ({
+        ...prevState,
+        ListingsLoading: false,
+      }));
     });
   };
 
@@ -234,7 +257,11 @@ class DealerProfileScreen extends Component {
         style={styles.row}
         onPress={() => {
           global.ViewingCurrency = Currency;
-          this.setState({currency: Currency, page: 1});
+          this.setState(prevState => ({
+            ...prevState,
+            currency: Currency,
+            page: 1,
+          }));
           //   this.ResetFilters();
           this.CurrencyModal.close();
 
@@ -248,12 +275,16 @@ class DealerProfileScreen extends Component {
           }).then(data => {
             //    alert(JSON.stringify(data));
             if (data && data.Success) {
-              this.setState({
+              this.setState(prevState => ({
+                ...prevState,
                 Listings: data.Listings,
                 TotalPages: data.TotalPages,
-              });
+              }));
             }
-            this.setState({ListingsLoading: false});
+            this.setState(prevState => ({
+              ...prevState,
+              ListingsLoading: false,
+            }));
           });
         }}>
         <View
@@ -355,7 +386,10 @@ class DealerProfileScreen extends Component {
               borderRightWidth: 1,
             }}
             onPress={() => {
-              this.setState({active: true});
+              this.setState(prevState => ({
+                ...prevState,
+                active: true,
+              }));
             }}>
             <Text
               style={{
@@ -375,7 +409,10 @@ class DealerProfileScreen extends Component {
               paddingVertical: 5,
             }}
             onPress={() => {
-              this.setState({active: false});
+              this.setState(prevState => ({
+                ...prevState,
+                active: false,
+              }));
             }}>
             <Text
               style={{
@@ -522,7 +559,7 @@ class DealerProfileScreen extends Component {
               style={{backgroundColor: 'white', padding: 5, borderRadius: 10}}>
               {this.state.PrimaryCurrencies &&
                 this.state.PrimaryCurrencies.map(type =>
-                  this.renderCurrencyRow(type)
+                  this.renderCurrencyRow(type),
                 )}
               <TouchableOpacity
                 activeOpacity={0.9}
@@ -638,52 +675,70 @@ class DealerProfileScreen extends Component {
             data={this.state.Listings}
             renderItem={this.renderItem.bind(this)}
             onEndReached={() => {
-              this.setState({page: this.state.page + 1}, () => {
-                if (this.state.page <= this.state.TotalPages) {
-                  this.setState({footerLoading: true});
+              this.setState(
+                prevState => ({
+                  ...prevState,
+                  page: this.state.page + 1,
+                }),
+                () => {
+                  if (this.state.page <= this.state.TotalPages) {
+                    this.setState(prevState => ({
+                      ...prevState,
+                      footerLoading: true,
+                    }));
 
-                  KS.UserListings({
-                    langid: Languages.langID,
-                    offerStatus: 16,
+                    KS.UserListings({
+                      langid: Languages.langID,
+                      offerStatus: 16,
 
-                    userid: this.props.route.params?.userid ?? null,
-                    page: this.state.page,
-                    pagesize: 10,
-                  }).then(data => {
-                    if (data && data.Success) {
-                      let concattedListings = this.state.Listings;
-                      let tempBanners = this.state.Banners || [];
+                      userid: this.props.route.params?.userid ?? null,
+                      page: this.state.page,
+                      pagesize: 10,
+                    }).then(data => {
+                      if (data && data.Success) {
+                        let concattedListings = this.state.Listings;
+                        let tempBanners = this.state.Banners || [];
 
-                      if (this.state.Banners?.length > 0) {
-                        concattedListings.push({
-                          AutoBeebBanner: true,
-                          BannerDetails: tempBanners.shift(),
-                        });
-                        this.setState({Banners: tempBanners});
-                      }
-                      //  else {
-                      //   concattedListings.push({Banner: true});
-                      // }
-
-                      concattedListings = concattedListings.concat(
-                        data.Listings
-                      );
-
-                      this.setState(
-                        {
-                          Listings: concattedListings,
-                        },
-                        () => {
-                          setTimeout(() => {
-                            this.setState({footerLoading: false});
-                          }, 1000);
+                        if (this.state.Banners?.length > 0) {
+                          concattedListings.push({
+                            AutoBeebBanner: true,
+                            BannerDetails: tempBanners.shift(),
+                          });
+                          this.setState(prevState => ({
+                            ...prevState,
+                            Banners: tempBanners,
+                          }));
                         }
-                      );
-                    }
-                    this.setState({ListingsLoading: false});
-                  });
-                }
-              });
+                        //  else {
+                        //   concattedListings.push({Banner: true});
+                        // }
+
+                        concattedListings = concattedListings.concat(
+                          data.Listings,
+                        );
+
+                        this.setState(
+                          {
+                            Listings: concattedListings,
+                          },
+                          () => {
+                            setTimeout(() => {
+                              this.setState(prevState => ({
+                                ...prevState,
+                                footerLoading: false,
+                              }));
+                            }, 1000);
+                          },
+                        );
+                      }
+                      this.setState(prevState => ({
+                        ...prevState,
+                        ListingsLoading: false,
+                      }));
+                    });
+                  }
+                },
+              );
             }}
             ListEmptyComponent={() => {
               return <Text style={{}}>{Languages.NoOffers}</Text>;
@@ -767,7 +822,10 @@ class DealerProfileScreen extends Component {
                         Linking.openURL(`tel:${this.state.Dealer.Phone}`);
                       } else {
                         KS.UpdateMobileClick({UserId: this.state.Dealer.ID});
-                        this.setState({ShowPhone: true});
+                        this.setState(prevState => ({
+                          ...prevState,
+                          ShowPhone: true,
+                        }));
                       }
                     }}
                     style={styles.InformationRow}>
@@ -791,7 +849,10 @@ class DealerProfileScreen extends Component {
                         KS.UpdateMobileClick({
                           UserId: this.state.Dealer.User.ID,
                         });
-                        this.setState({ShowPhone: true});
+                        this.setState(prevState => ({
+                          ...prevState,
+                          ShowPhone: true,
+                        }));
                       }
                     }}
                     style={styles.InformationRow}>
@@ -803,7 +864,7 @@ class DealerProfileScreen extends Component {
                         ? `\u200E${this.state.Dealer.User.Phone}`
                         : `${this.state.Dealer.User.Phone}`.replace(
                             /.{4}$/,
-                            'xxxx'
+                            'xxxx',
                           )}
                     </Text>
                   </Pressable>
@@ -843,14 +904,13 @@ class DealerProfileScreen extends Component {
                     </Text>
 
                     <MapView
-                      ref={instance => (this.map = instance)}
                       liteMode
                       region={{
                         latitude: parseFloat(
-                          this.state.Dealer?.LatLng.split(',')[0]
+                          this.state.Dealer?.LatLng.split(',')[0],
                         ),
                         longitude: parseFloat(
-                          this.state.Dealer?.LatLng.split(',')[1]
+                          this.state.Dealer?.LatLng.split(',')[1],
                         ),
                         latitudeDelta: 0.002,
                         longitudeDelta: 0.002,
@@ -858,10 +918,10 @@ class DealerProfileScreen extends Component {
                       onPress={() => {
                         this.handleGetDirections({
                           latitude: parseFloat(
-                            this.state.Dealer?.LatLng.split(',')[0]
+                            this.state.Dealer?.LatLng.split(',')[0],
                           ),
                           longitude: parseFloat(
-                            this.state.Dealer?.LatLng.split(',')[1]
+                            this.state.Dealer?.LatLng.split(',')[1],
                           ),
                         });
                       }}
@@ -877,19 +937,19 @@ class DealerProfileScreen extends Component {
                           onPress={() => {
                             this.handleGetDirections({
                               latitude: parseFloat(
-                                this.state.Dealer?.LatLng.split(',')[0]
+                                this.state.Dealer?.LatLng.split(',')[0],
                               ),
                               longitude: parseFloat(
-                                this.state.Dealer?.LatLng.split(',')[1]
+                                this.state.Dealer?.LatLng.split(',')[1],
                               ),
                             });
                           }}
                           coordinate={{
                             latitude: parseFloat(
-                              this.state.Dealer?.LatLng.split(',')[0]
+                              this.state.Dealer?.LatLng.split(',')[0],
                             ),
                             longitude: parseFloat(
-                              this.state.Dealer?.LatLng.split(',')[1]
+                              this.state.Dealer?.LatLng.split(',')[1],
                             ),
                           }}
                         />

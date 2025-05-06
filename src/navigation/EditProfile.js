@@ -23,7 +23,7 @@ import {connect} from 'react-redux';
 import {Color, Languages, Styles, Constants} from '../common';
 import {NewHeader} from '../containers';
 import KS from '../services/KSAPI';
-import Toast, {DURATION} from 'react-native-easy-toast';
+import Toast from 'react-native-easy-toast';
 import PhoneInput from '../components/react-native-phone-input/lib/index';
 import CountryPicker from '../components/CountryModal/CountryPickerModal';
 import * as Animatable from 'react-native-animatable';
@@ -138,7 +138,7 @@ class EditProfile extends Component {
   }
 
   onPressFlag() {
-    this.countryPicker?.openModal();
+    this.countryPickerRef?.openModal();
   }
 
   validateEmail(email) {
@@ -295,9 +295,9 @@ class EditProfile extends Component {
           if (data.Success == 1) {
             if (data.Error) {
               if (data.Error == -1)
-                this.refs.toast.show(Languages.NumberAlreadyTaken);
+                this.toast.show(Languages.NumberAlreadyTaken);
               else {
-                this.refs.toast.show(Languages.EmailAlreadyTaken);
+                this.toast.show(Languages.EmailAlreadyTaken);
               }
             } else {
               _this.props.storeUserData(data.User, () => {
@@ -312,14 +312,14 @@ class EditProfile extends Component {
               });
             }
           } else {
-            this.refs.toast.show(Languages.SomethingWentWrong, 2500);
+            this.toast.show(Languages.SomethingWentWrong, 2500);
           }
         })
         .finally(() => {
           this.setState({AddLoader: false});
         });
     } else {
-      this.refs.toast.show(Languages.InvalidNumber, 2500);
+      this.toast.show(Languages.InvalidNumber, 2500);
     }
   }
 
@@ -349,9 +349,9 @@ class EditProfile extends Component {
             if (data.Success == 1) {
               if (data.Error) {
                 if (data.Error == -1)
-                  this.refs.toast.show(Languages.NumberAlreadyTaken);
+                  this.toast.show(Languages.NumberAlreadyTaken);
                 else {
-                  this.refs.toast.show(Languages.EmailAlreadyTaken);
+                  this.toast.show(Languages.EmailAlreadyTaken);
                 }
               } else {
                 _this.props.storeUserData(data.User, () => {
@@ -365,7 +365,7 @@ class EditProfile extends Component {
                 });
               }
             } else {
-              this.refs.toast.show(Languages.SomethingWentWrong, 2500);
+              this.toast.show(Languages.SomethingWentWrong, 2500);
             }
           })
           .finally(() => {
@@ -373,7 +373,7 @@ class EditProfile extends Component {
           });
       }
     } else {
-      this.refs.toast.show(Languages.InvalidNumber, 2500);
+      this.toast.show(Languages.InvalidNumber, 2500);
       this.setState({changeMobileLoading: false});
     }
   }
@@ -410,13 +410,14 @@ class EditProfile extends Component {
             <Toast
               textStyle={{fontFamily: 'Cairo-Regular', color: 'white'}}
               position="top"
-              ref="toast"
+              ref={instance => (this.toast = instance)}
               style={{backgroundColor: Color.primary}}
             />
 
             <AutobeebModal
               //coverScreen
               style={[styles.modalbox]}
+              fullScreen={true}
               ref={instance => (this.NameModal = instance)}
               swipeToClose={true}
               backButtonClose>
@@ -463,14 +464,11 @@ class EditProfile extends Component {
                             _this.props.storeUserData(data.User);
                             this.NameModal.close();
                           } else {
-                            this.refs.toast.show(
-                              Languages.SomethingWentWrong,
-                              2500,
-                            );
+                            this.toast.show(Languages.SomethingWentWrong, 2500);
                           }
                         });
                       } else {
-                        this.refs.toast.show(Languages.invalidInfo, 2500);
+                        this.toast.show(Languages.invalidInfo, 2500);
                       }
                     }}>
                     <Text style={{color: 'white', textAlign: 'center'}}>
@@ -483,9 +481,13 @@ class EditProfile extends Component {
 
             <AutobeebModal
               //coverScreen
-              style={[styles.modalbox]}
+              style={[
+                styles.modalbox,
+                {height: Dimensions.get('screen').height},
+              ]}
               ref={instance => (this.PasswordModal = instance)}
               swipeToClose={true}
+              fullScreen={true}
               backButtonClose>
               <View style={styles.modalContent}>
                 <Text style={styles.modalTitle}>
@@ -555,13 +557,10 @@ class EditProfile extends Component {
                           .then(data => {
                             if (data.Success == 1) {
                               _this.props.storeUserData(data.User);
-                              this.refs.toast.show(
-                                Languages.passwordChanged,
-                                1500,
-                              );
+                              this.toast.show(Languages.passwordChanged, 1500);
                               this.PasswordModal.close();
                             } else {
-                              this.refs.toast.show(
+                              this.toast.show(
                                 Languages.SomethingWentWrong,
                                 2500,
                               );
@@ -571,7 +570,7 @@ class EditProfile extends Component {
                             this.setState({passLoader: false});
                           });
                       } else {
-                        this.refs.toast.show(Languages.invalidInfo, 2500);
+                        this.toast.show(Languages.invalidInfo, 2500);
                       }
                     }}>
                     {this.state.passLoader ? (
@@ -593,6 +592,7 @@ class EditProfile extends Component {
             <AutobeebModal
               //coverScreen
               style={[styles.modalbox]}
+              fullScreen={true}
               ref={instance => (this.AddEmailModal = instance)}
               swipeToClose={true}
               backButtonClose>
@@ -649,13 +649,9 @@ class EditProfile extends Component {
                           if (data.Success == 1) {
                             if (data.Error) {
                               if (data.Error == -1)
-                                this.refs.toast.show(
-                                  Languages.NumberAlreadyTaken,
-                                );
+                                this.toast.show(Languages.NumberAlreadyTaken);
                               else {
-                                this.refs.toast.show(
-                                  Languages.EmailAlreadyTaken,
-                                );
+                                this.toast.show(Languages.EmailAlreadyTaken);
                               }
                             } else {
                               _this.props.storeUserData(data.User, () => {
@@ -668,14 +664,11 @@ class EditProfile extends Component {
                               });
                             }
                           } else {
-                            this.refs.toast.show(
-                              Languages.SomethingWentWrong,
-                              2500,
-                            );
+                            this.toast.show(Languages.SomethingWentWrong, 2500);
                           }
                         });
                       } else {
-                        this.refs.toast.show(Languages.invalidInfo, 2500);
+                        this.toast.show(Languages.invalidInfo, 2500);
                       }
                     }}>
                     <Text style={{color: 'white', textAlign: 'center'}}>
@@ -689,6 +682,7 @@ class EditProfile extends Component {
             <AutobeebModal
               //coverScreen
               style={[styles.modalbox]}
+              fullScreen={true}
               ref={instance => (this.AddPhoneModal = instance)}
               swipeToClose={true}
               backButtonClose>
@@ -697,7 +691,6 @@ class EditProfile extends Component {
 
                 <View
                   style={{
-                    backgroundColor: '#fff',
                     borderWidth: 1,
                     borderColor:
                       this.phone && this.phone.isValidNumber()
@@ -775,9 +768,11 @@ class EditProfile extends Component {
                         top: -1000,
                       }}>
                       <CountryPicker
+                        ref={ref => {
+                          this.countryPickerRef = ref;
+                        }}
                         filterPlaceholder={Languages.Search}
                         hideAlphabetFilter
-                        ref="countryPicker"
                         onChange={value => this.selectCountry(value)}
                         translation={Languages.translation}
                         filterable
@@ -862,6 +857,7 @@ class EditProfile extends Component {
             <AutobeebModal
               //coverScreen
               style={[styles.modalbox]}
+              fullScreen={true}
               ref={instance => (this.ChangePhoneModal = instance)}
               swipeToClose={true}
               backButtonClose
@@ -1068,6 +1064,7 @@ class EditProfile extends Component {
             <AutobeebModal
               //coverScreen
               style={[styles.modalbox]}
+              fullScreen={true}
               ref={instance => (this.ChangeEmailModal = instance)}
               swipeToClose={true}
               backButtonClose>
@@ -1128,13 +1125,9 @@ class EditProfile extends Component {
                             if (data.Success == 1) {
                               if (data.Error) {
                                 if (data.Error == -1)
-                                  this.refs.toast.show(
-                                    Languages.NumberAlreadyTaken,
-                                  );
+                                  this.toast.show(Languages.NumberAlreadyTaken);
                                 else {
-                                  this.refs.toast.show(
-                                    Languages.EmailAlreadyTaken,
-                                  );
+                                  this.toast.show(Languages.EmailAlreadyTaken);
                                 }
                               } else {
                                 _this.props.storeUserData(data.User, () => {
@@ -1147,7 +1140,7 @@ class EditProfile extends Component {
                                 });
                               }
                             } else {
-                              this.refs.toast.show(
+                              this.toast.show(
                                 Languages.SomethingWentWrong,
                                 2500,
                               );
@@ -1157,7 +1150,7 @@ class EditProfile extends Component {
                             this.setState({addEamiloader: false});
                           });
                       } else {
-                        this.refs.toast.show(Languages.invalidInfo, 2500);
+                        this.toast.show(Languages.invalidInfo, 2500);
                       }
                     }}>
                     {this.state.addEamiloader ? (
@@ -1179,6 +1172,7 @@ class EditProfile extends Component {
             <AutobeebModal
               //coverScreen
               style={[styles.modalbox]}
+              fullScreen={true}
               ref={instance => (this.VerifyEmailModal = instance)}
               onClosed={() => {
                 this.setState({
@@ -1311,10 +1305,10 @@ class EditProfile extends Component {
                                   );
                                 }
                               } else {
-                                this.refs.toast.show(Languages.WrongOTP, 1500);
+                                this.toast.show(Languages.WrongOTP, 1500);
                               }
                             } else {
-                              this.refs.toast.show(
+                              this.toast.show(
                                 Languages.SomethingWentWrong,
                                 2500,
                               );
@@ -1324,7 +1318,7 @@ class EditProfile extends Component {
                             this.setState({addEamiloader: false});
                           });
                       } else {
-                        this.refs.toast.show(Languages.invalidInfo, 2500);
+                        this.toast.show(Languages.invalidInfo, 2500);
                       }
                     }}>
                     {this.state.addEamiloader ? (
@@ -1346,6 +1340,7 @@ class EditProfile extends Component {
             <AutobeebModal
               //coverScreen
               style={[styles.modalbox]}
+              fullScreen={true}
               ref={instance => (this.VerifyPhoneModal = instance)}
               onOpened={() => {
                 setTimeout(() => {
@@ -1475,10 +1470,10 @@ class EditProfile extends Component {
                                   );
                                 }
                               } else {
-                                this.refs.toast.show(Languages.WrongOTP, 1500);
+                                this.toast.show(Languages.WrongOTP, 1500);
                               }
                             } else {
-                              this.refs.toast.show(
+                              this.toast.show(
                                 Languages.SomethingWentWrong,
                                 2500,
                               );
@@ -1488,7 +1483,7 @@ class EditProfile extends Component {
                             this.setState({changeMobileOTPLoading: false});
                           });
                       } else {
-                        this.refs.toast.show(Languages.invalidInfo, 2500);
+                        this.toast.show(Languages.invalidInfo, 2500);
                         this.setState({changeMobileOTPLoading: false});
                       }
                     }}>
@@ -1511,10 +1506,10 @@ class EditProfile extends Component {
             <AutobeebModal
               ref={instance => (this.photoModal = instance)}
               position="top"
-              //      //coverScreen
+              fullScreen={true}
               style={{
                 backgroundColor: 'transparent',
-                //flex: 1,
+                height: Dimensions.get('screen').height,
                 justifyContent: 'center',
               }}
               backButtonClose={true}
@@ -2204,6 +2199,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     backgroundColor: 'transparent',
     flex: 1,
+    height: Dimensions.get('screen').height,
   },
   modalContent: {
     width: Dimensions.get('screen').width * 0.9,

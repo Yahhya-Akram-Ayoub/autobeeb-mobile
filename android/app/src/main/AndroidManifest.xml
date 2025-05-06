@@ -30,6 +30,42 @@
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
+        <intent-filter android:label="autobeeb">
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" android:host="autobeeb.com" /> 
+            <data android:scheme="https" android:host="autobeeb.com/ar/ads" /> 
+            <data android:scheme="https" android:host="autobeeb.com/ads" /> 
+            <data android:scheme="http" android:host="autobeeb.com/ar/ads" /> 
+            <data android:scheme="http" android:host="autobeeb.com/ads" /> 
+            <data android:scheme="http" android:host="autobeeb.com/es/ads" /> 
+            <data android:scheme="https" android:host="autobeeb.com/es/ads" /> 
+            <data android:scheme="http" android:host="autobeeb.com/fr/ads" /> 
+            <data android:scheme="https" android:host="autobeeb.com/fr/ads" /> 
+            <data android:scheme="http" android:host="autobeeb.com/de/ads" /> 
+            <data android:scheme="https" android:host="autobeeb.com/de/ads" /> 
+            <data android:scheme="http" android:host="autobeeb.com/tr/ads" /> 
+            <data android:scheme="https" android:host="autobeeb.com/tr/ads" /> 
+            <data android:scheme="http" android:host="autobeeb.com/zh/ads" /> 
+            <data android:scheme="https" android:host="autobeeb.com/zh/ads" /> 
+            <data android:scheme="http" android:host="autobeeb.com/pl/ads" /> 
+            <data android:scheme="https" android:host="autobeeb.com/pl/ads" /> 
+            <data android:scheme="autobeeb" android:host="app" /> 
+        </intent-filter>
       </activity>
+
+      <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+      
+      <meta-data
+        android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+        android:value="ocr" />   
+        
+      <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyCCQ3kX4mwKT0xGlb_z7m9J2gK54-O4DK0"/>
+
+      <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+      <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
     </application>
 </manifest>

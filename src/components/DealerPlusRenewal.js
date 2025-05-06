@@ -22,7 +22,6 @@ const DealerPlusRenewal = ({route}) => {
         style={{flex: 1}}
         onMessage={event => {
           let _data = event.nativeEvent.data;
-          console.log({_data});
           if (!!_data) {
             let data = JSON.parse(_data);
             if (!!data && data?.Screen == 'CliQScreen') {
@@ -35,7 +34,6 @@ const DealerPlusRenewal = ({route}) => {
             }
           } else {
             navigation.navigate('HomeScreen');
-            k;
           }
         }}
         source={{

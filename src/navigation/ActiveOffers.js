@@ -251,32 +251,31 @@ class ActiveOffers extends Component {
   checkOTP() {
     const _this = this;
     const otp = this.state.otp;
-    {
-      KS.UserVerifyOTP({
-        otpcode: otp,
-        userid: this.state.User.ID,
-        username:
-          this.props.user && this.props.user.EmailRegister
-            ? this.props.user.Email
-            : this.state.User && this.state.User.Phone,
-      }).then(data => {
-        if (data.OTPVerified == true || data.EmailConfirmed == true) {
-          if (data.User) {
-            _this.props.storeUserData(data.User, () => {
-              _this.refs.OTPModal.close();
-              _this.props.navigation.navigate('HomeScreen');
-            });
-          }
-          //
-        } else {
-          toast(Languages.WrongOTP);
 
-          setTimeout(() => {
-            this.setState({otp: ''});
-          }, 1800);
+    KS.UserVerifyOTP({
+      otpcode: otp,
+      userid: this.state.User.ID,
+      username:
+        this.props.user && this.props.user.EmailRegister
+          ? this.props.user.Email
+          : this.state.User && this.state.User.Phone,
+    }).then(data => {
+      if (data.OTPVerified == true || data.EmailConfirmed == true) {
+        if (data.User) {
+          _this.props.storeUserData(data.User, () => {
+            _this.setState({openOTPModal: false});
+            _this.props.navigation.navigate('HomeScreen');
+          });
         }
-      });
-    }
+        //
+      } else {
+        toast(Languages.WrongOTP);
+
+        setTimeout(() => {
+          this.setState({otp: ''});
+        }, 1800);
+      }
+    });
   }
 
   render() {
@@ -340,7 +339,7 @@ class ActiveOffers extends Component {
       <View style={{flex: 1}}>
         {this.state.User && (
           <OTPModal
-            ref="OTPModal"
+            isOpen={this.state.openOTPModal}
             OTPMessage={Languages.WeHavePreviouslySentTheOTP}
             EnterMessage={Languages.ToPublishAndVerifyAccount}
             pendingDelete={this.state.pendingDelete}
@@ -667,7 +666,7 @@ class ActiveOffers extends Component {
                       });
                     }}
                     onVerify={() => {
-                      this.refs.OTPModal.open();
+                      this.setState({openOTPModal: true});
                     }}
                     item={this.mapKeysToOldFormat(item)}
                     navigation={this.props.navigation}

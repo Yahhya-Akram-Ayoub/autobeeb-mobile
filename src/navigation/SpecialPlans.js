@@ -234,7 +234,6 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
     {
       ID: 2,
       Name: 'Visa',
-      Image: 'https://1000logos.net/wp-content/uploads/2017/06/VISA-logo.png',
       localImage: true,
       Image: require('../images/visa.png'),
     },
@@ -277,7 +276,7 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
   const Currency = !pCurrency ? route?.params?.Currency : pCurrency;
   const lang = Languages.getLanguage();
   const [InAppPurchases, setInAppPurchases] = useState([]);
-
+ 
   useEffect(() => {
     ks.GetSpecialPlans({
       UserId: User.ID,
@@ -737,11 +736,12 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
         position="center"
         backButtonClose
         entry="bottom"
+        fullScreen={true}
         swipeToClose={true}
         backdropPressToClose
         coverScreen={Platform.OS == 'android'}
         backdropOpacity={0.9}>
-        {/* <View
+        <View
           style={{
             zIndex: 200,
             minHeight: 50,
@@ -758,7 +758,7 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
               paddingTop: 20,
               justifyContent: 'space-between',
             }}></View>
-        </View> */}
+        </View>
         <WebView
           thirdPartyCookiesEnabled={true}
           originWhitelist={['*']}
@@ -771,7 +771,7 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
             );
           }}
           javaScriptEnabled={true}
-          style={{flex: 1}}
+          style={{flex: 1, height: Dimensions.get('screen').height}}
           onMessage={event => {
             setOpenPaymentModal(false);
             PaymentModal.current.close();
@@ -1036,15 +1036,11 @@ const styles = StyleSheet.create({
   planPrice: {
     fontSize: 24,
     color: Color.primary,
+    flex: 1,
+    fontFamily: Constants.fontFamilyBold,
   },
-
   modalStyle: {
     flex: 1,
-  },
-  planPrice: {
-    flex: 1,
-    fontSize: 20,
-    fontFamily: Constants.fontFamilyBold,
   },
   planName: {
     fontSize: 16,

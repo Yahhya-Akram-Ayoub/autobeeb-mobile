@@ -274,7 +274,7 @@ class DealersBanner extends Component {
                     ]}>
                     {this.state.ShowPhone
                       ? this.props.mobile
-                        ? this.props.mobile
+                        ? `\u200E${this.props.mobile}`
                         : `\u200E${Dealer.Phone}`
                       : `${
                           this.props.mobile ? this.props.mobile : Dealer.Phone

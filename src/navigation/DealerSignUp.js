@@ -662,11 +662,13 @@ class DealerSignUp extends Component {
           backButtonClose
           coverScreen={Platform.OS == 'android'}
           swipeToClose={false}
+          fullScreen={true}
           style={{
             backgroundColor: 'transparent',
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
+            height: Dimensions.get('screen').height,
           }}>
           <View
             style={{
@@ -688,7 +690,7 @@ class DealerSignUp extends Component {
                 });
               }}
               onClose={data => {
-                this.photoModal.close();
+                this.locationModal.close();
               }}
               initialRegion={{
                 latitude: 40.697,
@@ -700,9 +702,10 @@ class DealerSignUp extends Component {
           </View>
         </AutobeebModal>
         <AutobeebModal
-          style={[styles.modalbox]}
+          style={[styles.modalbox, {height: Dimensions.get('screen').height}]}
           ref={instance => (this.PasswordModal = instance)}
           swipeToClose={true}
+          fullScreen={true}
           backButtonClose>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>{Languages.ChangePassword}</Text>
@@ -832,9 +835,10 @@ class DealerSignUp extends Component {
           //   coverScreen
           style={{
             backgroundColor: 'transparent',
-            //flex: 1,
+            height: Dimensions.get('screen').height,
             justifyContent: 'center',
           }}
+          fullScreen={true}
           backButtonClose={true}
           backdropPressToClose={true}
           swipeToClose={true}>
@@ -1818,7 +1822,7 @@ class DealerSignUp extends Component {
                   backgroundColor: '#fff',
                 }}
                 onPress={region => {
-                  this.photoModal.open();
+                  this.locationModal.open();
                   Keyboard.dismiss();
                 }}>
                 {this.state.userLocation && (
@@ -1833,7 +1837,7 @@ class DealerSignUp extends Component {
                   justifyContent: 'space-between',
                 }}
                 onPress={() => {
-                  this.photoModal.open();
+                  this.locationModal.open();
                   Keyboard.dismiss();
                 }}>
                 <Text style={[styles.Textinput, {paddingHorizontal: 0}]}>
@@ -2162,7 +2166,7 @@ class DealerSignUp extends Component {
 
 const styles = StyleSheet.create({
   modalTextinput: {
-    height: 40,
+    minHeight: 40,
     borderColor: Color.secondary,
     marginTop: 10,
     borderBottomWidth: 1,

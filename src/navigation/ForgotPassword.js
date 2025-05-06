@@ -215,9 +215,7 @@ class ForgotPassword extends Component {
     }).then(data => {
       if (data && data.Success == 1) {
         if (data.Status == 1) {
-          //     alert(JSON.stringify(data));
-
-          this.refs.OTPModal.open();
+          this.setState({openOTPModal: true});
         } else {
           toast(Languages.PleaseCheckYourInput);
         }
@@ -236,14 +234,8 @@ class ForgotPassword extends Component {
         : _this.phone.getValue(),
       langid: Languages.langID,
     }).then(data => {
-      //  console.log(JSON.stringify(data));
       if (data.Status == 1) {
-        //   console.log("yaz2");
-
-        //      console.log(JSON.stringify(data));
-
-        this.setState({Username: data.Username});
-        this.refs.OTPModal.close();
+        this.setState({Username: data.Username , openOTPModal: false});
         this.props.navigation.navigate('ChangePasswordScreen', {
           user: data.User,
           Username: data.Username,
@@ -265,7 +257,7 @@ class ForgotPassword extends Component {
     return (
       <View style={styles.containerTopLevel}>
         <OTPModal
-          ref="OTPModal"
+          isOpen={this.state.openOTPModal}
           OTPMessage={Languages.WeHaveSentTheOTP}
           EnterMessage={Languages.forgotpassOTPMessage}
           Username={
@@ -473,10 +465,8 @@ class ForgotPassword extends Component {
                 <TextInput
                   ref="email"
                   style={{
-                    height: 40,
-
+                    minHeight: 40,
                     borderRadius: 5,
-
                     backgroundColor: this.validateEmail(this.state.email)
                       ? 'rgba(0,255,0,0.2)'
                       : '#fff',
@@ -505,7 +495,6 @@ class ForgotPassword extends Component {
                     Languages.Confirm
                   )
                 }
-                lo
                 // disabled={this.state.ButtonDisabled}
                 containerStyle={[
                   styles.loginButton,
@@ -530,7 +519,7 @@ class ForgotPassword extends Component {
                     .then(data => {
                       if (data && data.Success == 1) {
                         if (data.Status == 1) {
-                          this.refs.OTPModal.open();
+                          this.setState({openOTPModal: true});
                         } else {
                           toast(Languages.PleaseCheckYourInput);
                         }

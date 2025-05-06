@@ -212,7 +212,7 @@ class ChatScreen extends Component {
             isListingActive: data?.IsListingActive,
             loading: false,
             sessionID: data.SessionID,
-            isSystem: `${item.RelatedEntity}`.includes(
+            isSystem: `${data.RelatedEntity}`.includes(
               '"FullImagePath":"wsImages/chat_logo"',
             ),
           });
