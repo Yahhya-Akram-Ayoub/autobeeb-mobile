@@ -3223,7 +3223,7 @@ class ListingsScreen extends Component {
           ref={instance => (this.filterModal = instance)}
           //  isOpen={true}
           style={[styles.filterModal]}
-          backButtonClose={true}
+          keyboardResponsive={true}
           entry="bottom"
           swipeToClose={false}
           fullScreen={true}
@@ -3704,7 +3704,7 @@ class ListingsScreen extends Component {
           ref={instance => (this.makeModal = instance)}
           style={[styles.modelModal]}
           position="center"
-          backButtonClose={true}
+          keyboardResponsive={true}
           entry="bottom"
           swipeToClose={false}
           backdropPressToClose={false}
@@ -3872,7 +3872,7 @@ class ListingsScreen extends Component {
           ref={instance => (this.SortModal = instance)}
           style={[styles.sellTypeModal]}
           position="center"
-          backButtonClose={true}
+          keyboardResponsive={true}
           entry="top"
           swipeToClose={true}
           //   backdropPressToClose={true}
@@ -3918,7 +3918,7 @@ class ListingsScreen extends Component {
           ref={instance => (this.SellTypeModal = instance)}
           style={[styles.sellTypeModal]}
           position="center"
-          backButtonClose={true}
+          keyboardResponsive={true}
           entry="bottom"
           swipeToClose={true}
           // backdropPressToClose
@@ -3963,7 +3963,7 @@ class ListingsScreen extends Component {
           ref={instance => (this.CurrencyModal = instance)}
           style={[styles.sellTypeModal]}
           position="center"
-          backButtonClose={true}
+          keyboardResponsive={true}
           entry="bottom"
           swipeToClose={true}
           // backdropPressToClose
@@ -4011,7 +4011,7 @@ class ListingsScreen extends Component {
           ref={instance => (this.sectionModal = instance)}
           style={[styles.modelModal]}
           position="center"
-          backButtonClose={true}
+          keyboardResponsive={true}
           entry="bottom"
           swipeToClose={false}
           // backdropPressToClose
@@ -4202,7 +4202,7 @@ class ListingsScreen extends Component {
           ref={instance => (this.categoryModal = instance)}
           style={[styles.modelModal]}
           position="center"
-          backButtonClose={true}
+          keyboardResponsive={true}
           entry="bottom"
           swipeToClose={false}
           // backdropPressToClose
@@ -4396,7 +4396,7 @@ class ListingsScreen extends Component {
           ref={instance => (this.modelModal = instance)}
           style={[styles.modelModal]}
           position="center"
-          backButtonClose={true}
+          keyboardResponsive={true}
           entry="bottom"
           swipeToClose={false}
           backdropPressToClose={false}
@@ -4530,7 +4530,7 @@ class ListingsScreen extends Component {
           ref={instance => (this.cityModal = instance)}
           style={[styles.modelModal]}
           position="center"
-          backButtonClose={true}
+          keyboardResponsive={true}
           entry="bottom"
           swipeToClose={false}
           backdropPressToClose={false}
@@ -4659,7 +4659,7 @@ class ListingsScreen extends Component {
           ref={instance => (this.yearModal = instance)}
           style={[styles.modelModal]}
           position="center"
-          backButtonClose={true}
+          keyboardResponsive={true}
           entry="bottom"
           swipeToClose={false}
           backdropPressToClose={false}
@@ -4814,7 +4814,7 @@ class ListingsScreen extends Component {
           ref={instance => (this.PriceModal = instance)}
           style={[styles.modelModal]}
           position="center"
-          backButtonClose={true}
+          keyboardResponsive={true}
           entry="bottom"
           swipeToClose={false}
           backdropPressToClose={false}
@@ -4963,7 +4963,7 @@ class ListingsScreen extends Component {
           ref={instance => (this.MileageModal = instance)}
           style={[styles.modelModal]}
           position="center"
-          backButtonClose={true}
+          keyboardResponsive={true}
           entry="bottom"
           swipeToClose={false}
           backdropPressToClose={false}
@@ -5093,18 +5093,21 @@ class ListingsScreen extends Component {
               },
               () => {
                 this.MileageModal.close();
-                this.setState({
-                  minMileage: '',
-                  maxMileage: '',
-                  maxMileagesList: this.state.FullmaxMileagesList,
-                  minMileagesList: this.state.FullminMileagesList,
-                  selectedMinMileage: this.state.minMileage,
-                  selectedMaxMileage: this.state.maxMileage,
-                } ,()=>{
-                  if (!this.filterModal.isOpen) {
-                    this.filterResults();
-                  }
-                });
+                this.setState(
+                  {
+                    minMileage: '',
+                    maxMileage: '',
+                    maxMileagesList: this.state.FullmaxMileagesList,
+                    minMileagesList: this.state.FullminMileagesList,
+                    selectedMinMileage: this.state.minMileage,
+                    selectedMaxMileage: this.state.maxMileage,
+                  },
+                  () => {
+                    if (!this.filterModal.isOpen) {
+                      this.filterResults();
+                    }
+                  },
+                );
               },
             )}
           </View>

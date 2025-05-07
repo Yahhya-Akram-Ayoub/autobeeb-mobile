@@ -126,9 +126,9 @@ export default class ReduxWrapper extends React.Component {
           <Provider store={store}>
             <View style={Styles.app}>
               <StatusBar backgroundColor="#fff" barStyle="dark-content" />
-              <Navigation />
               <MyToast />
               <MyNetInfo />
+              <Navigation />
               <NotificationPermission />
               <MySignalR />
             </View>

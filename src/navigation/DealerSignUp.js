@@ -704,7 +704,7 @@ class DealerSignUp extends Component {
         <AutobeebModal
           style={[styles.modalbox, {height: Dimensions.get('screen').height}]}
           ref={instance => (this.PasswordModal = instance)}
-          swipeToClose={true}
+          keyboardResponsive={true}
           fullScreen={true}
           backButtonClose>
           <View style={styles.modalContent}>

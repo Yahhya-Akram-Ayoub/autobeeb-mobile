@@ -419,7 +419,7 @@ class EditProfile extends Component {
               style={[styles.modalbox]}
               fullScreen={true}
               ref={instance => (this.NameModal = instance)}
-              swipeToClose={true}
+              keyboardResponsive={true}
               backButtonClose>
               <View style={styles.modalContent}>
                 <Text style={styles.modalTitle}>{Languages.ChangeName}</Text>
@@ -486,7 +486,7 @@ class EditProfile extends Component {
                 {height: Dimensions.get('screen').height},
               ]}
               ref={instance => (this.PasswordModal = instance)}
-              swipeToClose={true}
+              keyboardResponsive={true}
               fullScreen={true}
               backButtonClose>
               <View style={styles.modalContent}>
@@ -594,7 +594,7 @@ class EditProfile extends Component {
               style={[styles.modalbox]}
               fullScreen={true}
               ref={instance => (this.AddEmailModal = instance)}
-              swipeToClose={true}
+              keyboardResponsive={true}
               backButtonClose>
               <View style={styles.modalContent}>
                 <Text style={styles.modalTitle}>{Languages.AddEmail}</Text>
@@ -684,7 +684,7 @@ class EditProfile extends Component {
               style={[styles.modalbox]}
               fullScreen={true}
               ref={instance => (this.AddPhoneModal = instance)}
-              swipeToClose={true}
+              keyboardResponsive={true}
               backButtonClose>
               <View style={styles.modalContent}>
                 <Text style={styles.modalTitle}>{Languages.AddYourPhone}</Text>
@@ -859,7 +859,7 @@ class EditProfile extends Component {
               style={[styles.modalbox]}
               fullScreen={true}
               ref={instance => (this.ChangePhoneModal = instance)}
-              swipeToClose={true}
+              keyboardResponsive={true}
               backButtonClose
               onClosed={data => {
                 this.setState({isPhone2Valid: false});
@@ -1066,7 +1066,7 @@ class EditProfile extends Component {
               style={[styles.modalbox]}
               fullScreen={true}
               ref={instance => (this.ChangeEmailModal = instance)}
-              swipeToClose={true}
+              keyboardResponsive={true}
               backButtonClose>
               <View style={styles.modalContent}>
                 <Text style={[styles.modalTitle]}>{Languages.ChangeEmail}</Text>
@@ -1174,13 +1174,12 @@ class EditProfile extends Component {
               style={[styles.modalbox]}
               fullScreen={true}
               ref={instance => (this.VerifyEmailModal = instance)}
+              keyboardResponsive={true}
               onClosed={() => {
                 this.setState({
                   emailVerificationCode: '',
                 });
-              }}
-              swipeToClose={true}
-              backButtonClose>
+              }}>
               <View style={styles.modalContent}>
                 <TouchableOpacity
                   style={{position: 'absolute', top: 10, right: 10}}
@@ -1342,6 +1341,7 @@ class EditProfile extends Component {
               style={[styles.modalbox]}
               fullScreen={true}
               ref={instance => (this.VerifyPhoneModal = instance)}
+              keyboardResponsive={true}
               onOpened={() => {
                 setTimeout(() => {
                   this.refs.verifyPhoneText &&
@@ -1511,10 +1511,7 @@ class EditProfile extends Component {
                 backgroundColor: 'transparent',
                 height: Dimensions.get('screen').height,
                 justifyContent: 'center',
-              }}
-              backButtonClose={true}
-              backdropPressToClose={true}
-              swipeToClose={true}>
+              }}>
               <View
                 style={{
                   alignSelf: 'center',

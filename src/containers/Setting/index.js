@@ -62,14 +62,12 @@ class Setting extends Component {
     KS.CurrenciesGet({
       langid: Languages.langID,
     }).then(data => {
-      console.log({data});
       if (data && data.Currencies) {
         this.setState({Currencies: data.Currencies});
       }
     });
     AsyncStorage.getItem('cca2', (error, data) => {
       if (data) {
-        console.log({data});
         this.setState({cca2: data});
       }
     });

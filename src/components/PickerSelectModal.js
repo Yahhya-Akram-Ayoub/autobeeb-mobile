@@ -150,7 +150,7 @@ const PickerSelectModal = forwardRef((props, ref) => {
       ref={ModalRef}
       style={[styles.optionModal]}
       position="center"
-      backButtonClose={true}
+      keyboardResponsive={true}
       entry="bottom"
       swipeToClose={false}
       backdropPressToClose={false}

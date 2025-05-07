@@ -49,24 +49,7 @@ class LanguagePicker extends Component {
     }
   }
   render() {
-    const onPress = () => {
-      Alert.alert(Languages.ConfirmLanguage, Languages.SwitchLanguageConfirm, [
-        {text: Languages.CancelLanguage, onPress: () => undefined},
-        {
-          text: Languages.okLanguage,
-          onPress: async () => {
-            const newlang = this.state.selectedOption;
-
-            I18nManager.forceRTL(newlang === 'ar');
-            //this.stopAndToast(newlang);
-            AsyncStorage.setItem('language', newlang, () => {
-              RNRestart.Restart();
-            });
-          },
-        },
-      ]);
-      return true;
-    };
+  
     const renderOption = ({item, index}) => {
       // if (option !== "en")
       let selected = item == Languages.getLanguage();
@@ -79,18 +62,22 @@ class LanguagePicker extends Component {
               {
                 text: Languages.okLanguage,
                 onPress: async () => {
-                  AsyncStorage.getItem('language', (err, result) => {
-                    //this.stopAndToast(JSON.parse(result));
-                    var lang = 'en';
-                    if (result !== null) lang = result;
-                    let newlang = item;
+                  try {
+                    let newLang = item;
+                    const isRTL = newLang === 'ar' || newLang === 'kr';
 
-                    I18nManager.forceRTL(newlang == 'ar' || newlang == 'kr');
-                    //this.stopAndToast(newlang);
-                    AsyncStorage.setItem('language', newlang, () => {
-                      RNRestart.Restart();
-                    });
-                  });
+                    if (I18nManager.isRTL !== isRTL) {
+                      await AsyncStorage.setItem('language', newLang);
+                      I18nManager.allowRTL(isRTL);
+                      I18nManager.forceRTL(isRTL);
+                    } else {
+                      await AsyncStorage.setItem('language', newLang);
+                    }
+                    
+                    RNRestart.Restart();
+                  } catch (error) {
+                    console.error('Language switch error:', error);
+                  }
                 },
               },
             ]);

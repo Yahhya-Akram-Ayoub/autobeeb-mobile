@@ -25,10 +25,8 @@ const AutobeebModal = forwardRef((props, ref) => {
     backdropOpacity = 0.7,
     onOpened,
     onClosed,
-    backButtonClose = true,
-    swipeToClose = false, // Not implemented in this version
-    entry = 'bottom',
     fullScreen,
+    keyboardResponsive = false,
   } = props;
 
   const [visible, setVisible] = useState(false);
@@ -87,7 +85,8 @@ const AutobeebModal = forwardRef((props, ref) => {
 
       <Animated.View
         style={[
-          styles.modalContainer,
+          !keyboardResponsive && styles.modalContainer,
+          !!keyboardResponsive && styles.modalContainerStiky,
           style,
           fullScreen && {maxHeight: SCREEN_HEIGHT},
         ]}>
@@ -113,6 +112,13 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     maxHeight: SCREEN_HEIGHT * 0.9,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    overflow: 'hidden',
+  },
+  modalContainerStiky: {
+    maxHeight: SCREEN_HEIGHT,
     backgroundColor: '#fff',
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,

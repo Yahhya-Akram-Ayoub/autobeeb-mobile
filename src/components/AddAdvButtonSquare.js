@@ -78,6 +78,12 @@ const AddAdvButtonSquare = ({_user}) => {
 
   return (
     <TouchableOpacity style={styles.MainContainer} onPress={navigateToScreen}>
+      <Image
+        style={styles.Image}
+        resizeMode="contain"
+        source={require('../images/postOfferIcon.png')}
+      />
+
       {/* Show image on appropriate side based on language direction */}
       <Text numberOfLines={1} style={styles.TextAddOffer}>
         {Languages.PostOfferButton}
@@ -86,12 +92,6 @@ const AddAdvButtonSquare = ({_user}) => {
       <Animated.Text style={[styles.TextFree, {opacity: fadeAnim}]}>
         {' ' + Languages.Free}
       </Animated.Text>
-
-      <Image
-        style={styles.Image}
-        resizeMode="contain"
-        source={require('../images/postOfferIcon.png')}
-      />
     </TouchableOpacity>
   );
 };

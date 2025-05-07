@@ -20,6 +20,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import KS from '../services/KSAPI';
 import {toast} from '../Omni';
 import CarrierInfo from 'react-native-carrier-info';
+import {getCountryNameAsync} from 'react-native-country-picker-modal/lib/CountryService';
 
 let ArabicLanguageList = [
   'IL',
@@ -154,7 +155,8 @@ class LanguageSelector extends Component {
     const _country = _countries.filter(
       country => country.cca2 == result.toUpperCase(),
     )[0];
-
+    // var _name = getCountryNameAsync(_country.cca2, 'AR');
+    // console.log(_country.cca2 + ' ================= ' + JSON.stringify(_name));
     this.setState(
       {
         cca2: result == 'il' ? 'PS' : result.toUpperCase(),
@@ -182,7 +184,6 @@ class LanguageSelector extends Component {
   async findCountry() {
     let countries = await getAllCountries();
     let _country = countries.find(i => i.cca2 == this.state.cca2);
-
     this.setState({
       country: _country,
       countryName: _country.name,
@@ -271,7 +272,6 @@ class LanguageSelector extends Component {
             closeable
             transparent
             onChange={value => {
-              console.log('=================44==');
               this.setState(
                 {
                   cca2: value.cca2,
@@ -284,7 +284,6 @@ class LanguageSelector extends Component {
               );
             }}
             onSelect={value => {
-              console.log('=================22==');
               this.setState(
                 {
                   cca2: value.cca2,
@@ -326,7 +325,6 @@ class LanguageSelector extends Component {
                 closeable
                 transparent
                 onSelect={value => {
-                  console.log('=================11==');
                   this.setState(
                     {
                       cca2: value.cca2,
@@ -466,7 +464,6 @@ class LanguageSelector extends Component {
                         ['language', this.state.selectedLanguage.Prefix],
                         ['cca2', this.state.cca2],
                         ['country', JSON.stringify(this.state.country)],
-
                         ['countryName', this.state.countryName],
                       ],
                       () => {
@@ -498,7 +495,6 @@ class LanguageSelector extends Component {
                     ['language', this.state.selectedLanguage.Prefix],
                     ['cca2', this.state.cca2],
                     ['country', JSON.stringify(this.state.country)],
-
                     ['countryName', this.state.countryName],
                   ],
                   () => {
