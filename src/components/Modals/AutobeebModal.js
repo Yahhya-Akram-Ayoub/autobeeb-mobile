@@ -15,6 +15,7 @@ import {
   Platform,
   BackHandler,
 } from 'react-native';
+import MyToast from '../../containers/MyToast';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -92,6 +93,7 @@ const AutobeebModal = forwardRef((props, ref) => {
         ]}>
         {children}
       </Animated.View>
+      <MyToast />
     </Modal>
   );
 });

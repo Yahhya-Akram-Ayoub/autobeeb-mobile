@@ -1529,6 +1529,7 @@ class CarDetails extends Component {
           style={styles.modalBoxWrap}
           useNativeDriver={true}>
           <FlatList
+            ref={instance => (this.FlatListModalPhoto = instance)}
             style={{
               height: Dimensions.get('screen').width / 1.2,
               width: Dimensions.get('screen').width,
@@ -1540,7 +1541,6 @@ class CarDetails extends Component {
             keyExtractor={(item, index) => index.toString()}
             showsHorizontalScrollIndicator={false}
             initialNumToRender={16}
-            numColumns={0}
             data={this.state.Listing.Images}
             renderItem={({item, index}) => {
               return (
@@ -1551,7 +1551,7 @@ class CarDetails extends Component {
                   }}
                   resizeMode="cover"
                   source={{
-                    uri: `https://autobeeb.com/${this.state.Listing.ImageBasePath}${item}.jpg`,
+                    uri: `https://autobeeb.com/${this.state.Listing.ImageBasePath}${item}_1024x853.jpg`,
                   }}
                 />
               );

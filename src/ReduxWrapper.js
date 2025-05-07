@@ -125,8 +125,8 @@ export default class ReduxWrapper extends React.Component {
         <SafeAreaView style={{flex: 1}}>
           <Provider store={store}>
             <View style={Styles.app}>
-              <StatusBar backgroundColor="#fff" barStyle="dark-content" />
               <MyToast />
+              <StatusBar backgroundColor="#fff" barStyle="dark-content" />
               <MyNetInfo />
               <Navigation />
               <NotificationPermission />

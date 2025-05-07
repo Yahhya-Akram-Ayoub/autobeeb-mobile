@@ -121,7 +121,7 @@ const OTPModal = ({
           onClosed();
         }
       }}
-      backButtonClose={true}
+      keyboardResponsive={true}
       entry="bottom"
       swipeToClose={false}
       backdropOpacity={0.5}>
@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   modelModal: {
-    zIndex: 2000,
+    zIndex: 1000,
     flex: 1,
     backgroundColor: 'transparent',
     alignSelf: 'center',
@@ -337,7 +337,6 @@ const styles = StyleSheet.create({
     marginBottom: Platform.select({ios: 100, android: 0}),
     backgroundColor: '#eee',
     padding: 15,
-    borderRadius: 10,
   },
 });
 
