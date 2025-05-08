@@ -27,7 +27,7 @@ import {
   AutobeebModal,
 } from '../components';
 import LinearGradient from 'react-native-linear-gradient';
-import IconEV from 'react-native-vector-icons/EvilIcons';
+import IconOc from 'react-native-vector-icons/Octicons';
 import IconMa from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MapView, {Marker} from 'react-native-maps';
@@ -608,52 +608,59 @@ class DealerProfileScreen extends Component {
             </Text>
           </TouchableOpacity>
         )}
-        <LinearGradient
-          colors={[
-            'rgba(0,0,0,0.8)',
-            'rgba(0,0,0,0.5)',
-            'rgba(0,0,0,0.3)',
-            'rgba(0,0,0,0.1)',
-          ]}
+
+        <View
           style={{
             position: 'absolute',
             top: 0,
-            zIndex: 500,
-            minHeight: 50,
+            zIndex: 200,
+            minHeight: 70,
+            paddingTop: 15,
             width: Dimensions.get('screen').width,
           }}>
           <View
             style={{
-              flexDirection: 'row',
+              flexDirection: 'row-reverse',
               alignItems: 'center',
-              paddingTop: 30,
               justifyContent: 'space-between',
             }}>
             <TouchableOpacity
-              // hitSlop={{top: 10, right: 10, bottom: 10, left: 10}}
-              // style={{
-              //   paddingLeft: 15,
-              // }}
-              onPress={() => this.props.navigation.goBack()}>
-              <Ionicons name="arrow-back" size={25} color={'black'} />
-            </TouchableOpacity>
-            {/* <HeaderBackButton
-              labelVisible={false}
-              tintColor="#fff"
-              style={{}}
-              onPress={() => {
-                this.props.navigation.goBack();
+              hitSlop={{top: 10, right: 10, bottom: 10, left: 10}}
+              style={{
+                marginRight: 15,
+                backgroundColor: 'rgba(0,0,0,0.5)',
+                borderRadius: 100,
+                padding: 7,
               }}
-            /> */}
-            <TouchableOpacity
-              style={{marginRight: 15}}
+              onPress={data => {
+                this.props.navigation.goBack();
+              }}>
+              <Ionicons
+                name={I18nManager.isRTL ? 'arrow-back' : 'arrow-forward'}
+                size={20}
+                color={'white'}
+              />
+            </TouchableOpacity>
+
+            <Pressable
               onPress={() => {
                 this.onShare();
+              }}
+              style={{
+                marginRight: 15,
+                backgroundColor: 'rgba(0,0,0,0.5)',
+                borderRadius: 100,
+                width: 35,
+                height: 35,
+                paddingStart: 2,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginLeft: 15,
               }}>
-              <IconEV name="share-google" size={30} color="white" />
-            </TouchableOpacity>
+              <IconOc name="share-android" size={15} color="white" />
+            </Pressable>
           </View>
-        </LinearGradient>
+        </View>
 
         {this.state.active && (
           <FlatList

@@ -1103,461 +1103,6 @@ class CarDetails extends Component {
 
     return (
       <View style={{flex: 1, backgroundColor: '#fff'}}>
-        {this.state.firstLoad && (
-          <AutobeebModal
-            ref={instance => (this.WarningPopup = instance)}
-            isOpen={this.state.firstLoad}
-            style={[styles.modelModal]}
-            position="center"
-            onClosed={() => {
-              this.setState({firstLoad: false});
-            }}
-            backButtonClose
-            entry="bottom"
-            swipeToClose={true}
-            backdropPressToClose
-            coverScreen={Platform.OS == 'android'}
-            backdropOpacity={0.9}>
-            <View
-              style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-              <IconFE
-                name="alert-triangle"
-                style={{fontSize: 90, color: '#ffcc00'}}></IconFE>
-              <Text
-                style={{fontSize: 20, color: '#ffcc00', textAlign: 'center'}}>
-                {Languages.WarningMessage}
-              </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  this.setState({firstLoad: false});
-                }}>
-                <Text
-                  style={{
-                    paddingHorizontal: 25,
-                    paddingVertical: 5,
-                    borderRadius: 10,
-                    marginTop: 20,
-                    fontSize: 20,
-                    color: '#ffffff',
-                    backgroundColor: Color.secondary,
-                    textAlign: 'center',
-                  }}>
-                  {Languages.OK}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </AutobeebModal>
-        )}
-        {this.state.isLoading && <LogoSpinner fullStretch={true} />}
-        <OTPModal
-          isOpen={this.state.OtpOpen}
-          OTPMessage={Languages.WeHaveSentTheOTP}
-          EnterMessage={Languages.EnterItNow}
-          pendingDelete={this.state.pendingDelete}
-          onOpened={() => {
-            this.setState({footerShown: false});
-          }}
-          Username={
-            !!this.props?.route?.params?.isEmailRegister ||
-            (this.props.userData &&
-              this.props.userData.EmailRegister &&
-              this.props.userData.EmailConfirmed == false)
-              ? this.state.Email || this.props.userData?.Email
-              : this.props?.route?.params?.Phone ||
-                (this.props.userData && this.props.userData.Phone)
-          }
-          otp={this.state.otp}
-          onChange={otp => {
-            this.setState({otp});
-          }}
-          checkOTP={() => {
-            this.checkOTP();
-          }}
-          toast={msg => {
-            toast(msg);
-          }}
-          onClosed={() => {
-            this.setState({footerShown: true});
-          }}
-          resendCode={() => {
-            this.resendCode();
-          }}
-        />
-        <AutobeebModal
-          ref={instance => (this.FeaturesModal = instance)}
-          style={[styles.modelModal]}
-          fullScreen={true}
-          position="center"
-          onClosed={() => {
-            if (!!this.props?.route?.params?.isNewUser == true) {
-              this.setState({
-                OtpOpen: true,
-              });
-            }
-
-            if (!!this.props?.route?.params?.pendingDelete == true) {
-              this.setState({pendingDelete: true, OtpOpen: true});
-            }
-            console.log({
-              IsSpecial: this.props?.route?.params?.IsSpecial,
-              TypeID: this.props?.route?.params?.item?.TypeID,
-              SellType: `${this.props?.route?.params?.item?.SellType}`,
-            });
-            if (
-              !!this.props?.route?.params?.pendingDelete == false &&
-              !!this.props?.route?.params?.isNewUser == false &&
-              !this.props?.route?.params?.IsSpecial &&
-              this.props?.route?.params?.item?.TypeID != '32' &&
-              `${this.props?.route?.params?.item?.SellType}` != '4'
-            ) {
-              this.SpecialPlansModal.open();
-            }
-          }}
-          backButtonClose={true}
-          entry="bottom"
-          swipeToClose={false}
-          // backdropPressToClose
-          coverScreen={true}
-          backdropOpacity={0.5}>
-          <View
-            style={[
-              styles.modelContainer,
-              {
-                backgroundColor: '#fff',
-                maxHeight: Dimensions.get('screen').height * 0.8,
-              },
-              {
-                shadowColor: '#000',
-                shadowOffset: {
-                  width: 0,
-                  height: 12,
-                },
-                shadowOpacity: 0.58,
-                shadowRadius: 16.0,
-                elevation: 24,
-              },
-            ]}>
-            <ScrollView nestedScrollEnabled={true}>
-              {this.state.FeaturesLoaded ? (
-                <View style={{}}>
-                  <Text
-                    style={{padding: 5, textAlign: 'center', color: '#000'}}>
-                    {Languages.SelectFeatureSet}
-                  </Text>
-                  <View style={{}}>
-                    <FlatList
-                      nestedScrollEnabled
-                      keyExtractor={(item, index) => index.toString()}
-                      data={this.state.FeaturesSwitch || []}
-                      style={{
-                        maxHeight: Dimensions.get('screen').height * 0.75,
-                      }}
-                      extraData={this.state}
-                      renderItem={({item, index}) => {
-                        return (
-                          <TouchableOpacity
-                            style={[
-                              {
-                                borderBottomWidth: 1,
-                                borderBottomColor: '#ddd',
-                                flexDirection: 'row',
-                                justifyContent: 'space-around',
-                                alignItems: 'center',
-                                backgroundColor:
-                                  this.state.selectedFeatures &&
-                                  this.state.selectedFeatures.filter(
-                                    model => model.ID == item.ID,
-                                  ).length > 0
-                                    ? Color.primary
-                                    : '#fff',
-                              },
-                            ]}
-                            onPress={() => {
-                              if (
-                                this.state.selectedFeatures &&
-                                this.state.selectedFeatures.filter(
-                                  model => model.ID == item.ID,
-                                ).length > 0 //model is already selected
-                              ) {
-                                let models = this.state.selectedFeatures.filter(
-                                  model => model.ID != item.ID, //remove model
-                                );
-
-                                this.setState({
-                                  selectedFeatures: models,
-                                });
-                              } else {
-                                let models = this.state.selectedFeatures;
-
-                                models.push(item);
-                                this.setState({
-                                  selectedFeatures: models,
-                                });
-                              }
-                            }}>
-                            <Image
-                              style={{
-                                width: 50,
-                                height: 50,
-                              }}
-                              tintColor={
-                                this.state.selectedFeatures &&
-                                this.state.selectedFeatures.filter(
-                                  model => model.ID == item.ID,
-                                ).length > 0
-                                  ? '#FFF'
-                                  : Color.secondary
-                              }
-                              resizeMode={'contain'}
-                              source={{
-                                uri:
-                                  'https://autobeeb.com/' +
-                                  item.FullImagePath +
-                                  '_300x150.png',
-                              }}
-                            />
-
-                            <Text
-                              style={{
-                                color:
-                                  this.state.selectedFeatures &&
-                                  this.state.selectedFeatures.filter(
-                                    model => model.ID == item.ID,
-                                  ).length > 0
-                                    ? '#FFF'
-                                    : Color.secondary,
-                                fontSize: 15,
-                                textAlign: 'left',
-                                flex: 1,
-                              }}>
-                              {item.Name}
-                            </Text>
-                          </TouchableOpacity>
-                        );
-                      }}
-                    />
-
-                    <SectionList
-                      sections={this.state.FeaturesDropDown.map(item => {
-                        return {title: item.Name, data: item.Options};
-                      })}
-                      keyExtractor={(item, index) => item + index}
-                      style={
-                        {
-                          //marginHorizontal: 10
-                        }
-                      }
-                      renderItem={({item}) => {
-                        return (
-                          <TouchableOpacity
-                            style={{
-                              marginBottom: 3,
-                            }}
-                            onPress={() => {
-                              let SingleFeature =
-                                this.state.FeaturesDropDown.find(
-                                  x => x.ID == item.FeatureID,
-                                );
-                              SingleFeature.Value = item.ID; // this set the state of the item
-
-                              let selectedDropdownFeatures =
-                                this.state.selectedDropdownFeatures;
-                              if (
-                                selectedDropdownFeatures.filter(
-                                  x => x.ID == item.FeatureID,
-                                ).length == 0
-                              ) {
-                                //already selected value for this
-                                selectedDropdownFeatures = [
-                                  ...this.state.selectedDropdownFeatures,
-                                  SingleFeature,
-                                ];
-                              }
-
-                              var mapped = selectedDropdownFeatures.map(
-                                item => ({
-                                  [item.ID]: item.Value,
-                                }),
-                              );
-                              let newObj = Object.assign({}, ...mapped);
-
-                              this.setState({
-                                selectedDropdownFeatures,
-                                FormattedDropDownFeatures: newObj,
-                              });
-                            }}>
-                            <Text
-                              style={{
-                                fontSize: 16,
-                                textAlign: 'left',
-                                marginLeft: 10,
-                                color:
-                                  this.state.selectedDropdownFeatures.filter(
-                                    x => x.Value == item.ID,
-                                  ).length > 0
-                                    ? Color.primary
-                                    : 'black',
-                              }}>
-                              {item.Name}
-                            </Text>
-                          </TouchableOpacity>
-                        );
-                      }}
-                      renderSectionHeader={({section: {title}}) => (
-                        <Text
-                          style={{
-                            color: Color.secondary,
-                            borderBottomWidth: 1,
-                            textAlign: 'left',
-
-                            fontSize: 18,
-                            marginTop: 15,
-                            borderBottomColor: '#ddd',
-                            fontFamily: 'Cairo-Bold',
-                          }}>
-                          {title}
-                        </Text>
-                      )}
-                    />
-                  </View>
-                </View>
-              ) : (
-                <Text style={{}}>{'loading'}</Text>
-              )}
-            </ScrollView>
-            {this.renderOkCancelButton(
-              () => {
-                this.FeaturesModal.close();
-              },
-              () => {
-                this.setState({isFeaturesModalLoading: true}, () => {
-                  KS.FeatureSetAdd({
-                    listingID: this.state.Listing.ID,
-                    featureSet: {
-                      FeaturesOn: this.state.selectedFeatures
-                        ? this.state.selectedFeatures.map(feature => feature.ID)
-                        : [],
-                      FeaturesDropdown:
-                        this.state.FormattedDropDownFeatures || {},
-                    },
-                  })
-                    .then(data => {
-                      if (data && data.Success == 1) {
-                        KS.ListingGet({
-                          // to refresh features
-                          userid:
-                            (this.props.userData && this.props.userData.ID) ||
-                            '',
-                          langid: Languages.langID,
-                          pID: this.props?.route?.params?.item?.ID,
-                          typeID: this.props?.route?.params?.item?.TypeID,
-                          ignoreDelete:
-                            this.props?.route?.params?.item?.TypeID == 32
-                              ? false
-                              : true,
-                        }).then(data => {
-                          if (data.Success == 1) {
-                            this.setState({
-                              Listing: data.Listing,
-                              Features: data.ItemFeatures,
-                            });
-                          } else {
-                            toast(Languages.SomethingWentWrong);
-                          }
-                        });
-                        this.FeaturesModal.close();
-                      }
-                    })
-                    .finally(() => {
-                      this.setState({isFeaturesModalLoading: false});
-                    });
-                });
-              },
-            )}
-          </View>
-        </AutobeebModal>
-        <AutobeebModal
-          ref={instance => (this.SpecialPlansModal = instance)}
-          style={[
-            styles.modelModal,
-            {flexDirection: 'column', justifyContent: 'flex-end'},
-          ]}
-          fullScreen={true}
-          position="center"
-          onClosed={() => {
-            this.setState({
-              isSpecialPlansModal: false,
-            });
-          }}
-          onOpened={() => {
-            this.setState({
-              isSpecialPlansModal: true,
-            });
-          }}
-          backButtonClose={true}
-          entry="bottom"
-          swipeToClose={false}
-          backdropPressToClose
-          coverScreen={true}
-          backdropOpacity={0.5}>
-          <View
-            style={[
-              styles.modelContainer,
-              {
-                backgroundColor: '#fff',
-                height: Dimensions.get('screen').height * 0.93,
-                width: Dimensions.get('screen').width * 0.9,
-                bottom: 0,
-                alignItems: 'center',
-              },
-            ]}>
-            <SpecialPlans
-              pOffer={Listing}
-              pUser={!!this.props.userData ? {...this.props.userData} : null}
-              pCurrency={global.ViewingCurrency || this.props.ViewingCurrency}
-              pOnClose={() => {
-                this.SpecialPlansModal.close();
-              }}
-            />
-          </View>
-        </AutobeebModal>
-        <AutobeebModal //the full view
-          ref={instance => (this.modalPhoto = instance)}
-          swipeToClose={false}
-          fullScreen={true}
-          animationDuration={200}
-          style={styles.modalBoxWrap}
-          useNativeDriver={true}>
-          <FlatList
-            ref={instance => (this.FlatListModalPhoto = instance)}
-            style={{
-              height: Dimensions.get('screen').width / 1.2,
-              width: Dimensions.get('screen').width,
-            }}
-            contentContainerStyle={{
-              gap: 15,
-              paddingBottom: 20,
-            }}
-            keyExtractor={(item, index) => index.toString()}
-            showsHorizontalScrollIndicator={false}
-            initialNumToRender={16}
-            data={this.state.Listing.Images}
-            renderItem={({item, index}) => {
-              return (
-                <FastImage
-                  style={{
-                    height: Dimensions.get('screen').width / 1.2,
-                    width: Dimensions.get('screen').width,
-                  }}
-                  resizeMode="cover"
-                  source={{
-                    uri: `https://autobeeb.com/${this.state.Listing.ImageBasePath}${item}_1024x853.jpg`,
-                  }}
-                />
-              );
-            }}
-          />
-        </AutobeebModal>
         <View
           style={{
             position: 'absolute',
@@ -3318,6 +2863,32 @@ class CarDetails extends Component {
           </ScrollView>
         )}
 
+        <Animated.View
+          style={{
+            position: 'absolute',
+            right: 0,
+            bottom: 60,
+            transform: [{translateY: this.ContactBoxSpace}],
+            minHeight: 'auto',
+            minWidth: 'auto',
+            zIndex: 2000,
+          }}>
+          <AddAdvButtonSquare navigation={this.props.navigation} />
+        </Animated.View>
+
+        <Animated.View
+          style={{
+            position: 'absolute',
+            transform: [{translateY: this.BottomBarSpace}],
+            right: 0,
+            bottom: 0,
+            zIndex: 2000,
+            minHeight: 'auto',
+            minWidth: '100%',
+          }}>
+          <BottomNavigationBar />
+        </Animated.View>
+
         <AutobeebModal
           ref={instance => (this.IsSharePopup = instance)}
           backButtonClose
@@ -3446,32 +3017,510 @@ class CarDetails extends Component {
             </View>
           )}
         </AutobeebModal>
+        
+        {this.state.firstLoad && (
+          <AutobeebModal
+            ref={instance => (this.WarningPopup = instance)}
+            isOpen={this.state.firstLoad}
+            style={[styles.modelModal]}
+            position="center"
+            onClosed={() => {
+              this.setState({firstLoad: false});
+            }}
+            backButtonClose
+            entry="bottom"
+            swipeToClose={true}
+            backdropPressToClose
+            coverScreen={Platform.OS == 'android'}
+            backdropOpacity={0.9}>
+            <View
+              style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+              <IconFE
+                name="alert-triangle"
+                style={{fontSize: 90, color: '#ffcc00'}}></IconFE>
+              <Text
+                style={{fontSize: 20, color: '#ffcc00', textAlign: 'center'}}>
+                {Languages.WarningMessage}
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  this.setState({firstLoad: false});
+                }}>
+                <Text
+                  style={{
+                    paddingHorizontal: 25,
+                    paddingVertical: 5,
+                    borderRadius: 10,
+                    marginTop: 20,
+                    fontSize: 20,
+                    color: '#ffffff',
+                    backgroundColor: Color.secondary,
+                    textAlign: 'center',
+                  }}>
+                  {Languages.OK}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </AutobeebModal>
+        )}
+        {this.state.isLoading && <LogoSpinner fullStretch={true} />}
+        <OTPModal
+          isOpen={this.state.OtpOpen}
+          OTPMessage={Languages.WeHaveSentTheOTP}
+          EnterMessage={Languages.EnterItNow}
+          pendingDelete={this.state.pendingDelete}
+          onOpened={() => {
+            this.setState({footerShown: false});
+          }}
+          Username={
+            !!this.props?.route?.params?.isEmailRegister ||
+            (this.props.userData &&
+              this.props.userData.EmailRegister &&
+              this.props.userData.EmailConfirmed == false)
+              ? this.state.Email || this.props.userData?.Email
+              : this.props?.route?.params?.Phone ||
+                (this.props.userData && this.props.userData.Phone)
+          }
+          otp={this.state.otp}
+          onChange={otp => {
+            this.setState({otp});
+          }}
+          checkOTP={() => {
+            this.checkOTP();
+          }}
+          toast={msg => {
+            toast(msg);
+          }}
+          onClosed={() => {
+            this.setState({footerShown: true});
+          }}
+          resendCode={() => {
+            this.resendCode();
+          }}
+        />
+        <AutobeebModal
+          ref={instance => (this.FeaturesModal = instance)}
+          style={[styles.modelModal]}
+          fullScreen={true}
+          position="center"
+          onClosed={() => {
+            if (!!this.props?.route?.params?.isNewUser == true) {
+              this.setState({
+                OtpOpen: true,
+              });
+            }
 
-        <Animated.View
-          style={{
-            position: 'absolute',
-            right: 0,
-            bottom: 60,
-            transform: [{translateY: this.ContactBoxSpace}],
-            minHeight: 'auto',
-            minWidth: 'auto',
-            zIndex: 2000,
-          }}>
-          <AddAdvButtonSquare navigation={this.props.navigation} />
-        </Animated.View>
+            if (!!this.props?.route?.params?.pendingDelete == true) {
+              this.setState({pendingDelete: true, OtpOpen: true});
+            }
+            console.log({
+              IsSpecial: this.props?.route?.params?.IsSpecial,
+              TypeID: this.props?.route?.params?.item?.TypeID,
+              SellType: `${this.props?.route?.params?.item?.SellType}`,
+            });
+            if (
+              !!this.props?.route?.params?.pendingDelete == false &&
+              !!this.props?.route?.params?.isNewUser == false &&
+              !this.props?.route?.params?.IsSpecial &&
+              this.props?.route?.params?.item?.TypeID != '32' &&
+              `${this.props?.route?.params?.item?.SellType}` != '4'
+            ) {
+              this.SpecialPlansModal.open();
+            }
+          }}
+          backButtonClose={true}
+          entry="bottom"
+          swipeToClose={false}
+          // backdropPressToClose
+          coverScreen={true}
+          backdropOpacity={0.5}>
+          <View
+            style={[
+              styles.modelContainer,
+              {
+                backgroundColor: '#fff',
+                maxHeight: Dimensions.get('screen').height * 0.8,
+              },
+              {
+                shadowColor: '#000',
+                shadowOffset: {
+                  width: 0,
+                  height: 12,
+                },
+                shadowOpacity: 0.58,
+                shadowRadius: 16.0,
+                elevation: 24,
+              },
+            ]}>
+            <ScrollView nestedScrollEnabled={true}>
+              {this.state.FeaturesLoaded ? (
+                <View style={{}}>
+                  <Text
+                    style={{padding: 5, textAlign: 'center', color: '#000'}}>
+                    {Languages.SelectFeatureSet}
+                  </Text>
+                  <View style={{}}>
+                    <FlatList
+                      nestedScrollEnabled
+                      keyExtractor={(item, index) => index.toString()}
+                      data={this.state.FeaturesSwitch || []}
+                      style={{
+                        maxHeight: Dimensions.get('screen').height * 0.75,
+                      }}
+                      extraData={this.state}
+                      renderItem={({item, index}) => {
+                        return (
+                          <TouchableOpacity
+                            style={[
+                              {
+                                borderBottomWidth: 1,
+                                borderBottomColor: '#ddd',
+                                flexDirection: 'row',
+                                justifyContent: 'space-around',
+                                alignItems: 'center',
+                                backgroundColor:
+                                  this.state.selectedFeatures &&
+                                  this.state.selectedFeatures.filter(
+                                    model => model.ID == item.ID,
+                                  ).length > 0
+                                    ? Color.primary
+                                    : '#fff',
+                              },
+                            ]}
+                            onPress={() => {
+                              if (
+                                this.state.selectedFeatures &&
+                                this.state.selectedFeatures.filter(
+                                  model => model.ID == item.ID,
+                                ).length > 0 //model is already selected
+                              ) {
+                                let models = this.state.selectedFeatures.filter(
+                                  model => model.ID != item.ID, //remove model
+                                );
 
-        <Animated.View
-          style={{
-            position: 'absolute',
-            transform: [{translateY: this.BottomBarSpace}],
-            right: 0,
-            bottom: 0,
-            zIndex: 2000,
-            minHeight: 'auto',
-            minWidth: '100%',
-          }}>
-          <BottomNavigationBar />
-        </Animated.View>
+                                this.setState({
+                                  selectedFeatures: models,
+                                });
+                              } else {
+                                let models = this.state.selectedFeatures;
+
+                                models.push(item);
+                                this.setState({
+                                  selectedFeatures: models,
+                                });
+                              }
+                            }}>
+                            <Image
+                              style={{
+                                width: 50,
+                                height: 50,
+                              }}
+                              tintColor={
+                                this.state.selectedFeatures &&
+                                this.state.selectedFeatures.filter(
+                                  model => model.ID == item.ID,
+                                ).length > 0
+                                  ? '#FFF'
+                                  : Color.secondary
+                              }
+                              resizeMode={'contain'}
+                              source={{
+                                uri:
+                                  'https://autobeeb.com/' +
+                                  item.FullImagePath +
+                                  '_300x150.png',
+                              }}
+                            />
+
+                            <Text
+                              style={{
+                                color:
+                                  this.state.selectedFeatures &&
+                                  this.state.selectedFeatures.filter(
+                                    model => model.ID == item.ID,
+                                  ).length > 0
+                                    ? '#FFF'
+                                    : Color.secondary,
+                                fontSize: 15,
+                                textAlign: 'left',
+                                flex: 1,
+                              }}>
+                              {item.Name}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      }}
+                    />
+
+                    <SectionList
+                      sections={this.state.FeaturesDropDown.map(item => {
+                        return {title: item.Name, data: item.Options};
+                      })}
+                      keyExtractor={(item, index) => item + index}
+                      style={
+                        {
+                          //marginHorizontal: 10
+                        }
+                      }
+                      renderItem={({item}) => {
+                        return (
+                          <TouchableOpacity
+                            style={{
+                              marginBottom: 3,
+                            }}
+                            onPress={() => {
+                              let SingleFeature =
+                                this.state.FeaturesDropDown.find(
+                                  x => x.ID == item.FeatureID,
+                                );
+                              SingleFeature.Value = item.ID; // this set the state of the item
+
+                              let selectedDropdownFeatures =
+                                this.state.selectedDropdownFeatures;
+                              if (
+                                selectedDropdownFeatures.filter(
+                                  x => x.ID == item.FeatureID,
+                                ).length == 0
+                              ) {
+                                //already selected value for this
+                                selectedDropdownFeatures = [
+                                  ...this.state.selectedDropdownFeatures,
+                                  SingleFeature,
+                                ];
+                              }
+
+                              var mapped = selectedDropdownFeatures.map(
+                                item => ({
+                                  [item.ID]: item.Value,
+                                }),
+                              );
+                              let newObj = Object.assign({}, ...mapped);
+
+                              this.setState({
+                                selectedDropdownFeatures,
+                                FormattedDropDownFeatures: newObj,
+                              });
+                            }}>
+                            <Text
+                              style={{
+                                fontSize: 16,
+                                textAlign: 'left',
+                                marginLeft: 10,
+                                color:
+                                  this.state.selectedDropdownFeatures.filter(
+                                    x => x.Value == item.ID,
+                                  ).length > 0
+                                    ? Color.primary
+                                    : 'black',
+                              }}>
+                              {item.Name}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      }}
+                      renderSectionHeader={({section: {title}}) => (
+                        <Text
+                          style={{
+                            color: Color.secondary,
+                            borderBottomWidth: 1,
+                            textAlign: 'left',
+
+                            fontSize: 18,
+                            marginTop: 15,
+                            borderBottomColor: '#ddd',
+                            fontFamily: 'Cairo-Bold',
+                          }}>
+                          {title}
+                        </Text>
+                      )}
+                    />
+                  </View>
+                </View>
+              ) : (
+                <Text style={{}}>{'loading'}</Text>
+              )}
+            </ScrollView>
+            {this.renderOkCancelButton(
+              () => {
+                this.FeaturesModal.close();
+              },
+              () => {
+                this.setState({isFeaturesModalLoading: true}, () => {
+                  KS.FeatureSetAdd({
+                    listingID: this.state.Listing.ID,
+                    featureSet: {
+                      FeaturesOn: this.state.selectedFeatures
+                        ? this.state.selectedFeatures.map(feature => feature.ID)
+                        : [],
+                      FeaturesDropdown:
+                        this.state.FormattedDropDownFeatures || {},
+                    },
+                  })
+                    .then(data => {
+                      if (data && data.Success == 1) {
+                        KS.ListingGet({
+                          // to refresh features
+                          userid:
+                            (this.props.userData && this.props.userData.ID) ||
+                            '',
+                          langid: Languages.langID,
+                          pID: this.props?.route?.params?.item?.ID,
+                          typeID: this.props?.route?.params?.item?.TypeID,
+                          ignoreDelete:
+                            this.props?.route?.params?.item?.TypeID == 32
+                              ? false
+                              : true,
+                        }).then(data => {
+                          if (data.Success == 1) {
+                            this.setState({
+                              Listing: data.Listing,
+                              Features: data.ItemFeatures,
+                            });
+                          } else {
+                            toast(Languages.SomethingWentWrong);
+                          }
+                        });
+                        this.FeaturesModal.close();
+                      }
+                    })
+                    .finally(() => {
+                      this.setState({isFeaturesModalLoading: false});
+                    });
+                });
+              },
+            )}
+          </View>
+        </AutobeebModal>
+        <AutobeebModal
+          ref={instance => (this.SpecialPlansModal = instance)}
+          style={[
+            styles.modelModal,
+            {flexDirection: 'column', justifyContent: 'flex-end'},
+          ]}
+          fullScreen={true}
+          position="center"
+          onClosed={() => {
+            this.setState({
+              isSpecialPlansModal: false,
+            });
+          }}
+          onOpened={() => {
+            this.setState({
+              isSpecialPlansModal: true,
+            });
+          }}
+          backButtonClose={true}
+          entry="bottom"
+          swipeToClose={false}
+          backdropPressToClose
+          coverScreen={true}
+          backdropOpacity={0.5}>
+          <View
+            style={[
+              styles.modelContainer,
+              {
+                backgroundColor: '#fff',
+                height: Dimensions.get('screen').height * 0.93,
+                width: Dimensions.get('screen').width * 0.9,
+                bottom: 0,
+                alignItems: 'center',
+              },
+            ]}>
+            <SpecialPlans
+              pOffer={Listing}
+              pUser={!!this.props.userData ? {...this.props.userData} : null}
+              pCurrency={global.ViewingCurrency || this.props.ViewingCurrency}
+              pOnClose={() => {
+                this.SpecialPlansModal.close();
+              }}
+            />
+          </View>
+        </AutobeebModal>
+        <AutobeebModal //the full view
+          ref={instance => (this.modalPhoto = instance)}
+          swipeToClose={false}
+          fullScreen={true}
+          animationDuration={200}
+          style={styles.modalBoxWrap}
+          useNativeDriver={true}>
+          <View style={{marginTop: 22}}>
+            <View
+              style={{
+                position: 'absolute',
+                top: 0,
+                zIndex: 200,
+                minHeight: 70,
+                paddingTop: 15,
+                width: Dimensions.get('screen').width,
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row-reverse',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}>
+                <TouchableOpacity
+                  hitSlop={{top: 10, right: 10, bottom: 10, left: 10}}
+                  style={{
+                    marginRight: 15,
+                    backgroundColor: 'rgba(0,0,0,0.5)',
+                    borderRadius: 100,
+                    padding: 7,
+                  }}
+                  onPress={data => {
+                    this.modalPhoto.close();
+                  }}>
+                  <Ionicons
+                    name={I18nManager.isRTL ? 'arrow-back' : 'arrow-forward'}
+                    size={20}
+                    color={'white'}
+                  />
+                </TouchableOpacity>
+
+                <Pressable
+                  onPress={() => {
+                    this.shareOnSocial('facebook');
+                  }}
+                  style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginLeft: 10,
+                  }}>
+                  <FacebookIcon size={32} />
+                </Pressable>
+              </View>
+            </View>
+          </View>
+          <FlatList
+            ref={instance => (this.FlatListModalPhoto = instance)}
+            style={{
+              height: Dimensions.get('screen').width / 1.2,
+              width: Dimensions.get('screen').width,
+            }}
+            contentContainerStyle={{
+              gap: 15,
+              paddingBottom: 20,
+            }}
+            keyExtractor={(item, index) => index.toString()}
+            showsHorizontalScrollIndicator={false}
+            initialNumToRender={16}
+            data={this.state.Listing.Images}
+            renderItem={({item, index}) => {
+              return (
+                <FastImage
+                  style={{
+                    height: Dimensions.get('screen').width / 1.2,
+                    width: Dimensions.get('screen').width,
+                  }}
+                  resizeMode="cover"
+                  source={{
+                    uri: `https://autobeeb.com/${this.state.Listing.ImageBasePath}${item}_1024x853.jpg`,
+                  }}
+                />
+              );
+            }}
+          />
+        </AutobeebModal>
       </View>
     );
   }

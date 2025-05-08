@@ -148,7 +148,11 @@ const OTPModal = ({
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text style={styles.fontStyle}>{' ' + Username}</Text>
+              <Text style={styles.fontStyle}>
+                {Username?.startsWith('+')
+                  ? ` \u200E${Username}`
+                  : ` ${Username}`}
+              </Text>
             </View>
             {pendingDelete ? (
               <View style={{}}>

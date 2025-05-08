@@ -601,11 +601,11 @@ class ListingReview extends Component {
           {
             <Menu
               onSelect={value => this.setState({currency: value})}
-              style={{
+              customStyles={{
                 paddingHorizontal: 5,
                 borderLeftWidth: 1,
               }}>
-              <MenuTrigger>
+              <MenuTrigger customStyles={{}}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <Text style={{fontSize: 14, color: 'blue'}}>
                     {this.state.currency?.Name}
@@ -619,11 +619,11 @@ class ListingReview extends Component {
                 </View>
               </MenuTrigger>
 
-              <MenuOptions>
+              <MenuOptions customStyles={{}}>
                 {this.state.PrimaryCurrencies &&
                   this.state.PrimaryCurrencies.map(currency => {
                     return (
-                      <MenuOption value={currency}>
+                      <MenuOption value={currency} customStyles={{}}>
                         <Text
                           style={[
                             {

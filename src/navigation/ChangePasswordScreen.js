@@ -42,7 +42,6 @@ class ChangePasswordScreen extends Component {
       isLoading: false,
       logInFB: false,
       userInfo: null,
-      logInFB: false,
       loading: false,
       modalVisible: false,
       passwordHidden: true,
@@ -83,9 +82,8 @@ class ChangePasswordScreen extends Component {
 
     const {username, password, loading} = this.state;
     if (loading) return;
-    //this.setState({ isLoading: true });
-    _this = this;
-    _this.setState({loading: true});
+
+    this.setState({loading: true});
     KS.AutobeebLogin({
       name: username,
       pass: password,
@@ -93,18 +91,18 @@ class ChangePasswordScreen extends Component {
     }).then(function (data) {
       if (data === undefined) {
         showToast("Can't get data from server");
-        _this.setState({loading: false});
+        this.setState({loading: false});
       } else if (data.result === 0) {
         showToast(Languages.EmailOrPassIncorrect, 1500);
-        _this.setState({loading: false});
+        this.setState({loading: false});
       } else {
-        _this.setState({loading: false});
+        this.setState({loading: false});
         login(data);
-        _this.setPushNotification(data.uid);
+        this.setPushNotification(data.uid);
 
         AsyncStorage.setItem('user', JSON.stringify(data), () => {
-          if (_this.props.needLogin) {
-            _this.props.navigation.goBack();
+          if (this.props.needLogin) {
+            this.props.navigation.goBack();
           } else {
             this.props.navigation.navigate('App');
           }
@@ -149,7 +147,7 @@ class ChangePasswordScreen extends Component {
         //user.avatar = setAvatar(json.id)
       })
       .catch(() => {
-        reject('ERROR GETTING DATA FROM FACEBOOK');
+        //reject('ERROR GETTING DATA FROM FACEBOOK');
       });
   }
 
@@ -194,7 +192,6 @@ class ChangePasswordScreen extends Component {
     return (
       <View style={styles.containerTopLevel}>
         <OTPModal
-          ref="OTPModal"
           otp={this.state.otp}
           onChange={otp => {
             this.setState({otp});
@@ -262,7 +259,6 @@ class ChangePasswordScreen extends Component {
                   borderWidth: 1,
                 }}>
                 <TextInput
-                  ref="password"
                   secureTextEntry={this.state.passwordHidden}
                   style={{
                     height: 40,
@@ -312,6 +308,7 @@ class ChangePasswordScreen extends Component {
                       .then(data => {
                         if (data && data?.Success == 1) {
                           this.props.storeUserData(data?.User);
+                          this.props.navigation.replace('Drawer');
                           this.props.navigation.navigate('HomeScreen');
                         } else {
                           this.setState({loading: false});

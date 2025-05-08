@@ -130,11 +130,16 @@ class NewHeader extends Component {
               ]}
               onPress={() => {
                 if (this.props.query) {
-                  this.props.navigation.navigate('Search', {
-                    query: this.props.query,
+                  this.props.navigation.navigate('HomeScreen', {
+                    screen: 'Search',
+                    params: {
+                      query: this.props.query,
+                    },
                   });
                 } else {
-                  this.props.navigation.navigate('Search');
+                  this.props.navigation.navigate('HomeScreen', {
+                    screen: 'Search',
+                  });
                 }
               }}>
               <View

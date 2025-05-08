@@ -28,6 +28,7 @@ import {toast} from '../Omni';
 import CountryPicker from '../components/CountryModal/CountryPickerModal';
 import IconEn from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 
 //GoogleSignin.configure ();
 
@@ -45,7 +46,6 @@ class ForgotPassword extends Component {
       isLoading: false,
       logInFB: false,
       userInfo: null,
-      logInFB: false,
       loading: false,
       modalVisible: false,
       isEmailBasedCountry:
@@ -121,9 +121,8 @@ class ForgotPassword extends Component {
 
     const {username, password, loading} = this.state;
     if (loading) return;
-    //this.setState({ isLoading: true });
-    _this = this;
-    _this.setState({loading: true});
+  
+    this.setState({loading: true});
     KS.AutobeebLogin({
       name: username,
       pass: password,
@@ -131,18 +130,18 @@ class ForgotPassword extends Component {
     }).then(function (data) {
       if (data === undefined) {
         showToast("Can't get data from server");
-        _this.setState({loading: false});
+        this.setState({loading: false});
       } else if (data.result === 0) {
         showToast(Languages.EmailOrPassIncorrect, 1500);
-        _this.setState({loading: false});
+        this.setState({loading: false});
       } else {
-        _this.setState({loading: false});
+        this.setState({loading: false});
         login(data);
-        _this.setPushNotification(data.uid);
+        this.setPushNotification(data.uid);
 
         AsyncStorage.setItem('user', JSON.stringify(data), () => {
-          if (_this.props.needLogin) {
-            _this.props.navigation.goBack();
+          if (this.props.needLogin) {
+            this.props.navigation.goBack();
           } else {
             this.props.navigation.navigate('HomeScreen');
           }
@@ -187,7 +186,7 @@ class ForgotPassword extends Component {
         //user.avatar = setAvatar(json.id)
       })
       .catch(() => {
-        reject('ERROR GETTING DATA FROM FACEBOOK');
+        // reject('ERROR GETTING DATA FROM FACEBOOK');
       });
   }
 

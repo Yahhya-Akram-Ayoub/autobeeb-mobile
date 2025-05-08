@@ -442,6 +442,14 @@ class ListingsScreen extends Component {
               if (!newState.selectedRentPeriod?.length)
                 newState = {selectedRentPeriod: [All]};
               break;
+            case 'V':
+              newState = {
+                selectedStatus: prevState.selectedStatus.filter(
+                  item => item.ID !== Id,
+                ),
+              };
+
+              break;
             case 'D':
               newState = {
                 selectedModel: prevState.selectedModel.filter(
@@ -2520,6 +2528,9 @@ class ListingsScreen extends Component {
                 }),
                 ...this.state.selectedRentPeriod.map(i => {
                   return {Name: i.Name, Id: i.ID, Type: 'O'};
+                }),
+                ...this.state.selectedStatus.map(i => {
+                  return {Name: i.Name, Id: i.ID, Type: 'V'};
                 }),
                 ...this.state.selectedGearBox.map(i => {
                   return {Name: i.Name, Id: i.ID, Type: 'G'};

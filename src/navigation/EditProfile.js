@@ -1639,7 +1639,7 @@ class EditProfile extends Component {
                 style={[styles.inputWrap, {justifyContent: 'space-between'}]}>
                 <View
                   style={{
-                    flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
+                    flexDirection: 'row',
                     alignItems: 'center',
                     flex: 7,
                   }}>
@@ -1735,7 +1735,7 @@ class EditProfile extends Component {
                 style={[styles.inputWrap, {justifyContent: 'space-between'}]}>
                 <View
                   style={{
-                    flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
+                    flexDirection: 'row',
                     alignItems: 'center',
                     flex: 7,
                   }}>
@@ -1777,7 +1777,7 @@ class EditProfile extends Component {
                           : {color: 'red'},
                       ]}>
                       {this.props.user && this.props.user?.Phone
-                        ? this.props.user?.Phone
+                        ? `\u200E${this.props.user?.Phone}`
                         : Languages.AddYourPhone}
                     </Text>
                   </TouchableOpacity>
@@ -1852,6 +1852,7 @@ class EditProfile extends Component {
                 </TouchableOpacity>
               </View>
             </View>
+
             {this.props.user &&
               !this.props.user?.IsDealer &&
               this.props.user?.MemberOf &&
@@ -2122,7 +2123,7 @@ const styles = StyleSheet.create({
   },
   loginForm: {},
   inputWrap: {
-    flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
+    flexDirection: 'row',
     alignItems: 'center',
     // justifyContent: "center",
     borderColor: Color.blackDivide,
