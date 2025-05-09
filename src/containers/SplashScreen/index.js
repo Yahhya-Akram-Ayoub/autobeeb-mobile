@@ -53,13 +53,15 @@ class SplashScreen extends Component {
         global.ViewingCurrency = this.props.ViewingCurrency;
       }
     }, 500);
-
     AsyncStorage.getItem('cca2', (error, data) => {
-      // console.log("in cca2 khaled" + JSON.stringify(data));
-      //  alert(data);
-      //   alert(JSON.stringify(this.props.ViewingCurrency));
       if (data) {
-        if (this.props.ViewingCurrency) {
+        KS.CurrencyGetByISOCode({
+          langid: Languages.langID,
+          isoCode: data,
+        }).then(curr => {
+          console.log(JSON.stringify(curr));
+          global.ViewingCurrency = curr.currency;
+          this.props.setViewingCurrency(curr.currency);
           AsyncStorage.getItem('user', (error, result) => {
             const user = JSON.parse(result);
             this.props.HomeScreenGet(
@@ -67,39 +69,14 @@ class SplashScreen extends Component {
               Languages.langID,
               data,
               5,
-              this.props.ViewingCurrency?.ID,
+              curr.currency?.ID,
               () => {
                 this.setState({finishedLoadingHomescreen: true});
-                this.prepareData();
-                // Timer.setTimeout(this.prepareData, minDisplayTime);
-              }
+                Timer.setTimeout(this.prepareData, minDisplayTime);
+              },
             );
           });
-        } else {
-          // console.log("get currency by iso khaled " + JSON.stringify(data));
-          KS.CurrencyGetByISOCode({
-            langid: Languages.langID,
-            isoCode: data,
-          }).then(curr => {
-            //  alert(JSON.stringify(curr));
-            global.ViewingCurrency = curr.currency;
-            this.props.setViewingCurrency(curr.currency);
-            AsyncStorage.getItem('user', (error, result) => {
-              const user = JSON.parse(result);
-              this.props.HomeScreenGet(
-                user?.ID,
-                Languages.langID,
-                data,
-                5,
-                curr.currency?.ID,
-                () => {
-                  this.setState({finishedLoadingHomescreen: true});
-                  Timer.setTimeout(this.prepareData, minDisplayTime);
-                }
-              );
-            });
-          });
-        }
+        });
       } else {
         this.setState({finishedLoadingHomescreen: true});
 
@@ -116,7 +93,6 @@ class SplashScreen extends Component {
     if (Platform.OS == 'android') {
       BootSplash.hide({fade: true});
     }
-    
   }
 
   render() {
@@ -206,7 +182,7 @@ const mapDispatchToProps = dispatch => {
         listingsCount,
         cur,
         callback,
-        userId
+        userId,
       ),
 
     editChat: data => dispatch(data),

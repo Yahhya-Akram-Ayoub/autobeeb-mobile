@@ -55,7 +55,9 @@ const HeaderRight = navigation => (
       Styles.Common.Row,
       {justifyContent: 'center', alignItems: 'center', flexDirection: 'row'},
     ]}>
-    <TouchableOpacity style={{}} onPress={() => navigation.navigate('Search')}>
+    <TouchableOpacity
+      style={{}}
+      onPress={() => navigation.navigate('HomeScreen', {screen: 'Search'})}>
       <Text
         style={{
           fontFamily: 'Cairo-Regular',
@@ -68,7 +70,7 @@ const HeaderRight = navigation => (
     <NavigationBarIcon
       icon={Images.IconSearch}
       size={18}
-      onPress={() => navigation.navigate('Search')}
+      onPress={() => navigation.navigate('HomeScreen', {screen: 'Search'})}
       color={'#D24B92'}
     />
   </View>

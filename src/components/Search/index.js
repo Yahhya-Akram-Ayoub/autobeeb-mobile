@@ -35,7 +35,6 @@ class Search extends Component {
       query: '',
       selectedItems: [],
     };
-    this.renderItem = this.renderItem.bind(this);
     this.renderSearchBar = this.renderSearchBar.bind(this);
   }
 
@@ -170,10 +169,7 @@ class Search extends Component {
     }, 500);
   }
 
-  renderItem(item) {
-    return <Text style={{}}>{yazeed}</Text>;
-  }
-
+ 
   nextPosts() {
     this.page += 1;
     this.props.fetchProductsByName(this.state.text, this.langid, this.page);

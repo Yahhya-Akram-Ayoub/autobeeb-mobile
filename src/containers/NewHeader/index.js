@@ -107,7 +107,6 @@ class NewHeader extends Component {
                   fontSize: 16,
                   marginTop: 10,
                   width: Dimensions.get('screen').width * 0.45,
-                  textAlign: 'left',
                   fontFamily: 'Cairo-Regular',
                   textAlign: I18nManager.isRTL ? 'right' : 'left',
                 }}
@@ -136,10 +135,12 @@ class NewHeader extends Component {
                       query: this.props.query,
                     },
                   });
+                  this.props.navigation.navigate('Search');
                 } else {
                   this.props.navigation.navigate('HomeScreen', {
                     screen: 'Search',
                   });
+                  this.props.navigation.navigate('Search');
                 }
               }}>
               <View
@@ -150,7 +151,6 @@ class NewHeader extends Component {
                   borderBottomWidth: 1,
                   borderBottomColor:
                     this.props.blue && false ? '#fff' : 'rgba(0,0,0,0.7)',
-                  paddingHorizontal: 5,
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>

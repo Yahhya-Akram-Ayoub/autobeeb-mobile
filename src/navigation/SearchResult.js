@@ -78,7 +78,7 @@ class SearchResult extends Component {
             ShortName: 'USD',
             Primary: true,
           },
-      footerLoading: false,
+      footerLoading: true,
     };
 
     this.translateY = new Animated.Value(0);
@@ -267,7 +267,7 @@ class SearchResult extends Component {
     if (Pages < 2 /* equal 0 OR 1 */) {
       ViewsIds = Ids;
       !!ViewsIds.length && KS.IncreaseScViews(ViewsIds);
-    } else if (Pages == 2 && Page == 2) {
+    } else if (Pages === 2 && Page == 2) {
       ViewsIds = ViewsIds.concat(Ids);
       !!ViewsIds.length && KS.IncreaseScViews(ViewsIds);
     } else if (Page < 3) {
@@ -275,7 +275,7 @@ class SearchResult extends Component {
     } else {
       !!ViewsIds.length && KS.IncreaseScViews(ViewsIds);
       ViewsIds = Ids;
-      if (Pages == Page) !!ViewsIds.length && KS.IncreaseScViews(ViewsIds);
+      if (Pages === Page) !!ViewsIds.length && KS.IncreaseScViews(ViewsIds);
     }
   }
 
@@ -559,7 +559,6 @@ class SearchResult extends Component {
             {
               sellType: SellType,
               PageNum: 1,
-              footerLoading: false,
               isLoading: true,
             },
             () => {
@@ -723,7 +722,6 @@ class SearchResult extends Component {
                   backgroundColor: '#D31018',
                 },
                 PageNum: 1,
-                footerLoading: false,
                 isLoading: true,
               },
               () => {
@@ -1037,87 +1035,91 @@ class SearchResult extends Component {
   }
 
   LoadListingsPage = async () => {
-    if (!this.state.footerLoading) {
-      this.setState({PageNum: this.state.PageNum + 1}, () => {
-        if (this.state.PageNum <= this.state.maximumPages) {
-          this.setState({footerLoading: true});
-          //khaled
-          KS.FreeSearch({
-            searchFor:
-              this.props.route.params?.submitted ?? false
-                ? this.props.route.params?.query ?? ''
-                : '',
-            makeID: this.props.route.params?.MakeID ?? '',
-            modelID: this.props.route.params?.ModelID ?? '',
-            langID: Languages.langID,
-            isocode: this.props.ViewingCountry.cca2,
-            pagenum: this.state.PageNum,
-            selltype:
-              this.state.sellType && this.state.sellType.ID
-                ? this.state.sellType.ID
-                : '',
-            typeid:
-              this.state.ListingType && this.state.ListingType.ID
-                ? this.state.ListingType.ID
-                : '',
-            sortby:
-              this.state.sortOption && this.state.sortOption.sortBy
-                ? this.state.sortOption.sortBy
-                : '',
-            asc:
-              this.state.sortOption && this.state.sortOption.asc
-                ? this.state.sortOption.asc
-                : '',
-            cur: this.state.currency?.ID,
-            pageSize,
-          }).then(data => {
-            if (data && data.Success) {
-              this.countListingsViews(
-                data.Listings.map(x => x.ID),
-                this.state.PageNum,
-                data.Pages,
-              );
+    console.log({
+      PageNum: this.state.PageNum,
+      maximumPages: this.state.maximumPages,
+    });
+    this.setState({PageNum: this.state.PageNum + 1}, () => {
+      if (this.state.PageNum <= this.state.maximumPages) {
+        //khaled
+        KS.FreeSearch({
+          searchFor:
+            this.props.route.params?.submitted ?? false
+              ? this.props.route.params?.query ?? ''
+              : '',
+          makeID: this.props.route.params?.MakeID ?? '',
+          modelID: this.props.route.params?.ModelID ?? '',
+          langID: Languages.langID,
+          isocode: this.props.ViewingCountry.cca2,
+          pagenum: this.state.PageNum,
+          selltype:
+            this.state.sellType && this.state.sellType.ID
+              ? this.state.sellType.ID
+              : '',
+          typeid:
+            this.state.ListingType && this.state.ListingType.ID
+              ? this.state.ListingType.ID
+              : '',
+          sortby:
+            this.state.sortOption && this.state.sortOption.sortBy
+              ? this.state.sortOption.sortBy
+              : '',
+          asc:
+            this.state.sortOption && this.state.sortOption.asc
+              ? this.state.sortOption.asc
+              : '',
+          cur: this.state.currency?.ID,
+          pageSize,
+        }).then(data => {
+          if (data && data.Success) {
+            this.countListingsViews(
+              data.Listings.map(x => x.ID),
+              this.state.PageNum,
+              data.Pages,
+            );
+            console.log({
+              Pages: data.Pages,
+            });
+            let concattedListings = this.state.Listings;
+            let tempBanners = this.state.Banners || [];
 
-              let concattedListings = this.state.Listings;
-              let tempBanners = this.state.Banners || [];
+            if (this.state.Banners?.length > 0) {
+              concattedListings.push({
+                AutoBeebBanner: true,
+                BannerDetails: tempBanners.shift(),
+              });
 
-              if (this.state.Banners?.length > 0) {
-                concattedListings.push({
-                  AutoBeebBanner: true,
-                  BannerDetails: tempBanners.shift(),
-                });
-
-                this.setState({Banners: tempBanners});
-                concattedListings.push({
-                  skipForAutoBeebBanner: true,
-                });
-              }
-              // else {
-              //   concattedListings.push({Banner: true});
-              //   concattedListings.push({skip: true});
-              // }
-
-              concattedListings = concattedListings.concat(data.Listings);
-              this.setState(
-                {
-                  Listings: concattedListings,
-                  maximumPages: data.Pages,
-                  NoRelatedOffers: data.NoRelatedOffers,
-                  NumberOfIntrested: data.NumberOfIntrested,
-                },
-                () => {
-                  this.intrestedFlag = false;
-                  this.similarAdsFlag = false;
-                  setTimeout(() => {
-                    this.setState({footerLoading: false});
-                  }, 1000);
-                },
-              );
+              this.setState({Banners: tempBanners});
+              concattedListings.push({
+                skipForAutoBeebBanner: true,
+              });
             }
-          });
-        }
-      });
-    }
+            // else {
+            //   concattedListings.push({Banner: true});
+            //   concattedListings.push({skip: true});
+            // }
+
+            concattedListings = concattedListings.concat(data.Listings);
+
+            this.setState(
+              {
+                Listings: concattedListings,
+                maximumPages: data.Pages,
+                NoRelatedOffers: data.NoRelatedOffers,
+                NumberOfIntrested: data.NumberOfIntrested,
+                footerLoading: data.Pages > this.state.PageNum,
+              },
+              () => {
+                this.intrestedFlag = false;
+                this.similarAdsFlag = false;
+              },
+            );
+          }
+        });
+      } else {
+        this.setState({footerLoading: false});
+      }
+    });
   };
   renderEmptyComponent() {
     return (
@@ -1391,13 +1393,13 @@ class SearchResult extends Component {
           <FlatList
             keyExtractor={(item, index) => index.toString()}
             numColumns={this.state.renderType == 1 ? 2 : 1}
-            contentContainerStyle={styles.LoadingList}
+            contentContainerStyle={[styles.LoadingList, {paddingBottom: 55}]}
             key={this.state.renderType}
             ListEmptyComponent={this.renderEmptyComponent()}
             data={this.state.Listings.filter(x => !x.IsSpecial)}
             renderItem={this.renderItem.bind(this)}
             onEndReached={this.LoadListingsPage}
-            onEndReachedThreshold={0.5} //was 0.5
+            onEndReachedThreshold={5} //was 0.5
             ListHeaderComponent={
               <>
                 {[
@@ -1765,12 +1767,8 @@ const styles = StyleSheet.create({
   },
   modal: {
     zIndex: 50,
-
     elevation: 10,
-    zIndex: 20,
-
     height: Dimensions.get('screen').height * 0.8,
-
     width: Dimensions.get('screen').width,
   },
   modelModal: {
@@ -1857,20 +1855,11 @@ const styles = StyleSheet.create({
     borderColor: Color.primary,
     alignSelf: 'center',
   },
-  filterBox: {},
-  filterIcon: {},
   HeaderRow: {
     width: '100%',
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
-  },
-  HeaderRowContainer: {
-    width: '100%',
-    flexDirection: 'column',
-    marginBottom: 6,
-    marginTop: 6,
-    gap: 6,
   },
   filterBox: {},
   filterIcon: {
@@ -1886,12 +1875,6 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingHorizontal: 6,
     paddingVertical: 4,
-  },
-  HeaderRow: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
   },
   HeaderRow2: {
     width: Dimensions.get('screen').width - 20,
