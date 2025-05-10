@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "autobeeb.app"
+               BuildableName = "AutoBeeb - &#x627;&#x648;&#x62a;&#x648;&#x628;&#x64a;&#x628;.app"
                BlueprintName = "autobeeb"
                ReferencedContainer = "container:autobeeb.xcodeproj">
             </BuildableReference>
@@ -55,7 +55,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "autobeeb.app"
+            BuildableName = "AutoBeeb - &#x627;&#x648;&#x62a;&#x648;&#x628;&#x64a;&#x628;.app"
             BlueprintName = "autobeeb"
             ReferencedContainer = "container:autobeeb.xcodeproj">
          </BuildableReference>
@@ -72,7 +72,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "autobeeb.app"
+            BuildableName = "AutoBeeb - &#x627;&#x648;&#x62a;&#x648;&#x628;&#x64a;&#x628;.app"
             BlueprintName = "autobeeb"
             ReferencedContainer = "container:autobeeb.xcodeproj">
          </BuildableReference>

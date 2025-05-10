@@ -35,6 +35,7 @@ import {
 } from '@invertase/react-native-apple-authentication';
 
 GoogleSignin.configure({
+  iosClientId: '409836146565-eam3sed7de7uiqn3lprnb4bfov685502.apps.googleusercontent.com',
   webClientId:
     //  '409836146565-fdcfrv5dfv460thftop83ae2o9i01vgg.apps.googleusercontent.com',
     '409836146565-6vk84khr54jnui21u6pbo6v1umk6mg6t.apps.googleusercontent.com',

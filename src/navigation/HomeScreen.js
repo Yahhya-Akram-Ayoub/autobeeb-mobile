@@ -501,7 +501,7 @@ class HomeScreen extends Component {
                         index == 0 && {position: 'relative', top: 8},
                         index == 5 && {width: 60, height: 60},
                       ]}
-                      tintColor={this.renderTintColor(index)}
+                      // tintColor={this.renderTintColor(index)}
                       resizeMode={FastImage.resizeMode.contain}
                       source={{
                         uri:
@@ -885,7 +885,7 @@ class HomeScreen extends Component {
                                 marginRight: 15,
                                 //     tintColor: this.renderTintColor(index)
                               }}
-                              tintColor={this.renderTintColor(index)}
+                              // tintColor={this.renderTintColor(index)}
                               resizeMode={FastImage.resizeMode.contain}
                               source={{
                                 uri:
