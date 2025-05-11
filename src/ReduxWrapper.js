@@ -28,6 +28,7 @@ import setDefaultProps from 'react-native-simple-default-props';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {MySignalR, NotificationPermission} from './components';
 import {StackActions} from '@react-navigation/native';
+import AutobeebApp from './autobeeb/navigation/indesx';
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 
@@ -128,7 +129,7 @@ export default class ReduxWrapper extends React.Component {
               <MyToast />
               <StatusBar backgroundColor="#fff" barStyle="dark-content" />
               <MyNetInfo />
-              <Navigation />
+              <AutobeebApp />
               <NotificationPermission />
               <MySignalR />
             </View>

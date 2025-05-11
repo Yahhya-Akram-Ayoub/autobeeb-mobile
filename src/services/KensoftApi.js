@@ -610,7 +610,7 @@ KensoftApi.prototype.Core_UserListings = function (data, callback) {
   let requestUrl = `${this.coreApiV1}User/ListingsAsync?`;
 
   data = Object.fromEntries(
-    Object.entries(data).filter(([_, v]) => v !== null)
+    Object.entries(data).filter(([_, v]) => v !== null),
   );
   requestUrl +=
     this.join(data, '&') + `&CurrencyId=${global.ViewingCurrency.ID}`;
@@ -1237,6 +1237,15 @@ KensoftApi.prototype.IncreaseScViews = function (data, callback) {
         reject(err);
       });
   });
+};
+
+KensoftApi.prototype.GetCountryCore = function (data, callback) {
+  let _requestUrl = `${this.coreApiV1}Country/Get?`;
+  data = Object.fromEntries(
+    Object.entries(data).filter(([_, v]) => v !== null),
+  );
+  _requestUrl += this.join(data, '&');
+  return this._request(_requestUrl, callback);
 };
 
 KensoftApi.prototype.UpdateMobileClick = function (data, callback) {

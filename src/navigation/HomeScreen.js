@@ -147,7 +147,13 @@ class HomeScreen extends Component {
     });
   }
   componentDidMount = () => {
-    //  alert(JSON.stringify(this.props.ViewingCurrency));
+    (async () => {
+      await this.intiData();
+    })();
+  };
+
+  async intiData() {
+
     setTimeout(() => {
       if (this.props.userData && this.props.userData.ID) {
         this.setPushNotification(this.props.userData.ID);
@@ -224,7 +230,7 @@ class HomeScreen extends Component {
         }
       });
     }
-  };
+  }
 
   checkCountry(callback) {
     if (!this.props.userData) {
@@ -254,7 +260,7 @@ class HomeScreen extends Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate11(prevProps) {
     if (prevProps.ViewingCountry != this.props.ViewingCountry) {
       this._onRefresh();
     }
@@ -407,8 +413,7 @@ class HomeScreen extends Component {
               autoplay={this.state.autoplay}
               onIndexChanged={this.handleIndexChanged}
               autoplayTimeout={5}
-              loop
-            >
+              loop>
               {this.props.homePageData.NewBanners.map((banner, index) => {
                 this.handleIndexChanged(0);
                 if (banner)

@@ -8,6 +8,8 @@ module.exports = {
     'react-native/no-inline-styles': 'off',
     'react/no-unstable-nested-components': 'off',
     'react/self-closing-comp': 'off',
+    'eol-last': 'off',
+    curly: 'off',
   },
   parser: '@babel/eslint-parser',
 };

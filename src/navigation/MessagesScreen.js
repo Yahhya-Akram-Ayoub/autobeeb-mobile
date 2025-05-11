@@ -11,6 +11,7 @@ import {
   Image,
   AppState,
   StatusBar,
+  Alert,
 } from 'react-native';
 import NewHeader from '../containers/NewHeader';
 import KS from '../services/KSAPI';
@@ -42,6 +43,8 @@ class MessagesScreen extends Component {
   }
 
   componentDidMount = () => {
+    if (!this.props.user || !this.props.user?.ID) return;
+
     this.focusListener = this.props.navigation.addListener(
       'focus',
       this.handleFocus,
@@ -236,6 +239,7 @@ class MessagesScreen extends Component {
     if (!this.props.user) {
       return (
         <View style={{flex: 1, backgroundColor: '#fff'}}>
+          <NewHeader navigation={this.props.navigation} />
           <View
             style={{justifyContent: 'center', flex: 1, alignItems: 'center'}}>
             <IconMC

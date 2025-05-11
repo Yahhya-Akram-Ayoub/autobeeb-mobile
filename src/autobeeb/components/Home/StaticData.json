@@ -1,0 +1,51 @@
+{
+  "Tabs": [
+    {
+      "ID": 1,
+      "NameKey": "ElectricCars",
+      "Name": "",
+      "Image": "https://autobeeb.com/wsImages/ElectricCars.png",
+      "SellType": {
+        "ID": 1,
+        "Name": "ForSale"
+      },
+      "selectedFuelType": {
+        "ID": 4,
+        "All": false,
+        "Name": "Electric"
+      }
+    },
+    {
+      "ID": 32,
+      "NameKey": "Accessories",
+      "Name": "",
+      "Image": "https://autobeeb.com/wsImages/Accessories.png",
+      "SellType": {
+        "ID": 1,
+        "Name": "ForSale"
+      },
+      "SectionID": 2048,
+      "selectedSection": {
+        "ID": 2048,
+        "All": false,
+        "Name": "Accessories"
+      }
+    },
+    {
+      "ID": 32,
+      "NameKey": "Boards",
+      "Name": "",
+      "Image": "https://autobeeb.com/wsImages/Board.png",
+      "SellType": {
+        "ID": 1,
+        "Name": "ForSale"
+      },
+      "SectionID": 4096,
+      "selectedSection": {
+        "ID": 4096,
+        "All": false,
+        "Name": "Boards"
+      }
+    }
+  ]
+}
