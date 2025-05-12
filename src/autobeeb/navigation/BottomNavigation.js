@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import {View, Pressable, Text, StyleSheet} from 'react-native';
+import React, {useEffect, useRef} from 'react';
+import {View, Pressable, Text, Animated, StyleSheet} from 'react-native';
 import {
   useNavigation,
   getFocusedRouteNameFromRoute,
@@ -14,6 +14,7 @@ import {ChatStack, OffersStack, ProfileStack, HomeStack} from './Stacks';
 import KS from '../../services/KSAPI';
 import {Color, Languages} from '../../common';
 import {CardStyleInterpolators} from '@react-navigation/stack';
+import BottomTabBar from './BottomTabBar';
 
 const Tab = createBottomTabNavigator();
 const hideOnScreens = ['ListingsScreen', 'CarDetails', 'SearchResult'];
@@ -85,28 +86,36 @@ const BottomNavigation = ({navigationRef}) => {
       tabBarLabel: ({color, focused}) => (
         <Text style={styles.labelStyle}>{label}</Text>
       ),
-      tabBarIcon: ({focused}) => (
-        <View style={[{position: 'relative'}, focused && styles.ActiveIcon]}>
-          {isIonIcon ? (
-            <IconIon
-              name={iconName}
-              color={focused ? Color.secondary : Color.tabBarInactive}
-              size={22}
-            />
-          ) : (
-            <IconMC
-              name={iconName}
-              color={focused ? Color.secondary : Color.tabBarInactive}
-              size={25}
-            />
-          )}
-          {showBadge && unreadMessages > 0 && (
-            <View style={styles.badgeStyle}>
-              <Text style={styles.badgeText}>{unreadMessages}</Text>
-            </View>
-          )}
-        </View>
-      ),
+      tabBarIcon: ({focused}) => {
+        return (
+          <View
+            style={[
+              {
+                position: 'relative',
+              },
+              focused && styles.ActiveIcon,
+            ]}>
+            {isIonIcon ? (
+              <IconIon
+                name={iconName}
+                color={focused ? Color.secondary : Color.tabBarInactive}
+                size={22}
+              />
+            ) : (
+              <IconMC
+                name={iconName}
+                color={focused ? Color.secondary : Color.tabBarInactive}
+                size={25}
+              />
+            )}
+            {showBadge && unreadMessages > 0 && (
+              <View style={styles.badgeStyle}>
+                <Text style={styles.badgeText}>{unreadMessages}</Text>
+              </View>
+            )}
+          </View>
+        );
+      },
       tabBarButton: props => (
         <Pressable {...props} android_ripple={null}>
           {props.children}
@@ -118,6 +127,7 @@ const BottomNavigation = ({navigationRef}) => {
   return (
     <Tab.Navigator
       initialRouteName="HomeScreen"
+      tabBar={props => <BottomTabBar {...props} />}
       screenOptions={{
         headerShown: false,
         tabBarHideOnKeyboard: true,
@@ -129,7 +139,12 @@ const BottomNavigation = ({navigationRef}) => {
         listeners={{
           tabPress: e => handleResetStack(e, 'HomeScreen', 'HomeScreen'),
         }}
-        options={({route}) => getTabOptions(route, Languages.Home, 'home')}
+        options={{
+          tabBarLabel: Languages.Home,
+          tabBarIconName: 'home',
+          tabBarIonIcon: false,
+          tabBarShowBadge: false,
+        }}
       />
       <Tab.Screen
         name="MessagesScreen"
@@ -138,9 +153,12 @@ const BottomNavigation = ({navigationRef}) => {
           tabPress: e =>
             handleResetStack(e, 'MessagesScreen', 'MessagesScreen'),
         }}
-        options={({route}) =>
-          getTabOptions(route, Languages.MyChats, 'chatbubbles', true, true)
-        }
+        options={{
+          tabBarLabel: Languages.MyChats,
+          tabBarIconName: 'chatbubbles',
+          tabBarIonIcon: true,
+          tabBarShowBadge: true,
+        }}
       />
       <Tab.Screen
         name="ActiveOffers"
@@ -148,9 +166,12 @@ const BottomNavigation = ({navigationRef}) => {
         listeners={{
           tabPress: e => handleResetStack(e, 'ActiveOffers', 'ActiveOffers'),
         }}
-        options={({route}) =>
-          getTabOptions(route, Languages.MyOffers, 'playlist-check')
-        }
+        options={{
+          tabBarLabel: Languages.MyOffers,
+          tabBarIconName: 'playlist-check',
+          tabBarIonIcon: false,
+          tabBarShowBadge: false,
+        }}
       />
       <Tab.Screen
         name="DrawerStack"
@@ -158,9 +179,12 @@ const BottomNavigation = ({navigationRef}) => {
         listeners={{
           tabPress: e => handleResetStack(e, 'DrawerStack', 'Drawer'),
         }}
-        options={({route}) =>
-          getTabOptions(route, Languages.Profile, 'account')
-        }
+        options={{
+          tabBarLabel: Languages.Profile,
+          tabBarIconName: 'account',
+          tabBarIonIcon: false,
+          tabBarShowBadge: false,
+        }}
       />
     </Tab.Navigator>
   );
