@@ -33,9 +33,6 @@ KensoftApi.prototype._request = function (url, callback, signal = null) {
 };
 
 KensoftApi.prototype._requestPost = function (url, data, callback) {
-  //var self = this;
-  // console.log(url);
-  // console.log(JSON.stringify(data));
   var params = {
     method: 'POST',
     headers: {
@@ -51,13 +48,10 @@ KensoftApi.prototype._requestPost = function (url, data, callback) {
       if (typeof callback == 'function') {
         callback(responseData);
       }
-      //  console.log("request result from " + url, responseData);
-
       return responseData;
     })
     .catch(error => {
       console.log({error, url});
-      //////console.log('error network', error.message);
     });
 };
 
@@ -584,9 +578,6 @@ KensoftApi.prototype.GetPlusSubscription = function (data, callback) {
 KensoftApi.prototype.DealersGet = function (data, callback) {
   var requestUrl = this.url + '/Services/DealersGet?';
   requestUrl += this.join(data, '&');
-
-  // console.log(requestUrl);
-
   return this._requestPost(requestUrl, data, response => {
     return response;
   });

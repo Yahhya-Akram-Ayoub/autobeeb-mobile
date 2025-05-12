@@ -1,5 +1,12 @@
 import {ScrollView, View} from 'react-native';
-import {AddOfferBtn, AppHeader, HomeBanner, HomeTabs} from '../components';
+import {
+  AddOfferBtn,
+  AppHeader,
+  BlogsRow,
+  DealersRow,
+  HomeBanner,
+  HomeTabs,
+} from '../components';
 import Layout from '../constants/Layout';
 
 const HomeScreen = () => {
@@ -14,6 +21,9 @@ const HomeScreen = () => {
         <HomeBanner />
         <HomeTabs />
         <AddOfferBtn />
+        <BlogsRow />
+        <DealersRow />
+        <View style={{height: 200}} />
       </ScrollView>
     </View>
   );
