@@ -68,62 +68,6 @@ const BottomNavigation = ({navigationRef}) => {
     );
   };
 
-  const getTabOptions = (
-    route,
-    label,
-    iconName,
-    isIonIcon = false,
-    showBadge = false,
-  ) => {
-    const routeName = getFocusedRouteNameFromRoute(route) ?? 'Default';
-    const isHidden = hideOnScreens.includes(routeName);
-
-    return {
-      tabBarStyle: {
-        display: isHidden ? 'none' : 'flex',
-        ...styles.BottomBarStyle,
-      },
-      tabBarLabel: ({color, focused}) => (
-        <Text style={styles.labelStyle}>{label}</Text>
-      ),
-      tabBarIcon: ({focused}) => {
-        return (
-          <View
-            style={[
-              {
-                position: 'relative',
-              },
-              focused && styles.ActiveIcon,
-            ]}>
-            {isIonIcon ? (
-              <IconIon
-                name={iconName}
-                color={focused ? Color.secondary : Color.tabBarInactive}
-                size={22}
-              />
-            ) : (
-              <IconMC
-                name={iconName}
-                color={focused ? Color.secondary : Color.tabBarInactive}
-                size={25}
-              />
-            )}
-            {showBadge && unreadMessages > 0 && (
-              <View style={styles.badgeStyle}>
-                <Text style={styles.badgeText}>{unreadMessages}</Text>
-              </View>
-            )}
-          </View>
-        );
-      },
-      tabBarButton: props => (
-        <Pressable {...props} android_ripple={null}>
-          {props.children}
-        </Pressable>
-      ),
-    };
-  };
-
   return (
     <Tab.Navigator
       initialRouteName="HomeScreen"
