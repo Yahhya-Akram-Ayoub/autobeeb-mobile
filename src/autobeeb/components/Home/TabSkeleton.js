@@ -21,28 +21,31 @@ const TabSkeleton = () => {
   });
 
   return (
-    <View style={styles.container}>
-      <View style={styles.skeletonBox}>
-        <Animated.View
-          style={[styles.shimmer, {transform: [{translateX}]}]}
-        />
+    <View style={styles.tabWrapper}>
+      <View style={styles.tabSkeleton}>
+        <Animated.View style={[styles.shimmer, {transform: [{translateX}]}]} />
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    padding: Layout.screenWidth * 0.01,
-  },
-  skeletonBox: {
-    width: Layout.screenWidth * 0.31, // 31% of the screen width for the tab size
-    height: Layout.screenWidth * 0.29, // Adjusting height for tab item
-    backgroundColor: '#e0e0e0',
-    overflow: 'hidden',
+  tabWrapper: {
+    margin: 2,
+    width: Layout.screenWidth * 0.31,
+    height: Layout.screenWidth * 0.29,
     borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    overflow: 'hidden',
+    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  tabSkeleton: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#e0e0e0',
   },
   shimmer: {
     ...StyleSheet.absoluteFillObject,

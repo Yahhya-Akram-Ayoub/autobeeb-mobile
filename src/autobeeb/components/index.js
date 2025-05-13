@@ -5,3 +5,4 @@ export {default as AddOfferBtn} from './Home/AddOfferBtn';
 export {default as HomeTabs} from './Home/HomeTabs';
 export {default as BlogsRow} from './shared/BlogsRow';
 export {default as DealersRow} from './shared/DealersRow';
+export {default as HorizontalSwiper} from './shared/HorizontalSwiper';

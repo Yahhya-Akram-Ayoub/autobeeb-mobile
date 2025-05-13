@@ -7,6 +7,7 @@ import {Color, Constants, Languages} from '../../../common';
 import {DealersBanner} from '../../../components';
 import KS from '../../../services/KSAPI';
 import {useSelector} from 'react-redux';
+import BlogsRowSkeleton from './BlogsRowSkeleton';
 
 const DealersRow = () => {
   const navigation = useNavigation();
@@ -38,6 +39,9 @@ const DealersRow = () => {
         setLoading(false);
       });
   };
+
+  if (loading) return <BlogsRowSkeleton />;
+  if (!loading && (!dealers || !dealers?.length)) return <></>;
 
   return (
     <View style={styles.rowContainer}>
@@ -103,8 +107,7 @@ const styles = StyleSheet.create({
     fontFamily: Constants.fontFamily,
     color: Color.secondary,
   },
-  listContent: {
-  },
+  listContent: {},
 });
 
 export default DealersRow;

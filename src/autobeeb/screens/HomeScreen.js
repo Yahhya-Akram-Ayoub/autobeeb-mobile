@@ -23,7 +23,7 @@ const HomeScreen = () => {
         <AddOfferBtn />
         <BlogsRow />
         <DealersRow />
-        <View style={{height: 200}} />
+        <View style={{height: 190}} />
       </ScrollView>
     </View>
   );

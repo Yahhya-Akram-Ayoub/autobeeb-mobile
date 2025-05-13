@@ -10,10 +10,8 @@ import BannerSkeleton from './BannerSkeleton';
 
 const BannersDisplayed = [];
 const HomeBanner = () => {
-  const {
-    homePageData: {NewBanners},
-    isFetching,
-  } = useSelector(state => state.home);
+  const {homePageData, isFetching} = useSelector(state => state.home);
+  const NewBanners = homePageData?.NewBanners ?? [];
 
   const handleIndexChanged = async index => {
     if (!BannersDisplayed.includes(index)) {

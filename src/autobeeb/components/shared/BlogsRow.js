@@ -9,28 +9,34 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Color, Constants, Languages} from '../../../common';
-import {HorizontalSwiper} from '../../../components';
+import HorizontalSwiper from './HorizontalSwiper';
+import Layout from '../../constants/Layout';
+import {useSelector} from 'react-redux';
+import BlogsRowSkeleton from './BlogsRowSkeleton';
 
-const {width: screenWidth} = Dimensions.get('screen');
-
-const BlogsRow = ({homePageData}) => {
+const BlogsRow = () => {
   const navigation = useNavigation();
+  const {homePageData, isFetching} = useSelector(state => state.home);
+  const Blog = homePageData?.Blog ?? [];
+
+  if (isFetching) return <BlogsRowSkeleton />;
+  if (!isFetching && (!Blog || !Blog?.length)) return <></>;
 
   return (
     <View style={styles.container}>
       <View style={styles.headerRow}>
-        <View />
+        <View style={{width: '32%'}} />
         <View style={styles.titleWrapper}>
           <Text
             style={styles.title}
-            onPress={() => navigation.navigate('BlogsScreen')}>
+            onPressIn={() => navigation.navigate('BlogsScreen')}>
             {Languages.LatestNews}
           </Text>
           <View style={styles.underline} />
         </View>
         <TouchableOpacity
           style={styles.viewAllWrapper}
-          onPress={() => navigation.navigate('BlogsScreen')}>
+          onPressIn={() => navigation.navigate('BlogsScreen')}>
           <View style={styles.viewAllInner}>
             <Text style={styles.viewAllText}>{Languages.ViewAll}</Text>
           </View>
@@ -41,13 +47,13 @@ const BlogsRow = ({homePageData}) => {
         autoLoop
         intervalValue={4000}
         showButtons
-        data={homePageData?.Blog}
+        data={Blog}
         renderItem={({item}) => (
           <TouchableOpacity
             style={styles.blogItemWrapper}
             onPress={() =>
               navigation.navigate('BlogDetails', {
-                Blog: item,
+                Blog: {ID: item.Id},
               })
             }>
             <View style={styles.blogCard}>
@@ -80,15 +86,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     flex: 1,
-    width: screenWidth,
     paddingVertical: 5,
+    width: Layout.screenWidth,
   },
   titleWrapper: {
     alignSelf: 'center',
+    alignItems: 'center',
+    width: '32%',
   },
   title: {
     textAlign: 'center',
-    fontSize: Constants.MediumFont,
+    fontSize: Constants.mediumFont,
     color: '#000',
     fontFamily: 'Cairo-Bold',
   },
@@ -100,8 +108,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   viewAllWrapper: {
-    alignSelf: 'flex-end',
-    marginRight: 20,
+    width: '32%',
+    alignItems: 'center',
   },
   viewAllInner: {
     flexDirection: 'row',
@@ -113,7 +121,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   blogItemWrapper: {
-    width: screenWidth,
+    width: Layout.screenWidth,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -123,8 +131,8 @@ const styles = StyleSheet.create({
     borderColor: '#eee',
     backgroundColor: '#ddd',
     alignSelf: 'center',
-    width: screenWidth * 0.95,
-    height: (screenWidth * 0.95) / 2,
+    width: Layout.screenWidth * 0.95,
+    height: (Layout.screenWidth * 0.95) / 2,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,

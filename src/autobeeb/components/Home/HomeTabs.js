@@ -9,10 +9,8 @@ import {Languages} from '../../../common';
 import TabSkeleton from './TabSkeleton';
 
 const HomeTabs = () => {
-  const {
-    homePageData: {MainTypes},
-    isFetching,
-  } = useSelector(state => state.home);
+  const {homePageData, isFetching} = useSelector(state => state.home);
+  const MainTypes = homePageData?.MainTypes ?? [];
   const ViewingCountry = useSelector(state => state.menu.ViewingCountry);
   const navigation = useNavigation();
 

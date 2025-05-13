@@ -148,7 +148,7 @@ KensoftApi.prototype.HomeScreenGet = function (data) {
     requestUrl = 'parent=0';
   }
 
-  var requestUrl = this.url + '/services/HomeScreenGet?';
+  var requestUrl = this.url + '/services/HomeScreenGetV2?';
   requestUrl += this.join(data, '&', true);
   // requestUrl += "&kensoftware=" + ConvertURL(data);
   requestUrl = requestUrl.replace('&userID=null', '');
