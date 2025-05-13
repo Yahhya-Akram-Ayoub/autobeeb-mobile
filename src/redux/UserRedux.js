@@ -38,7 +38,6 @@ const types = {
 
 export const actions = {
   login: (dispatch, user) => {
-    //   alert(JSON.stringify(user))
     FCM.getToken().then(token => {
       if (!!token)
         KS.SetUserToken({
@@ -48,23 +47,30 @@ export const actions = {
         });
     });
 
-    KS.GetCountryCore({LangId: Languages.langID, Iso: user.Country.Id}).then(
-      ({country}) => {
+    KS.UserGet({
+      userID: user.ID,
+      langid: Languages.langID,
+    }).then(data => {
+      const _user = data.User;
+
+      KS.GetCountryCore({
+        LangId: Languages.langID,
+        Id: _user.Country?.Id ?? _user.Country,
+      }).then(({country}) => {
         dispatch({
           type: types.USER_COUNTRY,
           userCountry: country,
         });
-      },
-    );
+      });
 
-    dispatch({
-      type: types.LOGIN,
-      user: user,
+      dispatch({
+        type: types.LOGIN,
+        user: _user,
+      });
     });
   },
   logout: dispatch => {
     // alert("logout");
-    //FBLoginManager.logout(function(error, data) {});
     dispatch({type: 'REST_UNREAD_MESSAGES', payload: {Count: 0}});
     return {type: types.LOGOUT};
   },
@@ -82,17 +88,13 @@ export const actions = {
   },
   storeUserData(dispatch, data, callback) {
     const _this = this;
-    // console.log("my user is:", data);
     AsyncStorage.setItem('user', JSON.stringify(data), () => {
-      //const customers = await WooWorker.getCustomerById(json.user.id);
       _this.login(dispatch, data);
       if (callback) callback(data);
-      //navigation.dispatch(NavigationActions.reset(resetData));
     });
   },
 
   GoogleSignin(dispatch, email, callback) {
-    console.log({GoogleSignin: email});
     const _this = this;
     dispatch({type: types.USER_LOGIN_PENDING});
     KS.GoogleSignin({email: email}).then(data => {

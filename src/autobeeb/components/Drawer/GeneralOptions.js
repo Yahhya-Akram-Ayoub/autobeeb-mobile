@@ -1,27 +1,19 @@
-import {
-  Platform,
-  Share,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Color, Languages} from '../../../common';
 import {AppIcon, Icons} from '../index';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
-import {useState} from 'react';
 
 const GeneralOptions = () => {
   const navigation = useNavigation();
   const {user, userCountry} = useSelector(state => state.user);
-  console.log({user, userCountry});
-  
+
   const AppLink = () => `https://cutt.ly/AUTOBEEB${Languages.getLanguage()}`;
+
   const ShareAccount = () => {
     Share.share({
       message: `${Languages.ShareAccountMessage}\nhttps://autobeeb.com/${
-        user.isDealer
+        user.IsDealer
           ? Languages.langID !== 1
             ? `${Languages.prefix}/dealer/profile/${user.ID}`
             : `dealer/profile/${user.ID}`
@@ -31,190 +23,115 @@ const GeneralOptions = () => {
       }\n\n${Languages.DownloadAutobeeb}\n${AppLink()}`,
     });
   };
+
   const ShareFc = () => {
     Share.share({
       message: `${Languages.DownloadAutobeeb}\n\n${AppLink()}`,
     });
   };
 
+  const options = [
+    {
+      label: Languages.MyChats,
+      icon: 'chatbubbles',
+      iconType: Icons.Ionicons,
+      iconSize: 25,
+      onPress: () => navigation.navigate('MessagesScreen'),
+      isDisplay: !!user,
+    },
+    {
+      isLine: true,
+      isDisplay: true,
+    },
+    {
+      label: Languages.Blog,
+      icon: 'newsletter',
+      iconType: Icons.Entypo,
+      onPress: () => navigation.navigate('HomeScreen', {screen: 'BlogsScreen'}),
+      isDisplay: true,
+    },
+    {
+      label: Languages.Dealers,
+      icon: 'users',
+      iconType: Icons.FontAwesome,
+      onPress: () => navigation.navigate('DealersScreen'),
+      isDisplay: true,
+    },
+    {
+      label: Languages.RecentlyViewed,
+      icon: 'eye',
+      iconType: Icons.MaterialCommunityIcons,
+      onPress: () =>
+        navigation.navigate('HomeScreen', {screen: 'RecentlyViewedScreen'}),
+      isDisplay: true,
+    },
+    {
+      label: Languages.DetailsPayToAutobeeb,
+      icon: 'credit-card',
+      iconType: Icons.MaterialCommunityIcons,
+      iconSize: 26,
+      onPress: () =>
+        navigation.navigate('PaymentDetailsAutobeeb', {
+          userCountry,
+          user,
+        }),
+      isDisplay: !!user && !!userCountry && userCountry?.WithFee,
+    },
+    {
+      isLine: true,
+      isDisplay: true,
+    },
+    {
+      label: Languages.ShareApplication,
+      icon: 'share',
+      iconType: Icons.Entypo,
+      onPress: ShareFc,
+      isDisplay: true,
+    },
+    {
+      label: Languages.ShareAccount,
+      icon: 'account-box',
+      iconType: Icons.MaterialCommunityIcons,
+      onPress: ShareAccount,
+      isDisplay: !!user,
+    },
+    {
+      label: Languages.Settings,
+      icon: 'settings',
+      iconType: Icons.Ionicons,
+      onPress: () => navigation.navigate('SettingScreen'),
+      isDisplay: true,
+    },
+  ];
+
   return (
     <View>
-      <View style={styles.rowsContainer}>
-        <TouchableOpacity
-          style={styles.rowStyle}
-          onPress={() => {
-            this.props.navigation.navigate('HomeScreen', {
-              screen: 'BlogsScreen',
-            });
-          }}>
-          <View
-            style={{
-              width: 40,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <AppIcon
-              type={Icons.Entypo}
-              name="newsletter"
-              size={20}
-              color={Color.secondary}
-              //    style={{ marginRight: 15 }}
-            />
-          </View>
-
-          <Text style={{color: '#000', fontSize: 17}}>{Languages.Blog}</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.rowStyle}
-          onPress={() => {
-            this.props.navigation.navigate('DealersScreen');
-          }}>
-          <View
-            style={{
-              width: 40,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <AppIcon
-              type={Icons.FontAwesome}
-              name="users"
-              size={20}
-              color={Color.secondary}
-              //  style={{ marginRight: 15 }}
-            />
-          </View>
-
-          <Text style={{color: '#000', fontSize: 17}}>{Languages.Dealers}</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.rowStyle}
-          onPress={() => {
-            this.props.navigation.navigate('HomeScreen', {
-              screen: 'RecentlyViewedScreen',
-            });
-          }}>
-          <View
-            style={{
-              width: 40,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <AppIcon
-              type={Icons.MaterialCommunityIcons}
-              name="eye"
-              size={20}
-              color={Color.secondary}
-              //    style={{ marginRight: 15 }}
-            />
-          </View>
-
-          <Text style={{color: '#000', fontSize: 17}}>
-            {Languages.RecentlyViewed}
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.rowsContainer}>
-        {!!user && !!userCountry && userCountry?.WithFee && (
-          <TouchableOpacity
-            //hide
-            style={styles.rowStyle}
-            onPress={() => {
-              navigation.navigate('PaymentDetailsAutobeeb', {
-                userCountry: userCountry,
-                user: user,
-              });
-            }}>
-            <View
-              style={{
-                width: 40,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <AppIcon
-                type={Icons.MaterialCommunityIcons}
-                name="credit-card"
-                size={26}
-                color={Color.secondary}
-                style={{marginRight: 10}}
-              />
-            </View>
-
-            <Text style={{color: '#000', fontSize: 17}}>
-              {Languages.DetailsPayToAutobeeb}
-            </Text>
-          </TouchableOpacity>
-        )}
-
-        <TouchableOpacity style={styles.rowStyle} onPress={ShareFc}>
-          <View
-            style={{
-              width: 40,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <AppIcon
-              type={Icons.Entypo}
-              name="share"
-              size={20}
-              color={Color.secondary}
-            />
-          </View>
-
-          <Text style={{color: '#000', fontSize: 17}}>
-            {Languages.ShareApplication}
-          </Text>
-        </TouchableOpacity>
-
-        {user && (
-          <TouchableOpacity style={styles.rowStyle} onPress={ShareAccount}>
-            <View
-              style={{
-                width: 40,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <AppIcon
-                type={Icons.MaterialCommunityIcons}
-                name="account-box"
-                size={20}
-                color={Color.secondary}
-                //  style={{ marginRight: 15 }}
-              />
-            </View>
-
-            <Text style={{color: '#000', fontSize: 17}}>
-              {Languages.ShareAccount}
-            </Text>
-          </TouchableOpacity>
-        )}
-
-        <TouchableOpacity
-          style={styles.rowStyle}
-          onPress={() => {
-            navigation.navigate('SettingScreen');
-          }}>
-          <View
-            style={{
-              width: 40,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <AppIcon
-              type={Icons.Ionicons}
-              name="settings"
-              size={20}
-              color={Color.secondary}
-            />
-          </View>
-
-          <Text style={{color: '#000', fontSize: 17}}>
-            {Languages.Settings}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      {options
+        .filter(item => item.isDisplay)
+        .map((option, index) => {
+          if (option.isLine) return <View style={styles.rowsContainer} />;
+          return (
+            <TouchableOpacity
+              key={index}
+              style={styles.rowStyle}
+              onPress={option.onPress}>
+              <View
+                style={{
+                  width: 40,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <AppIcon
+                  type={option.iconType}
+                  name={option.icon}
+                  size={option.iconSize || 20}
+                  color={Color.secondary}
+                />
+              </View>
+              <Text style={{color: '#000', fontSize: 17}}>{option.label}</Text>
+            </TouchableOpacity>
+          );
+        })}
     </View>
   );
 };
