@@ -13,6 +13,7 @@ FCM.requestPermission();
 const types = {
   LOGOUT: 'LOGOUT',
   LOGIN: 'LOGIN_SUCCESS',
+  USER_COUNTRY: 'USER_COUNTRY',
   LOGINDATE: 'LOGIN_DATE',
   USER_LISTING_FETCH_PENDING: 'USER_LISTING_FETCH_PENDING',
   USER_FAVORITES_FETCH_PENDING: 'USER_FAVORITES_FETCH_PENDING',
@@ -43,9 +44,18 @@ export const actions = {
         KS.SetUserToken({
           userID: user.ID,
           token: token,
-          langId: Languages.langID
+          langId: Languages.langID,
         });
     });
+
+    KS.GetCountryCore({LangId: Languages.langID, Iso: user.Country.Id}).then(
+      ({country}) => {
+        dispatch({
+          type: types.USER_COUNTRY,
+          userCountry: country,
+        });
+      },
+    );
 
     dispatch({
       type: types.LOGIN,
@@ -121,7 +131,7 @@ export const actions = {
     KS.getFacebookUser({facebookid: user.id, langid: Languages.langID}).then(
       data => {
         if (callback) callback(data);
-      }
+      },
     );
     //dispatch({ type: types.LOGIN, payload: { uid: user.id} });
   },
@@ -147,10 +157,11 @@ const initialState = {
   isLoggedIn: false,
   error: false,
   errorMessage: '',
+  userCountry: null,
 };
 
 export const reducer = (state = initialState, action) => {
-  const {type, user} = action;
+  const {type, user, userCountry} = action;
   switch (type) {
     case types.USER_LOGIN_PENDING:
       return {
@@ -166,6 +177,8 @@ export const reducer = (state = initialState, action) => {
       return {...state, user: null};
     case types.LOGIN:
       return {...state, user: user};
+    case types.USER_COUNTRY:
+      return {...state, userCountry: userCountry};
     case types.USER_USERNAME_UPDATE:
       return {
         ...state,

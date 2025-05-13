@@ -26,6 +26,7 @@ import PrivacyPolicy from '../../../navigation/PrivacyPolicy';
 import SearchResult from '../../../navigation/SearchResult';
 import FavoriteScreen from '../../../navigation/FavoriteScreen';
 import SubscriptionsScreen from '../../../navigation/SubscriptionsScreen';
+import {DrawerScreen} from '../../screens';
 
 const Stack = createNativeStackNavigator();
 
@@ -53,7 +54,7 @@ const ProfileStack = ({stackRef}) => {
         initialRouteName: 'Drawer',
         cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
       }}>
-      <Stack.Screen name="Drawer" component={Drawer} />
+      <Stack.Screen name="Drawer" component={DrawerScreen} />
       <Stack.Screen name="SettingScreen" component={SettingScreen} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
 

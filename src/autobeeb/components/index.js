@@ -6,3 +6,4 @@ export {default as HomeTabs} from './Home/HomeTabs';
 export {default as BlogsRow} from './shared/BlogsRow';
 export {default as DealersRow} from './shared/DealersRow';
 export {default as HorizontalSwiper} from './shared/HorizontalSwiper';
+export {default as GeneralOptions} from './Drawer/GeneralOptions';
