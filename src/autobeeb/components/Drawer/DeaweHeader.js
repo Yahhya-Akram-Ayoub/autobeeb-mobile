@@ -56,7 +56,7 @@ const DeaweHeader = () => {
               style={[styles.bannerImage, {height: bannerHeight}]}
               resizeMode="cover"
               source={{
-                uri: `http://autobeeb.com/content/dealers/${user.ID}/${user.ID}_1024x653.jpg`,
+                uri: `http://autobeeb.com/content/dealers/${user.ID}/${user.ID}_1024x653.jpg?Trigger=${user.trigger}`,
               }}
               onError={() => setHasBanner(false)}
             />

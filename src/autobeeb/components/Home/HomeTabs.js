@@ -91,14 +91,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     margin: 2,
     borderColor: '#ccc',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     width: Layout.screenWidth * 0.31,
     height: Layout.screenWidth * 0.29,
   },
   fastImage: {
     width: 90,
-    flex: 3,
+    flex: 2,
   },
   tabText: {
     flex: 1,

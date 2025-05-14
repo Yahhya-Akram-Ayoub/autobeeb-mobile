@@ -83,11 +83,20 @@ const BottomNavigation = ({navigationRef}) => {
         listeners={{
           tabPress: e => handleResetStack(e, 'HomeScreen', 'HomeScreen'),
         }}
-        options={{
-          tabBarLabel: Languages.Home,
-          tabBarIconName: 'home',
-          tabBarIonIcon: false,
-          tabBarShowBadge: false,
+        options={({route}) => {
+          const routeName = getFocusedRouteNameFromRoute(route) ?? 'Default';
+          const isTabBarHidden = hideOnScreens.includes(routeName);
+          console.log({routeName, isTabBarHidden});
+
+          return {
+            tabBarStyle: {
+              display: isTabBarHidden ? 'none' : 'flex',
+            },
+            tabBarLabel: Languages.Home,
+            tabBarIconName: 'home',
+            tabBarIonIcon: false,
+            tabBarShowBadge: false,
+          };
         }}
       />
       <Tab.Screen
@@ -97,11 +106,19 @@ const BottomNavigation = ({navigationRef}) => {
           tabPress: e =>
             handleResetStack(e, 'MessagesScreen', 'MessagesScreen'),
         }}
-        options={{
-          tabBarLabel: Languages.MyChats,
-          tabBarIconName: 'chatbubbles',
-          tabBarIonIcon: true,
-          tabBarShowBadge: true,
+        options={({route}) => {
+          const routeName = getFocusedRouteNameFromRoute(route) ?? 'Default';
+          const isTabBarHidden = hideOnScreens.includes(routeName);
+          console.log({routeName, isTabBarHidden});
+          return {
+            tabBarStyle: {
+              display: isTabBarHidden ? 'none' : 'flex',
+            },
+            tabBarLabel: Languages.MyChats,
+            tabBarIconName: 'chatbubbles',
+            tabBarIonIcon: true,
+            tabBarShowBadge: true,
+          };
         }}
       />
       <Tab.Screen
@@ -110,11 +127,19 @@ const BottomNavigation = ({navigationRef}) => {
         listeners={{
           tabPress: e => handleResetStack(e, 'ActiveOffers', 'ActiveOffers'),
         }}
-        options={{
-          tabBarLabel: Languages.MyOffers,
-          tabBarIconName: 'playlist-check',
-          tabBarIonIcon: false,
-          tabBarShowBadge: false,
+        options={({route}) => {
+          const routeName = getFocusedRouteNameFromRoute(route) ?? 'Default';
+          const isTabBarHidden = hideOnScreens.includes(routeName);
+          console.log({routeName, isTabBarHidden});
+          return {
+            tabBarStyle: {
+              display: isTabBarHidden ? 'none' : 'flex',
+            },
+            tabBarLabel: Languages.MyOffers,
+            tabBarIconName: 'playlist-check',
+            tabBarIonIcon: false,
+            tabBarShowBadge: false,
+          };
         }}
       />
       <Tab.Screen
@@ -123,11 +148,19 @@ const BottomNavigation = ({navigationRef}) => {
         listeners={{
           tabPress: e => handleResetStack(e, 'DrawerStack', 'Drawer'),
         }}
-        options={{
-          tabBarLabel: Languages.Profile,
-          tabBarIconName: 'account',
-          tabBarIonIcon: false,
-          tabBarShowBadge: false,
+        options={({route}) => {
+          const routeName = getFocusedRouteNameFromRoute(route) ?? 'Default';
+          const isTabBarHidden = hideOnScreens.includes(routeName);
+          console.log({routeName, isTabBarHidden});
+          return {
+            tabBarStyle: {
+              display: isTabBarHidden ? 'none' : 'flex',
+            },
+            tabBarLabel: Languages.Profile,
+            tabBarIconName: 'account',
+            tabBarIonIcon: false,
+            tabBarShowBadge: false,
+          };
         }}
       />
     </Tab.Navigator>

@@ -1,9 +1,8 @@
 import React, {useRef, useEffect} from 'react';
 import {View, Pressable, Text, Animated, StyleSheet} from 'react-native';
-import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
-import IconIon from 'react-native-vector-icons/Ionicons';
 import {Color} from '../../common';
 import {useSelector} from 'react-redux';
+import {AppIcon, Icons} from '../components/shared/AppIcon';
 
 const BottomTabBar = ({state, descriptors, navigation}) => {
   const {unreadMessages} = useSelector(state => state.chat || {});
@@ -31,8 +30,10 @@ const BottomTabBar = ({state, descriptors, navigation}) => {
     });
   }, [state.index]);
 
+  const tabBarStyle =
+    descriptors[state.routes[state.index].key]?.options?.tabBarStyle;
   return (
-    <View style={styles.tabBar}>
+    <View style={[styles.tabBar, tabBarStyle]}>
       {state.routes.map((route, index) => {
         const {options} = descriptors[route.key];
         const label = options.tabBarLabel || route.name;
@@ -63,16 +64,18 @@ const BottomTabBar = ({state, descriptors, navigation}) => {
                 isFocused && styles.activeIcon,
               ]}>
               {isIonIcon ? (
-                <IconIon
+                <AppIcon
+                  type={Icons.Ionicons}
                   name={iconName}
                   size={22}
-                  color={isFocused ? Color.secondary : Color.tabBarInactive}
+                  color={isFocused ? Color.secondary : '#000'}
                 />
               ) : (
-                <IconMC
+                <AppIcon
+                  type={Icons.MaterialCommunityIcons}
                   name={iconName}
                   size={25}
-                  color={isFocused ? Color.secondary : Color.tabBarInactive}
+                  color={isFocused ? Color.secondary : '#000'}
                 />
               )}
               {showBadge && unreadMessages > 0 && (
@@ -106,6 +109,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 12,
+    color: '#000',
   },
   iconWrapper: {
     position: 'relative',

@@ -65,7 +65,7 @@ export const actions = {
 
       dispatch({
         type: types.LOGIN,
-        user: _user,
+        user: {..._user, trigger: new Date()},
       });
     });
   },

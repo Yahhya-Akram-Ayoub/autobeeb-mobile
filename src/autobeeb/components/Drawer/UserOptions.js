@@ -43,7 +43,9 @@ const UserOptions = () => {
       setStatistics(data.Statistic);
       setInactiveListings(data.InActiveListings);
       setActiveListings(data.ActiveListings);
-      setUserLimit(isDealer ? data.User.DealerLimit : data.User.UserLimit);
+      setUserLimit(
+        user?.IsDealer ? data.User.DealerLimit : data.User.UserLimit,
+      );
     });
 
     KS.WatchlistGet({

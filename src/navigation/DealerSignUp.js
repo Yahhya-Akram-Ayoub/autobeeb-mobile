@@ -2113,15 +2113,6 @@ class DealerSignUp extends Component {
                                 isocode: this.state.selectedCountry.cca2,
                               }).then(data => {
                                 if (data?.Plans?.length > 0) {
-                                  // Khattab
-                                  // this.props.navigation.replace(
-                                  //   'SubscriptionsScreen',
-                                  //   {
-                                  //     ISOCode: this.state.selectedCountry.cca2, //data.CurrentUser.ISOCode,
-                                  //     User: this.props.user,
-                                  //     Plans: data.Plans,
-                                  //   },
-                                  // );
                                 } else {
                                   toast(Languages.WaitingAdminAprroval, 6000);
                                   this.props.navigation.goBack();

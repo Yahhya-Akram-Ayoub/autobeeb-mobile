@@ -29,6 +29,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {MySignalR, NotificationPermission} from './components';
 import {StackActions} from '@react-navigation/native';
 import AutobeebApp from './autobeeb/navigation/indesx';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 
@@ -122,20 +123,22 @@ export default class ReduxWrapper extends React.Component {
 
   render() {
     return (
-      <SafeAreaProvider>
-        <SafeAreaView style={{flex: 1}}>
-          <Provider store={store}>
-            <View style={Styles.app}>
-              <MyToast />
-              <StatusBar backgroundColor="#fff" barStyle="dark-content" />
-              <MyNetInfo />
-              <AutobeebApp />
-              <NotificationPermission />
-              <MySignalR />
-            </View>
-          </Provider>
-        </SafeAreaView>
-      </SafeAreaProvider>
+      <GestureHandlerRootView style={{flex: 1}}>
+        <SafeAreaProvider>
+          <SafeAreaView style={{flex: 1}}>
+            <Provider store={store}>
+              <View style={Styles.app}>
+                <MyToast />
+                <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+                <MyNetInfo />
+                <AutobeebApp />
+                <NotificationPermission />
+                <MySignalR />
+              </View>
+            </Provider>
+          </SafeAreaView>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
     );
   }
 }
