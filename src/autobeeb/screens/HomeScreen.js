@@ -14,7 +14,6 @@ const HomeScreen = () => {
     <View
       style={{
         minWidth: Layout.screenWidth,
-        minHeight: Layout.screenHeight,
       }}>
       <AppHeader />
       <ScrollView>
@@ -23,7 +22,6 @@ const HomeScreen = () => {
         <AddOfferBtn />
         <BlogsRow />
         <DealersRow />
-        <View style={{height: 190}} />
       </ScrollView>
     </View>
   );
