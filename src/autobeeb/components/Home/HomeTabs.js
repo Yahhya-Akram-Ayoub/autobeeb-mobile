@@ -53,13 +53,27 @@ const HomeTabs = () => {
           {rowItems.map((item, itemIndex) => {
             const globalIndex = rowIndex * 3 + itemIndex;
             const isActive = activeItemIndex === globalIndex;
+
+            if (isFetching && item === 1) {
+              return (
+                <View
+                  key={`skeleton-${itemIndex}`}
+                  style={{width: screenWidth * 0.33, alignItems: 'center'}}>
+                  <TabSkeleton />
+                </View>
+              );
+            }
+
             return (
               <View
                 key={globalIndex}
                 style={{width: screenWidth * 0.33, alignItems: 'center'}}>
                 <TouchableOpacity
                   onPress={() => handleTabPress(item, globalIndex)}
-                  style={[styles.tabButton]}>
+                  style={[
+                    styles.tabButton,
+                    isActive && styles.activeTabButton,
+                  ]}>
                   <FastImage
                     style={styles.fastImage}
                     resizeMode={FastImage.resizeMode.contain}
@@ -130,6 +144,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: Layout.screenWidth * 0.31,
     height: Layout.screenWidth * 0.29,
+    borderBottomLeftRadius: 5,
+    borderBottomRightRadius: 5,
+  },
+  activeTabButton: {
+    position: 'absolute',
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+    backgroundColor: '#fff',
+    borderBottomWidth: 0,
+    borderColor: '#ccc',
+    height: 120,
+    borderWidth: 0,
   },
   fastImage: {
     width: 90,
@@ -149,7 +175,8 @@ const styles = StyleSheet.create({
   expandedBox: {
     width: screenWidth * 0.97,
     backgroundColor: 'white',
-    borderWidth: 1,
+    borderWidth: 0,
+    borderTopWidth: 0,
     borderColor: '#ccc',
     borderRadius: 3,
     paddingVertical: 30,
