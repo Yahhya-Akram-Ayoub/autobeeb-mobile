@@ -17,6 +17,7 @@ import {Tabs} from './StaticData.json';
 import {Languages} from '../../../common';
 import Layout from '../../constants/Layout';
 import TabSkeleton from './TabSkeleton';
+import FilterTabBox from './FilterTabBox';
 
 if (
   Platform.OS === 'android' &&
@@ -25,24 +26,39 @@ if (
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
-const screenWidth = Dimensions.get('window').width;
-
 const HomeTabs = () => {
   const {homePageData, isFetching} = useSelector(state => state.home);
+  const ViewingCountry = useSelector(state => state.menu.ViewingCountry);
+  const navigation = useNavigation();
   const MainTypes = homePageData?.MainTypes ?? [];
-
-  const [activeRowIndex, setActiveRowIndex] = useState(null);
-  const [activeItemIndex, setActiveItemIndex] = useState(null);
+  const [activeRowIndex, setActiveRowIndex] = useState(0);
+  const [activeItemIndex, setActiveItemIndex] = useState(0);
 
   const handleTabPress = (item, index) => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    const row = Math.floor(index / 3);
-    if (activeRowIndex === row && activeItemIndex === index) {
-      setActiveRowIndex(null);
-      setActiveItemIndex(null);
+    if (item.IsLink) {
+      navigation.navigate('ListingsScreen', {
+        cca2: ViewingCountry?.cca2 || 'us',
+        ListingType: MainTypes.find(x => x.ID === item.ID),
+        SellType: {...item.SellType, Name: Languages[item.SellType.Name]},
+        selectedFuelType: {
+          ...item.selectedFuelType,
+          Name: Languages[item.selectedFuelType?.Name],
+        },
+        selectedSection: {
+          ...item.selectedSection,
+          Name: Languages[item.selectedSection?.Name],
+        },
+      });
     } else {
-      setActiveRowIndex(row);
-      setActiveItemIndex(index);
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+      const row = Math.floor(index / 3);
+      if (activeRowIndex === row && activeItemIndex === index) {
+        setActiveRowIndex(null);
+        setActiveItemIndex(null);
+      } else {
+        setActiveRowIndex(row);
+        setActiveItemIndex(index);
+      }
     }
   };
 
@@ -58,7 +74,10 @@ const HomeTabs = () => {
               return (
                 <View
                   key={`skeleton-${itemIndex}`}
-                  style={{width: screenWidth * 0.33, alignItems: 'center'}}>
+                  style={{
+                    width: Layout.screenWidth * 0.33,
+                    alignItems: 'center',
+                  }}>
                   <TabSkeleton />
                 </View>
               );
@@ -67,7 +86,10 @@ const HomeTabs = () => {
             return (
               <View
                 key={globalIndex}
-                style={{width: screenWidth * 0.33, alignItems: 'center'}}>
+                style={{
+                  width: Layout.screenWidth * 0.33,
+                  alignItems: 'center',
+                }}>
                 <TouchableOpacity
                   onPress={() => handleTabPress(item, globalIndex)}
                   style={[
@@ -93,11 +115,7 @@ const HomeTabs = () => {
         </View>
         {activeRowIndex === rowIndex && (
           <View style={styles.expandedBoxWrapper}>
-            <View style={styles.expandedBox}>
-              <Text style={styles.filterText}>
-                خيارات فلترة لـ {Tabs[activeItemIndex]?.Name || '...'}
-              </Text>
-            </View>
+            <FilterTabBox Tab={fullData[activeItemIndex]} />
           </View>
         )}
       </View>
@@ -171,20 +189,5 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     marginBottom: 0,
-  },
-  expandedBox: {
-    width: screenWidth * 0.97,
-    backgroundColor: 'white',
-    borderWidth: 0,
-    borderTopWidth: 0,
-    borderColor: '#ccc',
-    borderRadius: 3,
-    paddingVertical: 30,
-    paddingHorizontal: 15,
-  },
-  filterText: {
-    fontSize: 14,
-    color: '#333',
-    textAlign: 'center',
   },
 });

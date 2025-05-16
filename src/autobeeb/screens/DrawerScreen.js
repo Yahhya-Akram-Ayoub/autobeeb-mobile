@@ -6,26 +6,25 @@ import {
   UserOptions,
 } from '../components';
 import Layout from '../constants/Layout';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const DrawerScreen = () => {
+  const insets = useSafeAreaInsets();
+
   return (
-    <View style={styles.container}>
+    <View
+      style={{
+        backgroundColor: '#fff',
+        flex: 1,
+        paddingBottom: insets.bottom + 10,
+      }}>
       <ScrollView>
         <DeaweHeader />
         <UserOptions />
         <GeneralOptions />
-        <View style={{height: 190}} />
       </ScrollView>
     </View>
   );
 };
 
 export {DrawerScreen};
-
-const styles = StyleSheet.create({
-  container: {
-    minWidth: Layout.screenWidth,
-    minHeight: Layout.screenHeight,
-    backgroundColor: '#fff',
-  },
-});

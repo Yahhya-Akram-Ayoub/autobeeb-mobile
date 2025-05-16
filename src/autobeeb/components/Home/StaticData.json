@@ -13,7 +13,8 @@
         "ID": 4,
         "All": false,
         "Name": "Electric"
-      }
+      },
+      "IsLink": true
     },
     {
       "ID": 32,
@@ -29,7 +30,8 @@
         "ID": 2048,
         "All": false,
         "Name": "Accessories"
-      }
+      },
+      "IsLink": true
     },
     {
       "ID": 32,
@@ -45,7 +47,8 @@
         "ID": 4096,
         "All": false,
         "Name": "Boards"
-      }
+      },
+      "IsLink": true
     }
   ]
 }

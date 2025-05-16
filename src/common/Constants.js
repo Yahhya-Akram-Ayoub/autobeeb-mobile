@@ -75,32 +75,22 @@ const Constants = {
   ],
 
   sellTypesFilter: [
-    // {
-    //   ID: 7,
-    //   Name: Languages.All,
-    //   img: require('../images/SellTypes/BlueAll.png'),
-
-    //   backgroundColor: '#D31018',
-    // },
     {
       ID: 1,
       Name: Languages.ForSale,
       img: require('../images/SellTypes/BlueSale.png'),
-
       backgroundColor: '#0F93DD',
     },
     {
       ID: 2,
       Name: Languages.ForRent,
       img: require('../images/SellTypes/BlueRent.png'),
-
       backgroundColor: '#F68D00',
     },
     {
       ID: 4,
       Name: Languages.Wanted,
       img: require('../images/SellTypes/BlueWanted.png'),
-
       backgroundColor: '#D31018',
     },
   ],
@@ -211,31 +201,42 @@ const Constants = {
   ],
   FilterFuelTypes: [
     {
-      //  FullImagePath: "yaz",
       ID: -1,
       Image: require('../images/SellTypes/BlueAll.png'),
       All: true,
-      Name: Languages.All,
+      get Name() {
+        return Languages.All;
+      },
     },
     {
       ID: 1,
-      Name: Languages.Benzin,
+      get Name() {
+        return Languages.Benzin;
+      },
     },
     {
       ID: 2,
-      Name: Languages.Diesel,
+      get Name() {
+        return Languages.Diesel;
+      },
     },
     {
       ID: 4,
-      Name: Languages.Electric,
+      get Name() {
+        return Languages.Electric;
+      },
     },
     {
       ID: 8,
-      Name: Languages.Hybrid,
+      get Name() {
+        return Languages.Hybrid;
+      },
     },
     {
       ID: 16,
-      Name: Languages.Other,
+      get Name() {
+        return Languages.Other;
+      },
     },
   ],
   paymentMethods: [
@@ -353,15 +354,21 @@ const Constants = {
       ID: -1,
       Image: require('../images/SellTypes/BlueAll.png'),
       All: true,
-      Name: Languages.All,
+      get Name() {
+        return Languages.All;
+      },
     },
     {
       ID: 1,
-      Name: Languages.New,
+      get Name() {
+        return Languages.New;
+      },
     },
     {
       ID: 2,
-      Name: Languages.Used,
+      get Name() {
+        return Languages.Used;
+      },
     },
   ],
   addingSteps: [
