@@ -91,7 +91,7 @@ const HomeTabs = () => {
                   alignItems: 'center',
                 }}>
                 <TouchableOpacity
-                  onPress={() => handleTabPress(item, globalIndex)}
+                  onPressIn={() => handleTabPress(item, globalIndex)}
                   style={[
                     styles.tabButton,
                     isActive && styles.activeTabButton,

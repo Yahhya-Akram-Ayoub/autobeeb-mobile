@@ -1,11 +1,72 @@
-import {memo, useMemo} from 'react';
-import {FlatList, Pressable, StyleSheet, Text, View} from 'react-native';
+import {memo, useMemo, useState} from 'react';
+import {
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Layout from '../../constants/Layout';
 import {Color, Constants, Languages} from '../../../common';
 import FastImage from 'react-native-fast-image';
+import {useNavigation} from '@react-navigation/native';
+
+const RenderSellTypes = ({Tab, isForRent}) => {
+  const navigation = useNavigation();
+
+  const navigateBasedOnType = (SellType, ListingType) => {
+    const isDirectToListings =
+      ![1, 7].includes(SellType.ID) &&
+      !(ListingType.ID === 32 && SellType.ID === 4);
+
+    if (isDirectToListings) {
+      navigation.navigate('ListingsScreen', {ListingType, SellType});
+      return;
+    }
+
+    switch (ListingType.ID) {
+      case 32:
+      case 4:
+        navigation.navigate('SectionsScreen', {ListingType, SellType});
+        break;
+      case 16:
+        navigation.navigate('CategoriesScreen', {ListingType, SellType});
+        break;
+      default:
+        navigation.navigate('MakesScreen', {ListingType, SellType});
+    }
+  };
+
+  return (
+    <View style={styles.SellTypes}>
+      <View style={[styles.SellBtn, styles.ActiveOption]}>
+        <Text style={[styles.TextSellBtn, styles.ActiveOptionText]}>
+          {Languages.ForSale}
+        </Text>
+      </View>
+      {isForRent && (
+        <TouchableOpacity
+          onPressIn={() => {
+            navigateBasedOnType(Constants.sellTypes[1], Tab);
+          }}
+          style={[styles.SellBtn]}>
+          <Text style={[styles.TextSellBtn]}>{Languages.ForRent}</Text>
+        </TouchableOpacity>
+      )}
+      <TouchableOpacity
+        onPressIn={() => {
+          navigateBasedOnType(Constants.sellTypes[2], Tab);
+        }}
+        style={[styles.SellBtn]}>
+        <Text style={[styles.TextSellBtn]}>{Languages.Wanted}</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 const FilterTabBox = memo(({Tab}) => {
-  const isMake = Tab.ID !== 32 && Tab.ID !== 16;
+  const isMake = Tab.ID !== 16;
   const isForRent = Tab.ID !== 32;
   const isCategory = Tab.ID !== 1;
   const isSection = Tab.ID === 32;
@@ -29,11 +90,39 @@ const FilterTabBox = memo(({Tab}) => {
     </View>
   );
 
+  const renderMakeItem = ({item}) => (
+    <View style={styles.Make}>
+      {item.FullImagePath ? (
+        <FastImage
+          style={styles.MakeImage}
+          resizeMode="contain"
+          source={{
+            uri: `https://autobeeb.com/${item.FullImagePath}_300x150.png`,
+          }}
+        />
+      ) : (
+        <Text style={styles.MakeText}>{item.Name}</Text>
+      )}
+    </View>
+  );
+
+  const renderSectionItem = ({item}) => (
+    <View style={styles.Section}>
+      {item.FullImagePath && (
+        <FastImage
+          style={styles.SectionImage}
+          resizeMode="contain"
+          source={{
+            uri: `https://autobeeb.com/${item.FullImagePath}_300x150.png`,
+          }}
+        />
+      )}
+    </View>
+  );
+
   const renderFuelItem = ({item, index}) => (
-    <Pressable style={[styles.FuelBtn, !index && styles.ActiveOption]}>
-      <Text style={[styles.TextBtn, !index && styles.ActiveOptionText]}>
-        {item.Name}
-      </Text>
+    <Pressable style={[styles.FuelBtn]}>
+      <Text style={[styles.TextBtn]}>{item.Name}</Text>
     </Pressable>
   );
 
@@ -52,87 +141,83 @@ const FilterTabBox = memo(({Tab}) => {
     [Categories],
   );
 
+  const SectionsList = useMemo(
+    () => (
+      <FlatList
+        data={Sections}
+        keyExtractor={(_, index) => `cat-${index}`}
+        renderItem={renderSectionItem}
+        contentContainerStyle={styles.SectionsList}
+        scrollEnabled
+        showsHorizontalScrollIndicator={false}
+        horizontal
+      />
+    ),
+    [Sections],
+  );
+
+  const MakeListsList = useMemo(
+    () => (
+      <FlatList
+        data={Makes}
+        keyExtractor={(_, index) => `cat-${index}`}
+        renderItem={renderMakeItem}
+        contentContainerStyle={styles.Makes}
+        scrollEnabled
+        showsHorizontalScrollIndicator={false}
+        horizontal
+      />
+    ),
+    [Makes],
+  );
+
+  const FuelTypesList = useMemo(
+    () => (
+      <FlatList
+        data={Constants.FilterFuelTypes.filter(x => x.ID !== -1 && x.ID !== 16)}
+        keyExtractor={(_, index) => `fuel-${index}`}
+        renderItem={renderFuelItem}
+        contentContainerStyle={styles.FilterFuelTypes}
+        scrollEnabled
+        showsHorizontalScrollIndicator={false}
+        horizontal
+      />
+    ),
+    [],
+  );
+
+  const PaymentList = useMemo(
+    () => (
+      <View style={styles.OptionsTypes}>
+        {[0, 1].map(i => (
+          <Pressable key={`payment-${i}`} style={[styles.OptionBtn]}>
+            <Text style={[styles.TextOptionBtn]}>
+              {Constants.paymentMethods[i].Name}
+            </Text>
+          </Pressable>
+        ))}
+        {[1, 2].map(i => (
+          <Pressable key={`condition-${i}`} style={[styles.OptionBtn]}>
+            <Text style={[styles.TextOptionBtn]}>
+              {Constants.FilterOfferCondition[i].Name}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
+    ),
+    [],
+  );
+
   return (
     <View style={styles.expandedBox}>
-      <View style={styles.SellTypes}>
-        <Pressable style={styles.SellBtn}>
-          <Text style={styles.TextSellBtn}>{Languages.ForSale}</Text>
-        </Pressable>
-        {isForRent && (
-          <Pressable style={styles.SellBtn}>
-            <Text style={styles.TextSellBtn}>{Languages.ForRent}</Text>
-          </Pressable>
-        )}
-        <Pressable style={styles.SellBtn}>
-          <Text style={styles.TextSellBtn}>{Languages.Wanted}</Text>
-        </Pressable>
+      <RenderSellTypes Tab={Tab} isForRent={isForRent} />
+      <View style={styles.ContainerActive}>
+        {isSection && SectionsList}
+        {isMake && MakeListsList}
+        {isCategory && CategoriesList}
+        {isFuel && FuelTypesList}
+        {isPaymentMethod && PaymentList}
       </View>
-
-      {isMake && (
-        <View style={styles.Makes}>
-          {Makes.map(m => (
-            <View key={m.ID?.toString()} style={styles.Make}>
-              {m.FullImagePath ? (
-                <FastImage
-                  style={styles.MakeImage}
-                  resizeMode="contain"
-                  source={{
-                    uri: `https://autobeeb.com/${m.FullImagePath}_300x150.png`,
-                  }}
-                />
-              ) : (
-                <Text style={styles.MakeText}>{m.Name}</Text>
-              )}
-            </View>
-          ))}
-        </View>
-      )}
-
-      {isSection && CategoriesList}
-      {isCategory && CategoriesList}
-
-      {isFuel && (
-        <FlatList
-          data={Constants.FilterFuelTypes}
-          keyExtractor={(_, index) => `fuel-${index}`}
-          renderItem={renderFuelItem}
-          contentContainerStyle={styles.FilterFuelTypes}
-          scrollEnabled
-          showsHorizontalScrollIndicator={false}
-          horizontal
-        />
-      )}
-
-      {isPaymentMethod && (
-        <View style={styles.OptionsTypes}>
-          {[0, 1].map(i => (
-            <Pressable
-              key={`payment-${i}`}
-              style={[styles.OptionBtn, i === 0 && styles.ActiveOption]}>
-              <Text
-                style={[
-                  styles.TextOptionBtn,
-                  i === 0 && styles.ActiveOptionText,
-                ]}>
-                {Constants.paymentMethods[i].Name}
-              </Text>
-            </Pressable>
-          ))}
-          {[1, 2].map(i => (
-            <Pressable
-              key={`condition-${i}`}
-              style={[styles.OptionBtn, i === 1 && styles.ActiveOption]}>
-              <Text
-                style={[
-                  styles.TextOptionBtn,
-                  i === 1 && styles.ActiveOptionText,
-                ]}>
-                {Constants.FilterOfferCondition[i].Name}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
-      )}
     </View>
   );
 });
@@ -151,11 +236,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     gap: 10,
   },
+  ContainerActive: {
+    gap: 10,
+    backgroundColor: '#F8F8F8',
+    padding: 10,
+    borderRadius: 3,
+  },
   SellTypes: {
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'space-between',
-    gap: 5,
+    gap: 8,
   },
   SellBtn: {
     borderWidth: 1,
@@ -172,11 +263,7 @@ const styles = StyleSheet.create({
     fontFamily: Constants.fontFamilyBold,
     fontSize: 12,
   },
-  Makes: {
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'space-between',
-  },
+  Makes: {},
   Make: {
     borderWidth: 1,
     borderColor: '#69696950',
@@ -186,8 +273,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     maxWidth: 55,
     maxHeight: 55,
-    width: 55,
-    height: 55,
+    width: 65,
+    height: 65,
   },
   Category: {
     borderWidth: 1,
@@ -214,6 +301,21 @@ const styles = StyleSheet.create({
     width: 40,
     height: 20,
   },
+  SectionImage: {
+    width: 60,
+    height: 25,
+  },
+  Section: {
+    borderWidth: 1,
+    borderColor: '#69696950',
+    backgroundColor: '#0000cc00',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 5,
+    borderRadius: 100,
+    width: 65,
+    height: 65,
+  },
   FuelBtn: {
     borderWidth: 1,
     borderColor: '#69696950',
@@ -225,16 +327,29 @@ const styles = StyleSheet.create({
   FilterFuelTypes: {
     gap: 10,
   },
+  SectionsList: {
+    justifyContent: 'space-between',
+    width: '100%',
+  },
   TextBtn: {
     color: '#000',
     fontFamily: Constants.fontFamilyBold,
     fontSize: 12,
   },
   ActiveOption: {
-    backgroundColor: Color.secondary,
+    borderWidth: 0,
   },
   ActiveOptionText: {
-    color: '#fff',
+    color: '#000',
+    position: 'absolute',
+    backgroundColor: '#F8F8F8',
+    width: '100%',
+    textAlign: 'center',
+    height: 60,
+    paddingTop: 5,
+    top: 0,
+    borderTopRightRadius: 3,
+    borderTopLeftRadius: 3,
   },
   OptionsTypes: {
     flexDirection: 'row',
@@ -278,6 +393,21 @@ const Makes = [
     Name: 'KIA',
     Id: 837,
     FullImagePath: 'content/newListingMakes/837/837',
+  },
+  {
+    Name: 'Mercedes Benz',
+    Id: 1609,
+    FullImagePath: 'content/newListingMakes/1609/1609',
+  },
+  {
+    Name: 'BMW',
+    Id: 427,
+    FullImagePath: 'content/newListingMakes/427/427',
+  },
+  {
+    Name: 'Ford',
+    Id: 1620,
+    FullImagePath: 'content/newListingMakes/1620/1620',
   },
   {
     Name: 'المزيد',
@@ -595,5 +725,83 @@ const Categories = [
     RentCount: 0,
     RelatedEntity: null,
     Rank: 999999,
+  },
+];
+
+const Sections = [
+  {
+    ID: 64,
+    Icon: true,
+    FullImagePath: 'content/newlistingtype/64/64',
+    LangID: 2,
+    Rank: 70,
+    ParentID: 32,
+    Name: 'قطع غيار سيارات',
+    Description: null,
+    ExtraInfo: null,
+    SaleCount: 0,
+    RentCount: 0,
+    WantedCount: 0,
+    RelatedEntity: 1,
+  },
+  {
+    ID: 128,
+    Icon: true,
+    FullImagePath: 'content/newlistingtype/128/128',
+    LangID: 2,
+    Rank: 80,
+    ParentID: 32,
+    Name: 'قطع غيار شاحنات',
+    Description: null,
+    ExtraInfo: null,
+    SaleCount: 0,
+    RentCount: 0,
+    WantedCount: 0,
+    RelatedEntity: 2,
+  },
+  {
+    ID: 256,
+    Icon: true,
+    FullImagePath: 'content/newlistingtype/256/256',
+    LangID: 2,
+    Rank: 90,
+    ParentID: 32,
+    Name: 'قطع غيار مقطورات',
+    Description: null,
+    ExtraInfo: null,
+    SaleCount: 0,
+    RentCount: 0,
+    WantedCount: 0,
+    RelatedEntity: 16,
+  },
+  {
+    ID: 512,
+    Icon: true,
+    FullImagePath: 'content/newlistingtype/512/512',
+    LangID: 2,
+    Rank: 100,
+    ParentID: 32,
+    Name: 'قطع غيار باصات وفانات',
+    Description: null,
+    ExtraInfo: null,
+    SaleCount: 0,
+    RentCount: 0,
+    WantedCount: 0,
+    RelatedEntity: 8,
+  },
+  {
+    ID: 1024,
+    Icon: true,
+    FullImagePath: 'content/newlistingtype/1024/1024',
+    LangID: 2,
+    Rank: 110,
+    ParentID: 32,
+    Name: 'قطع غيار معدات ثقيلة',
+    Description: null,
+    ExtraInfo: null,
+    SaleCount: 0,
+    RentCount: 0,
+    WantedCount: 0,
+    RelatedEntity: 57344,
   },
 ];

@@ -238,6 +238,12 @@ const Constants = {
         return Languages.Other;
       },
     },
+    {
+      ID: 32,
+      get Name() {
+        return Languages.PlugInHybrid;
+      },
+    },
   ],
   paymentMethods: [
     {
