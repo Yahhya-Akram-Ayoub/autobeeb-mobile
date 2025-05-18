@@ -31,7 +31,10 @@ class MakesScreen extends Component {
   componentDidMount() {
     KS.MakesGet({
       langID: Languages.langID,
-      listingType: this.props.route.params?.ListingType?.ID,
+      listingType:
+        this.props.route.params?.ListingType?.ID === 4
+          ? 8192
+          : this.props.route.params?.ListingType?.ID,
     }).then(data => {
       let AllMakes = {
         //  FullImagePath: "yaz",

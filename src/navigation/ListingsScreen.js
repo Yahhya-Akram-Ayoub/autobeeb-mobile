@@ -123,7 +123,7 @@ class ListingsScreen extends Component {
       ],
       selectedRentPeriod: [AllState],
       selectedSection: [this.props.route.params?.selectedSection ?? AllState],
-      selectedStatus: [AllState],
+      selectedStatus: [this.props.route.params?.selectedStatus ?? AllState],
       Makes: this.props.route.params?.Makes ?? [],
       FullMakes: this.props.route.params?.Makes ?? [],
       isLoading: true,
@@ -688,6 +688,12 @@ class ListingsScreen extends Component {
       isocode: this.props.ViewingCountry.cca2 || '',
       cur: this.state.currency?.ID || '',
       partNumber: this.state.PartNumber,
+      condition:
+        (this.state.selectedStatus &&
+          this.state.selectedStatus
+            .map(item => item.ID)
+            .reduce((a, b) => a + b, '')) ||
+        '',
     }).then(data => {
       if (data.Success) {
         this.countListingsViews(
@@ -778,11 +784,7 @@ class ListingsScreen extends Component {
     if (!onEndReached) {
       this.filterModal.close();
     }
-    console.log({
-      curr: this.state.currency?.ID || '',
-      minPrice: this.state.selectedMinPrice || '',
-      maxPrice: this.state.selectedMaxPrice || '',
-    });
+
     KS.ListingsGet(
       {
         asc: asc ? (asc == 'false' ? false : true) : false, // if it was sent check the string for true or false because i don want it to resolve to true always

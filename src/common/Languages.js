@@ -570,6 +570,7 @@ export default new LocalizedStrings({
     SubscDealerPlus: 'Premium Merchant Subscription',
     NumberViewsMyAds: 'Number of views of my ads',
     Style: 'Style',
+    See_more: 'See More',
   },
   ar: {
     //Arabic
@@ -1287,6 +1288,7 @@ export default new LocalizedStrings({
     SubscDealerPlus: 'اشتراك التاجر المميز',
     NumberViewsMyAds: 'عدد مشاهدات إعلاناتي',
     Style: 'النمط',
+    See_more: 'المزيد',
   },
   de: {
     langID: 3,
@@ -1838,6 +1840,7 @@ export default new LocalizedStrings({
     SubscDealerPlus: 'Premium-Händler abonnement',
     NumberViewsMyAds: 'Anzahl der Aufrufe meiner Anzeigen',
     Style: 'Style',
+    See_more: 'Mehr sehen',
   },
   es: {
     langID: 4,
@@ -2386,6 +2389,7 @@ export default new LocalizedStrings({
     SubscDealerPlus: 'Suscripción de comerciante premium',
     NumberViewsMyAds: 'Número de visualizaciones de mis anuncios',
     Style: 'Style',
+    See_more: 'Ver más',
   },
   tr: {
     langID: 5,
@@ -2929,6 +2933,7 @@ export default new LocalizedStrings({
     SubscDealerPlus: 'Premium Tüccar Aboneliği',
     NumberViewsMyAds: 'Reklamlarımın görüntülenme sayısı',
     Style: 'Style',
+    See_more: 'Daha fazla gör',
   },
   fr: {
     langID: 6,
@@ -3480,6 +3485,7 @@ export default new LocalizedStrings({
     SubscDealerPlus: 'Abonnement marchand Premium',
     NumberViewsMyAds: 'Nombre de vues de mes annonces',
     Style: 'Style',
+    See_more: 'Voir plus',
   },
   pl: {
     langID: 7,
@@ -4022,6 +4028,7 @@ export default new LocalizedStrings({
     SubscDealerPlus: 'Subskrypcja Premium Merchant',
     NumberViewsMyAds: 'Liczba wyświetleń moich reklam',
     Style: 'Style',
+    See_more: 'Zobacz więcej',
   },
   zh: {
     //English
@@ -4536,5 +4543,6 @@ export default new LocalizedStrings({
     SubscDealerPlus: '高级商家订阅',
     NumberViewsMyAds: '我的廣告的瀏覽次數',
     Style: 'Style',
+    See_more: '查看更多',
   },
 });

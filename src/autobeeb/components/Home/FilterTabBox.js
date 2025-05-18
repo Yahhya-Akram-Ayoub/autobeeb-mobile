@@ -1,69 +1,25 @@
-import {memo, useMemo, useState} from 'react';
-import {
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {memo, useEffect, useMemo, useState} from 'react';
+import {Alert, FlatList, StyleSheet, View} from 'react-native';
 import Layout from '../../constants/Layout';
-import {Color, Constants, Languages} from '../../../common';
-import FastImage from 'react-native-fast-image';
+import {Constants, Languages} from '../../../common';
+import KS from '../../../services/KSAPI';
+import {
+  AllCategories,
+  AllMakes,
+  arrayOfNull,
+  MoreData,
+} from '../shared/StaticData';
+import {
+  FuelTypesList,
+  PaymentList,
+  RenderCategoryItem,
+  RenderMakeItem,
+  RenderSectionItem,
+  RenderSellTypes,
+} from './TabsComponents';
 import {useNavigation} from '@react-navigation/native';
 
-const RenderSellTypes = ({Tab, isForRent}) => {
-  const navigation = useNavigation();
-
-  const navigateBasedOnType = (SellType, ListingType) => {
-    const isDirectToListings =
-      ![1, 7].includes(SellType.ID) &&
-      !(ListingType.ID === 32 && SellType.ID === 4);
-
-    if (isDirectToListings) {
-      navigation.navigate('ListingsScreen', {ListingType, SellType});
-      return;
-    }
-
-    switch (ListingType.ID) {
-      case 32:
-      case 4:
-        navigation.navigate('SectionsScreen', {ListingType, SellType});
-        break;
-      case 16:
-        navigation.navigate('CategoriesScreen', {ListingType, SellType});
-        break;
-      default:
-        navigation.navigate('MakesScreen', {ListingType, SellType});
-    }
-  };
-
-  return (
-    <View style={styles.SellTypes}>
-      <View style={[styles.SellBtn, styles.ActiveOption]}>
-        <Text style={[styles.TextSellBtn, styles.ActiveOptionText]}>
-          {Languages.ForSale}
-        </Text>
-      </View>
-      {isForRent && (
-        <TouchableOpacity
-          onPressIn={() => {
-            navigateBasedOnType(Constants.sellTypes[1], Tab);
-          }}
-          style={[styles.SellBtn]}>
-          <Text style={[styles.TextSellBtn]}>{Languages.ForRent}</Text>
-        </TouchableOpacity>
-      )}
-      <TouchableOpacity
-        onPressIn={() => {
-          navigateBasedOnType(Constants.sellTypes[2], Tab);
-        }}
-        style={[styles.SellBtn]}>
-        <Text style={[styles.TextSellBtn]}>{Languages.Wanted}</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
+const _defaultArray = arrayOfNull(6);
 
 const FilterTabBox = memo(({Tab}) => {
   const isMake = Tab.ID !== 16;
@@ -72,140 +28,177 @@ const FilterTabBox = memo(({Tab}) => {
   const isSection = Tab.ID === 32;
   const isFuel = Tab.ID === 1;
   const isPaymentMethod = Tab.ID !== 32 && Tab.ID !== 16;
+  const [makes, setMakes] = useState(_defaultArray);
+  const [categories, setCategories] = useState(_defaultArray);
+  const [sections, setSections] = useState(_defaultArray);
+  const navigation = useNavigation();
 
-  const renderCategoryItem = ({item}) => (
-    <View style={styles.Category}>
-      {item.FullImagePath && (
-        <FastImage
-          style={styles.CategoryImage}
-          resizeMode="contain"
-          source={{
-            uri: `https://autobeeb.com/${item.FullImagePath}_300x150.png`,
-          }}
-        />
-      )}
-      <Text numberOfLines={1} style={styles.MakeText}>
-        {item.Name}
-      </Text>
-    </View>
-  );
+  useEffect(() => {
+    ResetStates();
+    isMake && LoadMakes();
+    isSection && LoadSections();
+    isCategory && LoadCategory();
+  }, [Tab.ID]);
 
-  const renderMakeItem = ({item}) => (
-    <View style={styles.Make}>
-      {item.FullImagePath ? (
-        <FastImage
-          style={styles.MakeImage}
-          resizeMode="contain"
-          source={{
-            uri: `https://autobeeb.com/${item.FullImagePath}_300x150.png`,
-          }}
-        />
-      ) : (
-        <Text style={styles.MakeText}>{item.Name}</Text>
-      )}
-    </View>
-  );
+  const ResetStates = () => {
+    setMakes(isMake ? _defaultArray : []);
+    setSections(isSection ? _defaultArray : []);
+    setCategories(isCategory ? _defaultArray : []);
+  };
 
-  const renderSectionItem = ({item}) => (
-    <View style={styles.Section}>
-      {item.FullImagePath && (
-        <FastImage
-          style={styles.SectionImage}
-          resizeMode="contain"
-          source={{
-            uri: `https://autobeeb.com/${item.FullImagePath}_300x150.png`,
-          }}
-        />
-      )}
-    </View>
-  );
+  const LoadMakes = () => {
+    const _listingType = Tab.ID === 4 ? 8192 : Tab.ID === 32 ? 1 : Tab.ID; // in case "معدات ثقيلة" get makes for section "معدات بناء" | in case "Spare parts" get makes for types "Cars"
+    KS.GetMakesCore({
+      LangId: Languages.langID,
+      ListingType: _listingType,
+      Page: 1,
+      PageSize: 8,
+    }).then(res => {
+      res.makes.unshift(AllMakes);
+      res.makes.push(MoreData);
+      setMakes(res.makes);
+    });
+  };
 
-  const renderFuelItem = ({item, index}) => (
-    <Pressable style={[styles.FuelBtn]}>
-      <Text style={[styles.TextBtn]}>{item.Name}</Text>
-    </Pressable>
-  );
+  const LoadSections = () => {
+    KS.GetSectionsCore({LangId: Languages.langID, ParentId: Tab.ID}).then(
+      res => {
+        setSections(res.sections.filter(x => x.id !== 4096 && x.id !== 2048)); // Exclude accessories and boards sections
+      },
+    );
+  };
 
+  const LoadCategory = () => {
+    const _listingType = Tab.ID === 4 ? 8192 : Tab.ID === 32 ? 64 : Tab.ID;
+    console.log({_listingType});
+    KS.GetCategoriesCore({
+      LangId: Languages.langID,
+      ListingType: _listingType,
+    }).then(res => {
+      console.log({res, categories});
+      if (Tab.ID === 16) res.categories.unshift(AllCategories);
+      setCategories(res.categories);
+    });
+  };
+
+  const MakeNavigation = make => {
+    if (make.more) {
+      navigation.navigate('MakesScreen', {
+        ListingType: Tab,
+        SellType: Constants.sellTypes[0],
+      });
+    } else {
+      navigation.navigate('ListingsScreen', {
+        ListingType: Tab,
+        SellType: Constants.sellTypes[0],
+        selectedMake: NormlizeObj(make),
+      });
+    }
+  };
+
+  const FuelNavigation = (type, value) => {
+    navigation.navigate('ListingsScreen', {
+      ListingType: Tab,
+      SellType: Constants.sellTypes[0],
+      selectedFuelType: type === 'fuel' ? value : null,
+      selectedStatus:
+        type === 'condition' ? Constants.FilterOfferCondition[value] : null,
+      selectedPaymentMethod:
+        type === 'payment' ? Constants.paymentMethods[value] : null,
+    });
+  };
+
+  const SectionNavigation = section => {
+    navigation.navigate('ListingsScreen', {
+      ListingType: Tab,
+      SellType: Constants.sellTypes[0],
+      selectedMake: AllMakes,
+      SectionID: section.id,
+      selectedSection: NormlizeObj(section),
+    });
+  };
+
+  const CategoryNavigation = (category, section) => {
+    navigation.navigate('ListingsScreen', {
+      ListingType: Tab,
+      SellType: Constants.sellTypes[0],
+      selectedMake: AllMakes,
+      selectedCategory: NormlizeObj(category),
+      SectionID: section?.id,
+      selectedSection: NormlizeObj(section),
+    });
+  };
+  const NormlizeObj = obj => {
+    if (!obj) return null;
+    return {...obj, ID: obj.id, Name: obj.name};
+  };
   const CategoriesList = useMemo(
     () => (
       <FlatList
-        data={Categories}
+        data={categories}
         keyExtractor={(_, index) => `cat-${index}`}
-        renderItem={renderCategoryItem}
+        renderItem={({item}) => (
+          <RenderCategoryItem
+            item={item}
+            onPress={() => {
+              CategoryNavigation(item);
+            }}
+          />
+        )}
         contentContainerStyle={styles.FilterFuelTypes}
         scrollEnabled
         showsHorizontalScrollIndicator={false}
         horizontal
+        extraData={[categories]}
       />
     ),
-    [Categories],
+    [categories],
   );
 
   const SectionsList = useMemo(
     () => (
       <FlatList
-        data={Sections}
-        keyExtractor={(_, index) => `cat-${index}`}
-        renderItem={renderSectionItem}
+        data={sections}
+        keyExtractor={(_, index) => `sec-${index}`}
+        renderItem={({item}) => (
+          <RenderSectionItem
+            item={item}
+            onPress={() => {
+              SectionNavigation(item);
+            }}
+          />
+        )}
         contentContainerStyle={styles.SectionsList}
         scrollEnabled
         showsHorizontalScrollIndicator={false}
         horizontal
+        extraData={[sections]}
       />
     ),
-    [Sections],
+    [sections],
   );
 
   const MakeListsList = useMemo(
     () => (
       <FlatList
-        data={Makes}
-        keyExtractor={(_, index) => `cat-${index}`}
-        renderItem={renderMakeItem}
+        data={makes}
+        keyExtractor={(_, index) => `mak-${index}`}
+        renderItem={({item}) => (
+          <RenderMakeItem
+            item={item}
+            onPress={() => {
+              MakeNavigation(item);
+            }}
+          />
+        )}
         contentContainerStyle={styles.Makes}
         scrollEnabled
         showsHorizontalScrollIndicator={false}
         horizontal
+        extraData={[makes]}
       />
     ),
-    [Makes],
-  );
-
-  const FuelTypesList = useMemo(
-    () => (
-      <FlatList
-        data={Constants.FilterFuelTypes.filter(x => x.ID !== -1 && x.ID !== 16)}
-        keyExtractor={(_, index) => `fuel-${index}`}
-        renderItem={renderFuelItem}
-        contentContainerStyle={styles.FilterFuelTypes}
-        scrollEnabled
-        showsHorizontalScrollIndicator={false}
-        horizontal
-      />
-    ),
-    [],
-  );
-
-  const PaymentList = useMemo(
-    () => (
-      <View style={styles.OptionsTypes}>
-        {[0, 1].map(i => (
-          <Pressable key={`payment-${i}`} style={[styles.OptionBtn]}>
-            <Text style={[styles.TextOptionBtn]}>
-              {Constants.paymentMethods[i].Name}
-            </Text>
-          </Pressable>
-        ))}
-        {[1, 2].map(i => (
-          <Pressable key={`condition-${i}`} style={[styles.OptionBtn]}>
-            <Text style={[styles.TextOptionBtn]}>
-              {Constants.FilterOfferCondition[i].Name}
-            </Text>
-          </Pressable>
-        ))}
-      </View>
-    ),
-    [],
+    [makes],
   );
 
   return (
@@ -215,8 +208,20 @@ const FilterTabBox = memo(({Tab}) => {
         {isSection && SectionsList}
         {isMake && MakeListsList}
         {isCategory && CategoriesList}
-        {isFuel && FuelTypesList}
-        {isPaymentMethod && PaymentList}
+        {isFuel && (
+          <FuelTypesList
+            onPress={fuel => {
+              FuelNavigation('fuel', fuel);
+            }}
+          />
+        )}
+        {isPaymentMethod && (
+          <PaymentList
+            onPress={(type, value) => {
+              FuelNavigation(type, value);
+            }}
+          />
+        )}
       </View>
     </View>
   );
@@ -242,566 +247,11 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 3,
   },
-  SellTypes: {
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'space-between',
-    gap: 8,
-  },
-  SellBtn: {
-    borderWidth: 1,
-    borderColor: '#11100121',
-    borderRadius: 3,
-    width: '30%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 30,
-    flex: 1,
-  },
-  TextSellBtn: {
-    color: '#000',
-    fontFamily: Constants.fontFamilyBold,
-    fontSize: 12,
-  },
-  Makes: {},
-  Make: {
-    borderWidth: 1,
-    borderColor: '#69696950',
-    backgroundColor: '#0000cc00',
-    borderRadius: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
-    maxWidth: 55,
-    maxHeight: 55,
-    width: 65,
-    height: 65,
-  },
-  Category: {
-    borderWidth: 1,
-    borderColor: '#69696950',
-    backgroundColor: '#0000cc00',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 5,
-    borderRadius: 3,
-    width: 60,
-    height: 55,
-  },
-  MakeText: {
-    fontFamily: Constants.fontFamily,
-    color: '#000000ff',
-    fontWeight: 700,
-    fontSize: 12,
-  },
-  MakeImage: {
-    width: 60,
-    height: 60,
-  },
-  CategoryImage: {
-    width: 40,
-    height: 20,
-  },
-  SectionImage: {
-    width: 60,
-    height: 25,
-  },
-  Section: {
-    borderWidth: 1,
-    borderColor: '#69696950',
-    backgroundColor: '#0000cc00',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 5,
-    borderRadius: 100,
-    width: 65,
-    height: 65,
-  },
-  FuelBtn: {
-    borderWidth: 1,
-    borderColor: '#69696950',
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    paddingVertical: 3,
-    height: 30,
-  },
   FilterFuelTypes: {
     gap: 10,
   },
   SectionsList: {
     justifyContent: 'space-between',
-    width: '100%',
-  },
-  TextBtn: {
-    color: '#000',
-    fontFamily: Constants.fontFamilyBold,
-    fontSize: 12,
-  },
-  ActiveOption: {
-    borderWidth: 0,
-  },
-  ActiveOptionText: {
-    color: '#000',
-    position: 'absolute',
-    backgroundColor: '#F8F8F8',
-    width: '100%',
-    textAlign: 'center',
-    height: 60,
-    paddingTop: 5,
-    top: 0,
-    borderTopRightRadius: 3,
-    borderTopLeftRadius: 3,
-  },
-  OptionsTypes: {
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'space-around',
     gap: 10,
   },
-  OptionBtn: {
-    borderWidth: 1,
-    borderColor: '#69696950',
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    paddingVertical: 3,
-    flex: 1,
-    height: 30,
-  },
-  TextOptionBtn: {
-    color: '#000',
-    fontFamily: Constants.fontFamilyBold,
-    fontSize: 12,
-    textAlign: 'center',
-  },
 });
-
-const Makes = [
-  {
-    Name: 'الكل',
-    Id: 0,
-  },
-  {
-    Name: 'Toyota',
-    Id: 1643,
-    FullImagePath: 'content/newListingMakes/1643/1643',
-  },
-  {
-    Name: 'Hyundai',
-    Id: 1619,
-    FullImagePath: 'content/newListingMakes/1619/1619',
-  },
-  {
-    Name: 'KIA',
-    Id: 837,
-    FullImagePath: 'content/newListingMakes/837/837',
-  },
-  {
-    Name: 'Mercedes Benz',
-    Id: 1609,
-    FullImagePath: 'content/newListingMakes/1609/1609',
-  },
-  {
-    Name: 'BMW',
-    Id: 427,
-    FullImagePath: 'content/newListingMakes/427/427',
-  },
-  {
-    Name: 'Ford',
-    Id: 1620,
-    FullImagePath: 'content/newListingMakes/1620/1620',
-  },
-  {
-    Name: 'المزيد',
-    Id: 837,
-  },
-];
-
-const Categories = [
-  {
-    Name: 'الكل',
-    ID: 0,
-  },
-  {
-    ID: 65536,
-    TypeID: 2,
-    Logo: false,
-    SaleCount: 0,
-    ParentID: null,
-    ChildrenCount: 0,
-    FullImagePath: 'content/newlistingcategories/265536/65536',
-    Name: 'راس تريلا',
-    ExtraInfo: null,
-    TypeName: 'شاحنات',
-    ParentName: null,
-    WantedCount: 0,
-    RentCount: 0,
-    RelatedEntity: null,
-    Rank: 5,
-  },
-  {
-    ID: 512,
-    TypeID: 2,
-    Logo: false,
-    SaleCount: 0,
-    ParentID: null,
-    ChildrenCount: 0,
-    FullImagePath: 'content/newlistingcategories/2512/512',
-    Name: 'شاسيه',
-    ExtraInfo: null,
-    TypeName: 'شاحنات',
-    ParentName: null,
-    WantedCount: 0,
-    RentCount: 0,
-    RelatedEntity: null,
-    Rank: 10,
-  },
-  {
-    ID: 16,
-    TypeID: 2,
-    Logo: false,
-    SaleCount: 0,
-    ParentID: null,
-    ChildrenCount: 0,
-    FullImagePath: 'content/newlistingcategories/216/16',
-    Name: 'صندوق',
-    ExtraInfo: null,
-    TypeName: 'شاحنات',
-    ParentName: null,
-    WantedCount: 0,
-    RentCount: 0,
-    RelatedEntity: null,
-    Rank: 15,
-  },
-  {
-    ID: 524288,
-    TypeID: 2,
-    Logo: false,
-    SaleCount: 0,
-    ParentID: null,
-    ChildrenCount: 0,
-    FullImagePath: 'content/newlistingcategories/2524288/524288',
-    Name: 'قلاب',
-    ExtraInfo: null,
-    TypeName: 'شاحنات',
-    ParentName: null,
-    WantedCount: 0,
-    RentCount: 0,
-    RelatedEntity: null,
-    Rank: 20,
-  },
-  {
-    ID: 131072,
-    TypeID: 2,
-    Logo: false,
-    SaleCount: 0,
-    ParentID: null,
-    ChildrenCount: 0,
-    FullImagePath: 'content/newlistingcategories/2131072/131072',
-    Name: 'صهريج - تنك',
-    ExtraInfo: null,
-    TypeName: 'شاحنات',
-    ParentName: null,
-    WantedCount: 0,
-    RentCount: 0,
-    RelatedEntity: null,
-    Rank: 21,
-  },
-  {
-    ID: 1048576,
-    TypeID: 2,
-    Logo: false,
-    SaleCount: 0,
-    ParentID: null,
-    ChildrenCount: 0,
-    FullImagePath: 'content/newlistingcategories/21048576/1048576',
-    Name: 'ونش',
-    ExtraInfo: null,
-    TypeName: 'شاحنات',
-    ParentName: null,
-    WantedCount: 0,
-    RentCount: 0,
-    RelatedEntity: null,
-    Rank: 25,
-  },
-  {
-    ID: 16384,
-    TypeID: 2,
-    Logo: false,
-    SaleCount: 0,
-    ParentID: null,
-    ChildrenCount: 0,
-    FullImagePath: 'content/newlistingcategories/216384/16384',
-    Name: 'براد ',
-    ExtraInfo: null,
-    TypeName: 'شاحنات',
-    ParentName: null,
-    WantedCount: 0,
-    RentCount: 0,
-    RelatedEntity: null,
-    Rank: 30,
-  },
-  {
-    ID: 4096,
-    TypeID: 2,
-    Logo: false,
-    SaleCount: 0,
-    ParentID: null,
-    ChildrenCount: 0,
-    FullImagePath: 'content/newlistingcategories/24096/4096',
-    Name: 'سطحة',
-    ExtraInfo: null,
-    TypeName: 'شاحنات',
-    ParentName: null,
-    WantedCount: 0,
-    RentCount: 0,
-    RelatedEntity: null,
-    Rank: 35,
-  },
-  {
-    ID: 32768,
-    TypeID: 2,
-    Logo: false,
-    SaleCount: 0,
-    ParentID: null,
-    ChildrenCount: 0,
-    FullImagePath: 'content/newlistingcategories/232768/32768',
-    Name: 'سطحة مع جوانب',
-    ExtraInfo: null,
-    TypeName: 'شاحنات',
-    ParentName: null,
-    WantedCount: 0,
-    RentCount: 0,
-    RelatedEntity: null,
-    Rank: 36,
-  },
-  {
-    ID: 1024,
-    TypeID: 2,
-    Logo: false,
-    SaleCount: 0,
-    ParentID: null,
-    ChildrenCount: 0,
-    FullImagePath: 'content/newlistingcategories/21024/1024',
-    Name: 'خلاطة خرسانة',
-    ExtraInfo: null,
-    TypeName: 'شاحنات',
-    ParentName: null,
-    WantedCount: 0,
-    RentCount: 0,
-    RelatedEntity: null,
-    Rank: 40,
-  },
-  {
-    ID: 8192,
-    TypeID: 2,
-    Logo: false,
-    SaleCount: 0,
-    ParentID: null,
-    ChildrenCount: 0,
-    FullImagePath: 'content/newlistingcategories/28192/8192',
-    Name: 'مضخة خرسانة',
-    ExtraInfo: null,
-    TypeName: 'شاحنات',
-    ParentName: null,
-    WantedCount: 0,
-    RentCount: 0,
-    RelatedEntity: null,
-    Rank: 45,
-  },
-  {
-    ID: 262144,
-    TypeID: 2,
-    Logo: false,
-    SaleCount: 0,
-    ParentID: null,
-    ChildrenCount: 0,
-    FullImagePath: 'content/newlistingcategories/2262144/262144',
-    Name: 'ناقلة اخشاب',
-    ExtraInfo: null,
-    TypeName: 'شاحنات',
-    ParentName: null,
-    WantedCount: 0,
-    RentCount: 0,
-    RelatedEntity: null,
-    Rank: 50,
-  },
-  {
-    ID: 2048,
-    TypeID: 2,
-    Logo: false,
-    SaleCount: 0,
-    ParentID: null,
-    ChildrenCount: 0,
-    FullImagePath: 'content/newlistingcategories/22048/2048',
-    Name: 'رافعة الهوك',
-    ExtraInfo: null,
-    TypeName: 'شاحنات',
-    ParentName: null,
-    WantedCount: 0,
-    RentCount: 0,
-    RelatedEntity: null,
-    Rank: 53,
-  },
-  {
-    ID: 64,
-    TypeID: 2,
-    Logo: false,
-    SaleCount: 0,
-    ParentID: null,
-    ChildrenCount: 0,
-    FullImagePath: 'content/newlistingcategories/264/64',
-    Name: 'ناقلة ماشية',
-    ExtraInfo: null,
-    TypeName: 'شاحنات',
-    ParentName: null,
-    WantedCount: 0,
-    RentCount: 0,
-    RelatedEntity: null,
-    Rank: 55,
-  },
-  {
-    ID: 8,
-    TypeID: 2,
-    Logo: false,
-    SaleCount: 0,
-    ParentID: null,
-    ChildrenCount: 0,
-    FullImagePath: 'content/newlistingcategories/28/8',
-    Name: 'ناقلة سيارات',
-    ExtraInfo: null,
-    TypeName: 'شاحنات',
-    ParentName: null,
-    WantedCount: 0,
-    RentCount: 0,
-    RelatedEntity: null,
-    Rank: 60,
-  },
-  {
-    ID: 2097456,
-    TypeID: 2,
-    Logo: false,
-    SaleCount: 0,
-    ParentID: null,
-    ChildrenCount: 0,
-    FullImagePath: 'content/newlistingcategories/22097456/2097456',
-    Name: 'ستارة',
-    ExtraInfo: null,
-    TypeName: 'شاحنات',
-    ParentName: null,
-    WantedCount: 0,
-    RentCount: 0,
-    RelatedEntity: null,
-    Rank: 65,
-  },
-  {
-    ID: 2097152,
-    TypeID: 2,
-    Logo: false,
-    SaleCount: 0,
-    ParentID: null,
-    ChildrenCount: 0,
-    FullImagePath: 'content/newlistingcategories/22097152/2097152',
-    Name: 'ضاغطة نفايات',
-    ExtraInfo: null,
-    TypeName: 'شاحنات',
-    ParentName: null,
-    WantedCount: 0,
-    RentCount: 0,
-    RelatedEntity: null,
-    Rank: 70,
-  },
-  {
-    ID: 32,
-    TypeID: 2,
-    Logo: false,
-    SaleCount: 0,
-    ParentID: null,
-    ChildrenCount: 0,
-    FullImagePath: 'content/newlistingcategories/232/32',
-    Name: 'كرفان',
-    ExtraInfo: null,
-    TypeName: 'شاحنات',
-    ParentName: null,
-    WantedCount: 0,
-    RentCount: 0,
-    RelatedEntity: null,
-    Rank: 999999,
-  },
-];
-
-const Sections = [
-  {
-    ID: 64,
-    Icon: true,
-    FullImagePath: 'content/newlistingtype/64/64',
-    LangID: 2,
-    Rank: 70,
-    ParentID: 32,
-    Name: 'قطع غيار سيارات',
-    Description: null,
-    ExtraInfo: null,
-    SaleCount: 0,
-    RentCount: 0,
-    WantedCount: 0,
-    RelatedEntity: 1,
-  },
-  {
-    ID: 128,
-    Icon: true,
-    FullImagePath: 'content/newlistingtype/128/128',
-    LangID: 2,
-    Rank: 80,
-    ParentID: 32,
-    Name: 'قطع غيار شاحنات',
-    Description: null,
-    ExtraInfo: null,
-    SaleCount: 0,
-    RentCount: 0,
-    WantedCount: 0,
-    RelatedEntity: 2,
-  },
-  {
-    ID: 256,
-    Icon: true,
-    FullImagePath: 'content/newlistingtype/256/256',
-    LangID: 2,
-    Rank: 90,
-    ParentID: 32,
-    Name: 'قطع غيار مقطورات',
-    Description: null,
-    ExtraInfo: null,
-    SaleCount: 0,
-    RentCount: 0,
-    WantedCount: 0,
-    RelatedEntity: 16,
-  },
-  {
-    ID: 512,
-    Icon: true,
-    FullImagePath: 'content/newlistingtype/512/512',
-    LangID: 2,
-    Rank: 100,
-    ParentID: 32,
-    Name: 'قطع غيار باصات وفانات',
-    Description: null,
-    ExtraInfo: null,
-    SaleCount: 0,
-    RentCount: 0,
-    WantedCount: 0,
-    RelatedEntity: 8,
-  },
-  {
-    ID: 1024,
-    Icon: true,
-    FullImagePath: 'content/newlistingtype/1024/1024',
-    LangID: 2,
-    Rank: 110,
-    ParentID: 32,
-    Name: 'قطع غيار معدات ثقيلة',
-    Description: null,
-    ExtraInfo: null,
-    SaleCount: 0,
-    RentCount: 0,
-    WantedCount: 0,
-    RelatedEntity: 57344,
-  },
-];

@@ -86,7 +86,6 @@ const BottomNavigation = ({navigationRef}) => {
         options={({route}) => {
           const routeName = getFocusedRouteNameFromRoute(route) ?? 'Default';
           const isTabBarHidden = hideOnScreens.includes(routeName);
-          console.log({routeName, isTabBarHidden});
 
           return {
             tabBarStyle: {
@@ -109,7 +108,8 @@ const BottomNavigation = ({navigationRef}) => {
         options={({route}) => {
           const routeName = getFocusedRouteNameFromRoute(route) ?? 'Default';
           const isTabBarHidden = hideOnScreens.includes(routeName);
-          console.log({routeName, isTabBarHidden});
+       
+
           return {
             tabBarStyle: {
               display: isTabBarHidden ? 'none' : 'flex',
@@ -130,7 +130,7 @@ const BottomNavigation = ({navigationRef}) => {
         options={({route}) => {
           const routeName = getFocusedRouteNameFromRoute(route) ?? 'Default';
           const isTabBarHidden = hideOnScreens.includes(routeName);
-          console.log({routeName, isTabBarHidden});
+  
           return {
             tabBarStyle: {
               display: isTabBarHidden ? 'none' : 'flex',
@@ -151,7 +151,7 @@ const BottomNavigation = ({navigationRef}) => {
         options={({route}) => {
           const routeName = getFocusedRouteNameFromRoute(route) ?? 'Default';
           const isTabBarHidden = hideOnScreens.includes(routeName);
-          console.log({routeName, isTabBarHidden});
+  
           return {
             tabBarStyle: {
               display: isTabBarHidden ? 'none' : 'flex',
