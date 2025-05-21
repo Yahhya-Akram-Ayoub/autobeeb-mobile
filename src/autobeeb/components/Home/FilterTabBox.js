@@ -1,5 +1,5 @@
-import {memo, useEffect, useMemo, useState} from 'react';
-import {Alert, FlatList, StyleSheet, View} from 'react-native';
+import {memo, useEffect, useState} from 'react';
+import {Alert, Platform, StyleSheet, UIManager, View} from 'react-native';
 import Layout from '../../constants/Layout';
 import {Constants, Languages} from '../../../common';
 import KS from '../../../services/KSAPI';
@@ -7,15 +7,16 @@ import {
   AllCategories,
   AllMakes,
   arrayOfNull,
+  deepClone,
   MoreData,
 } from '../shared/StaticData';
 import {
+  CategoriesList,
   FuelTypesList,
+  MakesList,
   PaymentList,
-  RenderCategoryItem,
-  RenderMakeItem,
-  RenderSectionItem,
   RenderSellTypes,
+  SectionsList,
 } from './TabsComponents';
 import {useNavigation} from '@react-navigation/native';
 
@@ -25,9 +26,9 @@ const FilterTabBox = memo(({Tab}) => {
   const isMake = Tab.ID !== 16;
   const isForRent = Tab.ID !== 32;
   const isCategory = Tab.ID !== 1;
-  const isSection = Tab.ID === 32;
+  const isSection = Tab.ID === 32 || Tab.ID === 4;
   const isFuel = Tab.ID === 1;
-  const isPaymentMethod = Tab.ID !== 32 && Tab.ID !== 16;
+  const isPaymentMethod = Tab.ID !== 32;
   const [makes, setMakes] = useState(_defaultArray);
   const [categories, setCategories] = useState(_defaultArray);
   const [sections, setSections] = useState(_defaultArray);
@@ -41,9 +42,9 @@ const FilterTabBox = memo(({Tab}) => {
   }, [Tab.ID]);
 
   const ResetStates = () => {
-    setMakes(isMake ? _defaultArray : []);
-    setSections(isSection ? _defaultArray : []);
-    setCategories(isCategory ? _defaultArray : []);
+    setMakes(deepClone(_defaultArray));
+    setSections(deepClone(_defaultArray));
+    setCategories(deepClone(_defaultArray));
   };
 
   const LoadMakes = () => {
@@ -70,14 +71,12 @@ const FilterTabBox = memo(({Tab}) => {
 
   const LoadCategory = () => {
     const _listingType = Tab.ID === 4 ? 8192 : Tab.ID === 32 ? 64 : Tab.ID;
-    console.log({_listingType});
     KS.GetCategoriesCore({
       LangId: Languages.langID,
       ListingType: _listingType,
     }).then(res => {
-      console.log({res, categories});
       if (Tab.ID === 16) res.categories.unshift(AllCategories);
-      setCategories(res.categories);
+      setCategories(deepClone(res.categories));
     });
   };
 
@@ -128,86 +127,35 @@ const FilterTabBox = memo(({Tab}) => {
       selectedSection: NormlizeObj(section),
     });
   };
+
   const NormlizeObj = obj => {
     if (!obj) return null;
     return {...obj, ID: obj.id, Name: obj.name};
   };
-  const CategoriesList = useMemo(
-    () => (
-      <FlatList
-        data={categories}
-        keyExtractor={(_, index) => `cat-${index}`}
-        renderItem={({item}) => (
-          <RenderCategoryItem
-            item={item}
-            onPress={() => {
-              CategoryNavigation(item);
-            }}
-          />
-        )}
-        contentContainerStyle={styles.FilterFuelTypes}
-        scrollEnabled
-        showsHorizontalScrollIndicator={false}
-        horizontal
-        extraData={[categories]}
-      />
-    ),
-    [categories],
-  );
-
-  const SectionsList = useMemo(
-    () => (
-      <FlatList
-        data={sections}
-        keyExtractor={(_, index) => `sec-${index}`}
-        renderItem={({item}) => (
-          <RenderSectionItem
-            item={item}
-            onPress={() => {
-              SectionNavigation(item);
-            }}
-          />
-        )}
-        contentContainerStyle={styles.SectionsList}
-        scrollEnabled
-        showsHorizontalScrollIndicator={false}
-        horizontal
-        extraData={[sections]}
-      />
-    ),
-    [sections],
-  );
-
-  const MakeListsList = useMemo(
-    () => (
-      <FlatList
-        data={makes}
-        keyExtractor={(_, index) => `mak-${index}`}
-        renderItem={({item}) => (
-          <RenderMakeItem
-            item={item}
-            onPress={() => {
-              MakeNavigation(item);
-            }}
-          />
-        )}
-        contentContainerStyle={styles.Makes}
-        scrollEnabled
-        showsHorizontalScrollIndicator={false}
-        horizontal
-        extraData={[makes]}
-      />
-    ),
-    [makes],
-  );
 
   return (
     <View style={styles.expandedBox}>
       <RenderSellTypes Tab={Tab} isForRent={isForRent} />
       <View style={styles.ContainerActive}>
-        {isSection && SectionsList}
-        {isMake && MakeListsList}
-        {isCategory && CategoriesList}
+        {isSection && Tab.ID !== 4 && (
+          <SectionsList sections={sections} onPress={SectionNavigation} />
+        )}
+
+        {isMake && <MakesList makes={makes} onPress={MakeNavigation} />}
+
+        {isCategory && (
+          <CategoriesList
+            categories={categories}
+            onPress={category => {
+              if (isSection) {
+                CategoryNavigation(category, sections[0]);
+              } else {
+                CategoryNavigation(category);
+              }
+            }}
+          />
+        )}
+
         {isFuel && (
           <FuelTypesList
             onPress={fuel => {
@@ -215,13 +163,22 @@ const FilterTabBox = memo(({Tab}) => {
             }}
           />
         )}
-        {isPaymentMethod && (
+
+        <View
+          style={[
+            !isPaymentMethod && {
+              maxHeight: 0,
+              opacity: 0,
+              margin: 0,
+              position: 'absolute',
+            },
+          ]}>
           <PaymentList
-            onPress={(type, value) => {
-              FuelNavigation(type, value);
+            onPress={() => {
+              FuelNavigation('payment', 0);
             }}
           />
-        )}
+        </View>
       </View>
     </View>
   );
@@ -240,18 +197,12 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 8,
     gap: 10,
+    flex: 3,
   },
   ContainerActive: {
     gap: 10,
     backgroundColor: '#F8F8F8',
     padding: 10,
     borderRadius: 3,
-  },
-  FilterFuelTypes: {
-    gap: 10,
-  },
-  SectionsList: {
-    justifyContent: 'space-between',
-    gap: 10,
   },
 });

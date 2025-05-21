@@ -34,6 +34,8 @@ class MakesScreen extends Component {
       listingType:
         this.props.route.params?.ListingType?.ID === 4
           ? 8192
+          : this.props.route.params?.ListingType?.ID === 32
+          ? 1
           : this.props.route.params?.ListingType?.ID,
     }).then(data => {
       let AllMakes = {

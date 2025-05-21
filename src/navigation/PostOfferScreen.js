@@ -1498,7 +1498,7 @@ class PostOfferScreen extends Component {
         style={{
           paddingTop: Platform.OS == 'ios' ? 40 : 0,
           marginBottom: 5,
-          height: Platform.OS == 'ios' ? 90 : 60,
+          minHeight: Platform.OS == 'ios' ? 90 : 60,
           flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
           elevation: 2,
           shadowColor: '#000',
@@ -1535,10 +1535,12 @@ class PostOfferScreen extends Component {
           </Text>
         ) : (
           <Text
+            numberOfLines={2}
             style={{
               color: '#000',
               fontSize: Constants.mediumFont,
               textAlign: 'center',
+              marginVertical: 5,
               flex: 5,
             }}>
             {this.state.step == 15 &&

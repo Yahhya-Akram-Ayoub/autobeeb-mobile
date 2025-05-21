@@ -79,7 +79,7 @@ class Cards extends PureComponent {
       (this.props.SelectedCities &&
         this.props.SelectedCities[0].ID != '' &&
         !this.props.SelectedCities.find(x => x.ID == item.CityID));
-
+        
     return (
       <View
         key={item.ID}

@@ -8,7 +8,6 @@ import CarDetails from '../../../navigation/CarDetails';
 import DealersScreen from '../../../navigation/DealersScreen';
 import UserProfileScreen from '../../../navigation/UserProfileScreen';
 import DealerProfileScreen from '../../../navigation/DealerProfileScreen';
-import Drawer from '../../../components/Drawer';
 
 const Stack = createNativeStackNavigator();
 
@@ -35,7 +34,7 @@ const ChatStack = ({stackRef}) => {
         initialRouteName: 'MessagesScreen',
         cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
       }}>
-      <Stack.Screen name="MessagesScreen" component={Drawer} />
+      <Stack.Screen name="MessagesScreen" component={MessagesScreen} />
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
       <Stack.Screen name="CarDetails" component={CarDetails} />
       <Stack.Screen name="DealersScreen" component={DealersScreen} />

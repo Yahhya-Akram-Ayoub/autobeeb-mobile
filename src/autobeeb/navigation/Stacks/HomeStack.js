@@ -37,7 +37,7 @@ import CliQScreen from '../../../navigation/CliQScreen';
 import PaymentDetailsAutobeeb from '../../../navigation/PaymentDetailsAutobeeb';
 import RecentlyViewedScreen from '../../../navigation/RecentlyViewedScreen';
 import SubscriptionsScreen from '../../../navigation/SubscriptionsScreen';
-import { HomeScreen } from '../../screens';
+import {HomeScreen, ErrorScreen} from '../../screens';
 
 const Stack = createNativeStackNavigator();
 
@@ -134,6 +134,7 @@ const HomeStack = ({stackRef}) => {
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
       <Stack.Screen name="SearchResult" component={SearchResult} />
       <Stack.Screen name="FavoriteScreen" component={FavoriteScreen} />
+      <Stack.Screen name="ErrorScreen" component={ErrorScreen} />
       <Stack.Screen
         name="RecentlyViewedScreen"
         component={RecentlyViewedScreen}

@@ -1,17 +1,25 @@
+import {useEffect} from 'react';
 import {Linking, StyleSheet, TouchableOpacity} from 'react-native';
 import Layout from '../../constants/Layout';
 import Swiper from 'react-native-swiper';
 import {useSelector} from 'react-redux';
-import {View} from 'react-native-animatable';
 import {ExtractScreenObjFromUrl} from '../../../common';
 import FastImage from 'react-native-fast-image';
 import KS from '../../../services/KSAPI';
 import BannerSkeleton from './BannerSkeleton';
+import {useNavigation} from '@react-navigation/native';
 
 const BannersDisplayed = [];
 const HomeBanner = () => {
   const {homePageData, isFetching} = useSelector(state => state.home);
   const NewBanners = homePageData?.NewBanners ?? [];
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    if (!isFetching && !homePageData) {
+      navigation.navigate('ErrorScreen');
+    }
+  }, [isFetching]);
 
   const handleIndexChanged = async index => {
     if (!BannersDisplayed.includes(index)) {

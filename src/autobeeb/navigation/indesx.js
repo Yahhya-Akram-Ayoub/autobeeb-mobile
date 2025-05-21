@@ -6,6 +6,7 @@ import BottomNavigation from './BottomNavigation';
 import {navigationRef} from './NavigationService'; // optional custom ref module
 import SplashScreen from '../../containers/SplashScreen';
 import LanguageSelector from '../../navigation/LanguageSelector';
+import { CardStyleInterpolators } from '@react-navigation/stack';
 
 enableScreens(true); // performance optimization
 
@@ -15,7 +16,10 @@ const AutobeebApp = () => {
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
-        screenOptions={{headerShown: false}}
+        screenOptions={{
+          headerShown: false,
+          cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
+        }}
         initialRouteName="SplashScreen">
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen name="LanguageSelector" component={LanguageSelector} />

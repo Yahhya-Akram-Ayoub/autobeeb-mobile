@@ -19,13 +19,6 @@ import Layout from '../../constants/Layout';
 import TabSkeleton from './TabSkeleton';
 import FilterTabBox from './FilterTabBox';
 
-if (
-  Platform.OS === 'android' &&
-  UIManager.setLayoutAnimationEnabledExperimental
-) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
-
 const HomeTabs = () => {
   const {homePageData, isFetching} = useSelector(state => state.home);
   const ViewingCountry = useSelector(state => state.menu.ViewingCountry);
@@ -91,7 +84,7 @@ const HomeTabs = () => {
                   alignItems: 'center',
                 }}>
                 <TouchableOpacity
-                  onPressIn={() => handleTabPress(item, globalIndex)}
+                  onPress={() => handleTabPress(item, globalIndex)}
                   style={[
                     styles.tabButton,
                     isActive && styles.activeTabButton,
@@ -105,7 +98,7 @@ const HomeTabs = () => {
                         : `https://autobeeb.com/${item.FullImagePath}_115x115.png`,
                     }}
                   />
-                  <Text style={styles.tabText}>
+                  <Text style={styles.tabText} numberOfLines={1}>
                     {item.NameKey ? Languages[item.NameKey] : item.Name}
                   </Text>
                 </TouchableOpacity>

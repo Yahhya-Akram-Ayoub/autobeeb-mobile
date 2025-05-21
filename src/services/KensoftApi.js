@@ -138,7 +138,6 @@ KensoftApi.prototype._setDefaultsOptions = async function (opt) {
 
 //   return md5(newURL);
 // };
-
 KensoftApi.prototype.HomeScreenGet = function (data) {
   var requestUrl = '';
 
@@ -1248,7 +1247,7 @@ KensoftApi.prototype.GetMakesCore = function (data, callback) {
   return this._request(_requestUrl, callback);
 };
 
-KensoftApi.prototype.GetSectionsCore = function (data  , callback) {
+KensoftApi.prototype.GetSectionsCore = function (data, callback) {
   let _requestUrl = `${this.coreApiV1}Lockups/List/SectionsAsync?`;
   data = Object.fromEntries(
     Object.entries(data).filter(([_, v]) => v !== null),

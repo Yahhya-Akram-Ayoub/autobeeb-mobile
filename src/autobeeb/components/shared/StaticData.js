@@ -28,3 +28,5 @@ export const MoreData = {
 };
 
 export const arrayOfNull = length => Array.from({length}, () => null);
+
+export const deepClone = obj => JSON.parse(JSON.stringify(obj));
