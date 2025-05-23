@@ -17,7 +17,6 @@ import SettingScreen from '../../../navigation/SettingScreen';
 import EditProfile from '../../../navigation/EditProfile';
 import LanguageSelector from '../../../navigation/LanguageSelector';
 import RecentListings from '../../../navigation/RecentListings';
-import CarDetails from '../../../navigation/CarDetails';
 import SpecialPlans from '../../../navigation/SpecialPlans';
 import PostOfferScreen from '../../../navigation/PostOfferScreen';
 import SectionsScreen from '../../../navigation/SectionsScreen';
@@ -37,7 +36,8 @@ import CliQScreen from '../../../navigation/CliQScreen';
 import PaymentDetailsAutobeeb from '../../../navigation/PaymentDetailsAutobeeb';
 import RecentlyViewedScreen from '../../../navigation/RecentlyViewedScreen';
 import SubscriptionsScreen from '../../../navigation/SubscriptionsScreen';
-import {HomeScreen, ErrorScreen} from '../../screens';
+import CarDetails from '../../../navigation/CarDetails';
+import {HomeScreen, ErrorScreen, ListingDetailsScreen} from '../../screens';
 
 const Stack = createNativeStackNavigator();
 

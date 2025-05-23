@@ -4,10 +4,7 @@ import {
   TouchableOpacity,
   View,
   StyleSheet,
-  Dimensions,
   LayoutAnimation,
-  UIManager,
-  Platform,
   FlatList,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -18,6 +15,8 @@ import {Languages} from '../../../common';
 import Layout from '../../constants/Layout';
 import TabSkeleton from './TabSkeleton';
 import FilterTabBox from './FilterTabBox';
+import {scale, verticalScale, moderateScale} from 'react-native-size-matters';
+import {RFValue} from 'react-native-responsive-fontsize';
 
 const HomeTabs = () => {
   const {homePageData, isFetching} = useSelector(state => state.home);
@@ -65,24 +64,14 @@ const HomeTabs = () => {
 
             if (isFetching && item === 1) {
               return (
-                <View
-                  key={`skeleton-${itemIndex}`}
-                  style={{
-                    width: Layout.screenWidth * 0.33,
-                    alignItems: 'center',
-                  }}>
+                <View key={`skeleton-${itemIndex}`} style={styles.homeBox}>
                   <TabSkeleton />
                 </View>
               );
             }
 
             return (
-              <View
-                key={globalIndex}
-                style={{
-                  width: Layout.screenWidth * 0.33,
-                  alignItems: 'center',
-                }}>
+              <View key={globalIndex} style={styles.homeBox}>
                 <TouchableOpacity
                   onPress={() => handleTabPress(item, globalIndex)}
                   style={[
@@ -140,6 +129,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: Layout.screenWidth * 0.01,
+  },
+  homeBox: {
+    width: Layout.screenWidth * 0.33,
+    alignItems: 'center',
   },
   rowContainer: {
     flexDirection: 'row',
