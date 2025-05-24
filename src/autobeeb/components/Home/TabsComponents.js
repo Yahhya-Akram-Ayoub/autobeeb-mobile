@@ -8,8 +8,9 @@ import {
 } from 'react-native';
 import {Color, Constants, Languages} from '../../../common';
 import {useNavigation} from '@react-navigation/native';
-import {memo, useCallback, useMemo} from 'react';
+import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import FastImage from 'react-native-fast-image';
+import {deepClone} from '../shared/StaticData';
 
 export const RenderSellTypes = ({Tab, isForRent}) => {
   const navigation = useNavigation();
@@ -205,7 +206,7 @@ export const RenderSectionItem = ({item, onPress}) => {
   return (
     <Pressable
       onPress={onPress}
-      style={[styles.Section, item.id == 64 && {borderColor: Color.primary}]}>
+      style={[styles.Section, item.id === 64 && {borderColor: Color.primary}]}>
       {item.fullImagePath && (
         <FastImage
           style={styles.SectionImage}
@@ -223,45 +224,81 @@ export const RenderSectionItem = ({item, onPress}) => {
     </Pressable>
   );
 };
-export const CategoriesList = memo(({categories, onPress}) => (
-  <FlatList
-    data={categories}
-    keyExtractor={(_, index) => `cat-${index}`}
-    renderItem={({item}) => (
-      <RenderCategoryItem item={item} onPress={() => onPress?.(item)} />
-    )}
-    contentContainerStyle={styles.FilterFuelTypes}
-    scrollEnabled
-    showsHorizontalScrollIndicator={false}
-    horizontal
-  />
-));
-export const SectionsList = memo(({sections, onPress}) => (
-  <FlatList
-    data={sections}
-    keyExtractor={(_, index) => `sec-${index}`}
-    renderItem={({item}) => (
-      <RenderSectionItem item={item} onPress={() => onPress?.(item)} />
-    )}
-    contentContainerStyle={styles.SectionsList}
-    scrollEnabled
-    showsHorizontalScrollIndicator={false}
-    horizontal
-  />
-));
-export const MakesList = memo(({makes, onPress}) => (
-  <FlatList
-    data={makes}
-    keyExtractor={(_, index) => `mak-${index}`}
-    renderItem={({item}) => (
-      <RenderMakeItem item={item} onPress={() => onPress?.(item)} />
-    )}
-    contentContainerStyle={styles.Makes}
-    scrollEnabled
-    showsHorizontalScrollIndicator={false}
-    horizontal
-  />
-));
+export const CategoriesList = memo(({categories, onPress}) => {
+  const listRef = useRef(null);
+
+  useEffect(() => {
+    return () =>
+      setTimeout(() => {
+        listRef?.current?.scrollToOffset({offset: -2000, animated: false});
+      }, 100);
+  }, [categories]);
+
+  return (
+    <FlatList
+      ref={listRef}
+      data={categories}
+      keyExtractor={(_, index) => `cat-${index}`}
+      renderItem={({item}) => (
+        <RenderCategoryItem item={item} onPress={() => onPress?.(item)} />
+      )}
+      contentContainerStyle={styles.FilterFuelTypes}
+      scrollEnabled
+      showsHorizontalScrollIndicator={false}
+      horizontal
+    />
+  );
+});
+export const SectionsList = memo(({sections, onPress}) => {
+  const listRef = useRef(null);
+
+  useEffect(() => {
+    return () =>
+      setTimeout(() => {
+        listRef?.current?.scrollToOffset({offset: -1000, animated: false});
+      }, 50);
+  }, [sections]);
+
+  return (
+    <FlatList
+      ref={listRef}
+      data={sections}
+      keyExtractor={(_, index) => `sec-${index}`}
+      renderItem={({item}) => (
+        <RenderSectionItem item={item} onPress={() => onPress?.(item)} />
+      )}
+      contentContainerStyle={styles.SectionsList}
+      scrollEnabled
+      showsHorizontalScrollIndicator={false}
+      horizontal
+    />
+  );
+});
+export const MakesList = memo(({makes, onPress}) => {
+  const listRef = useRef(null);
+
+  useEffect(() => {
+    return () =>
+      setTimeout(() => {
+        listRef?.current?.scrollToOffset({offset: -1000, animated: false});
+      }, 50);
+  }, [makes]);
+
+  return (
+    <FlatList
+      ref={listRef}
+      data={makes}
+      keyExtractor={(_, index) => `mak-${index}`}
+      renderItem={({item}) => (
+        <RenderMakeItem item={item} onPress={() => onPress?.(item)} />
+      )}
+      contentContainerStyle={styles.Makes}
+      scrollEnabled
+      showsHorizontalScrollIndicator={false}
+      horizontal
+    />
+  );
+});
 
 const RenderFuelItem = ({item, onPress}) => {
   return (
@@ -293,7 +330,7 @@ const styles = StyleSheet.create({
     fontFamily: Constants.fontFamilyBold,
     fontSize: 12,
   },
-  Makes: {},
+  Makes: {gap: 8},
   Make: {
     borderWidth: 1,
     borderColor: '#69696950',
@@ -301,8 +338,6 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     justifyContent: 'center',
     alignItems: 'center',
-    maxWidth: 55,
-    maxHeight: 55,
     width: 65,
     height: 65,
   },

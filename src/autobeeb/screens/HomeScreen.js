@@ -41,7 +41,7 @@ const HomeScreen = () => {
       style={{
         minWidth: Layout.screenWidth,
         flex: 1,
-        paddingBottom: insets.bottom + 10,
+        paddingBottom: insets.bottom,
       }}>
       <AppHeader onCountryChange={refreshScreen} />
       <ScrollView
@@ -53,6 +53,7 @@ const HomeScreen = () => {
         <AddOfferBtn />
         <BlogsRow />
         <DealersRow />
+        <View style={{height: 10}} />
       </ScrollView>
     </View>
   );

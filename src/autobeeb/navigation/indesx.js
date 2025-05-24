@@ -21,20 +21,8 @@ const AutobeebApp = () => {
           cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
         }}
         initialRouteName="SplashScreen">
-        <Stack.Screen
-          screenOptions={{
-            cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
-          }}
-          name="SplashScreen"
-          component={SplashScreen}
-        />
-        <Stack.Screen
-          screenOptions={{
-            cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
-          }}
-          name="LanguageSelector"
-          component={LanguageSelector}
-        />
+        <Stack.Screen name="SplashScreen" component={SplashScreen} />
+        <Stack.Screen name="LanguageSelector" component={LanguageSelector} />
         <Stack.Screen
           name="App"
           component={() => <BottomNavigation navigationRef={navigationRef} />}

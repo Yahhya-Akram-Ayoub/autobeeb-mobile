@@ -79,7 +79,12 @@ const HomeTabs = () => {
                     isActive && styles.activeTabButton,
                   ]}>
                   <FastImage
-                    style={styles.fastImage}
+                    style={[
+                      styles.fastImage,
+                      itemIndex === 2 &&
+                        rowIndex === 1 &&
+                        styles.marginSpareParts,
+                    ]}
                     resizeMode={FastImage.resizeMode.contain}
                     source={{
                       uri: item.Image
@@ -144,7 +149,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     margin: 4,
     borderColor: '#ccc',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     width: Layout.screenWidth * 0.31,
     height: Layout.screenWidth * 0.29,
@@ -160,6 +165,10 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     height: 120,
     borderWidth: 0,
+  },
+  marginSpareParts: {
+    marginTop: 3,
+    marginBottom: -3,
   },
   fastImage: {
     width: 90,

@@ -474,7 +474,7 @@ class LanguageSelector extends Component {
                           'SkipLanguage',
                           JSON.stringify(true),
                           () => {
-                            RNRestart.Restart();
+                            RNRestart.restart();
                           },
                         );
                       },
@@ -505,7 +505,7 @@ class LanguageSelector extends Component {
                       'SkipLanguage',
                       JSON.stringify(true),
                       () => {
-                        RNRestart.Restart();
+                        RNRestart.restart();
                       },
                     );
                   },

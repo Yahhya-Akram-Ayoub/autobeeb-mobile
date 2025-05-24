@@ -16,12 +16,13 @@ const DrawerScreen = () => {
       style={{
         backgroundColor: '#fff',
         flex: 1,
-        paddingBottom: insets.bottom + 10,
+        paddingBottom: insets.bottom,
       }}>
       <ScrollView>
         <DeaweHeader />
         <UserOptions />
         <GeneralOptions />
+        <View style={{height: 10}} />
       </ScrollView>
     </View>
   );

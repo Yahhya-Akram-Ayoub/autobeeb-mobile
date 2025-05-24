@@ -33,7 +33,7 @@ const AppHeader = ({
   const countryPickerRef = useRef(null);
 
   const handleCountryChange = value => {
-    dispatch(MenuActions.setViewingCountry(value));
+    MenuActions.setViewingCountry(dispatch, value);
     if (onCountryChange) {
       onCountryChange(value);
     }

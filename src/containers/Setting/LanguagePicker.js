@@ -74,7 +74,7 @@ class LanguagePicker extends Component {
                       await AsyncStorage.setItem('language', newLang);
                     }
                     
-                    RNRestart.Restart();
+                    RNRestart.restart();
                   } catch (error) {
                     console.error('Language switch error:', error);
                   }

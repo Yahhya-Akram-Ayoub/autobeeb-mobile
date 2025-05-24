@@ -107,7 +107,7 @@ class Setting extends Component {
       ],
       () => {
         setTimeout(() => {
-          RNRestart.Restart();
+          RNRestart.restart();
         }, 500);
       },
     );
@@ -143,7 +143,7 @@ class Setting extends Component {
                     onPress: async () => {
                       this.props.setViewingCurrency(data);
                       setTimeout(() => {
-                        RNRestart.Restart();
+                        RNRestart.restart();
                       }, 2000);
                     },
                   },
