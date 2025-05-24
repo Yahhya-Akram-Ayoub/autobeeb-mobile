@@ -82,6 +82,14 @@ let AllMakes = {
   All: true,
   Name: Languages.AllMakes,
 };
+const getMakeParentId = (typeId, sections) => {
+  if (typeId === 4) {
+    if (sections && sections?.length) {
+      return sections[0].ID;
+    }
+  } else if (typeId === 32) return 1;
+  return typeId;
+};
 
 class ListingsScreen extends Component {
   constructor(props) {
@@ -593,7 +601,10 @@ class ListingsScreen extends Component {
       this.setState({isMakesLoading: true});
       KS.MakesGet({
         langID: Languages.langID,
-        listingType: this.props.route.params?.ListingType?.ID,
+        listingType: getMakeParentId(
+          this.props.route.params?.ListingType?.ID,
+          this.state.selectedSection,
+        ),
       }).then(data => {
         let AllMakes = {
           //  FullImagePath: "yaz",
@@ -678,7 +689,10 @@ class ListingsScreen extends Component {
       makeID: (this.props.route.params?.selectedMake || {ID: ''}).ID || '',
       modelid: (this.props.route.params?.selectedModel || {ID: ''}).ID || '',
       sellType: (this.props.route.params?.SellType || {ID: ''}).ID || '',
-      categoryid: this.props.route.params?.CategoryID || '',
+      categoryid:
+        this.props.route.params?.CategoryID ||
+        this.props.route.params?.selectedCategory?.ID ||
+        '',
       section: this.props.route.params?.SectionID || '',
       fuelType:
         (this.props.route.params?.selectedFuelType || {ID: ''}).ID || '',
@@ -3017,10 +3031,15 @@ class ListingsScreen extends Component {
                   )}
 
                 <FlatList
-                  windowSize={16}
                   removeClippedSubviews
                   keyExtractor={this.keyExtractor}
+                  contentContainerStyle={{
+                    overflow: 'hidden',
+                    minWidth: '100%',
+                    flex: 3,
+                  }}
                   numColumns={1}
+                  horizontal={false}
                   key={this.state.renderType}
                   data={this.state.Listings.filter(
                     x =>
@@ -4130,9 +4149,10 @@ class ListingsScreen extends Component {
 
                           KS.MakesGet({
                             langID: Languages.langID,
-                            listingType: item.RelatedEntity
-                              ? item.RelatedEntity
-                              : item.ID,
+                            listingType: getMakeParentId(
+                              item.RelatedEntity ? item.RelatedEntity : item.ID,
+                              this.state.selectedSection,
+                            ),
                           }).then(data => {
                             data.unshift(AllMakes);
 

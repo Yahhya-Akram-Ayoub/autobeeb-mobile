@@ -15,8 +15,6 @@ import {Languages} from '../../../common';
 import Layout from '../../constants/Layout';
 import TabSkeleton from './TabSkeleton';
 import FilterTabBox from './FilterTabBox';
-import {scale, verticalScale, moderateScale} from 'react-native-size-matters';
-import {RFValue} from 'react-native-responsive-fontsize';
 
 const HomeTabs = () => {
   const {homePageData, isFetching} = useSelector(state => state.home);

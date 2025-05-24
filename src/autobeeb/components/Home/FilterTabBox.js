@@ -80,7 +80,7 @@ const FilterTabBox = memo(({Tab}) => {
     });
   };
 
-  const MakeNavigation = make => {
+  const MakeNavigation = (make, section) => {
     if (make.more) {
       navigation.navigate('MakesScreen', {
         ListingType: Tab,
@@ -91,6 +91,8 @@ const FilterTabBox = memo(({Tab}) => {
         ListingType: Tab,
         SellType: Constants.sellTypes[0],
         selectedMake: NormlizeObj(make),
+        SectionID: section?.id,
+        selectedSection: NormlizeObj(section),
       });
     }
   };
@@ -141,7 +143,18 @@ const FilterTabBox = memo(({Tab}) => {
           <SectionsList sections={sections} onPress={SectionNavigation} />
         )}
 
-        {isMake && <MakesList makes={makes} onPress={MakeNavigation} />}
+        {isMake && (
+          <MakesList
+            makes={makes}
+            onPress={make => {
+              if (isSection) {
+                MakeNavigation(make, sections[0]);
+              } else {
+                MakeNavigation(make);
+              }
+            }}
+          />
+        )}
 
         {isCategory && (
           <CategoriesList
@@ -174,8 +187,8 @@ const FilterTabBox = memo(({Tab}) => {
             },
           ]}>
           <PaymentList
-            onPress={() => {
-              FuelNavigation('payment', 0);
+            onPress={(type, val) => {
+              FuelNavigation(type, val);
             }}
           />
         </View>
