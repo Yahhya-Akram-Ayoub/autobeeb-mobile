@@ -11,3 +11,4 @@ export {default as DeaweHeader} from './Drawer/DeaweHeader';
 export {default as UserOptions} from './Drawer/UserOptions';
 export {default as FilterTabBox} from './Home/FilterTabBox';
 export {default as ListingBanner} from './ListingDetails/ListingBanner';
+export {default as SpecialSVG} from './ListingDetails/SpecialSVG';
