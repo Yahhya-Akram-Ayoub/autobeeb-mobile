@@ -69,10 +69,8 @@ const FeatueredListingCard = ({
     styles.cardBase,
     isListingsScreen && styles.cardListing,
     differentCountry && styles.cardDifferentCountry,
-    isSpecialOnly && [
-      styles.cardSpecialOnly,
-      {width: windowWidth * (fullScreen ? 0.96 : 0.84)},
-    ],
+    isSpecialOnly && styles.cardSpecialOnly,
+    isSpecialOnly && {width: windowWidth * (fullScreen ? 0.96 : 0.84)},
   ];
 
   return (
@@ -83,7 +81,7 @@ const FeatueredListingCard = ({
             contentContainerStyle={styles.imageList}
             data={imageList}
             horizontal={!isSpecialOnly}
-            scrollEnabled={!isSpecialOnly}
+            scrollEnabled={!isSpecialOnly || true}
             nestedScrollEnabled={true}
             renderItem={({item: img, index}) => (
               <Pressable

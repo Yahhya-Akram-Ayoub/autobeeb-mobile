@@ -17,7 +17,7 @@ const FeatueredListingsCards = ({
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (`${type}` != '32') {
+    if (fallbackTypes || `${type}` !== '32') {
       setIsLoading(true); // Show loading state
       getData();
     }
@@ -28,10 +28,10 @@ const FeatueredListingsCards = ({
     _listings = await getFeaturedListings(type); // Fetch listings for the current type
     if (_listings.length > 0) {
       setListings([..._listings]); // Update state with fetched listings
-      return; // Exit the loop as data is found
+      return;
     }
 
-    if (!!fallbackTypes) {
+    if (fallbackTypes) {
       for (const t of fallbackTypes) {
         _listings = await getFeaturedListings(t); // Fetch listings for the current type
 
@@ -54,7 +54,7 @@ const FeatueredListingsCards = ({
         countryId: country.cca2,
         type: TYPE,
       });
-
+      console.log({res});
       if (res?.Success === 1 && res.Listings.length > 0) {
         setIsLoading(false);
         return res.Listings;
@@ -75,7 +75,7 @@ const FeatueredListingsCards = ({
         toValue: 1,
         duration: 1500,
         useNativeDriver: true,
-      })
+      }),
     ).start();
   }, []);
 
@@ -87,7 +87,10 @@ const FeatueredListingsCards = ({
     ],
   });
 
-  if ((listings.length == 0 && !isLoading) || `${type}` == '32')
+  if (
+    (listings.length === 0 && !isLoading) ||
+    (!fallbackTypes && `${type}` === '32')
+  )
     return <View />;
 
   if (isLoading)
@@ -106,6 +109,20 @@ const FeatueredListingsCards = ({
       </View>
     );
 
+  if (listings.length == 1)
+    return (
+      <View style={{width: '100%'}}>
+        <FeatueredListingCard
+          AllCountries={ISOCode == 'ALL'}
+          AppCountryCode={ISOCode}
+          item={listings[0]}
+          navigation={navigation}
+          SelectedCities={selectedCity}
+          fullScreen={listings.length == 1}
+        />
+      </View>
+    );
+
   return (
     <View style={{width: '100%'}}>
       <FlatList
@@ -117,6 +134,7 @@ const FeatueredListingsCards = ({
         scrollEnabled={true}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
+        nestedScrollEnabled={true}
         renderItem={({index, item}) => {
           return (
             <FeatueredListingCard

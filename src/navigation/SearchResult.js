@@ -1035,10 +1035,6 @@ class SearchResult extends Component {
   }
 
   LoadListingsPage = async () => {
-    console.log({
-      PageNum: this.state.PageNum,
-      maximumPages: this.state.maximumPages,
-    });
     this.setState({PageNum: this.state.PageNum + 1}, () => {
       if (this.state.PageNum <= this.state.maximumPages) {
         //khaled
@@ -1077,9 +1073,7 @@ class SearchResult extends Component {
               this.state.PageNum,
               data.Pages,
             );
-            console.log({
-              Pages: data.Pages,
-            });
+
             let concattedListings = this.state.Listings;
             let tempBanners = this.state.Banners || [];
 
@@ -1094,10 +1088,6 @@ class SearchResult extends Component {
                 skipForAutoBeebBanner: true,
               });
             }
-            // else {
-            //   concattedListings.push({Banner: true});
-            //   concattedListings.push({skip: true});
-            // }
 
             concattedListings = concattedListings.concat(data.Listings);
 
@@ -1402,14 +1392,13 @@ class SearchResult extends Component {
             onEndReachedThreshold={5} //was 0.5
             ListHeaderComponent={
               <>
-                {[
-                  ...this.state.Listings.filter(
-                    x =>
-                      x.IsSpecial && x.CountryID == `${this.state.Country?.ID}`,
-                  ),
-                ].length == 0 &&
+                {this.state.Listings?.filter(
+                  x =>
+                    x.IsSpecial &&
+                    `${x.CountryID}` === `${this.state.Country?.ID}`,
+                )?.length === 0 &&
                   !this.state.NoRelatedOffers &&
-                  `${this.props.ViewingCountry?.cca2}`.toLowerCase() !=
+                  `${this.props.ViewingCountry?.cca2}`.toLowerCase() !==
                     'all' && (
                     <FeatueredListingsCards
                       ISOCode={this.state.ISOCode}

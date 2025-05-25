@@ -816,8 +816,6 @@ KensoftApi.prototype.FreeSearch = function (data, callback) {
 
   //  requestUrl += this.join(data, "&");
 
-  //console.log(requestUrl);
-
   return this._requestPost(requestUrl, data, response => {
     return response;
   });
@@ -903,10 +901,7 @@ KensoftApi.prototype.ListingInitInfo = function (data, callback) {
 KensoftApi.prototype.BannerClick = function (data, callback) {
   var requestUrl = this.url + 'Services/BannerClick?';
   requestUrl += this.join(data, '&');
-  __DEV__ &&
-    setTimeout(() => {
-      console.log({requestUrl});
-    }, 2000);
+
   return this._requestPost(requestUrl, data, response => {
     return response;
   });
@@ -1073,10 +1068,7 @@ KensoftApi.prototype.ReportListing = function (data, callback, noEmbed) {
 
 KensoftApi.prototype.BannerViewed = function (data, callback) {
   var requestUrl = this.url + 'Services/BannerViewed?bannerID=' + data;
-  __DEV__ &&
-    setTimeout(() => {
-      console.log({requestUrl});
-    }, 2000);
+
   return new Promise((resolve, reject) => {
     fetch(requestUrl, {
       method: 'POST',
@@ -1239,7 +1231,7 @@ KensoftApi.prototype.GetCountryCore = function (data, callback) {
 };
 
 KensoftApi.prototype.GetMakesCore = function (data, callback) {
-  let _requestUrl = `${this.coreApiV1}Lockups/List/MakesAsync?`;
+  let _requestUrl = `${this.coreApiV1}lookups/List/MakesAsync?`;
   data = Object.fromEntries(
     Object.entries(data).filter(([_, v]) => v !== null),
   );
@@ -1248,7 +1240,7 @@ KensoftApi.prototype.GetMakesCore = function (data, callback) {
 };
 
 KensoftApi.prototype.GetSectionsCore = function (data, callback) {
-  let _requestUrl = `${this.coreApiV1}Lockups/List/SectionsAsync?`;
+  let _requestUrl = `${this.coreApiV1}lookups/List/SectionsAsync?`;
   data = Object.fromEntries(
     Object.entries(data).filter(([_, v]) => v !== null),
   );
@@ -1257,7 +1249,7 @@ KensoftApi.prototype.GetSectionsCore = function (data, callback) {
 };
 
 KensoftApi.prototype.GetCategoriesCore = function (data, callback) {
-  let _requestUrl = `${this.coreApiV1}Lockups/List/CategoriesAsync?`;
+  let _requestUrl = `${this.coreApiV1}lookups/List/CategoriesAsync?`;
   data = Object.fromEntries(
     Object.entries(data).filter(([_, v]) => v !== null),
   );
