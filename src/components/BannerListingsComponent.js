@@ -160,6 +160,7 @@ class BannerListings extends PureComponent {
               onPress={() =>
                 this.props.navigation.push('CarDetails', {
                   item: item,
+                  id: item.ID,
                 })
               }>
               {item.Images && item.Images.length > 1 && (
@@ -485,6 +486,7 @@ class BannerListings extends PureComponent {
               onPress={() =>
                 this.props.navigation.push('CarDetails', {
                   item: item,
+                  id: item.ID,
                 })
               }
               style={[
@@ -535,6 +537,7 @@ class BannerListings extends PureComponent {
                           onPress={() =>
                             this.props.navigation.push('CarDetails', {
                               item: item,
+                              id: item.ID,
                             })
                           }>
                           <FastImage
@@ -561,6 +564,7 @@ class BannerListings extends PureComponent {
                     onPress={() =>
                       this.props.navigation.push('CarDetails', {
                         item: item,
+                        id: item.ID,
                       })
                     }>
                     <View
@@ -596,7 +600,7 @@ class BannerListings extends PureComponent {
                     style={{
                       color: '#fff',
                       backgroundColor: this.sellTypes.find(
-                        ST => ST.ID == item.SellType
+                        ST => ST.ID == item.SellType,
                       )?.backgroundColor,
                       padding: 3,
                       minWidth: 45,
@@ -1176,6 +1180,7 @@ class BannerListings extends PureComponent {
                   onPress={() =>
                     this.props.navigation.push('CarDetails', {
                       item: item,
+                      id: item.ID,
                     })
                   }>
                   <View style={[styles.SellFastBox]}>

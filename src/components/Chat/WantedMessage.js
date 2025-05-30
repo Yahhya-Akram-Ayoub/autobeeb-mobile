@@ -23,6 +23,7 @@ const WantedMessage = ({currentMessage, navigation}) => {
       onPress={() => {
         navigation.push('CarDetails', {
           item: offer,
+          id: offer.ID,
         });
       }}>
       <View style={styles.wantedText}>

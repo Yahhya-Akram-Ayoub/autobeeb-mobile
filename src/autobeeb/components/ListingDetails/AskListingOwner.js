@@ -6,52 +6,49 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import {Languages, Color} from '../common';
-import KS from '../services/KSAPI';
-import {toast} from '../Omni';
+import {useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+import KS from '../../../services/KSAPI';
+import {Color, Constants, Languages} from '../../../common';
+import {toast} from '../../../Omni';
+import {screenWidth} from '../../constants/Layout';
 
 const AskListingOwner = ({
-  navigateToLogin,
-  Listing,
-  OwnerId,
-  UserId,
-  IsDealer,
+  loading,
+  isSparePart,
+  ownerId,
+  isDealer,
+  listing,
 }) => {
+  const user = useSelector(state => state.user.user);
+  const navigation = useNavigation();
+
   const sendMessage = messaeg => {
-    if (UserId) {
+    if (user) {
       KS.AddEntitySession({
-        userID: UserId,
-        targetID: OwnerId,
-        relatedEntity: JSON.stringify({...Listing, IsDealer}),
+        userID: user.ID,
+        targetID: ownerId,
+        relatedEntity: JSON.stringify({...listing, IsDealer: isDealer}),
       }).then(result2 => {
         KS.SendMessage({
-          senderID: UserId,
-          receiverID: OwnerId,
+          senderID: user.ID,
+          receiverID: ownerId,
           message: messaeg,
           sessionID: result2.SessionID,
-        }).then(res => {
-          // console.log({res});
-        });
+        }).then(res => {});
         toast(Languages.MessageSent);
       });
     } else {
-      navigateToLogin();
+      navigation.navigate('LoginScreen');
     }
   };
 
-  if (OwnerId == UserId) return <></>;
+  if (loading) return <></>;
+  if (ownerId === user.ID) return <></>;
 
   return (
-    <View
-      style={[
-        styles.AskBox,
-        styles.BoxShadow,
-        {backgroundColor: '#fff', paddingTop: 12},
-        styles.marginBottom,
-      ]}>
-      <Text style={[styles.AskListingOwner, styles.titleStyle]}>
-        {Languages.AskListingOwner}
-      </Text>
+    <View style={styles.cardContainer}>
+      <Text style={styles.blackHeader}>{Languages.AskListingOwner}</Text>
       <View style={[styles.Qbox]}>
         {[
           Languages.interested_how_much,
@@ -63,7 +60,7 @@ const AskListingOwner = ({
             <Text style={styles.QuestionPoup}>{item}</Text>
           </TouchableOpacity>
         ))}
-        {Listing.TypeID == 32 &&
+        {isSparePart &&
           [
             Languages.new_or_used,
             Languages.manufacture,
@@ -80,6 +77,35 @@ const AskListingOwner = ({
 };
 
 const styles = StyleSheet.create({
+  cardContainer: {
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderColor: '#eee',
+    shadowColor: Color.secondary,
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    marginBottom: 8,
+    shadowOpacity: 0.29,
+    shadowRadius: 4.65,
+    elevation: 7,
+    width: screenWidth - 14,
+    alignSelf: 'center',
+    borderRadius: 10,
+    padding: 12,
+    justifyContent: 'space-around',
+  },
+  blackHeader: {
+    paddingHorizontal: 10,
+    width: '100%',
+    paddingTop: 4,
+    paddingBottom: 3,
+    color: '#000',
+    fontSize: 18,
+    marginBottom: 5,
+    fontFamily: Constants.fontFamilyBold,
+  },
   marginBottom: {
     marginBottom: 2,
   },
@@ -107,6 +133,8 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     backgroundColor: '#207ea5',
     color: '#fff',
+    fontSize: 15,
+    fontFamily: Constants.fontFamily,
   },
   Qbox: {
     flexDirection: 'row',

@@ -1261,6 +1261,7 @@ class CarDetails extends Component {
             }}
             onScroll={this.onScrollHandler}>
             {this.renderImages()}
+
             <View
               style={{
                 paddingHorizontal: 10,
@@ -1525,6 +1526,7 @@ class CarDetails extends Component {
                 </View>
               </TouchableOpacity>
             )}
+
             <View
               style={[
                 styles.boxContainer,
@@ -1621,7 +1623,6 @@ class CarDetails extends Component {
                   </View>
                 </View>
               )}
-              {}
               {!!Listing.MakeName && (
                 <View style={[styles.sectionHalf]}>
                   <Text style={styles.sectionTitle}>{Languages.Make}</Text>
@@ -1860,6 +1861,7 @@ class CarDetails extends Component {
                 />
               </View>
             )}
+
             {!!Listing.Description && (
               <View
                 style={[
@@ -2027,6 +2029,7 @@ class CarDetails extends Component {
                 </Text>
               </TouchableOpacity>
             </View>
+
             {Languages.langID == 2 && (
               <AskListingOwner
                 Listing={Listing}
@@ -2038,6 +2041,8 @@ class CarDetails extends Component {
                 }}
               />
             )}
+
+            {/* Yahhya */}
             <View
               style={[
                 styles.BoxShadow,
@@ -2348,6 +2353,8 @@ class CarDetails extends Component {
                 </Text>
               </View>
             </View>
+
+             {/* Yahhya */}
             <View
               style={[
                 styles.boxContainer,
@@ -2723,6 +2730,7 @@ class CarDetails extends Component {
                               this.props.navigation.push('CarDetails', {
                                 key: item.ID,
                                 item: item,
+                                id: item.ID,
                               });
                             }}
                             style={{
@@ -3017,7 +3025,7 @@ class CarDetails extends Component {
             </View>
           )}
         </AutobeebModal>
-        
+
         {this.state.firstLoad && (
           <AutobeebModal
             ref={instance => (this.WarningPopup = instance)}
@@ -3113,11 +3121,7 @@ class CarDetails extends Component {
             if (!!this.props?.route?.params?.pendingDelete == true) {
               this.setState({pendingDelete: true, OtpOpen: true});
             }
-            console.log({
-              IsSpecial: this.props?.route?.params?.IsSpecial,
-              TypeID: this.props?.route?.params?.item?.TypeID,
-              SellType: `${this.props?.route?.params?.item?.SellType}`,
-            });
+
             if (
               !!this.props?.route?.params?.pendingDelete == false &&
               !!this.props?.route?.params?.isNewUser == false &&

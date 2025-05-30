@@ -156,15 +156,21 @@ const Constants = {
   gearBoxTrucks: [
     {
       ID: 1,
-      Name: Languages.Automatic,
+      get Name() {
+        return Languages.Automatic;
+      },
     },
     {
       ID: 2,
-      Name: Languages.Manual,
+      get Name() {
+        return Languages.Manual;
+      },
     },
     {
       ID: 4,
-      Name: Languages.SemiAutomatic,
+      get Name() {
+        return Languages.SemiAutomatic;
+      },
     },
   ],
   fuelTypes: [
@@ -336,23 +342,33 @@ const Constants = {
       ID: -1,
       Image: require('../images/SellTypes/BlueAll.png'),
       All: true,
-      Name: Languages.All,
+      get Name() {
+        return Languages.All;
+      },
     },
     {
       ID: 1,
-      Name: Languages.Daily,
+      get Name() {
+        return Languages.Daily;
+      },
     },
     {
       ID: 2,
-      Name: Languages.Weekly,
+      get Name() {
+        return Languages.Weekly;
+      },
     },
     {
       ID: 4,
-      Name: Languages.Monthly,
+      get Name() {
+        return Languages.Monthly;
+      },
     },
     {
       ID: 8,
-      Name: Languages.Yearly,
+      get Name() {
+        return Languages.Yearly;
+      },
     },
   ],
   FilterOfferCondition: [

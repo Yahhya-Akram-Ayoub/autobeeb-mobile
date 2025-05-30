@@ -239,6 +239,7 @@ class componentName extends Component {
                               ID: URL.split('/')[URL.split('/').length - 2],
                               TypeID: URL.split('/')[URL.split('/').length - 1],
                             },
+                            id: URL.split('/')[URL.split('/').length - 2],
                           });
                         } else if (URL.includes('postoffer')) {
                           this.props.navigation.navigate('PostOfferScreen');

@@ -15,7 +15,7 @@ import {
   BackHandler,
   Modal,
 } from 'react-native';
-import {connect} from 'react-redux';
+import {connect, useSelector} from 'react-redux';
 import {Languages, Color, Constants} from '../common';
 import {AutobeebModal, LogoSpinner} from '../components';
 import HTML, {IGNORED_TAGS} from 'react-native-render-html';
@@ -212,6 +212,8 @@ const BankCountries = ['979'];
 
 const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
   const navigation = useNavigation();
+  const Currency = useSelector(state => state.menu.ViewingCurrency);
+  const User = useSelector(state => state.user.user);
   const [plans, setPlans] = useState([]);
   const itemSkus = Platform.select({
     ios: [
@@ -272,11 +274,10 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
   const PaymentModal = useRef(null);
   const plansListRef = useRef(null);
   const Offer = !pOffer ? route?.params?.Offer : pOffer;
-  const User = !pUser ? route?.params?.User : pUser;
-  const Currency = !pCurrency ? route?.params?.Currency : pCurrency;
+  const listingId = route?.params?.listingId ?? Offer.ID;
   const lang = Languages.getLanguage();
   const [InAppPurchases, setInAppPurchases] = useState([]);
- 
+
   useEffect(() => {
     ks.GetSpecialPlans({
       UserId: User.ID,
@@ -404,7 +405,7 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
 
   function OpenCliQScreen() {
     fetch(
-      `https://autobeeb.com/${lang}/special-do-pay/${Offer.ID}/${
+      `https://autobeeb.com/${lang}/special-do-pay/${listingId}/${
         selectedPlan?.Id
       }/${'15'}?userID=${User.ID}&id=${User.ID}`,
     ).then(res => {});
@@ -767,7 +768,7 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
           allowUniversalAccessFromFileURLs={true}
           onLoadStart={() => {
             console.log(
-              `https://autobeeb.com/${lang}/special-do-pay/${Offer.ID}/${selectedPlan?.Id}/${selectedGateway}?userID=${User.ID}&id=${User.ID}`,
+              `https://autobeeb.com/${lang}/special-do-pay/${listingId}/${selectedPlan?.Id}/${selectedGateway}?userID=${User.ID}&id=${User.ID}`,
             );
           }}
           javaScriptEnabled={true}
@@ -778,7 +779,7 @@ const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
             navigation.navigate('HomeScreen');
           }}
           source={{
-            uri: `https://autobeeb.com/${lang}/special-do-pay/${Offer.ID}/${selectedPlan?.Id}/${selectedGateway}?userID=${User.ID}&id=${User.ID}`,
+            uri: `https://autobeeb.com/${lang}/special-do-pay/${listingId}/${selectedPlan?.Id}/${selectedGateway}?userID=${User.ID}&id=${User.ID}`,
           }}
           renderLoading={() => (
             <ActivityIndicator

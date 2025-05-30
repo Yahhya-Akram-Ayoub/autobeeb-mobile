@@ -75,7 +75,6 @@ const BottomNavigation = ({navigationRef}) => {
       screenOptions={{
         headerShown: false,
         tabBarHideOnKeyboard: true,
-        cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
       }}>
       <Tab.Screen
         name="HomeScreen"

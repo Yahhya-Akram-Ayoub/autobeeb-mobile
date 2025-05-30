@@ -27,6 +27,7 @@ import SearchResult from '../../../navigation/SearchResult';
 import FavoriteScreen from '../../../navigation/FavoriteScreen';
 import SubscriptionsScreen from '../../../navigation/SubscriptionsScreen';
 import {DrawerScreen} from '../../screens';
+import {TranstionSettings} from './Transtion';
 
 const Stack = createNativeStackNavigator();
 
@@ -50,9 +51,8 @@ const ProfileStack = ({stackRef}) => {
       ref={stackRef}
       screenOptions={{
         headerShown: false,
-        animationEnabled: false,
         initialRouteName: 'Drawer',
-        cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
+        ...TranstionSettings,
       }}>
       <Stack.Screen name="Drawer" component={DrawerScreen} />
       <Stack.Screen name="SettingScreen" component={SettingScreen} />

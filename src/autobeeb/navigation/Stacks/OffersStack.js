@@ -13,6 +13,7 @@ import CarDetails from '../../../navigation/CarDetails';
 import DealersScreen from '../../../navigation/DealersScreen';
 import UserProfileScreen from '../../../navigation/UserProfileScreen';
 import DealerProfileScreen from '../../../navigation/DealerProfileScreen';
+import { TranstionSettings } from './Transtion';
 
 const Stack = createNativeStackNavigator();
 
@@ -35,9 +36,8 @@ const OffersStack = ({stackRef}) => {
       ref={stackRef}
       screenOptions={{
         headerShown: false,
-        animationEnabled: false,
         initialRouteName: 'ActiveOffers',
-        cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
+        ...TranstionSettings,
       }}>
       <Stack.Screen name="ActiveOffers" component={ActiveOffers} />
       <Stack.Screen name="ChatScreen" component={ChatScreen} />

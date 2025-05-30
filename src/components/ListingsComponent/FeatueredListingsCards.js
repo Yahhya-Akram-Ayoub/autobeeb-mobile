@@ -54,7 +54,7 @@ const FeatueredListingsCards = ({
         countryId: country.cca2,
         type: TYPE,
       });
-      console.log({res});
+
       if (res?.Success === 1 && res.Listings.length > 0) {
         setIsLoading(false);
         return res.Listings;

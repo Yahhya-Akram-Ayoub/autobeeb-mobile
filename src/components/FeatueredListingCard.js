@@ -87,7 +87,9 @@ const FeatueredListingCard = ({
               <Pressable
                 key={index}
                 style={[item.Images?.length === 1 ? styles.singleImage : {}]}
-                onPress={() => navigation.push('CarDetails', {item})}>
+                onPress={() =>
+                  navigation.push('CarDetails', {item, id: item.ID})
+                }>
                 <FastImage
                   style={[styles.image, {width: imageWidth}]}
                   source={{
@@ -119,7 +121,7 @@ const FeatueredListingCard = ({
         ) : (
           <Pressable
             style={styles.singleImage}
-            onPress={() => navigation.push('CarDetails', {item})}>
+            onPress={() => navigation.push('CarDetails', {item, id: item.ID})}>
             <FastImage
               style={styles.placeholderImage}
               source={require('../images/placeholder.png')}

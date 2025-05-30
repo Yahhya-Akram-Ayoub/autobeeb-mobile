@@ -102,6 +102,7 @@ class RowListingsComponent extends PureComponent {
           onPress={() =>
             this.props.navigation.push('CarDetails', {
               item: item,
+              id: item.ID,
             })
           }>
           <View

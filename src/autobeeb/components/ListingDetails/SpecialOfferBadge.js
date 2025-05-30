@@ -1,5 +1,5 @@
-import {View, Text, StyleSheet} from 'react-native';
-import {Languages} from '../../../common';
+import {View, Text, StyleSheet, I18nManager} from 'react-native';
+import {Color, Languages} from '../../../common';
 import SpecialSVG from './SpecialSVG';
 
 const SpecialOfferBadge = () => {
@@ -30,31 +30,47 @@ const SpecialOfferBadge = () => {
 export default SpecialOfferBadge;
 
 const styles = StyleSheet.create({
-  specialSignal: {
-    position: 'absolute',
-    top: 10,
-    zIndex: 10,
-    backgroundColor: '#FF0000',
-    paddingHorizontal: 10,
-    paddingVertical: 3,
-    borderRadius: 4,
-    left: 10,
-  },
-  specialSignalText: {
-    color: '#FFF',
-    fontWeight: 'bold',
-  },
-  specialSignalOtherLang: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center',
-  },
-  specialSignalTextOtherLang: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   svgSpacer: {
     width: 5,
+  },
+  specialSignal: {
+    top: 20,
+    right: -60,
+    position: 'absolute',
+    transform: I18nManager.isRTL ? [{rotate: '315deg'}] : [{rotate: '45deg'}],
+    textTransform: 'uppercase',
+    paddingVertical: 2,
+    paddingHorizontal: 0,
+    zIndex: 1,
+    width: 200,
+    backgroundColor: '#ff1c1a',
+    letterSpacing: 0.5,
+    backgroundImage: 'radial-gradient(circle, #ff1c1a, #bf0b00)',
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: {width: 2, height: 1},
+    textShadowRadius: 0,
+  },
+  specialSignalText: {
+    color: '#e9ea7b',
+    fontSize: 12,
+    textAlign: 'center',
+    borderWidth: 1,
+    borderStyle: 'dotted',
+    borderColor: '#e5e82c',
+    paddingVertical: 2,
+  },
+  specialSignalTextOtherLang: {
+    borderColor: '#ff1c1a',
+    gap: 15,
+    flexDirection: 'row',
+  },
+  specialSignalOtherLang: {
+    backgroundColor: '#e5e82c',
+  },
+  SpecialShadow: {
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    borderColor: Color.primary,
   },
 });

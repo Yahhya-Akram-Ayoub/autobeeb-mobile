@@ -588,6 +588,7 @@ class ChatScreen extends Component {
                     item: {
                       ID: this.state.RelatedEntity?.ID,
                       TypeID: this.state.RelatedEntity?.TypeID,
+                      id: this.state.RelatedEntity?.ID,
                     },
                   });
                 } else {

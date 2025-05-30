@@ -12,10 +12,21 @@ import IconFa from 'react-native-vector-icons/FontAwesome';
 import {screenWidth} from '../../constants/Layout';
 import SpecialOfferBadge from './SpecialOfferBadge';
 import BannersSwiper from './BannersSwiper';
+import {SkeletonLoader} from '../shared/Skeleton';
 
-const ListingBanner = ({images, isSpecial, imageBasePath}) => {
+const ListingBanner = ({loading, images, isSpecial, imageBasePath}) => {
   const isEmpty = images?.length === 0;
   const hasImages = images?.length > 0;
+
+  if (loading)
+    return (
+      <SkeletonLoader
+        containerStyle={[styles.container, styles.centeredContent]}
+        borderRadius={12}
+        shimmerColors={['#E0E0E0', '#F8F8F8', '#E0E0E0']}
+        animationDuration={1200}
+      />
+    );
 
   return (
     <View style={[styles.container, isEmpty && styles.centeredContent]}>

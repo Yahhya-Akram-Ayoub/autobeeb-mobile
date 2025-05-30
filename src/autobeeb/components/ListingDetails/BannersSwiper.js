@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import IconFa from 'react-native-vector-icons/FontAwesome';
-import {screenWidth} from '../../constants/Layout';
+import {screenHeight, screenWidth} from '../../constants/Layout';
 import {AutobeebModal} from '../../../components';
 import {AppIcon, Icons} from '../shared/AppIcon';
 
@@ -99,12 +99,12 @@ const BannersSwiper = ({images, imageBasePath}) => {
         style={styles.modalBoxWrap}
         useNativeDriver={true}>
         <FlatList
-          style={styles.imageList}
-          horizontal
+          style={styles.imageListModal}
           keyExtractor={(item, index) => index.toString()}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.imageListContent}
-          pagingEnabled
+          ItemSeparatorComponent={<View style={{height: 5}} />}
+          pagingEnabled={false}
           onScroll={handleScroll}
           initialNumToRender={16}
           data={images}
@@ -141,6 +141,11 @@ const styles = StyleSheet.create({
   imageList: {
     height: screenWidth / 1.2,
     width: screenWidth,
+  },
+  imageListModal: {
+    height: screenHeight,
+    width: screenWidth,
+    gap: 5,
   },
   imageListContent: {
     minWidth: '100%',

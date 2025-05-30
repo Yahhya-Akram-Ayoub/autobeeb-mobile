@@ -38,6 +38,7 @@ import RecentlyViewedScreen from '../../../navigation/RecentlyViewedScreen';
 import SubscriptionsScreen from '../../../navigation/SubscriptionsScreen';
 import CarDetails from '../../../navigation/CarDetails';
 import {HomeScreen, ErrorScreen, ListingDetailsScreen} from '../../screens';
+import {TranstionSettings} from './Transtion';
 
 const Stack = createNativeStackNavigator();
 
@@ -85,9 +86,8 @@ const HomeStack = ({stackRef}) => {
       ref={stackRef}
       screenOptions={{
         headerShown: false,
-        animationEnabled: false,
         initialRouteName: 'HomeScreen',
-        cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
+        ...TranstionSettings,
       }}>
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="SellTypeScreen" component={SellTypeScreen} />
@@ -118,7 +118,7 @@ const HomeStack = ({stackRef}) => {
         </>
       )}
       <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-      <Stack.Screen name="CarDetails" component={CarDetails} />
+      <Stack.Screen name="CarDetails" component={ListingDetailsScreen} />
       <Stack.Screen name="PostOfferScreen" component={PostOfferScreen} />
       <Stack.Screen name="SectionsScreen" component={SectionsScreen} />
       <Stack.Screen name="CategoriesScreen" component={CategoriesScreen} />

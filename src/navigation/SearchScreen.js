@@ -364,7 +364,10 @@ export class SearchScreen extends Component {
                     keyExtractor={(item, index) => index.toString()}
                     horizontal
                     //   inverted={I18nManager.isRTL}
-                    contentContainerStyle={{paddingHorizontal: 2 ,     width: '100%'}}
+                    contentContainerStyle={{
+                      paddingHorizontal: 2,
+                      width: '100%',
+                    }}
                     keyboardShouldPersistTaps="handled"
                     showsHorizontalScrollIndicator={false}
                     data={this.state.recentSeenListings}
@@ -431,6 +434,7 @@ export class SearchScreen extends Component {
                             onPress={() => {
                               this.props.navigation.replace('CarDetails', {
                                 item: item,
+                                id: item.ID,
                               });
                             }}>
                             {item.Images.length > 0 ? (

@@ -2618,7 +2618,6 @@ class ListingsScreen extends Component {
   LoadListingsPage = async item => {
     if (!this.state.footerLoading) {
       this.setState({page: this.state.page + 1}, async () => {
-        __DEV__ && console.log({page: this.state.page});
         if (this.state.page <= this.state.maximumPages) {
           await this.filterResults(
             true,
