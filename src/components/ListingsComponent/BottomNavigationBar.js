@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {memo, useMemo} from 'react';
 import {View, Text, Pressable, StyleSheet} from 'react-native';
 import {useNavigation, useNavigationState} from '@react-navigation/native';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons'; // or your preferred icon lib
@@ -12,7 +12,7 @@ const BottomNavigationBar = () => {
   const firstScreenInStack = useNavigationState(state =>
     !state.routeNames || !state.routeNames?.length
       ? 'HomeScreen'
-      : state.routeNames[0]
+      : state.routeNames[0],
   );
   const tabItems = [
     {
@@ -139,9 +139,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const MemoizedBottomNavigation = () => {
-  const RenderedComponent = useMemo(() => <BottomNavigationBar />, []);
-  return RenderedComponent;
-};
-
-export default MemoizedBottomNavigation;
+export default memo(BottomNavigationBar);

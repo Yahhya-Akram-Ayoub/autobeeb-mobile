@@ -57,7 +57,7 @@ const FeatureListingBtn = ({
       </View>
     );
 
-  if (isSpecial && ID && isOwner) {
+  if (isSpecial && !!ID && isOwner) {
     return (
       <View style={[styles.sellFastContainer, {backgroundColor: 'red'}]}>
         <View style={styles.sellFastBox}>

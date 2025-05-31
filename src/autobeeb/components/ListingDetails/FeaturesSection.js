@@ -37,6 +37,7 @@ const FeaturesSection = ({listingId}) => {
         numColumns={2}
         data={features.filter(x => x.type === 1)}
         renderItem={renderFeatureItemType1}
+        scrollEnabled={false}
       />
 
       <FlatList
@@ -44,6 +45,7 @@ const FeaturesSection = ({listingId}) => {
         contentContainerStyle={[styles.boxContainer, styles.noTopBorder]}
         data={features.filter(x => x.type === 2)}
         renderItem={renderFeatureItemType2}
+        scrollEnabled={false}
       />
     </View>
   );

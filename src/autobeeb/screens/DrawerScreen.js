@@ -18,7 +18,7 @@ const DrawerScreen = () => {
         flex: 1,
         paddingBottom: insets.bottom,
       }}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <DeaweHeader />
         <UserOptions />
         <GeneralOptions />

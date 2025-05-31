@@ -32,8 +32,8 @@ const ListingTitle = ({
   const {EmailRegister, OTPConfirmed, EmailConfirmed, ID, Email, Phone} =
     user ?? {};
   const renderPaymentMethod = method => {
-    switch (method) {
-      case 2:
+    switch (`${method}`) {
+      case '2':
         return '/ ' + Languages.Installments;
       default:
         return '';
@@ -153,7 +153,7 @@ const ListingTitle = ({
             </Text>
           )}
 
-          {paymentMethod && (
+          {!!paymentMethod && (
             <Text style={styles.paymentText}>
               {renderPaymentMethod(paymentMethod)}
             </Text>

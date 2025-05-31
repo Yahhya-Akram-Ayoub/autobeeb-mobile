@@ -1,4 +1,3 @@
-import React from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 import {Constants, Languages} from '../../../common';
 import {SkeletonLoader} from '../shared/Skeleton';
@@ -24,7 +23,11 @@ const ListingInfoBox = ({
       <View
         style={[
           styles.container,
-          {justifyContent: 'space-around', paddingVertical: 5},
+          {
+            justifyContent: 'space-around',
+            paddingVertical: 50,
+            marginBottom: 8,
+          },
         ]}>
         {[1, 2, 3, 4].map(x => (
           <SkeletonLoader

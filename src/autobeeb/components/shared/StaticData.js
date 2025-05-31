@@ -17,7 +17,7 @@ export const AllCategories = {
     return Languages.All;
   },
 };
-
+export const AppLink = `https://cutt.ly/AUTOBEEB${Languages.getLanguage()}`;
 export const MoreData = {
   id: '',
   more: true,

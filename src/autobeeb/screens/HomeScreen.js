@@ -45,6 +45,7 @@ const HomeScreen = () => {
       }}>
       <AppHeader onCountryChange={refreshScreen} />
       <ScrollView
+        showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={refreshScreen} />
         }>

@@ -20,4 +20,14 @@ export {default as FeaturesSection} from './ListingDetails/FeaturesSection';
 export {default as ListingDescription} from './ListingDetails/ListingDescription';
 export {default as FavoriteReportButtons} from './ListingDetails/FavoriteReportButtons';
 export {default as AskListingOwner} from './ListingDetails/AskListingOwner';
-
+export {default as SellerDetailsSection} from './ListingDetails/SellerDetailsSection';
+export {default as DealerBanner} from './shared/DealerBanner';
+export {default as UserBanner} from './shared/UserBanner';
+export {default as DealerMapSection} from './ListingDetails/DealerMapSection';
+export {default as ListingAutobeebBanner} from './ListingDetails/ListingAutobeebBanner';
+export {default as RelatedListingsSection} from './ListingDetails/RelatedListingsSection';
+export {default as PostYourOfferBanner} from './ListingDetails/PostYourOfferBanner';
+export {default as ListingDetailsExtras} from './ListingDetails/ListingDetailsExtras';
+export {default as PaymentBox} from './ListingDetails/PaymentBox';
+export {default as AddAdvButtonSquare} from './ListingDetails/AddAdvButtonSquare';
+export {default as AnimatedContactChatBar} from './ListingDetails/AnimatedContactChatBar';

@@ -2042,7 +2042,6 @@ class CarDetails extends Component {
               />
             )}
 
-            {/* Yahhya */}
             <View
               style={[
                 styles.BoxShadow,
@@ -2354,7 +2353,6 @@ class CarDetails extends Component {
               </View>
             </View>
 
-             {/* Yahhya */}
             <View
               style={[
                 styles.boxContainer,
@@ -2527,6 +2525,7 @@ class CarDetails extends Component {
                 </TouchableOpacity>
               )}
             </View>
+
             {this.state.Dealer?.LatLng && (
               <View>
                 <Text
@@ -2594,6 +2593,7 @@ class CarDetails extends Component {
                 </MapView>
               </View>
             )}
+          
             <View
               style={{
                 marginVertical: 5,
@@ -2641,7 +2641,7 @@ class CarDetails extends Component {
                 <></>
               )}
             </View>
-
+ 
             {this.state.userCountry &&
               this.state.userCountry.WithFee &&
               !!this.props.user && (
@@ -2691,7 +2691,7 @@ class CarDetails extends Component {
                   </TouchableOpacity>
                 </View>
               )}
-
+ {/* Yahhya */}
             {this.state.RelatedListings &&
               this.state.RelatedListings.filter(x => x.ThumbURL).length > 0 && (
                 <View
@@ -2800,6 +2800,7 @@ class CarDetails extends Component {
                   </View>
                 </View>
               )}
+
             <View
               style={[
                 styles.boxContainer,

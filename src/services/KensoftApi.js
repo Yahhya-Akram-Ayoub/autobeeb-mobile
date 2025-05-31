@@ -608,6 +608,18 @@ KensoftApi.prototype.Core_UserListings = function (data, callback) {
   return this._request(requestUrl, callback);
 };
 
+KensoftApi.prototype.GetListingsCore = function (data, callback) {
+  let requestUrl = `${this.coreApiV1}Listings/List/ListingsAsync?`;
+
+  data = Object.fromEntries(
+    Object.entries(data).filter(([_, v]) => v !== null),
+  );
+  requestUrl +=
+    this.join(data, '&') + `&CurrencyId=${global.ViewingCurrency.ID}`;
+
+  return this._request(requestUrl, callback);
+};
+
 KensoftApi.prototype.GetFeaturedListings = function (data, callback) {
   let _requestUrl = `${this.url}/Services/FeaturedListings?`;
 
@@ -619,6 +631,7 @@ KensoftApi.prototype.GetFeaturedListings = function (data, callback) {
     return response;
   });
 };
+
 
 KensoftApi.prototype.DeleteOffer = function (data, callback) {
   var requestUrl = this.url + '/Services/DeleteOffer?';
@@ -1223,6 +1236,15 @@ KensoftApi.prototype.IncreaseScViews = function (data, callback) {
 
 KensoftApi.prototype.GetCountryCore = function (data, callback) {
   let _requestUrl = `${this.coreApiV1}Country/Get?`;
+  data = Object.fromEntries(
+    Object.entries(data).filter(([_, v]) => v !== null),
+  );
+  _requestUrl += this.join(data, '&');
+  return this._request(_requestUrl, callback);
+};
+
+KensoftApi.prototype.GetUserCore = function (data, callback) {
+  let _requestUrl = `${this.coreApiV1}User/GetAsync?`;
   data = Object.fromEntries(
     Object.entries(data).filter(([_, v]) => v !== null),
   );

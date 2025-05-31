@@ -32,6 +32,7 @@ const Constants = {
   fontFamily: 'Cairo-Regular',
   currency: 1,
   fontFamilyBold: 'Cairo-Bold',
+  fontFamilySemiBold: 'Cairo-SemiBold',
   fontHeader: 'Cairo-Regular',
   fontHeaderAndroid: 'Cairo-Regular',
   listingsHeaderHiegth:
