@@ -9,6 +9,7 @@ module.exports = {
     'react/no-unstable-nested-components': 'off',
     'react/self-closing-comp': 'off',
     'eol-last': 'off',
+    'handle-callback-err': 'off',
     curly: 'off',
   },
   parser: '@babel/eslint-parser',

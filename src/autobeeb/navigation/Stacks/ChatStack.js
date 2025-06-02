@@ -1,7 +1,6 @@
-import React, {useEffect} from 'react';
+import {useEffect} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
-import {CardStyleInterpolators} from '@react-navigation/stack';
 import MessagesScreen from '../../../navigation/MessagesScreen';
 import ChatScreen from '../../../navigation/ChatScreen';
 import CarDetails from '../../../navigation/CarDetails';

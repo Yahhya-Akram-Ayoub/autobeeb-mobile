@@ -37,7 +37,12 @@ import PaymentDetailsAutobeeb from '../../../navigation/PaymentDetailsAutobeeb';
 import RecentlyViewedScreen from '../../../navigation/RecentlyViewedScreen';
 import SubscriptionsScreen from '../../../navigation/SubscriptionsScreen';
 import CarDetails from '../../../navigation/CarDetails';
-import {HomeScreen, ErrorScreen, ListingDetailsScreen} from '../../screens';
+import {
+  HomeScreen,
+  ErrorScreen,
+  ListingDetailsScreen,
+  ListingReportScreen,
+} from '../../screens';
 import {TranstionSettings} from './Transtion';
 
 const Stack = createNativeStackNavigator();
@@ -142,6 +147,10 @@ const HomeStack = ({stackRef}) => {
       <Stack.Screen
         name="SubscriptionsScreen"
         component={SubscriptionsScreen}
+      />
+      <Stack.Screen
+        name="ListingReportScreen"
+        component={ListingReportScreen}
       />
     </Stack.Navigator>
   );

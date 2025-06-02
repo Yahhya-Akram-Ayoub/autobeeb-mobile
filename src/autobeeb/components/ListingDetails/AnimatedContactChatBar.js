@@ -40,7 +40,7 @@ const AnimatedContactChatBar = ({listing, ownerId, ownerName}) => {
     });
   };
 
-  const shouldShowChat = !user || user.id !== ownerId;
+  const shouldShowChat = !user || user.ID !== ownerId;
 
   return (
     <>

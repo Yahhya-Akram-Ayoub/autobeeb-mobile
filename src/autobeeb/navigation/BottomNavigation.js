@@ -17,7 +17,12 @@ import {CardStyleInterpolators} from '@react-navigation/stack';
 import BottomTabBar from './BottomTabBar';
 
 const Tab = createBottomTabNavigator();
-const hideOnScreens = ['ListingsScreen', 'CarDetails', 'SearchResult'];
+const hideOnScreens = [
+  'ListingsScreen',
+  'CarDetails',
+  'SearchResult',
+  'ListingReportScreen',
+];
 
 const BottomNavigation = ({navigationRef}) => {
   const {unreadMessages} = useSelector(state => state.chat || {});

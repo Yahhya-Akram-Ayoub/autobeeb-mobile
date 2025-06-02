@@ -6,13 +6,12 @@ import {
   I18nManager,
   StyleSheet,
   View,
-  Pressable,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import IconFa from 'react-native-vector-icons/FontAwesome';
 import {screenHeight, screenWidth} from '../../constants/Layout';
 import {AutobeebModal} from '../../../components';
-import {AppIcon, Icons} from '../shared/AppIcon';
+import HeaderWithShare from './HeaderWithShare';
 
 const BannersSwiper = ({images, imageBasePath}) => {
   const modalPhotoRef = useRef(null);
@@ -98,6 +97,7 @@ const BannersSwiper = ({images, imageBasePath}) => {
         animationDuration={200}
         style={styles.modalBoxWrap}
         useNativeDriver={true}>
+        <HeaderWithShare name={'name'} listingId={11} typeId={1} />
         <FlatList
           style={styles.imageListModal}
           keyExtractor={(item, index) => index.toString()}

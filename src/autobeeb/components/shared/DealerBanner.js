@@ -71,7 +71,7 @@ const DealerBanner = ({userId, dealer, listingId}) => {
         differentCountry && styles.containerStylesDC,
       ]}
       onPress={() =>
-        navigation.navigate('DealerProfileScreen', {userid: user.id})
+        navigation.navigate('DealerProfileScreen', {userid: user.ID})
       }>
       <FastImage
         style={styles.coverStyle}

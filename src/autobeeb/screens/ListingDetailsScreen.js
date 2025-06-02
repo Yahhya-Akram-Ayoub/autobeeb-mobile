@@ -6,6 +6,7 @@ import {
   FavoriteReportButtons,
   FeatureListingBtn,
   FeaturesSection,
+  HeaderWithShare,
   ListingAutobeebBanner,
   ListingBanner,
   ListingDescription,
@@ -97,6 +98,13 @@ const ListingDetailsScreen = () => {
   };
   return (
     <View>
+      {!loading && listing && (
+        <HeaderWithShare
+          name={listing?.isSparePart ? listing?.title : listing?.name}
+          listingId={listing?.id}
+          typeId={listing?.typeID}
+        />
+      )}
       <ScrollView showsVerticalScrollIndicator={false} onScroll={handleScroll}>
         <ListingBanner
           loading={loading}

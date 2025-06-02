@@ -34,7 +34,7 @@ const FavoriteReportButtons = ({loading, listingId, isFavorite}) => {
 
   const handleReport = () => {
     if (user) {
-      //  reportPopup.open();
+      navigation.navigate('ListingReportScreen', {listingId});
     } else {
       Alert.alert('', Languages.YouNeedToLoginFirst, [
         {

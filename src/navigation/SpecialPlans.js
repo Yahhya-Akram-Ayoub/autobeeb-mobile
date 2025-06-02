@@ -210,7 +210,7 @@ const aliPaymentCountries = [
 ];
 const BankCountries = ['979'];
 
-const SpecialPlans = ({route, pCurrency, pUser, pOffer, pOnClose}) => {
+const SpecialPlans = ({route, pOffer, pOnClose}) => {
   const navigation = useNavigation();
   const Currency = useSelector(state => state.menu.ViewingCurrency);
   const User = useSelector(state => state.user.user);

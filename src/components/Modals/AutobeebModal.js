@@ -12,8 +12,6 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   Dimensions,
-  Platform,
-  BackHandler,
 } from 'react-native';
 import MyToast from '../../containers/MyToast';
 
@@ -62,7 +60,7 @@ const AutobeebModal = forwardRef((props, ref) => {
       transparent
       animationType="none"
       onRequestClose={() => {
-        if (!!ref?.current) ref?.current?.close();
+        if (ref?.current) ref?.current?.close();
         else {
           Animated.timing(animatedValue, {
             toValue: 0,
