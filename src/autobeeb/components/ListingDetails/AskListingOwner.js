@@ -44,7 +44,7 @@ const AskListingOwner = ({
   };
 
   if (loading) return <></>;
-  if (ownerId === user.ID) return <></>;
+  if (ownerId === user?.ID) return <></>;
 
   return (
     <View style={styles.cardContainer}>

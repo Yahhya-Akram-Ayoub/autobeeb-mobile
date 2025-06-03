@@ -5,6 +5,7 @@ import {
   AskListingOwner,
   FavoriteReportButtons,
   FeatureListingBtn,
+  FeaturesModal,
   FeaturesSection,
   HeaderWithShare,
   ListingAutobeebBanner,
@@ -13,6 +14,7 @@ import {
   ListingDetailsExtras,
   ListingInfoBox,
   ListingInformation,
+  ListingPopupHandler,
   ListingTitle,
   PaymentBox,
   PostYourOfferBanner,
@@ -32,11 +34,12 @@ const ListingDetailsScreen = () => {
   const contactBoxTranslate = useRef(new Animated.Value(100)).current;
   const lastScrollY = useRef(0);
   const currentDirection = useRef(null);
-
   const route = useRoute();
-  const {id} = route.params;
+  const {id, isNewUser, showFeatures} = route.params;
+
   const user = useSelector(state => state.user.user);
   const ViewingCurrency = useSelector(state => state.menu.ViewingCurrency);
+
   const [listing, setListing] = useState();
   const [loading, setLoading] = useState(true);
   const [openOTPModal, setOpenOTPModal] = useState(false);
@@ -48,7 +51,10 @@ const ListingDetailsScreen = () => {
     }, 1500);
   };
 
+  const handleReloadFeatures = () => {};
   useEffect(() => {
+        __DEV__ && console.log({id});
+
     KS.GetListingCore({
       id,
       userId: user?.id,
@@ -62,6 +68,8 @@ const ListingDetailsScreen = () => {
       })
       .finally(() => {
         setLoading(false);
+
+        if (isNewUser && !showFeatures) handleOpenOTPModal();
       });
   }, []);
 
@@ -188,7 +196,7 @@ const ListingDetailsScreen = () => {
           loading={loading}
           listingId={listing?.id}
           typeId={listing?.typeID}
-          name={listing?.name ?? listing?.title}
+          name={listing?.isSparePart ? listing?.title : listing?.name}
         />
         <SellerDetailsSection loading={loading} userId={listing?.ownerID} />
         <ListingAutobeebBanner />
@@ -232,6 +240,27 @@ const ListingDetailsScreen = () => {
         ]}>
         <BottomNavigationBar />
       </Animated.View>
+
+      <ListingPopupHandler
+        listingId={listing?.id}
+        typeId={listing?.typeID}
+        name={listing?.isSparePart ? listing?.title : listing?.name}
+        countryId={listing?.countryID}
+        ownerId={listing?.ownerID}
+      />
+      {showFeatures && (
+        <FeaturesModal
+          listingId={listing?.id}
+          typeId={listing?.typeID}
+          sellType={listing?.sellType}
+          section={listing?.section}
+          isPendingDelete={listing?.status === 64}
+          isNewUser={isNewUser}
+          isSpecial={listing?.isSpecial}
+          openOTPModale={handleOpenOTPModal}
+          reloadFeatures={handleReloadFeatures}
+        />
+      )}
     </View>
   );
 };

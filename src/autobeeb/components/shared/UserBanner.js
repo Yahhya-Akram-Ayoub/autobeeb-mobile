@@ -14,7 +14,6 @@ const UserBanner = ({user: userData, userId, listingId}) => {
   const isOnline = false; // handle later
 
   useEffect(() => {
-    console.log({userData});
     if (userId && !userData) loadData();
     if (userData && !userId) {
       setUser(userData);

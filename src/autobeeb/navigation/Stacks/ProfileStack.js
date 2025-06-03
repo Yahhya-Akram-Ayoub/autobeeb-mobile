@@ -26,7 +26,7 @@ import PrivacyPolicy from '../../../navigation/PrivacyPolicy';
 import SearchResult from '../../../navigation/SearchResult';
 import FavoriteScreen from '../../../navigation/FavoriteScreen';
 import SubscriptionsScreen from '../../../navigation/SubscriptionsScreen';
-import {DrawerScreen} from '../../screens';
+import {DrawerScreen, ListingDetailsScreen} from '../../screens';
 import {TranstionSettings} from './Transtion';
 
 const Stack = createNativeStackNavigator();
@@ -78,7 +78,7 @@ const ProfileStack = ({stackRef}) => {
       )}
       <Stack.Screen name="DealerPlusRenewal" component={DealerPlusRenewal} />
       <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-      <Stack.Screen name="CarDetails" component={CarDetails} />
+      <Stack.Screen name="CarDetails" component={ListingDetailsScreen} />
       <Stack.Screen name="PostOfferScreen" component={PostOfferScreen} />
       <Stack.Screen name="SectionsScreen" component={SectionsScreen} />
       <Stack.Screen name="DealerSignUp" component={DealerSignUp} />

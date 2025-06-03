@@ -33,4 +33,6 @@ export {default as AddAdvButtonSquare} from './ListingDetails/AddAdvButtonSquare
 export {default as AnimatedContactChatBar} from './ListingDetails/AnimatedContactChatBar';
 export {default as HeaderWithShare} from './ListingDetails/HeaderWithShare';
 export {default as ReportListingForm} from './ListingDetails/ReportListingForm';
+export {default as ListingPopupHandler} from './ListingDetails/ListingPopupHandler';
 export {default as useKeyboard} from './shared/useKeyboard';
+export {default as FeaturesModal} from './ListingDetails/FeaturesModal';

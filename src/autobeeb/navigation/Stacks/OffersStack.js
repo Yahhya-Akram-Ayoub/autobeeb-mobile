@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
-import {OffersScreen} from '../../screens';
+import {ListingDetailsScreen, OffersScreen} from '../../screens';
 import {CardStyleInterpolators} from '@react-navigation/stack';
 import ActiveOffers from '../../../navigation/ActiveOffers';
 import ChatScreen from '../../../navigation/ChatScreen';
@@ -45,7 +45,7 @@ const OffersStack = ({stackRef}) => {
       <Stack.Screen name="PostOfferScreen" component={PostOfferScreen} />
       <Stack.Screen name="SpecialPlans" component={SpecialPlans} />
       <Stack.Screen name="CliQScreen" component={CliQScreen} />
-      <Stack.Screen name="CarDetails" component={CarDetails} />
+      <Stack.Screen name="CarDetails" component={ListingDetailsScreen} />
       <Stack.Screen name="DealersScreen" component={DealersScreen} />
       <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} />
       <Stack.Screen

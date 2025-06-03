@@ -337,57 +337,61 @@ class ListingReview extends Component {
   }
 
   async pickSingleWithCamera() {
-    const IsPermission = await requestCameraPermission();
-    if (!IsPermission) {
-      return;
-    }
-
-    const options = {
-      mediaType: 'photo',
-      cropping: false,
-      width: 500,
-      height: 500,
-      includeExif: true,
-      includeBase64: true,
-      compressImageQuality: 0.7,
-    };
-
-    launchCamera(options, res => {
-      if (!res || res?.didCancel) return;
-      const image = res.assets[0];
-      this.setState({mainImage: null});
-      this.setState({image: null});
-      var myImages = this.state.images;
-      if (!myImages) myImages = [];
-
-      if (
-        this.props?.route?.params?.EditOffer &&
-        this.state.imagesEdit &&
-        this.state.imagesEdit.length > 0
-      ) {
-        if (myImages.length <= 14 - this.state.imagesEdit.length) {
-          myImages.push({
-            uri: image.uri,
-            width: image.width,
-            height: image.height,
-            mime: image.type,
-            data: image.base64,
-          });
-        }
-      } else {
-        if (myImages.length <= 14) {
-          myImages.push({
-            uri: image.uri,
-            width: image.width,
-            height: image.height,
-            mime: image.type,
-            data: image.base64,
-          });
-        }
+    try {
+      const IsPermission = await requestCameraPermission();
+      if (!IsPermission) {
+        return;
       }
 
-      this.setState({images: myImages});
-    });
+      const options = {
+        mediaType: 'photo',
+        cropping: false,
+        width: 500,
+        height: 500,
+        includeExif: true,
+        includeBase64: true,
+        compressImageQuality: 0.7,
+      };
+
+      launchCamera(options, res => {
+        if (!res || res?.didCancel) return;
+        const image = res.assets[0];
+        this.setState({mainImage: null});
+        this.setState({image: null});
+        var myImages = this.state.images;
+        if (!myImages) myImages = [];
+
+        if (
+          this.props?.route?.params?.EditOffer &&
+          this.state.imagesEdit &&
+          this.state.imagesEdit.length > 0
+        ) {
+          if (myImages.length <= 14 - this.state.imagesEdit.length) {
+            myImages.push({
+              uri: image.uri,
+              width: image.width,
+              height: image.height,
+              mime: image.type,
+              data: image.base64,
+            });
+          }
+        } else {
+          if (myImages.length <= 14) {
+            myImages.push({
+              uri: image.uri,
+              width: image.width,
+              height: image.height,
+              mime: image.type,
+              data: image.base64,
+            });
+          }
+        }
+
+        this.setState({images: myImages});
+      });
+    } catch (errorr) {
+      console.log({errorr});
+    }
   }
 
   renderImage(image, index) {
@@ -1109,6 +1113,7 @@ class ListingReview extends Component {
       },
       this.state.images,
       data => {
+        __DEV__ && console.log({NewUser: data});
         AsyncStorage.getItem('ItemNeedSharePoup', async (error, _item) => {
           AsyncStorage.setItem(
             'ItemNeedSharePoup',
@@ -1125,58 +1130,49 @@ class ListingReview extends Component {
           if (!data.IsUserActive) {
             this.props.navigation.navigate('HomeScreen');
             toast(Languages.AccountBlocked, 3500);
-          } else if (data.Status == 1) {
-            // to be tested
-            this.props.navigation.replace('CarDetails', {
-              IsSpecial: !!data.IsSpecial,
-              pendingDelete: true,
-              item: {
-                ID: data.ID,
-                SellType: data.SellType,
-                TypeID: data.TypeID,
-              },
-              Phone: data.Phone,
-              UserID: data.UserID,
-              showFeatures: true,
-              isEmailRegister: data.EmailRegister && !data.EmailConfirmed,
-              Email:
-                data.EmailRegister && !data.EmailConfirmed ? data.Email : '',
-            });
           } else if (data.EmailRegister && !data.EmailConfirmed) {
-            this.props.navigation.replace('CarDetails', {
-              IsSpecial: !!data.IsSpecial,
-              isNewUser: true,
-              isEmailRegister: true,
-              Email: data.Email,
-              User: data.User,
-              OTPCode: data.OTPCode,
-              item: {
-                ID: data.ID,
-                SellType: data.SellType,
-                TypeID: data.TypeID,
-              },
+            this.props.storeUserData({ID: data.UserID}, () => {
+              setTimeout(() => {
+                this.props.navigation.replace('CarDetails', {
+                  IsSpecial: !!data.IsSpecial,
+                  isNewUser: true,
+                  isEmailRegister: true,
+                  Email: data.Email,
+                  User: data.User,
+                  OTPCode: data.OTPCode,
+                  item: {
+                    ID: data.ID,
+                    SellType: data.SellType,
+                    TypeID: data.TypeID,
+                  },
 
-              ListingID: data.ID,
-              Phone: data.Phone,
-              UserID: data.UserID,
-              showFeatures: true,
+                  id: data.ID,
+                  Phone: data.Phone,
+                  UserID: data.UserID,
+                  showFeatures: true,
+                });
+              }, 500);
             });
           } else if (data.OTPConfirmed == false && !data.EmailRegister) {
-            this.props.navigation.replace('CarDetails', {
-              IsSpecial: !!data.IsSpecial,
-              isNewUser: true,
-              User: data.User,
-              OTPCode: data.OTPCode,
-              item: {
-                ID: data.ID,
-                SellType: data.SellType,
+            this.props.storeUserData({ID: data.UserID}, () => {
+              setTimeout(() => {
+                this.props.navigation.replace('CarDetails', {
+                  IsSpecial: !!data.IsSpecial,
+                  isNewUser: true,
+                  User: data.User,
+                  OTPCode: data.OTPCode,
+                  item: {
+                    ID: data.ID,
+                    SellType: data.SellType,
 
-                TypeID: data.TypeID,
-              },
-              ListingID: data.ID,
-              Phone: data.Phone,
-              UserID: data.UserID,
-              showFeatures: true,
+                    TypeID: data.TypeID,
+                  },
+                  id: data.ID,
+                  Phone: data.Phone,
+                  UserID: data.UserID,
+                  showFeatures: true,
+                });
+              }, 500);
             });
           } else {
             toast(Languages.PublishSuccess, 3500);
@@ -1192,10 +1188,27 @@ class ListingReview extends Component {
               },
               Phone: data.Phone,
               UserID: data.UserID,
-              ListingID: data.ID,
+              id: data.ID,
               showFeatures: true,
             });
           }
+        } else if (data.Status === 1) {
+          // to be tested
+          this.props.navigation.replace('CarDetails', {
+            IsSpecial: !!data.IsSpecial,
+            pendingDelete: true,
+            item: {
+              ID: data.ID,
+              SellType: data.SellType,
+              TypeID: data.TypeID,
+            },
+            id: data.ID,
+            Phone: data.Phone,
+            UserID: data.UserID,
+            showFeatures: true,
+            isEmailRegister: data.EmailRegister && !data.EmailConfirmed,
+            Email: data.EmailRegister && !data.EmailConfirmed ? data.Email : '',
+          });
         } else {
           alert(data.Message);
         }

@@ -27,6 +27,7 @@ import IconFa from 'react-native-vector-icons/FontAwesome';
 // import RNIap, {purchaseErrorListener} from 'react-native-iap';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const screenWidth = Dimensions.get('screen').width;
 const DurationType = {
@@ -211,6 +212,7 @@ const aliPaymentCountries = [
 const BankCountries = ['979'];
 
 const SpecialPlans = ({route, pOffer, pOnClose}) => {
+  const insets = useSafeAreaInsets();
   const navigation = useNavigation();
   const Currency = useSelector(state => state.menu.ViewingCurrency);
   const User = useSelector(state => state.user.user);
@@ -472,7 +474,10 @@ const SpecialPlans = ({route, pOffer, pOnClose}) => {
 
   if (loader) return <LogoSpinner fullStretch={true} />;
   return (
-    <View>
+    <View
+      style={{
+        paddingBottom: insets.bottom + 50,
+      }}>
       <ScrollView
         nestedScrollEnabled={true}
         contentContainerStyle={styles.mainContainer}>

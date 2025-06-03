@@ -205,7 +205,7 @@ class EditProfile extends Component {
         })
         .catch(e => {
           if (e.code === 'E_PERMISSION_MISSING') {
-            alert(e);
+            Alert.alert(JSON.stringify(e));
           }
         });
     } else {

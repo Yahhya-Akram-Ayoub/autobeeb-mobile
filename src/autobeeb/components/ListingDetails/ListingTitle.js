@@ -25,6 +25,7 @@ const ListingTitle = ({
   listingId,
 }) => {
   const user = useSelector(x => x.user.user);
+  __DEV__ && console.log({user});
   const [openOTPModal, setOpenOTPModal] = useState(false);
   const [oTP, setOTP] = useState(null);
   const dispatch = useDispatch();
@@ -34,7 +35,7 @@ const ListingTitle = ({
   const renderPaymentMethod = method => {
     switch (`${method}`) {
       case '2':
-        return '/ ' + Languages.Installments;
+        return ' / ' + Languages.Installments + ' ';
       default:
         return '';
     }
@@ -72,7 +73,7 @@ const ListingTitle = ({
         toast(Languages.PublishSuccess, 3500);
 
         if (data.User) {
-          dispatch(actions.login(data.User));
+          actions.login(dispatch, data.User);
           setOpenOTPModal(false);
           navigation.navigate('SpecialPlans', {listingId});
         }
@@ -143,7 +144,11 @@ const ListingTitle = ({
         style={[
           styles.infoRow,
           {
-            flexDirection: `${cityName}`.length >= 10 ? 'column' : 'row',
+            flexDirection:
+              `${cityName}`.length >= 10 ||
+              (!formatedPrice && paymentMethod === 2)
+                ? 'column'
+                : 'row',
           },
         ]}>
         <View style={styles.priceRow}>
@@ -152,7 +157,6 @@ const ListingTitle = ({
               {formatedPrice || Languages.CallForPrice}
             </Text>
           )}
-
           {!!paymentMethod && (
             <Text style={styles.paymentText}>
               {renderPaymentMethod(paymentMethod)}
@@ -175,6 +179,9 @@ const ListingTitle = ({
       {openOTPModal && (
         <OTPModal
           isOpen={openOTPModal}
+          onClosed={() => {
+            setOpenOTPModal(false);
+          }}
           OTPMessage={Languages.WeHaveSentTheOTP}
           EnterMessage={Languages.EnterItNow}
           pendingDelete={isPendingDelete}
@@ -252,7 +259,6 @@ const styles = StyleSheet.create({
     color: Color.error,
     fontFamily: 'Cairo-Bold',
     fontSize: 16,
-    marginRight: 15,
   },
   paymentText: {
     color: 'green',

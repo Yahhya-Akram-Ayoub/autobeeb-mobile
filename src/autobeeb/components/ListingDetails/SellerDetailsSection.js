@@ -13,7 +13,6 @@ const SellerDetailsSection = ({listingId, userId}) => {
   useEffect(() => {
     if (userId)
       KS.GetUserCore({userId: userId, langId: Languages.langID}).then(res => {
-        console.log({USERDealer: res, userId});
         setUser(res.user);
       });
   }, [userId]);
