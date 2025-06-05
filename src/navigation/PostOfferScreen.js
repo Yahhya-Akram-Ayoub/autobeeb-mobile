@@ -37,7 +37,7 @@ import ListingEmail from '../components/ListingEmail';
 import {toast} from '../Omni';
 import IconEn from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Animatable from 'react-native-animatable';
-import {LogoSpinner} from '../components';
+import {BottomNavigationBar, LogoSpinner} from '../components';
 
 class PostOfferScreen extends Component {
   constructor(props) {
@@ -1466,7 +1466,7 @@ class PostOfferScreen extends Component {
     } else if (this.state.isEditing) {
       this.setState({step: 18, isEditing: false});
     } else if (this.state.step == 1) {
-        this.props.navigation.goBack();
+      this.props.navigation.goBack();
     } else if (this.state.step == 2) {
       this.setState({
         step: this.state.step - 1,
@@ -1998,6 +1998,8 @@ class PostOfferScreen extends Component {
           : this.state.limitFull && !this.state.EditOffer
           ? this.renderFullLimit()
           : this.renderPage(this.state.step)}
+
+        <BottomNavigationBar appRoot={'App'} />
       </View>
     );
   }

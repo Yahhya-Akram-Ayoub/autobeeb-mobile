@@ -47,7 +47,6 @@ const OffersStack = ({stackRef}) => {
       <Stack.Screen name="ActiveOffers" component={ActiveOffers} />
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
-      <Stack.Screen name="PostOfferScreen" component={PostOfferScreen} />
       <Stack.Screen name="SpecialPlans" component={SpecialPlans} />
       <Stack.Screen name="CliQScreen" component={CliQScreen} />
       <Stack.Screen name="CarDetails" component={ListingDetailsScreen} />

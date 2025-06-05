@@ -31,7 +31,7 @@ const ListingPopupHandler = ({
 
   useEffect(() => {
     if (!listingId || !user) return;
-
+    console.log({listingId});
     AsyncStorage.getItem('warningShown', async (error, data) => {
       if (!data && ownerId !== user?.ID) {
         await AsyncStorage.setItem('warningShown', 'true');
@@ -42,14 +42,20 @@ const ListingPopupHandler = ({
       } else if (isActive && ownerId === user?.ID) {
         const _key = 'ItemNeedSharePoup';
         AsyncStorage.getItem(_key, (_error, _item) => {
+          console.log({listingId, _item});
           if (_item?.includes(`${listingId},`)) {
-            // this to open the popup in secoond timem user open the modal
             AsyncStorage.setItem(
               _key,
               _item.replace(`${listingId},`, `${listingId}-1,`),
             );
-          } else if (_item?.includes(`${listingId}-1,`)) {
-            AsyncStorage.setItem(_key, _item.replace(`${listingId}-1,`, ''));
+          } else console.log({listingId, _item});
+          if (_item?.includes(`${listingId}-1,`)) {
+            AsyncStorage.setItem(
+              _key,
+              _item.replace(`${listingId}-1,`, `${listingId}-2,`),
+            );
+          } else if (_item?.includes(`${listingId}-2,`)) {
+            AsyncStorage.setItem(_key, _item.replace(`${listingId}-2,`, ''));
             setFirstLoad(1);
             setTimeout(() => {
               isSharePopupRef.current?.open();

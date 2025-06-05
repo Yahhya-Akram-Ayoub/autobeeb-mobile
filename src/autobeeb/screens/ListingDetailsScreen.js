@@ -1,4 +1,11 @@
-import {Animated, Easing, ScrollView, StyleSheet, View} from 'react-native';
+import {
+  Animated,
+  BackHandler,
+  Easing,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import {
   AddAdvButtonSquare,
   AnimatedContactChatBar,
@@ -21,8 +28,12 @@ import {
   RelatedListingsSection,
   SellerDetailsSection,
 } from '../components';
-import {useRoute} from '@react-navigation/native';
-import {useEffect, useRef, useState} from 'react';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
+import React, {useEffect, useRef, useState} from 'react';
 import KS from '../../services/KSAPI';
 import {useSelector} from 'react-redux';
 import {Languages} from '../../common';
@@ -36,6 +47,7 @@ const ListingDetailsScreen = () => {
   const currentDirection = useRef(null);
   const route = useRoute();
   const {id, isNewUser, showFeatures} = route.params;
+  const navigation = useNavigation();
 
   const user = useSelector(state => state.user.user);
   const ViewingCurrency = useSelector(state => state.menu.ViewingCurrency);
@@ -55,6 +67,29 @@ const ListingDetailsScreen = () => {
   const handleReloadFeatures = () => {
     setRefreshFeatures(prev => !prev);
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        const state = navigation.getState();
+        const currentRouteIndex = state.index;
+        console.log({currentRouteIndex});
+        if (currentRouteIndex === 0) {
+          // Navigate to root of current stack
+          navigation.navigate('ActiveOffers');
+          return true; // Prevent default back behavior
+        } else {
+          navigation.goBack();
+        }
+        return true; // Allow default back behavior
+      };
+      const subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        onBackPress,
+      );
+      return () => subscription.remove();
+    }, [navigation]),
+  );
 
   useEffect(() => {
     KS.GetListingCore({

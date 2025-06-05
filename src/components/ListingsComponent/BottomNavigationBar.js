@@ -1,12 +1,16 @@
 import React, {memo, useMemo} from 'react';
 import {View, Text, Pressable, StyleSheet} from 'react-native';
-import {useNavigation, useNavigationState} from '@react-navigation/native';
+import {
+  CommonActions,
+  useNavigation,
+  useNavigationState,
+} from '@react-navigation/native';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons'; // or your preferred icon lib
 import {useSelector} from 'react-redux';
 import {Color, Languages} from '../../common';
 import IconIon from 'react-native-vector-icons/Ionicons';
 
-const BottomNavigationBar = () => {
+const BottomNavigationBar = ({appRoot}) => {
   const navigation = useNavigation();
   const {unreadMessages} = useSelector(state => state?.chat);
   const firstScreenInStack = useNavigationState(state =>
@@ -42,7 +46,24 @@ const BottomNavigationBar = () => {
     },
   ];
   const handleNavigate = screen => {
-    navigation.navigate(screen);
+    if (appRoot) {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            {
+              name: appRoot,
+              state: {
+                routes: [{name: screen}],
+                index: 0,
+              },
+            },
+          ],
+        }),
+      );
+    } else {
+      navigation.navigate(screen);
+    }
   };
 
   return (

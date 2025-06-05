@@ -208,7 +208,37 @@ class ListingReview extends Component {
       })
       .catch(err => {});
   }
-
+  navigateToOfferScreen(id, isNewUser) {
+    this.props.navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'App', // this is your bottom tab navigator
+            state: {
+              routes: [
+                {
+                  name: 'ActiveOffers', // tab name
+                  state: {
+                    routes: [
+                      {
+                        name: 'CarDetails',
+                        params: {
+                          id: id,
+                          showFeatures: true,
+                          isNewUser: isNewUser,
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      }),
+    );
+  }
   checkSwearCountry(_CountriesData) {
     if (
       !!this.props.userData &&
@@ -1138,27 +1168,17 @@ class ListingReview extends Component {
             if (isNewUser) {
               this.props.storeUserData({ID: data.UserID}, () => {
                 setTimeout(() => {
-                  this.props.navigation.replace('CarDetails', {
-                    id: data.ID,
-                    isNewUser: true,
-                    showFeatures: true,
-                  });
+                  this.navigateToOfferScreen(data.ID, isNewUser);
                 }, 500);
               });
             } else {
               toast(Languages.PublishSuccess, 3500);
-              this.props.navigation.replace('CarDetails', {
-                id: data.ID,
-                showFeatures: true,
-              });
+              this.navigateToOfferScreen(data.ID, false);
             }
           }
         } else if (data.Status === 1) {
           // to be tested
-          this.props.navigation.replace('CarDetails', {
-            id: data.ID,
-            showFeatures: true,
-          });
+          this.navigateToOfferScreen(data.ID, false);
         } else {
           alert(data.Message);
         }

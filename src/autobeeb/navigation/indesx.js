@@ -8,6 +8,7 @@ import SplashScreen from '../../containers/SplashScreen';
 import LanguageSelector from '../../navigation/LanguageSelector';
 import {CardStyleInterpolators} from '@react-navigation/stack';
 import {TranstionSettings} from './Stacks/Transtion';
+import PostOfferScreen from '../../navigation/PostOfferScreen';
 
 enableScreens(true); // performance optimization
 
@@ -24,6 +25,7 @@ const AutobeebApp = () => {
         initialRouteName="SplashScreen">
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen name="LanguageSelector" component={LanguageSelector} />
+        <Stack.Screen name="PostOfferScreen" component={PostOfferScreen} />
         <Stack.Screen
           name="App"
           component={() => <BottomNavigation navigationRef={navigationRef} />}
