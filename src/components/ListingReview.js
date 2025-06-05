@@ -36,6 +36,7 @@ import {SwearModal} from '../components/Modals';
 import KS from '../services/KSAPI';
 import {LogoSpinner} from '../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {CommonActions} from '@react-navigation/native';
 
 var ImagePicker = NativeModules.ImageCropPicker;
 
@@ -1146,7 +1147,6 @@ class ListingReview extends Component {
               });
             } else {
               toast(Languages.PublishSuccess, 3500);
-              console.log({tahhya: data});
               this.props.navigation.replace('CarDetails', {
                 id: data.ID,
                 showFeatures: true,
