@@ -49,7 +49,7 @@ const AddOfferBtn = () => {
   }, [fadeAnim]);
 
   const navigateToScreen = () => {
-    if (isEmailRegistry) {
+    if (isEmailRegistry && !user) {
       navigation.navigate('LoginScreen', {skippable: true});
     } else {
       navigation.navigate('PostOfferScreen');
