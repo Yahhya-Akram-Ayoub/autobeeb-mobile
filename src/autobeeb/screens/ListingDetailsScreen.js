@@ -42,6 +42,7 @@ const ListingDetailsScreen = () => {
 
   const [listing, setListing] = useState();
   const [loading, setLoading] = useState(true);
+  const [refreshFeatures, setRefreshFeatures] = useState(false);
   const [openOTPModal, setOpenOTPModal] = useState(false);
 
   const handleOpenOTPModal = () => {
@@ -51,19 +52,19 @@ const ListingDetailsScreen = () => {
     }, 1500);
   };
 
-  const handleReloadFeatures = () => {};
-  useEffect(() => {
-        __DEV__ && console.log({id});
+  const handleReloadFeatures = () => {
+    setRefreshFeatures(prev => !prev);
+  };
 
+  useEffect(() => {
     KS.GetListingCore({
       id,
-      userId: user?.id,
+      userId: user?.ID,
       currencyId: ViewingCurrency.ID,
       langId: Languages.langID,
       increaseViews: true,
     })
       .then(res => {
-        __DEV__ && console.log(res);
         setListing(res);
       })
       .finally(() => {
@@ -104,6 +105,7 @@ const ListingDetailsScreen = () => {
 
     lastScrollY.current = currentY;
   };
+
   return (
     <View>
       {!loading && listing && (
@@ -174,38 +176,46 @@ const ListingDetailsScreen = () => {
           id={listing?.id}
           dateAdded={listing?.dateAdded}
         />
-        <FeaturesSection listingId={listing?.id} />
-        <ListingDescription
-          loading={loading}
-          description={listing?.description}
-        />
-        <FavoriteReportButtons
-          loading={loading}
-          listingId={listing?.id}
-          isFavorite={listing?.favorite}
-        />
-        <AskListingOwner
-          loading={loading}
-          isSparePart={listing?.isSparePart}
-          ownerId={listing?.ownerID}
-          isDealer={listing?.isDealer}
-          listing={listing}
-        />
-        <PaymentBox />
-        <ListingDetailsExtras
-          loading={loading}
-          listingId={listing?.id}
-          typeId={listing?.typeID}
-          name={listing?.isSparePart ? listing?.title : listing?.name}
-        />
-        <SellerDetailsSection loading={loading} userId={listing?.ownerID} />
-        <ListingAutobeebBanner />
-        <RelatedListingsSection
-          countryId={listing?.categoryID}
-          cityId={listing?.cityID}
-        />
-        <PostYourOfferBanner />
-        <View style={{height: 80}} />
+        {!loading && (
+          <>
+            <FeaturesSection
+              listingId={listing?.id}
+              refreshFeatures={refreshFeatures}
+            />
+            <ListingDescription
+              loading={loading}
+              description={listing?.description}
+            />
+            <FavoriteReportButtons
+              loading={loading}
+              listingId={listing?.id}
+              isFavorite={listing?.favorite}
+              ownerId={listing?.ownerID}
+            />
+            <AskListingOwner
+              loading={loading}
+              isSparePart={listing?.isSparePart}
+              ownerId={listing?.ownerID}
+              isDealer={listing?.isDealer}
+              listing={listing}
+            />
+            <PaymentBox />
+            <ListingDetailsExtras
+              loading={loading}
+              listingId={listing?.id}
+              typeId={listing?.typeID}
+              name={listing?.isSparePart ? listing?.title : listing?.name}
+            />
+            <SellerDetailsSection loading={loading} userId={listing?.ownerID} />
+            <ListingAutobeebBanner />
+            <RelatedListingsSection
+              countryId={listing?.categoryID}
+              cityId={listing?.cityID}
+            />
+            <PostYourOfferBanner />
+            <View style={{height: 80}} />
+          </>
+        )}
       </ScrollView>
 
       <Animated.View
@@ -241,13 +251,16 @@ const ListingDetailsScreen = () => {
         <BottomNavigationBar />
       </Animated.View>
 
-      <ListingPopupHandler
-        listingId={listing?.id}
-        typeId={listing?.typeID}
-        name={listing?.isSparePart ? listing?.title : listing?.name}
-        countryId={listing?.countryID}
-        ownerId={listing?.ownerID}
-      />
+      {!loading && (
+        <ListingPopupHandler
+          listingId={listing?.id}
+          typeId={listing?.typeID}
+          name={listing?.isSparePart ? listing?.title : listing?.name}
+          countryId={listing?.countryID}
+          ownerId={listing?.ownerID}
+          isActive={listing?.status === 16}
+        />
+      )}
       {showFeatures && (
         <FeaturesModal
           listingId={listing?.id}

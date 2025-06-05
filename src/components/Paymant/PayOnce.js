@@ -24,6 +24,7 @@ import {isIphoneX} from 'react-native-iphone-x-helper';
 import {WebView} from 'react-native-webview';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AutobeebModal from '../Modals/AutobeebModal';
+import {screenHeight} from '../../autobeeb/constants/Layout';
 
 const screenWidth = Dimensions.get('screen').width;
 
@@ -48,7 +49,6 @@ const PayOnce = ({
     {
       ID: 2,
       Name: 'Visa',
-      Image: 'https://1000logos.net/wp-content/uploads/2017/06/VISA-logo.png',
       localImage: true,
       Image: require('../../images/visa.png'),
     },
@@ -290,7 +290,6 @@ const PayOnce = ({
       Unionpay: 17,
       Tap: 18,
     });
-   
 
     switch (PaymentMethod.ID) {
       case 1:
@@ -617,6 +616,8 @@ const PayOnce = ({
                   textAlign: 'center',
                   fontSize: 12,
                   paddingHorizontal: 10,
+                  color: '#000',
+                  fontFamily: Constants.fontFamilySemiBold,
                 }}>
                 {Languages.AmountWillDeducted}
               </Text>
@@ -632,6 +633,7 @@ const PayOnce = ({
         backdropPressToClose
         backButtonClose
         swipeToClose={false}
+        fullScreen={true}
         style={styles.modalStyle}>
         <View
           style={{
@@ -648,14 +650,18 @@ const PayOnce = ({
               flexDirection: 'row',
               alignItems: 'center',
               paddingTop: 20,
-              justifyContent: 'space-between',
+              marginHorizontal: 10,
+              justifyContent: 'flex-end',
             }}>
             <TouchableOpacity
               hitSlop={{top: 10, right: 10, bottom: 10, left: 10}}
               style={{
                 paddingLeft: 15,
               }}
-              onPress={() => navigation.goBack()}>
+              onPress={() => {
+                PaymentMethodModalRef?.current?.close();
+                PaymentModal?.current?.close();
+              }}>
               <Ionicons name="arrow-back" size={25} color={'black'} />
             </TouchableOpacity>
           </View>
@@ -669,9 +675,9 @@ const PayOnce = ({
           javaScriptEnabled={true}
           style={{flex: 1}}
           onMessage={event => {
-            PaymentMethodModalRef.current.close();
-            PaymentModal.current.close();
-            navigation.navigate('HomeScreen');
+            PaymentMethodModalRef?.current?.close();
+            PaymentModal?.current?.close();
+            navigation.goBack();
           }}
           source={{
             uri: `https://autobeeb.com/${lang}/special-do-pay/${
@@ -703,6 +709,10 @@ const styles = StyleSheet.create({
   planPrice: {
     fontSize: 24,
     color: Color.primary,
+  },
+  modalStyle: {
+    height: screenHeight,
+    width: screenWidth,
   },
 });
 

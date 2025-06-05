@@ -1,7 +1,11 @@
 import React, {useEffect} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
-import {ListingDetailsScreen, OffersScreen} from '../../screens';
+import {
+  ListingDetailsScreen,
+  ListingReportScreen,
+  OffersScreen,
+} from '../../screens';
 import {CardStyleInterpolators} from '@react-navigation/stack';
 import ActiveOffers from '../../../navigation/ActiveOffers';
 import ChatScreen from '../../../navigation/ChatScreen';
@@ -13,7 +17,8 @@ import CarDetails from '../../../navigation/CarDetails';
 import DealersScreen from '../../../navigation/DealersScreen';
 import UserProfileScreen from '../../../navigation/UserProfileScreen';
 import DealerProfileScreen from '../../../navigation/DealerProfileScreen';
-import { TranstionSettings } from './Transtion';
+import {TranstionSettings} from './Transtion';
+import PaymentDetailsAutobeeb from '../../../navigation/PaymentDetailsAutobeeb';
 
 const Stack = createNativeStackNavigator();
 
@@ -51,6 +56,14 @@ const OffersStack = ({stackRef}) => {
       <Stack.Screen
         name="DealerProfileScreen"
         component={DealerProfileScreen}
+      />
+      <Stack.Screen
+        name="ListingReportScreen"
+        component={ListingReportScreen}
+      />
+      <Stack.Screen
+        name="PaymentDetailsAutobeeb"
+        component={PaymentDetailsAutobeeb}
       />
     </Stack.Navigator>
   );

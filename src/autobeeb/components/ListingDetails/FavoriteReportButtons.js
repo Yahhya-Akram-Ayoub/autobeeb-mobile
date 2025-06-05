@@ -7,7 +7,7 @@ import {AppIcon, Icons} from '../shared/AppIcon';
 import KS from '../../../services/KSAPI';
 import {screenWidth} from '../../constants/Layout';
 
-const FavoriteReportButtons = ({loading, listingId, isFavorite}) => {
+const FavoriteReportButtons = ({ownerId, loading, listingId, isFavorite}) => {
   const user = useSelector(state => state.user.user);
   const navigation = useNavigation();
   const [favorite, setFavorite] = useState();
@@ -57,11 +57,20 @@ const FavoriteReportButtons = ({loading, listingId, isFavorite}) => {
         />
         <Text style={styles.buttonText}>{Languages.AddToFavourites}</Text>
       </TouchableOpacity>
-      <View style={{width: 10}} />
-      <TouchableOpacity style={styles.buttonBox} onPress={handleReport}>
-        <AppIcon type={Icons.Octicons} name="alert" size={20} color="#e44e44" />
-        <Text style={styles.buttonText}>{Languages.Report}</Text>
-      </TouchableOpacity>
+      {user?.ID !== ownerId && (
+        <>
+          <View style={{width: 10}} />
+          <TouchableOpacity style={styles.buttonBox} onPress={handleReport}>
+            <AppIcon
+              type={Icons.Octicons}
+              name="alert"
+              size={20}
+              color="#e44e44"
+            />
+            <Text style={styles.buttonText}>{Languages.Report}</Text>
+          </TouchableOpacity>
+        </>
+      )}
     </View>
   );
 };

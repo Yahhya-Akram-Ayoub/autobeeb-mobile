@@ -20,7 +20,6 @@ const ListingDetailsExtras = ({listingId, typeId, name}) => {
 
   const handlePaymentNavigation = () => {
     navigation.navigate('PaymentDetailsAutobeeb', {
-      userCountry: userCountry,
       user: user,
     });
   };
@@ -98,18 +97,6 @@ const ListingDetailsExtras = ({listingId, typeId, name}) => {
           </View>
         </TouchableOpacity>
       </View>
-
-      {user && userCountry?.WithFee && (
-        <View style={styles.cardContainer}>
-          <TouchableOpacity onPress={handlePaymentNavigation}>
-            <View style={styles.DetailsPayBox}>
-              <Text style={styles.DetailsPayTitle}>
-                {Languages.DetailsPayToAutobeeb}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      )}
 
       {/* Advice Section */}
       <View style={styles.cardContainer}>

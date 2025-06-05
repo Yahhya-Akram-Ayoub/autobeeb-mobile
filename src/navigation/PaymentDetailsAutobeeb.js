@@ -1,7 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Platform,
+  ScrollView,
+} from 'react-native';
 import ks from '../services/KSAPI';
-import {Languages} from '../common';
+import {Constants, Languages} from '../common';
 import {PayOnce} from '../components';
 import Color from '../common/Color';
 import LogoSpinner from '../components/LogoSpinner';
@@ -13,21 +20,20 @@ const PaymentDetailsAutobeeb = ({route}) => {
   const [loader, setLoader] = useState(true);
   const [openModal, setOpenModal] = useState(false);
   const navigation = useNavigation();
-  const _user = useSelector(state => state.user.user);
-  const userCountry = route.params?.userCountry;
+  const {user, userCountry} = useSelector(state => state.user);
   const User = route.params?.user;
   const Currency = global.ViewingCurrency;
 
   useEffect(() => {
-    if (_user == null) {
+    if (user == null) {
       navigation.navigate('LoginScreen');
       return;
     }
 
     ks.GetCommissionPlan({
-      CountryId: userCountry?.ID,
+      CountryId: userCountry?.id,
       lang: Languages.langID,
-      UserId: _user?.ID,
+      UserId: user?.ID,
     })
       .then(res => {
         setPlan(res.Plan);
@@ -69,7 +75,15 @@ const PaymentDetailsAutobeeb = ({route}) => {
     );
   }
   return (
-    <View style={styles.MainScreen}>
+    <ScrollView contentContainerStyle={styles.MainScreen}>
+      <TouchableOpacity
+        style={styles.backBtn}
+        onPress={() => {
+          navigation.goBack();
+        }}>
+        <Text style={styles.closeText}>{Languages.Close}</Text>
+      </TouchableOpacity>
+
       <View style={styles.TextView}>
         <Text style={styles.Title}>{Languages.ServiceFeeTitle}</Text>
         <Text style={styles.Description}>
@@ -90,41 +104,59 @@ const PaymentDetailsAutobeeb = ({route}) => {
         Offer={null}
         selectedPlan={plan}
         isModal={false}
-        countryId={userCountry?.ID}
+        countryId={userCountry?.id}
       />
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   MainScreen: {
     backgroundColor: '#ffffff',
-    height: '100%',
-    alignItems: 'center',
+    minHeight: '100%',
     paddingHorizontal: 20,
-    paddingVertical: 30,
+    paddingTop: 75,
+    paddingBottom: 20,
   },
   Title: {
     textAlign: 'center',
-    fontWeight: 700,
     color: Color.primary,
-    fontSize: 24,
+    fontSize: 22,
+    fontFamily: Constants.fontFamilyBold,
   },
   Description: {
     textAlign: 'center',
-    fontWeight: 700,
-    fontSize: 20,
+    fontSize: 18,
+    fontFamily: Constants.fontFamilyBold,
   },
   PriceText: {
     fontSize: 22,
-    fontWeight: 700,
     color: Color.primary,
+    fontFamily: Constants.fontFamilyBold,
   },
   TextView: {
     flexGrow: 1,
     justifyContent: 'flex-end',
     height: '22%',
     gap: 20,
+  },
+  closeText: {
+    fontSize: 16,
+    color: '#fff',
+    fontFamily: Constants.fontFamily,
+  },
+  backBtn: {
+    position: 'absolute',
+    top: Platform.select({
+      ios: 40,
+      android: 25,
+    }),
+    left: 15,
+    zIndex: 150,
+    paddingHorizontal: 20,
+    paddingVertical: 5,
+    backgroundColor: '#000',
+    borderRadius: 20,
   },
 });
 

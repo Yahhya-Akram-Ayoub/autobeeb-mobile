@@ -1466,7 +1466,7 @@ class PostOfferScreen extends Component {
     } else if (this.state.isEditing) {
       this.setState({step: 18, isEditing: false});
     } else if (this.state.step == 1) {
-      this.props.navigation.goBack();
+        this.props.navigation.goBack();
     } else if (this.state.step == 2) {
       this.setState({
         step: this.state.step - 1,

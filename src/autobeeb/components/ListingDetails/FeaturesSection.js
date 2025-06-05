@@ -5,7 +5,7 @@ import KS from '../../../services/KSAPI';
 import FastImage from 'react-native-fast-image';
 import {screenWidth} from '../../constants/Layout';
 
-const FeaturesSection = ({listingId}) => {
+const FeaturesSection = ({listingId, refreshFeatures}) => {
   const [features, setFeatures] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -22,7 +22,7 @@ const FeaturesSection = ({listingId}) => {
           setLoading(false);
         });
     }
-  }, [listingId]);
+  }, [listingId, refreshFeatures]);
 
   if (loading) return <></>;
   if (features.length === 0) return <></>;

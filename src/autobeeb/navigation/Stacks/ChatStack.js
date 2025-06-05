@@ -8,6 +8,7 @@ import DealersScreen from '../../../navigation/DealersScreen';
 import UserProfileScreen from '../../../navigation/UserProfileScreen';
 import DealerProfileScreen from '../../../navigation/DealerProfileScreen';
 import {TranstionSettings} from './Transtion';
+import {ListingDetailsScreen} from '../../screens';
 
 const Stack = createNativeStackNavigator();
 
@@ -35,7 +36,7 @@ const ChatStack = ({stackRef}) => {
       }}>
       <Stack.Screen name="MessagesScreen" component={MessagesScreen} />
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
-      <Stack.Screen name="CarDetails" component={CarDetails} />
+      <Stack.Screen name="CarDetails" component={ListingDetailsScreen} />
       <Stack.Screen name="DealersScreen" component={DealersScreen} />
       <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} />
       <Stack.Screen

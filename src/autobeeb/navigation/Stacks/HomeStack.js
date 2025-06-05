@@ -127,7 +127,6 @@ const HomeStack = ({stackRef}) => {
       <Stack.Screen name="PostOfferScreen" component={PostOfferScreen} />
       <Stack.Screen name="SectionsScreen" component={SectionsScreen} />
       <Stack.Screen name="CategoriesScreen" component={CategoriesScreen} />
-
       <Stack.Screen name="DealerSignUp" component={DealerSignUp} />
       <Stack.Screen name="DealersScreen" component={DealersScreen} />
       <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} />

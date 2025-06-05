@@ -22,6 +22,7 @@ const hideOnScreens = [
   'CarDetails',
   'SearchResult',
   'ListingReportScreen',
+  'SpecialPlans',
 ];
 
 const BottomNavigation = ({navigationRef}) => {

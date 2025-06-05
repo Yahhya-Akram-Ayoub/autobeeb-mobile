@@ -476,7 +476,7 @@ const SpecialPlans = ({route, pOffer, pOnClose}) => {
   return (
     <View
       style={{
-        paddingBottom: insets.bottom + 50,
+        paddingBottom: insets.bottom,
       }}>
       <ScrollView
         nestedScrollEnabled={true}

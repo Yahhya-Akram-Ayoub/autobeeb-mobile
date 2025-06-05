@@ -44,43 +44,32 @@ const FeaturesModal = ({
   const onClosed = () => {
     if (isNewUser || isPendingDelete) {
       openOTPModale();
-    }
-
-    if (
-      !isNewUser &&
-      !isPendingDelete &&
-      !isNewUser &&
-      !isSpecial &&
-      typeId !== '32' &&
-      `${sellType}` !== '4'
-    ) {
+    } else if (!isSpecial && typeId !== '32' && `${sellType}` !== '4') {
       navigation.navigate('SpecialPlans', {listingId});
     }
   };
 
   useEffect(() => {
     if (listingId) {
-      KS.FeaturesGet({
-        langid: Languages.langID,
-        selltype: sellType,
-        typeID: section || typeId,
-      }).then(data => {
-        if (data?.Success === 1) {
-          if (data.Features?.length > 0) {
-            setFeaturesSwitch(data.FeaturesSwitch || []);
-            setFeaturesDropDown(data.FeaturesDropDown || []);
-            setFeaturesLoaded(true);
+      if (!isPendingDelete) {
+        KS.FeaturesGet({
+          langid: Languages.langID,
+          selltype: sellType,
+          typeID: section || typeId,
+        }).then(data => {
+          if (data?.Success === 1) {
+            if (data.Features?.length > 0) {
+              setFeaturesSwitch(data.FeaturesSwitch || []);
+              setFeaturesDropDown(data.FeaturesDropDown || []);
+              setFeaturesLoaded(true);
 
-            setTimeout(() => {
-              modalRef.current?.open();
-            }, 500);
-          } else {
-            if (isNewUser || isPendingDelete) {
-              openOTPModale();
+              setTimeout(() => {
+                modalRef.current?.open();
+              }, 2000);
             }
           }
-        }
-      });
+        });
+      }
     }
   }, [listingId]);
 
@@ -174,7 +163,7 @@ const FeaturesModal = ({
                   );
                 }}
               />
-          
+
               <SectionList
                 sections={featuresDropDown.map(f => ({
                   title: f.Name,
@@ -220,7 +209,11 @@ const FeaturesModal = ({
         </ScrollView>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.cancelButton} onPress={onClosed}>
+          <TouchableOpacity
+            style={styles.cancelButton}
+            onPress={() => {
+              modalRef.current?.close();
+            }}>
             <Text style={styles.cancelText}>{Languages.CANCEL}</Text>
           </TouchableOpacity>
           <TouchableOpacity

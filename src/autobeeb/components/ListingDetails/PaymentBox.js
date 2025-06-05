@@ -10,14 +10,13 @@ const PaymentBox = () => {
   const userCountry = useSelector(state => state.user.userCountry);
   const shouldShowPayment = !!user && !!userCountry && !!userCountry.withFee;
 
-  if (!__DEV__ && !shouldShowPayment) return <View />;
+  if (!shouldShowPayment) return <View />;
 
   return (
     <View style={styles.cardContainer}>
       <TouchableOpacity
         onPress={() =>
           navigation.navigate('PaymentDetailsAutobeeb', {
-            userCountry,
             user,
           })
         }>

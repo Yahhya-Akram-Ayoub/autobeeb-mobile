@@ -218,9 +218,7 @@ class ListingReview extends Component {
       const _userCountry = _CountriesData.find(
         x => x.ID === this.props.userData.Country,
       );
-      setTimeout(() => {
-        console.log({_userCountry});
-      }, 1000);
+
       if (_userCountry && _userCountry.WithSwear) {
         this.setState({withSwear: _userCountry.WithSwear});
       }
@@ -1067,6 +1065,8 @@ class ListingReview extends Component {
       subCategoryID,
       email,
     } = this.props.data;
+    Keyboard.dismiss();
+
     let deviceID = DeviceInfo.getUniqueId();
     this.setState({disablePublish: true, openSwearModal: false});
     this.props.DoAddListing(
@@ -1113,7 +1113,6 @@ class ListingReview extends Component {
       },
       this.state.images,
       data => {
-        __DEV__ && console.log({NewUser: data});
         AsyncStorage.getItem('ItemNeedSharePoup', async (error, _item) => {
           AsyncStorage.setItem(
             'ItemNeedSharePoup',
@@ -1122,7 +1121,7 @@ class ListingReview extends Component {
         });
 
         this.setState({disablePublish: false});
-        if (data.Success == 1) {
+        if (data.Success === 1) {
           KS.ListingInitInfo({listingID: data.ID, langid: Languages.langID});
           if (data.User) {
             this.props.storeUserData(data.User);
@@ -1130,84 +1129,35 @@ class ListingReview extends Component {
           if (!data.IsUserActive) {
             this.props.navigation.navigate('HomeScreen');
             toast(Languages.AccountBlocked, 3500);
-          } else if (data.EmailRegister && !data.EmailConfirmed) {
-            this.props.storeUserData({ID: data.UserID}, () => {
-              setTimeout(() => {
-                this.props.navigation.replace('CarDetails', {
-                  IsSpecial: !!data.IsSpecial,
-                  isNewUser: true,
-                  isEmailRegister: true,
-                  Email: data.Email,
-                  User: data.User,
-                  OTPCode: data.OTPCode,
-                  item: {
-                    ID: data.ID,
-                    SellType: data.SellType,
-                    TypeID: data.TypeID,
-                  },
-
-                  id: data.ID,
-                  Phone: data.Phone,
-                  UserID: data.UserID,
-                  showFeatures: true,
-                });
-              }, 500);
-            });
-          } else if (data.OTPConfirmed == false && !data.EmailRegister) {
-            this.props.storeUserData({ID: data.UserID}, () => {
-              setTimeout(() => {
-                this.props.navigation.replace('CarDetails', {
-                  IsSpecial: !!data.IsSpecial,
-                  isNewUser: true,
-                  User: data.User,
-                  OTPCode: data.OTPCode,
-                  item: {
-                    ID: data.ID,
-                    SellType: data.SellType,
-
-                    TypeID: data.TypeID,
-                  },
-                  id: data.ID,
-                  Phone: data.Phone,
-                  UserID: data.UserID,
-                  showFeatures: true,
-                });
-              }, 500);
-            });
           } else {
-            toast(Languages.PublishSuccess, 3500);
+            const isNewUser =
+              (data.EmailRegister && !data.EmailConfirmed) ||
+              (data.OTPConfirmed == false && !data.EmailRegister);
 
-            this.props.navigation.replace('CarDetails', {
-              IsSpecial: !!data.IsSpecial,
-              isNewUser: false,
-              User: data.User,
-              item: {
-                ID: data.ID,
-                SellType: data.SellType,
-                TypeID: data.TypeID,
-              },
-              Phone: data.Phone,
-              UserID: data.UserID,
-              id: data.ID,
-              showFeatures: true,
-            });
+            if (isNewUser) {
+              this.props.storeUserData({ID: data.UserID}, () => {
+                setTimeout(() => {
+                  this.props.navigation.replace('CarDetails', {
+                    id: data.ID,
+                    isNewUser: true,
+                    showFeatures: true,
+                  });
+                }, 500);
+              });
+            } else {
+              toast(Languages.PublishSuccess, 3500);
+              console.log({tahhya: data});
+              this.props.navigation.replace('CarDetails', {
+                id: data.ID,
+                showFeatures: true,
+              });
+            }
           }
         } else if (data.Status === 1) {
           // to be tested
           this.props.navigation.replace('CarDetails', {
-            IsSpecial: !!data.IsSpecial,
-            pendingDelete: true,
-            item: {
-              ID: data.ID,
-              SellType: data.SellType,
-              TypeID: data.TypeID,
-            },
             id: data.ID,
-            Phone: data.Phone,
-            UserID: data.UserID,
             showFeatures: true,
-            isEmailRegister: data.EmailRegister && !data.EmailConfirmed,
-            Email: data.EmailRegister && !data.EmailConfirmed ? data.Email : '',
           });
         } else {
           alert(data.Message);

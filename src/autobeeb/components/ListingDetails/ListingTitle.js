@@ -23,10 +23,10 @@ const ListingTitle = ({
   ownerId,
   status,
   listingId,
+  openOTPModal,
 }) => {
   const user = useSelector(x => x.user.user);
-  __DEV__ && console.log({user});
-  const [openOTPModal, setOpenOTPModal] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [oTP, setOTP] = useState(null);
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -41,11 +41,11 @@ const ListingTitle = ({
     }
   };
   const onVerifyPress = () => {
-    setOpenOTPModal(true);
+    setOpenModal(true);
   };
 
   useEffect(() => {
-    if (openOTPModal) setOpenOTPModal(true);
+    if (openOTPModal) setOpenModal(true);
   }, [openOTPModal]);
 
   const notOtpConfirmed =
@@ -74,8 +74,10 @@ const ListingTitle = ({
 
         if (data.User) {
           actions.login(dispatch, data.User);
-          setOpenOTPModal(false);
-          navigation.navigate('SpecialPlans', {listingId});
+          setOpenModal(false);
+          setTimeout(() => {
+            navigation.navigate('SpecialPlans', {listingId});
+          }, 1000);
         }
       } else {
         toast(Languages.WrongOTP);
@@ -176,11 +178,11 @@ const ListingTitle = ({
           </Text>
         </View>
       </View>
-      {openOTPModal && (
+      {openModal && (
         <OTPModal
-          isOpen={openOTPModal}
+          isOpen={openModal}
           onClosed={() => {
-            setOpenOTPModal(false);
+            setOpenModal(false);
           }}
           OTPMessage={Languages.WeHaveSentTheOTP}
           EnterMessage={Languages.EnterItNow}

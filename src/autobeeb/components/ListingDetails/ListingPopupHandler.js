@@ -16,7 +16,14 @@ import {Color, Languages} from '../../../common';
 import Svg, {Path} from 'react-native-svg';
 import {screenHeight, screenWidth} from '../../constants/Layout';
 
-const ListingPopupHandler = ({listingId, countryId, typeId, name, ownerId}) => {
+const ListingPopupHandler = ({
+  listingId,
+  countryId,
+  typeId,
+  name,
+  ownerId,
+  isActive,
+}) => {
   const user = useSelector(state => state.user.user);
   const [firstLoad, setFirstLoad] = useState(0);
   const isSharePopupRef = useRef();
@@ -32,13 +39,17 @@ const ListingPopupHandler = ({listingId, countryId, typeId, name, ownerId}) => {
         setTimeout(() => {
           warningPopupRef.current?.open();
         }, 500);
-      } else if (ownerId === user?.ID) {
-        AsyncStorage.getItem('ItemNeedSharePoup', (_error, _item) => {
-          if (_item?.includes(`${listingId}`)) {
+      } else if (isActive && ownerId === user?.ID) {
+        const _key = 'ItemNeedSharePoup';
+        AsyncStorage.getItem(_key, (_error, _item) => {
+          if (_item?.includes(`${listingId},`)) {
+            // this to open the popup in secoond timem user open the modal
             AsyncStorage.setItem(
-              'ItemNeedSharePoup',
-              _item.replace(`${listingId},`, ''),
+              _key,
+              _item.replace(`${listingId},`, `${listingId}-1,`),
             );
+          } else if (_item?.includes(`${listingId}-1,`)) {
+            AsyncStorage.setItem(_key, _item.replace(`${listingId}-1,`, ''));
             setFirstLoad(1);
             setTimeout(() => {
               isSharePopupRef.current?.open();

@@ -72,10 +72,9 @@ const GeneralOptions = () => {
       iconSize: 26,
       onPress: () =>
         navigation.navigate('PaymentDetailsAutobeeb', {
-          userCountry,
           user,
         }),
-      isDisplay: !!user && !!userCountry && userCountry?.WithFee,
+      isDisplay: !!user && !!userCountry && userCountry?.withFee,
     },
     {
       isLine: true,
