@@ -46,7 +46,6 @@ export const actions = {
             });
             if (images && images.length > 0) {
               images.forEach(async (image, index) => {
-                console.log({uri: image.uri});
                 if (image.uri) {
                   fetch(
                     'https://api.autobeeb.com/v2/Services/ListingImageUpload', // https://apiv2.autobeeb.com

@@ -41,12 +41,13 @@ import * as Animatable from 'react-native-animatable';
 import {BottomNavigationBar, LogoSpinner} from '../components';
 import {screenHeight} from '../autobeeb/constants/Layout';
 import ListingAddImages from '../components/ListingAddImages';
+import {CommonActions} from '@react-navigation/native';
 
 class PostOfferScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      step: __DEV__ ? Steps.Images : this.props.route?.params?.step ?? 1,
+      step: this.props.route?.params?.step ?? 1,
       sellType: undefined,
       sellTypeLabel: undefined,
       listingType: undefined,
@@ -103,6 +104,9 @@ class PostOfferScreen extends Component {
         listingType: item.TypeID,
         listingTypeLabel: item.TypeName,
 
+        images: item.Images ?? [],
+        mainImage: item.Images?.[0] ?? null,
+        imageBasePath: item.ImageBasePath ?? '',
         makeID: item.MakeID,
         makeLabel: item.MakeName,
 
@@ -489,6 +493,11 @@ class PostOfferScreen extends Component {
         return (
           <ListingAddImages
             step={Steps.Images}
+            pImages={this.state.images ?? []}
+            imageBasePath={this.state.imageBasePath ?? ''}
+            sellType={this.state.sellType}
+            pMainImage={this.state.mainImage ?? null}
+            listingId={this.props.route.params?.Listing?.ID}
             onClick={item => {
               this.setState(
                 {images: item.images, mainImage: item.mainImage},
@@ -499,7 +508,10 @@ class PostOfferScreen extends Component {
                     this.state.sellType,
                     this.props.user ? true : false,
                   ).then(result => {
-                    this.setState({navObject: result, step: result.next});
+                    this.setState({
+                      navObject: result,
+                      step: this.state.isEditing ? Steps.Review : result.next,
+                    });
                   });
                 },
               );
@@ -1315,6 +1327,23 @@ class PostOfferScreen extends Component {
             EditOfferLoading={
               this.state.EditOfferLoading && this.state.EditOffer
             }
+            images={
+              this.state.EditOffer && !this.state.images?.length
+                ? this.props.route.params?.Listing?.Images
+                : this.state.images
+                ? [...this.state.images]
+                : []
+            }
+            mainImage={
+              this.state.EditOffer && !this.state.mainImage
+                ? this.props.route.params?.Listing?.Images?.[0]
+                : this.state.mainImage
+            }
+            imageBasePath={
+              this.state.EditOffer && !this.state.imageBasePath
+                ? this.props.route.params?.Listing?.ImageBasePath
+                : this.state.imageBasePath
+            }
             EditOffer={this.state.EditOffer}
             Listing={this.props.route.params?.Listing}
             CountryCode={this.state.CountryCode}
@@ -1463,12 +1492,8 @@ class PostOfferScreen extends Component {
     let skipSteps = [];
     if (this.state.isEditing && this.state.phone.length < 9) {
       toast(Languages.InvalidNumber);
-    } else if (this.state.EditOffer && this.state.step == 18) {
-      this.props.navigation.navigate('ActiveOffers', {
-        userid: this.props.user?.ID,
-        status: 16,
-        active: true,
-      });
+    } else if (this.state.EditOffer && this.state.step === Steps.Review) {
+      this.navigateToOfferScreen();
     } else if (this.state.EditingMake) {
       Alert.alert('', Languages.MustChooseModel);
       //  this.setState({  EditingMake: false });
@@ -1499,6 +1524,38 @@ class PostOfferScreen extends Component {
         step: this.state.navObject.prev,
       });
     }
+  }
+
+  navigateToOfferScreen() {
+    this.props.navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'App', // this is your bottom tab navigator
+            state: {
+              routes: [
+                {
+                  name: 'ActiveOffers', // tab name
+                  state: {
+                    routes: [
+                      {
+                        name: 'ActiveOffers',
+                        params: {
+                          userid: this.props.user?.ID,
+                          status: 16,
+                          active: true,
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      }),
+    );
   }
 
   renderHeader() {
@@ -1842,11 +1899,7 @@ class PostOfferScreen extends Component {
             }}
             onPress={() => {
               this.props.navigation.goBack();
-              this.props.navigation.navigate('ActiveOffers', {
-                userid: this.props.user && this.props.user?.ID,
-                status: 16,
-                active: true,
-              });
+              this.navigateToOfferScreen();
             }}>
             <Text style={{color: '#fff', fontSize: 20, textAlign: 'center'}}>
               {Languages.Feature_2}

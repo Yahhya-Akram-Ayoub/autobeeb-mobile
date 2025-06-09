@@ -31,7 +31,7 @@ const ListingPopupHandler = ({
 
   useEffect(() => {
     if (!listingId || !user) return;
-    console.log({listingId});
+ 
     AsyncStorage.getItem('warningShown', async (error, data) => {
       if (!data && ownerId !== user?.ID) {
         await AsyncStorage.setItem('warningShown', 'true');

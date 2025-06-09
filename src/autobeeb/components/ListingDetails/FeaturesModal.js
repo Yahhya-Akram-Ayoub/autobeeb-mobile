@@ -63,9 +63,7 @@ const FeaturesModal = ({
               setFeaturesDropDown(data.FeaturesDropDown || []);
               setFeaturesLoaded(true);
 
-              setTimeout(() => {
-                modalRef.current?.open();
-              }, 2000);
+              modalRef.current?.open();
             }
           }
         });

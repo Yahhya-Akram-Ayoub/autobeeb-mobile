@@ -46,7 +46,7 @@ const ListingDetailsScreen = () => {
   const lastScrollY = useRef(0);
   const currentDirection = useRef(null);
   const route = useRoute();
-  const {id, isNewUser, showFeatures} = route.params;
+  const {id, isNewUser, showFeatures, isNeedRefresh} = route.params;
   const navigation = useNavigation();
   __DEV__ && console.log({id});
   const user = useSelector(state => state.user.user);
@@ -73,7 +73,7 @@ const ListingDetailsScreen = () => {
       const onBackPress = () => {
         const state = navigation.getState();
         const currentRouteIndex = state.index;
-        console.log({currentRouteIndex});
+
         if (currentRouteIndex === 0) {
           // Navigate to root of current stack
           navigation.navigate('ActiveOffers');
@@ -156,6 +156,8 @@ const ListingDetailsScreen = () => {
           images={listing?.images}
           isSpecial={listing?.isSpecial}
           imageBasePath={listing?.imageBasePath}
+          isNeedRefresh={isNeedRefresh}
+          listingId={id}
         />
         <ListingTitle
           loading={loading}
@@ -286,7 +288,7 @@ const ListingDetailsScreen = () => {
         <BottomNavigationBar />
       </Animated.View>
 
-      {!loading && (
+      {!loading && !showFeatures && (
         <ListingPopupHandler
           listingId={listing?.id}
           typeId={listing?.typeID}

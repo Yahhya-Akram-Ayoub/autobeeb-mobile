@@ -16,114 +16,149 @@ import {Color, Constants, Languages} from '../common';
 import IconFa from 'react-native-vector-icons/FontAwesome';
 import {requestCameraPermission} from '../ultils/Permission';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import KS from '../services/KSAPI';
-import {useRoute} from '@react-navigation/native';
 import DialogBox from 'react-native-dialogbox';
 import {screenHeight, screenWidth} from '../autobeeb/constants/Layout';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
+import {toast} from '../Omni';
+import KS from '../services/KSAPI';
 
 var ImagePicker = NativeModules.ImageCropPicker;
-const ListingAddImages = ({onClick, listingType}) => {
-  const [images, setImages] = useState([]);
-  const [mainImage, setMainImage] = useState(null);
-  const [imagesEdit, setImagesEdit] = useState([]);
-  const [imagePendingDelete, setImagePendingDelete] = useState(false);
-  const [isMaxImagesUploaded, setIsMaxImagesUploaded] = useState(false);
-  const [index, setIndex] = useState(0);
-  const imagesListRef = useRef(null);
-  const route = useRoute();
-  const isEditMode = route?.params?.EditOffer;
+const ListingAddImages = ({
+  onClick,
+  listingType,
+  pImages,
+  imageBasePath,
+  listingId,
+  sellType,
+}) => {
+  const [images, setImages] = useState(pImages ?? []);
+  const [mainImage, setMainImage] = useState(0); // Store index
   const dialogRef = useRef(null);
-  const maxImages = listingType !== 32 ? 15 : 1;
+  const maxImages = listingType !== 32 && sellType !== 4 ? 15 : 1;
+
+  const updateImages = newImages => {
+    setImages(newImages.slice(0, maxImages));
+    if (newImages.length === 0) {
+      setMainImage(null);
+    } else if (mainImage === null || mainImage >= newImages.length) {
+      setMainImage(0);
+    }
+  };
+
+  const deleteImageByPath = (fileName, index) => {
+    let isPrimary = mainImage === index;
+
+    KS.ListingImageDelete({
+      id: listingId,
+      fileName: fileName,
+      primary: isPrimary,
+    })
+      .then(result => {
+        dialogRef.current?.close();
+
+        if (result.Success === 1) {
+          cleanupImage(fileName, index, true);
+        } else {
+          toast('Error Delete Image : ' + JSON.stringify(result.Message));
+        }
+      })
+      .finally(() => {
+        dialogRef.current?.close();
+      });
+  };
 
   const pickMultiple = () => {
-    const maxAllowed = maxImages - (imagesEdit?.length ?? 0);
-    const selectionLimit = maxAllowed > 0 ? maxAllowed : 0;
+    dialogRef.current?.close();
+    const maxAllowed = maxImages - images.length;
 
-    const options = {
-      mediaType: 'photo',
-      selectionLimit,
-      maxFiles: selectionLimit,
-      includeBase64: true,
-      compressImageQuality: 0.7,
-    };
+    launchImageLibrary(
+      {
+        mediaType: 'photo',
+        selectionLimit: maxAllowed,
+        includeBase64: true,
+        compressImageQuality: 0.7,
+      },
+      res => {
+        if (!res || res.didCancel || !res.assets) return;
 
-    launchImageLibrary(options, res => {
-      if (!res || res.didCancel || !res.assets) return;
+        const newImages = images
+          ? [
+              ...images,
+              ...res.assets.map(image => ({
+                uri: image.uri,
+                width: image.width,
+                height: image.height,
+                mime: image.type,
+                data: image.base64,
+              })),
+            ]
+          : res.assets.map(image => ({
+              uri: image.uri,
+              width: image.width,
+              height: image.height,
+              mime: image.type,
+              data: image.base64,
+            }));
 
-      setMainImage(null);
-      let newImages = [...images];
-
-      res.assets.forEach(image => {
-        if (newImages.length < selectionLimit) {
-          newImages.push({
-            uri: image.uri,
-            width: image.width,
-            height: image.height,
-            mime: image.type,
-            data: image.base64,
-          });
-        }
-      });
-
-      setImages(newImages);
-      setIndex(prev => prev + 1);
-      setIsMaxImagesUploaded(newImages.length === selectionLimit);
-    });
+        updateImages(newImages);
+      },
+    );
   };
 
   const pickSingleWithCamera = async () => {
-    try {
-      const isPermissionGranted = await requestCameraPermission();
-      if (!isPermissionGranted) return;
+    dialogRef.current?.close();
+    const isGranted = await requestCameraPermission();
+    if (!isGranted) return;
 
-      const options = {
+    launchCamera(
+      {
         mediaType: 'photo',
         cropping: false,
         width: 500,
         height: 500,
-        includeExif: true,
         includeBase64: true,
         compressImageQuality: 0.7,
-      };
+      },
+      res => {
+        if (!res || res.didCancel) {
+          __DEV__ && toast('Operation failed or canceled');
+          return;
+        }
 
-      launchCamera(options, res => {
-        if (!res || res.didCancel || !res.assets?.[0]) return;
-
-        const image = res.assets[0];
-        setMainImage(null);
-
-        let newImages = [...images];
-
-        const canAddImage = isEditMode
-          ? newImages.length <= 14 - imagesEdit.length
-          : newImages.length <= 14;
-
-        if (canAddImage) {
-          newImages.push({
+        try {
+          const image = res.assets[0];
+          const _image = {
             uri: image.uri,
             width: image.width,
             height: image.height,
             mime: image.type,
             data: image.base64,
-          });
+          };
+          const newImages = images ? [...images, _image] : [_image];
+          updateImages(newImages);
+        } catch (err) {
+          console.log({err});
         }
-
-        setImages(newImages);
-      });
-    } catch (error) {
-      console.log('Camera Error:', error);
-    }
+      },
+    );
   };
-  const cleanupImage = image => {
-    if (!image) return;
 
-    setImages(prev => prev.filter(x => x !== image));
+  const cleanupImage = (image, index, fromArray = false) => {
+    if (listingId && images.length === 1) {
+      toast('You can not delete all photos');
+      return;
+    }
 
-    try {
-      ImagePicker.cleanSingle(image.uri);
-    } catch (error) {
-      console.warn('Failed to clean image:', error);
+    if (typeof image === 'string' && !fromArray) {
+      confirmImageDelete(image, index);
+    } else {
+      const filtered = images.filter(img => img !== image);
+      updateImages(filtered);
+      try {
+        ImagePicker.cleanSingle(image.uri);
+      } catch (err) {
+        console.warn('Clean error:', err);
+      }
     }
   };
 
@@ -133,24 +168,37 @@ const ListingAddImages = ({onClick, listingType}) => {
       btns: [
         {
           text: Languages.camera,
-          callback: () => {
-            dialogRef.current?.close();
-            setTimeout(() => {
-              pickSingleWithCamera();
-            }, 500);
-          },
+          callback: () => setTimeout(pickSingleWithCamera, 500),
         },
         {
           text: Languages.Gallery,
-          callback: () => {
-            dialogRef.current?.close();
-            setTimeout(() => {
-              pickMultiple();
-            }, 500);
-          },
+          callback: () => setTimeout(pickMultiple, 500),
         },
       ],
     });
+  };
+
+  const confirmImageDelete = (image, index) => {
+    dialogRef.current?.pop({
+      title: Languages.DeleteConfirm,
+      btns: [
+        {
+          text: Languages.Ok,
+          callback: () => deleteImageByPath(image, index),
+        },
+        {
+          text: Languages.Cancel,
+          callback: () => dialogRef.current?.close(),
+        },
+      ],
+    });
+  };
+  const moveIndexToStart = index => {
+    if (index < 0 || index >= images.length) return images; // invalid index
+    const item = images[index];
+    const newArr = images.slice(0, index).concat(images.slice(index + 1));
+    setMainImage(0);
+    setImages([item, ...newArr]);
   };
 
   const renderItem = useCallback(
@@ -168,69 +216,64 @@ const ListingAddImages = ({onClick, listingType}) => {
             )}
             <IconFa
               name="plus"
-              size={index === 0 ? 20 : 20}
+              size={20}
               color={Color.primary}
               style={index === 0 ? styles.AbsulatePlus : styles.PlusIcon}
             />
-
             <Text style={styles.addPhotoText}>{Languages.addPhotos}</Text>
           </TouchableOpacity>
         );
 
       return (
         <View
-          key={index} // style={styles.imageWrapper}
-          style={styles.addBox}>
+          key={index}
+          style={[
+            styles.addBox,
+            mainImage === index && {
+              borderWidth: 3,
+              borderColor: Color.primary,
+            },
+          ]}>
           <TouchableOpacity
             onPress={() => {
-              if (imagesListRef.current) {
-                imagesListRef.current.scrollToOffset({
-                  animated: true,
-                  offset: 0,
-                });
-              }
-
-              const newImages = [...images];
-              const [selected] = newImages.splice(index, 1);
-              setMainImage(null);
-              setImages([selected, ...newImages]);
+              moveIndexToStart(index);
             }}>
             <Image
-              style={[
-                {
-                  maxWidth: '100%',
-                  maxHeight: '100%',
-                  resizeMode: 'contains',
-                },
-                mainImage === index && {
-                  borderWidth: 3,
-                  borderColor: Color.primary,
-                },
-              ]}
-              source={item}
+              style={styles.imageBoxSquer}
+              source={
+                typeof item === 'string'
+                  ? {
+                      uri: `https://autobeeb.com/${imageBasePath}${item}_400x400.jpg`,
+                    }
+                  : item
+              }
             />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.removeButton}
-            onPress={() => cleanupImage(item)}>
-            <IconMC name="close" size={20} color={'#fff'} />
+            onPress={() => cleanupImage(item, index)}>
+            <IconMC name="close" size={20} color="#fff" />
           </TouchableOpacity>
         </View>
       );
     },
-    [cleanupImage],
+    [images, mainImage],
   );
+
+  const paddedImages = [...images];
+  while (paddedImages.length < maxImages) paddedImages.push(null);
 
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <Text style={styles.limitText}>
-          {isMaxImagesUploaded
+          {images.length === maxImages
             ? Languages.limitHighlightedImage.replace('15', maxImages)
-            : images.length > 0 && !mainImage
+            : images.length > 0 && mainImage === null
             ? Languages.highlightedImage
             : ''}
         </Text>
+
         {maxImages === 1 && !images.length ? (
           <TouchableOpacity
             onPress={showImageOptions}
@@ -249,58 +292,54 @@ const ListingAddImages = ({onClick, listingType}) => {
             />
             <Text style={styles.addPhotoText}>{Languages.addPhotos}</Text>
           </TouchableOpacity>
-        ) : maxImages === 1 && images.length ? (
-          <View
-            key={index} // style={styles.imageWrapper}
-            style={styles.addBoxOnImage}>
-            <TouchableOpacity>
+        ) : maxImages === 1 && images.length < 2 ? (
+          <View key={0} style={styles.addBoxOnImage}>
+            <TouchableOpacity onPress={() => setMainImage(0)}>
               <Image
                 style={[
-                  {
-                    maxWidth: '100%',
-                    maxHeight: '100%',
-                    resizeMode: 'contains',
-                  },
-                  mainImage === index && {
+                  {maxWidth: '100%', maxHeight: '100%', resizeMode: 'contain'},
+                  mainImage === 0 && {
                     borderWidth: 3,
                     borderColor: Color.primary,
                   },
                 ]}
-                source={images[0]}
+                source={
+                  typeof item === 'string'
+                    ? {
+                        uri: `https://autobeeb.com/${imageBasePath}${images[0]}_400x400.jpg`,
+                      }
+                    : images[0]
+                }
               />
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.removeButton}
               onPress={() => cleanupImage(images[0])}>
-              <IconMC name="close" size={20} color={'#fff'} />
+              <IconMC name="close" size={20} color="#fff" />
             </TouchableOpacity>
           </View>
         ) : (
           <FlatList
-            ref={imagesListRef}
-            data={[
-              ...images,
-              ...Array.apply(null, {length: maxImages - images.length}),
-            ]}
-            keyExtractor={(item, index) => index.toString()}
-            extraData={images}
+            data={paddedImages}
+            keyExtractor={(_, index) => index.toString()}
+            extraData={mainImage}
             numColumns={3}
             renderItem={renderItem}
             scrollEnabled={false}
             contentContainerStyle={styles.flatListContent}
-            columnWrapperStyle={{
-              gap: 3,
-            }}
+            columnWrapperStyle={{gap: 3}}
           />
         )}
       </ScrollView>
+
       <DialogBox ref={dialogRef} />
       <TouchableOpacity
-        onPress={() => {
-          onClick({images, mainImage});
-        }}
+        onPress={() => onClick({images, mainImage: images[0]})}
         style={{
-          backgroundColor: Color.primary,
+          backgroundColor:
+            !images.length || images.length > maxImages
+              ? 'gray'
+              : Color.primary,
           width: '100%',
           height: 50,
           justifyContent: 'center',
@@ -309,7 +348,7 @@ const ListingAddImages = ({onClick, listingType}) => {
           position: 'absolute',
           bottom: 65,
         }}
-        disabled={!images.length}>
+        disabled={!images.length || images.length > maxImages}>
         <Text
           style={{
             color: '#fff',
@@ -365,6 +404,13 @@ const styles = StyleSheet.create({
   PlusIcon: {},
   iconMain: {
     marginVertical: 5,
+  },
+  imageBoxSquer: {
+    maxWidth: '100%',
+    maxHeight: '100%',
+    resizeMode: 'contain',
+    minWidth: 130,
+    height: '100%',
   },
   iconPlus: {
     position: 'absolute',

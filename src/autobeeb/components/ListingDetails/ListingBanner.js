@@ -1,4 +1,4 @@
-import {useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -13,12 +13,52 @@ import {screenWidth} from '../../constants/Layout';
 import SpecialOfferBadge from './SpecialOfferBadge';
 import BannersSwiper from './BannersSwiper';
 import {SkeletonLoader} from '../shared/Skeleton';
+import KS from '../../../services/KSAPI';
+import {useSelector} from 'react-redux';
 
-const ListingBanner = ({loading, images, isSpecial, imageBasePath}) => {
+const ListingBanner = ({
+  listingId,
+  loading,
+  images,
+  isSpecial,
+  imageBasePath,
+  isNeedRefresh,
+}) => {
   const isEmpty = images?.length === 0;
-  const hasImages = images?.length > 0;
+  const user = useSelector(state => state.user.user);
+  const [loadingRefersh, setLoadingRefersh] = useState(false);
+  const [photos, setPhotos] = useState(images ?? []);
+  const [hasImages, setHasImages] = useState(images?.length > 0);
 
-  if (loading)
+  useEffect(() => {
+    console.log({isNeedRefresh});
+    if (isNeedRefresh)
+      setTimeout(() => {
+        refreshImages();
+      }, 5000);
+  }, []);
+
+  const refreshImages = () => {
+    KS.GetListingCore({
+      id: listingId,
+      userId: user?.ID,
+      currencyId: 1,
+      langId: 1,
+      increaseViews: false,
+    })
+      .then(res => {
+        setLoadingRefersh(true);
+        setPhotos(res.images);
+        setHasImages(res?.images?.length > 0);
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setLoadingRefersh(false);
+        }, 500);
+      });
+  };
+
+  if (loading || loadingRefersh)
     return (
       <SkeletonLoader
         containerStyle={[styles.container, styles.centeredContent]}
@@ -33,7 +73,7 @@ const ListingBanner = ({loading, images, isSpecial, imageBasePath}) => {
       {isSpecial && <SpecialOfferBadge />}
 
       {hasImages ? (
-        <BannersSwiper images={images} imageBasePath={imageBasePath} />
+        <BannersSwiper images={photos} imageBasePath={imageBasePath} />
       ) : (
         <FastImage
           style={styles.placeholderImage}

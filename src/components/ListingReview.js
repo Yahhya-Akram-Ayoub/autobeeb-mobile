@@ -43,10 +43,12 @@ var ImagePicker = NativeModules.ImageCropPicker;
 class ListingReview extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       currency: global.ViewingCurrency || this.props.ViewingCurrency,
       imagePendingDelete: false,
-      images: [],
+      images: props.images ?? [],
+      imageBasePath: props.imageBasePath ?? null,
       openSwearModal: false,
       swearCountry: '',
       withSwear: false,
@@ -119,14 +121,12 @@ class ListingReview extends Component {
     if (!!this.props?.route?.params?.Listing) {
       this.setState({
         editListing: this.props?.route?.params?.Listing,
-        imagesEdit: this.props?.route?.params?.Listing?.Images,
-        mainImage: this.props?.route?.params?.Listing?.Images[0],
+        //  images: this.props?.route?.params?.Listing?.Images,
       });
     } else if (!!this.props.Listing) {
       this.setState({
         editListing: this.props.Listing,
-        imagesEdit: this.props.Listing.Images,
-        mainImage: this.props.Listing.Images[0],
+        // images: this.props.Listing.Images,
       });
     }
     setTimeout(() => {
@@ -222,11 +222,19 @@ class ListingReview extends Component {
                   state: {
                     routes: [
                       {
+                        name: 'ActiveOffers',
+                        params: {
+                          userid: this.props?.userData?.ID,
+                          active: !isNewUser,
+                        },
+                      },
+                      {
                         name: 'CarDetails',
                         params: {
                           id: id,
                           showFeatures: true,
                           isNewUser: isNewUser,
+                          isNeedRefresh: true,
                         },
                       },
                     ],
@@ -324,7 +332,6 @@ class ListingReview extends Component {
 
     launchImageLibrary(options, res => {
       if (!res || res?.didCancel) return;
-      this.setState({mainImage: null});
       this.setState({image: null});
       var myImages = this.state.images;
       if (!myImages) myImages = [];
@@ -385,7 +392,6 @@ class ListingReview extends Component {
       launchCamera(options, res => {
         if (!res || res?.didCancel) return;
         const image = res.assets[0];
-        this.setState({mainImage: null});
         this.setState({image: null});
         var myImages = this.state.images;
         if (!myImages) myImages = [];
@@ -425,24 +431,7 @@ class ListingReview extends Component {
 
   renderImage(image, index) {
     return (
-      <TouchableOpacity
-        onPress={() => {
-          if (this.imagesListRef) {
-            this.imagesListRef.scrollToOffset({
-              animated: true,
-              offset: 0,
-            });
-          }
-          // var oldmain = this.state.images[0];
-          //    this.state.images[0] = this.state.images[index];
-          //    this.state.images[index] = oldmain;
-
-          let img = this.state.images[index];
-          this.state.images.splice(index, 1);
-          this.setState({mainImage: null});
-          this.state.images.unshift(img);
-          this.setState({images: this.state.images});
-        }}>
+      <View>
         <Image
           style={[
             {
@@ -452,22 +441,26 @@ class ListingReview extends Component {
               resizeMode: 'cover',
               marginBottom: 7,
             },
-            index == 0 &&
-              !this.state.mainImage && {
-                borderWidth: 3,
-                borderColor: Color.primary,
-              },
-
+            index === 0 && {
+              borderWidth: 3,
+              borderColor: Color.primary,
+            },
             styles.imageBox,
           ]}
-          source={image}
+          source={
+            typeof image === 'string'
+              ? {
+                  uri: `https://autobeeb.com/${this.props.imageBasePath}${image}_400x400.jpg`,
+                }
+              : image
+          }
         />
-      </TouchableOpacity>
+      </View>
     );
   }
 
   deleteImage(listingID, fileName, index) {
-    let isPrimary = this.state.mainImage && this.state.mainImage == fileName;
+    let isPrimary = index === 0;
     this.setState({imagePendingDelete: true});
     KS.ListingImageDelete({
       id: listingID,
@@ -478,64 +471,13 @@ class ListingReview extends Component {
 
       if (result.Success == 1) {
         this.state.imagesEdit.splice(index, 1);
-        this.setState({imagesEdit: this.state.imagesEdit}, () => {
-          if (this.state.imagesEdit && this.state.imagesEdit.length > 0) {
-            this.setState({mainImage: this.state.imagesEdit[0]});
-          } else {
-            this.setState({mainImage: null});
-          }
-        });
+        this.setState({imagesEdit: this.state.imagesEdit});
       } else {
         alert('Error Delete Image : ' + JSON.stringify(result.Message));
       }
     });
   }
 
-  renderEditImage(image, index) {
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          if (this.imagesEditListRef) {
-            this.imagesEditListRef.scrollToOffset({
-              animated: true,
-              offset: 0,
-            });
-          }
-
-          let img = this.state.imagesEdit[index];
-          this.state.imagesEdit.splice(index, 1);
-          this.setState({mainImage: image});
-          this.state.imagesEdit.unshift(img);
-          this.setState({imagesEdit: this.state.imagesEdit});
-        }}>
-        <Image
-          style={[
-            {
-              width: 90,
-              height: 90,
-              borderRadius: 10,
-              resizeMode: 'cover',
-              marginBottom: 7,
-            },
-            index == 0 &&
-              this.state.mainImage == image && {
-                borderWidth: 3,
-                borderColor: Color.primary,
-              },
-
-            styles.imageBox,
-          ]}
-          source={{
-            uri:
-              'https://autobeeb.com/' +
-              this.state.editListing.ImageBasePath +
-              image +
-              '_400x400.jpg',
-          }}
-        />
-      </TouchableOpacity>
-    );
-  }
   renderRow = (value, step, singleEdit) => {
     return (
       <View style={[styles.rowContainer]}>
@@ -865,98 +807,6 @@ class ListingReview extends Component {
     );
   };
 
-  renderEditImages = () => {
-    if (this.state.imagesEdit && this.state.imagesEdit.length > 0)
-      return (
-        <View
-          style={{
-            backgroundColor: 'white',
-            paddingTop: 10,
-            paddingLeft: 10,
-            marginTop: 10,
-          }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            {this.state.editListing && this.state.imagesEdit && (
-              <FlatList
-                ref={this.imagesEditListRef}
-                keyExtractor={(item, index) => index.toString()}
-                extraData={this.state}
-                data={this.state.imagesEdit}
-                horizontal
-                contentContainerStyle={{
-                  flexGrow: 1,
-                  flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
-                }}
-                renderItem={({item, index}) => {
-                  return (
-                    <View
-                      key={index}
-                      style={{
-                        marginHorizontal: 3,
-                        overflow: 'visible',
-                        paddingVertical: 18,
-                        paddingHorizontal: 5,
-                      }}>
-                      {this.renderEditImage(item, index)}
-                      {!this.state.imagePendingDelete && (
-                        <TouchableOpacity
-                          style={{
-                            position: 'absolute',
-                            right: 0,
-                            top: 2,
-                            backgroundColor: '#000',
-                            zIndex: 500,
-                            elevation: 1,
-                            width: 25,
-                            height: 25,
-                            borderRadius: 15,
-                            alignContent: 'center',
-                            justifyContent: 'center',
-                          }}
-                          onPress={() =>
-                            this.deleteImage(
-                              this.state.editListing.ID,
-                              item,
-                              index,
-                            )
-                          }>
-                          <Text
-                            style={{
-                              color: '#fff',
-                              textAlign: 'center',
-                            }}>
-                            X
-                          </Text>
-                        </TouchableOpacity>
-                      )}
-                    </View>
-                  );
-                }}
-              />
-            )}
-          </View>
-
-          {this.state.imagesEdit &&
-            this.state.imagesEdit.length > 0 &&
-            this.state.mainImage && (
-              <Text
-                style={{
-                  color: Color.primary,
-                  fontSize: 12,
-                  textAlign: 'left',
-                }}>
-                {Languages.highlightedImage}
-              </Text>
-            )}
-        </View>
-      );
-    else return <View style={{}}></View>;
-  };
-
   renderImagePicker = () => {
     return (
       <View
@@ -966,104 +816,46 @@ class ListingReview extends Component {
           paddingLeft: 10,
           marginTop: 10,
         }}>
-        <View
-          style={{
-            flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
-            alignItems: 'center',
+        <TouchableOpacity
+          onPress={() => {
+            this.props.goToStep(Steps.Images, true);
           }}>
-          <TouchableOpacity
-            onPress={() => {
-              this.showImageOptions();
-              //   this.pickMultiple();
-            }}
-            style={[styles.addBox]}>
-            <IconFa
-              name="file-image-o"
-              size={40}
-              color={Color.primary}
-              style={{marginVertical: 5}}
-            />
-            <IconFa
-              name="plus"
-              size={20}
-              color={Color.primary}
-              style={{
-                position: 'absolute',
-                top: 12,
-                right: 5,
-              }}
-            />
-            <Text style={{fontSize: 12, color: Color.primary}}>
-              {Languages.addPhotos}
-            </Text>
-          </TouchableOpacity>
-
-          {this.state.images && (
-            <FlatList
-              ref={ins => (this.imagesListRef = ins)}
-              keyExtractor={(item, index) => index.toString()}
-              extraData={this.state.images}
-              data={this.state.images}
-              horizontal
-              inverted={Platform.OS == 'ios' && I18nManager.isRTL}
-              contentContainerStyle={{
-                flexGrow: 1,
-                //        flexDirection: I18nManager.isRTL ? "row-reverse" : "row"
-              }}
-              renderItem={({item, index}) => {
-                return (
-                  <View
-                    key={index}
-                    style={{
-                      marginHorizontal: 3,
-                      overflow: 'visible',
-                      paddingVertical: 18,
-                      paddingHorizontal: 5,
-                    }}>
-                    {this.renderImage(item, index)}
-                    <TouchableOpacity
-                      style={{
-                        position: 'absolute',
-                        right: 0,
-                        top: 2,
-                        backgroundColor: '#000',
-                        zIndex: 500,
-                        elevation: 1,
-                        width: 25,
-                        height: 25,
-                        borderRadius: 15,
-                        alignContent: 'center',
-                        justifyContent: 'center',
-                      }}
-                      onPress={() => this.cleanupImage(item)}>
-                      <Text
-                        style={{
-                          color: '#fff',
-                          textAlign: 'center',
-                        }}>
-                        X
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                );
-              }}
-            />
-          )}
-        </View>
-        {this.state.isMaxImagesUploaded ? (
-          <Text style={{color: Color.primary, fontSize: 12, textAlign: 'left'}}>
-            {Languages.limitHighlightedImage}
+          <Text
+            style={{
+              fontFamily: Constants.fontFamilySemiBold,
+              fontSize: 18,
+              paddingHorizontal: 8,
+              color: '#383737',
+            }}>
+            {'Edit listing images'}
           </Text>
-        ) : (
-          this.state.images &&
-          this.state.images.length > 0 &&
-          !this.state.mainImage && (
-            <Text
-              style={{color: Color.primary, fontSize: 12, textAlign: 'left'}}>
-              {Languages.highlightedImage}
-            </Text>
-          )
-        )}
+        </TouchableOpacity>
+        <FlatList
+          ref={ins => (this.imagesListRef = ins)}
+          keyExtractor={(item, index) => index.toString()}
+          extraData={this.state.images}
+          data={this.state.images}
+          horizontal
+          inverted={Platform.OS == 'ios' && I18nManager.isRTL}
+          contentContainerStyle={{
+            flexGrow: 1,
+            //        flexDirection: I18nManager.isRTL ? "row-reverse" : "row"
+          }}
+          renderItem={({item, index}) => {
+            return (
+              <View
+                key={index}
+                style={{
+                  marginHorizontal: 3,
+                  overflow: 'visible',
+                  paddingVertical: 18,
+                  paddingHorizontal: 5,
+                }}>
+                {this.renderImage(item, index)}
+              </View>
+            );
+          }}
+        />
       </View>
     );
   };
@@ -1135,21 +927,18 @@ class ListingReview extends Component {
         currency: this.state.currency ? this.state.currency.ID : '2',
         ID: this.props.data.ID || '',
         email: this.state.hideEmail ? '' : email,
-        mainimage:
-          this.state.imagesEdit &&
-          this.state.imagesEdit.length > 0 &&
-          this.state.mainImage
-            ? this.state.mainImage
-            : '',
+        mainimage: this.props.data.ID ? this.state.images[0] : '',
       },
       this.state.images,
       data => {
-        AsyncStorage.getItem('ItemNeedSharePoup', async (error, _item) => {
-          AsyncStorage.setItem(
-            'ItemNeedSharePoup',
-            `${_item ?? ''}${data.ID},`,
-          );
-        });
+        if (!this.props.data.ID) {
+          AsyncStorage.getItem('ItemNeedSharePoup', async (error, _item) => {
+            AsyncStorage.setItem(
+              'ItemNeedSharePoup',
+              `${_item ?? ''}${data.ID},`,
+            );
+          });
+        }
 
         this.setState({disablePublish: false});
         if (data.Success === 1) {
@@ -1180,6 +969,7 @@ class ListingReview extends Component {
           // to be tested
           this.navigateToOfferScreen(data.ID, false);
         } else {
+          console.log(data);
           alert(data.Message);
         }
         this.setState({isLoading: false});
@@ -1320,7 +1110,7 @@ class ListingReview extends Component {
                 stepArray.includes(20) &&
                 this.renderRow(data.email, 20, true)}
               {this.renderRow(data.phone, 16)}
-              {this.props.EditOffer && this.renderEditImages()}
+              {/* {this.props.EditOffer && this.renderEditImages()} */}
               {this.renderImagePicker()}
               {this.renderPrice()}
               {data.listingType == 32 &&
@@ -1523,5 +1313,28 @@ const mapDispatchToProps = dispatch => {
       UserActions.actions.storeUserData(dispatch, user, callback),
   };
 };
+const Steps = Object.freeze({
+  Type: 1,
+  SellType: 2,
+  Section: 3,
+  Category: 4,
+  Make: 5,
+  Model: 6,
+  Year: 7,
+  City: 8,
+  FuelType: 9,
+  Condition: 10,
+  GearBox: 11,
+  PaymentMethod: 12,
+  RentPeriod: 13,
+  Color: 14,
+  Mileage: 15,
+  Phone: 16,
+  UserName: 17,
+  Review: 18,
+  SubCategory: 19,
+  Email: 20,
+  Images: 21,
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListingReview);

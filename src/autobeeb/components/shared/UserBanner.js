@@ -45,7 +45,7 @@ const UserBanner = ({user: userData, userId, listingId}) => {
       style={styles.container}
       onPress={() =>
         navigation.navigate('UserProfileScreen', {
-          userid: userId,
+          userid: user.id,
         })
       }>
       <View style={styles.imageWrapper}>
