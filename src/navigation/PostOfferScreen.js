@@ -11,6 +11,7 @@ import {
   Dimensions,
   Platform,
   I18nManager,
+  ScrollView,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Color, Constants, Languages} from '../common';
@@ -38,12 +39,14 @@ import {toast} from '../Omni';
 import IconEn from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Animatable from 'react-native-animatable';
 import {BottomNavigationBar, LogoSpinner} from '../components';
+import {screenHeight} from '../autobeeb/constants/Layout';
+import ListingAddImages from '../components/ListingAddImages';
 
 class PostOfferScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      step: this.props.route?.params?.step ?? 1,
+      step: __DEV__ ? Steps.Images : this.props.route?.params?.step ?? 1,
       sellType: undefined,
       sellTypeLabel: undefined,
       listingType: undefined,
@@ -426,10 +429,10 @@ class PostOfferScreen extends Component {
     if (this.state.stepLoader) return <LogoSpinner fullStretch={true} />;
 
     switch (step) {
-      case 1:
+      case Steps.Type:
         return (
           <ListingType
-            step={1}
+            step={Steps.Type}
             onClick={item => {
               this.resetState();
               this.setState({
@@ -456,11 +459,11 @@ class PostOfferScreen extends Component {
             types={this.props.homePageData.MainTypes}
           />
         );
-        break;
-      case 2:
+
+      case Steps.SellType:
         return (
           <ListingSellType
-            step={2}
+            step={Steps.SellType}
             onClick={item => {
               this.setState(
                 {sellType: item.ID, sellTypeLabel: item.Name},
@@ -481,11 +484,35 @@ class PostOfferScreen extends Component {
             types={this.sellTypes}
           />
         );
-        break;
-      case 3:
+
+      case Steps.Images:
+        return (
+          <ListingAddImages
+            step={Steps.Images}
+            onClick={item => {
+              this.setState(
+                {images: item.images, mainImage: item.mainImage},
+                () => {
+                  this.FindStep(
+                    this.state.step,
+                    this.state.listingType,
+                    this.state.sellType,
+                    this.props.user ? true : false,
+                  ).then(result => {
+                    this.setState({navObject: result, step: result.next});
+                  });
+                },
+              );
+            }}
+            currentStep={this.state.step}
+            listingType={this.state.listingType}
+          />
+        );
+
+      case Steps.Section:
         return (
           <ListingSection
-            step={3}
+            step={Steps.Section}
             currentStep={this.state.step}
             onClick={item => {
               this.setState({
@@ -527,11 +554,10 @@ class PostOfferScreen extends Component {
             }}
           />
         );
-        break;
-      case 4:
+      case Steps.Category:
         return (
           <ListingCategory
-            step={4}
+            step={Steps.Category}
             currentStep={this.state.step}
             listingType={this.state.listingType}
             sectionID={this.state.sectionID || ''}
@@ -544,7 +570,7 @@ class PostOfferScreen extends Component {
                 categoryID: item.ID,
                 categoryLabel: item.Name,
                 ChildrenCount: item.ChildrenCount,
-                step: item.ChildrenCount > 0 ? 19 : 18,
+                step: item.ChildrenCount > 0 ? Steps.SubCategory : Steps.Review,
                 isEditing: item.ChildrenCount ? true : false,
               });
             }}
@@ -597,11 +623,10 @@ class PostOfferScreen extends Component {
             }}
           />
         );
-        break;
-      case 5:
+      case Steps.Make:
         return (
           <ListingMake
-            step={5}
+            step={Steps.Make}
             onClick={item => {
               this.setState({
                 makeID: item.ID,
@@ -646,7 +671,7 @@ class PostOfferScreen extends Component {
                   this.setState({
                     Models: data,
                     EditingMake: true,
-                    step: 6,
+                    step: Steps.Model,
                   });
                 })
                 .finally(() => {
@@ -734,11 +759,10 @@ class PostOfferScreen extends Component {
             //    Makes={this.state.Makes}
           />
         );
-        break;
-      case 6:
+      case Steps.Model:
         return (
           <ListingModel
-            step={6}
+            step={Steps.Model}
             currentStep={this.state.step}
             onClick={item => {
               this.setState({
@@ -752,7 +776,7 @@ class PostOfferScreen extends Component {
                 modelID: item.ID,
                 EditingMake: false,
                 modelLabel: item.Name,
-                step: 18,
+                step: Steps.Review,
                 isEditing: false,
               });
             }}
@@ -775,16 +799,16 @@ class PostOfferScreen extends Component {
             Models={this.state.Models}
           />
         );
-      case 7:
+      case Steps.Year:
         return (
           <ListingYear
-            step={7}
+            step={Steps.Year}
             currentStep={this.state.step}
             isEditing={this.state.isEditing}
             onEditingClick={item => {
               this.setState({
                 selectedYear: item,
-                step: 18,
+                step: Steps.Review,
                 isEditing: false,
               });
             }}
@@ -807,11 +831,10 @@ class PostOfferScreen extends Component {
             }}
           />
         );
-        break;
-      case 8:
+      case Steps.City:
         return (
           <ListingCity
-            step={8}
+            step={Steps.City}
             currentStep={this.state.step}
             isEditing={this.state.isEditing}
             onEditingClick={item => {
@@ -819,7 +842,7 @@ class PostOfferScreen extends Component {
                 cityID: item.ID,
                 cityLabel: item.Name,
                 isEditing: false,
-                step: 18,
+                step: Steps.Review,
               });
             }}
             onClick={item => {
@@ -844,18 +867,17 @@ class PostOfferScreen extends Component {
             CountryCode={this.state.CountryCode}
           />
         );
-        break;
-      case 9:
+      case Steps.FuelType:
         return (
           <ListingFuelType
-            step={9}
+            step={Steps.FuelType}
             currentStep={this.state.step}
             isEditing={this.state.isEditing}
             onEditingClick={item => {
               this.setState({
                 fuelType: item,
                 isEditing: false,
-                step: 18,
+                step: Steps.Review,
               });
             }}
             onClick={item => {
@@ -878,10 +900,10 @@ class PostOfferScreen extends Component {
           />
         );
 
-      case 10:
+      case Steps.Condition:
         return (
           <ListingCondition
-            step={10}
+            step={Steps.Condition}
             currentStep={this.state.step}
             listingType={this.state.listingType}
             isEditing={this.state.isEditing}
@@ -889,7 +911,7 @@ class PostOfferScreen extends Component {
               this.setState({
                 condition: item,
                 isEditing: false,
-                step: 18,
+                step: Steps.Review,
               });
             }}
             onClick={item => {
@@ -911,11 +933,10 @@ class PostOfferScreen extends Component {
             types={this.offerCondition}
           />
         );
-        break;
-      case 11:
+      case Steps.GearBox:
         return (
           <ListingGearBox
-            step={11}
+            step={Steps.GearBox}
             currentStep={this.state.step}
             listingType={this.state.listingType}
             isEditing={this.state.isEditing}
@@ -923,7 +944,7 @@ class PostOfferScreen extends Component {
               this.setState({
                 gearBox: item,
                 isEditing: false,
-                step: 18,
+                step: Steps.Review,
               });
             }}
             onClick={item => {
@@ -946,11 +967,10 @@ class PostOfferScreen extends Component {
             gearBoxTrucks={this.gearBoxTrucks}
           />
         );
-        break;
-      case 12:
+      case Steps.PaymentMethod:
         return (
           <ListingPaymentMethod
-            step={12}
+            step={Steps.PaymentMethod}
             currentStep={this.state.step}
             listingType={this.state.listingType}
             isEditing={this.state.isEditing}
@@ -958,7 +978,7 @@ class PostOfferScreen extends Component {
               this.setState({
                 paymentMethod: item,
                 isEditing: false,
-                step: 18,
+                step: Steps.Review,
               });
             }}
             onClick={item => {
@@ -980,11 +1000,10 @@ class PostOfferScreen extends Component {
             types={this.paymentMethods}
           />
         );
-        break;
-      case 13:
+      case Steps.RentPeriod:
         return (
           <ListingRentPeriod
-            step={13}
+            step={Steps.RentPeriod}
             currentStep={this.state.step}
             listingType={this.state.listingType}
             isEditing={this.state.isEditing}
@@ -992,7 +1011,7 @@ class PostOfferScreen extends Component {
               this.setState({
                 rentPeriod: item,
                 isEditing: false,
-                step: 18,
+                step: Steps.Review,
               });
             }}
             onClick={item => {
@@ -1014,11 +1033,10 @@ class PostOfferScreen extends Component {
             types={this.rentPeriod}
           />
         );
-        break;
-      case 14:
+      case Steps.Color:
         return (
           <ListingColor
-            step={14}
+            step={Steps.Color}
             currentStep={this.state.step}
             listingType={this.state.listingType}
             isEditing={this.state.isEditing}
@@ -1027,7 +1045,7 @@ class PostOfferScreen extends Component {
                 colorID: item.ID,
                 colorLabel: item.Label,
                 isEditing: false,
-                step: 18,
+                step: Steps.Review,
               });
             }}
             onClick={item => {
@@ -1051,11 +1069,10 @@ class PostOfferScreen extends Component {
             Colors={this.state.Colors}
           />
         );
-        break;
-      case 15:
+      case Steps.Mileage:
         return (
           <ListingMileage
-            step={15}
+            step={Steps.Mileage}
             currentStep={this.state.step}
             sellType={this.state.sellType}
             listingType={this.state.listingType}
@@ -1063,7 +1080,7 @@ class PostOfferScreen extends Component {
             onEditingDone={() => {
               if (this.state.mileage.length > 0)
                 this.setState({
-                  step: 18,
+                  step: Steps.Review,
                   isEditing: false,
                 });
               else {
@@ -1097,11 +1114,10 @@ class PostOfferScreen extends Component {
             }}
           />
         );
-        break;
-      case 16:
+      case Steps.Phone:
         return (
           <ListingPhone
-            step={16}
+            step={Steps.Phone}
             currentStep={this.state.step}
             user={this.props.user}
             listingType={this.state.listingType}
@@ -1221,14 +1237,14 @@ class PostOfferScreen extends Component {
                 this.setState({
                   phone,
                   CountryCode,
-                  step: 20,
+                  step: Steps.Email,
                   //    isEditing: false
                 });
               } else {
                 this.setState({
                   phone,
                   CountryCode,
-                  step: 8,
+                  step: Steps.City,
                   //    isEditing: false
                 });
               }
@@ -1250,18 +1266,17 @@ class PostOfferScreen extends Component {
             CountriesData={this.state.CountriesData}
           />
         );
-        break;
-      case 17:
+      case Steps.UserName:
         return (
           <ListingUserName
-            step={17}
+            step={Steps.UserName}
             currentStep={this.state.step}
             listingType={this.state.listingType}
             isEditing={this.state.isEditing}
             onEditingDone={() => {
               if (this.state.userName.length > 0)
                 this.setState({
-                  step: 18,
+                  step: Steps.Review,
                   isEditing: false,
                 });
               else {
@@ -1293,11 +1308,10 @@ class PostOfferScreen extends Component {
             }}
           />
         );
-        break;
-      case 18:
+      case Steps.Review:
         return (
           <ListingReview
-            step={18}
+            step={Steps.Review}
             EditOfferLoading={
               this.state.EditOfferLoading && this.state.EditOffer
             }
@@ -1360,12 +1374,10 @@ class PostOfferScreen extends Component {
             types={this.offerCondition}
           />
         );
-        break;
-
-      case 19:
+      case Steps.SubCategory:
         return (
           <ListingSubCategory
-            step={19}
+            step={Steps.SubCategory}
             currentStep={this.state.step}
             categoryID={this.state.categoryID}
             listingType={this.state.listingType}
@@ -1374,7 +1386,7 @@ class PostOfferScreen extends Component {
               this.setState({
                 subCategoryID: item.ID,
                 subCategoryLabel: item.Name,
-                step: 18,
+                step: Steps.Review,
                 isEditing: false,
               });
             }}
@@ -1399,19 +1411,17 @@ class PostOfferScreen extends Component {
             }}
           />
         );
-        break;
-
-      case 20:
+      case Steps.Email:
         return (
           <ListingEmail
-            step={20}
+            step={Steps.Email}
             currentStep={this.state.step}
             listingType={this.state.listingType}
             isEditing={this.state.isEditing}
             onEditingDone={() => {
               if (this.state.email.length > 0)
                 this.setState({
-                  step: 8,
+                  step: Steps.City,
 
                   isEditing: false,
                   email: this.state.email?.trim(),
@@ -1446,7 +1456,6 @@ class PostOfferScreen extends Component {
             }}
           />
         );
-        break;
     }
   }
 
@@ -1464,7 +1473,7 @@ class PostOfferScreen extends Component {
       Alert.alert('', Languages.MustChooseModel);
       //  this.setState({  EditingMake: false });
     } else if (this.state.isEditing) {
-      this.setState({step: 18, isEditing: false});
+      this.setState({step: Steps.Review, isEditing: false});
     } else if (this.state.step == 1) {
       this.props.navigation.goBack();
     } else if (this.state.step == 2) {
@@ -1986,9 +1995,12 @@ class PostOfferScreen extends Component {
     ];
 
     return (
-      <View style={{flex: 1, backgroundColor: '#fff'}}>
-        <StatusBar backgroundColor={'#fff'} barStyle="dark-content" />
-
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: '#fff',
+          paddingBottom: 70, // hieght of buttom bar
+        }}>
         {this.renderHeader()}
 
         {this.state.VerifyAccount
@@ -1999,11 +2011,45 @@ class PostOfferScreen extends Component {
           ? this.renderFullLimit()
           : this.renderPage(this.state.step)}
 
-        <BottomNavigationBar appRoot={'App'} />
+        <View
+          style={{
+            position: 'absolute',
+            right: 0,
+            bottom: 0,
+            zIndex: 2000,
+            minHeight: 'auto',
+            minWidth: '100%',
+          }}>
+          <BottomNavigationBar appRoot={'App'} />
+        </View>
       </View>
     );
   }
 }
+
+const Steps = Object.freeze({
+  Type: 1,
+  SellType: 2,
+  Section: 3,
+  Category: 4,
+  Make: 5,
+  Model: 6,
+  Year: 7,
+  City: 8,
+  FuelType: 9,
+  Condition: 10,
+  GearBox: 11,
+  PaymentMethod: 12,
+  RentPeriod: 13,
+  Color: 14,
+  Mileage: 15,
+  Phone: 16,
+  UserName: 17,
+  Review: 18,
+  SubCategory: 19,
+  Email: 20,
+  Images: 21,
+});
 
 const mapStateToProps = ({home, user}) => {
   return {

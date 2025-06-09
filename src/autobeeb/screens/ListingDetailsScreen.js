@@ -48,7 +48,7 @@ const ListingDetailsScreen = () => {
   const route = useRoute();
   const {id, isNewUser, showFeatures} = route.params;
   const navigation = useNavigation();
-
+  __DEV__ && console.log({id});
   const user = useSelector(state => state.user.user);
   const ViewingCurrency = useSelector(state => state.menu.ViewingCurrency);
 

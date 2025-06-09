@@ -1,4 +1,4 @@
-import {useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {
   Text,
   FlatList,
@@ -6,12 +6,14 @@ import {
   I18nManager,
   StyleSheet,
   View,
+  Image,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import IconFa from 'react-native-vector-icons/FontAwesome';
 import {screenHeight, screenWidth} from '../../constants/Layout';
 import {AutobeebModal} from '../../../components';
 import HeaderWithShare from './HeaderWithShare';
+import {SkeletonLoader} from '../shared/Skeleton';
 
 const BannersSwiper = ({images, imageBasePath}) => {
   const modalPhotoRef = useRef(null);
@@ -97,7 +99,14 @@ const BannersSwiper = ({images, imageBasePath}) => {
         animationDuration={200}
         style={styles.modalBoxWrap}
         useNativeDriver={true}>
-        <HeaderWithShare name={'name'} listingId={11} typeId={1} />
+        <HeaderWithShare
+          name={'name'}
+          listingId={11}
+          typeId={1}
+          backCkick={() => {
+            modalPhotoRef.current.close();
+          }}
+        />
         <FlatList
           style={styles.imageListModal}
           keyExtractor={(item, index) => index.toString()}
@@ -108,32 +117,82 @@ const BannersSwiper = ({images, imageBasePath}) => {
           onScroll={handleScroll}
           initialNumToRender={16}
           data={images}
-          renderItem={({item, index}) => {
-            const isFailOver = failOverImages?.includes(index);
-            return (
-              <TouchableOpacity
-                activeOpacity={0.9}
-                onPress={() => openPhoto(index)}>
-                <FastImage
-                  style={[
-                    styles.image,
-                    {width: screenWidth * (isFailOver ? 0.7 : 1)},
-                  ]}
-                  resizeMode={isFailOver ? 'contain' : 'cover'}
-                  source={
-                    isFailOver
-                      ? require('../../../images/placeholder.png') // Replace if needed
-                      : {
-                          uri: `https://autobeeb.com/${imageBasePath}${item}_1024x853.jpg`,
-                        }
-                  }
-                />
-              </TouchableOpacity>
-            );
-          }}
+          renderItem={({item, index}) => (
+            <RenderPopupImage
+              item={item}
+              index={index}
+              isFailOver={failOverImages?.includes(index)}
+              openPhoto={openPhoto}
+              imageBasePath={imageBasePath}
+            />
+          )}
         />
       </AutobeebModal>
     </>
+  );
+};
+
+const RenderPopupImage = ({
+  item,
+  index,
+  isFailOver,
+  openPhoto,
+  imageBasePath,
+}) => {
+  const [imageSize, setImageSize] = useState({width: 0, height: 0});
+  const imageUri = `https://autobeeb.com/${imageBasePath}${item}.png`;
+
+  useEffect(() => {
+    if (!isFailOver) {
+      Image.getSize(
+        imageUri,
+        (width, height) => {
+          // scale down if needed
+          const scaleFactor = screenWidth / width;
+          const imageHeight = height * scaleFactor;
+          setImageSize({
+            width: screenWidth,
+            height: imageHeight > screenHeight ? screenHeight : imageHeight,
+          });
+        },
+        error => {
+          console.log('Failed to get image size:', error);
+        },
+      );
+    }
+  }, [imageUri]);
+
+  if (imageSize.width === 0 && !isFailOver)
+    return (
+      <SkeletonLoader
+        containerStyle={[styles.imageSkeleton]}
+        borderRadius={3}
+        shimmerColors={['#E0E0E0', '#F8F8F8', '#E0E0E0']}
+        animationDuration={1200}
+      />
+    );
+
+  return (
+    <TouchableOpacity activeOpacity={0.9} onPress={() => openPhoto(index)}>
+      <FastImage
+        style={[
+          isFailOver
+            ? styles.failOverImage
+            : {
+                width: imageSize.width || screenWidth,
+                height: imageSize.height || screenWidth / 1.2,
+              },
+        ]}
+        resizeMode={'contain'}
+        source={
+          isFailOver
+            ? require('../../../images/placeholder.png') // Replace if needed
+            : {
+                uri: imageUri,
+              }
+        }
+      />
+    </TouchableOpacity>
   );
 };
 
@@ -172,6 +231,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     fontSize: 14,
     borderRadius: 4,
+  },
+  imageSkeleton: {width: screenWidth, height: screenHeight / 2},
+  failOverImage: {
+    width: screenWidth * 0.7,
+    height: screenWidth / 1.2,
   },
 });
 

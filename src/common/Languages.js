@@ -57,6 +57,7 @@ export default new LocalizedStrings({
       'Review', //18
       'Select your offer subcategory', //19
       'Enter Your Email', //20
+      'Add Photos', // 21
     ],
     stepHeader: [
       '',
@@ -644,6 +645,7 @@ export default new LocalizedStrings({
       'معلومات الإعلان', //18
       'إختر التصنيف الفرعي للإعلان', //19
       'ادخل بريدك الالكتروني', //20
+      'أضف صور', //21
     ],
 
     stepHeader: [
@@ -1342,6 +1344,7 @@ export default new LocalizedStrings({
       'Anzeigendetails', //18
       'Wählen Sie Ihre Angebotsunterkategorie aus', //19
       'Geben sie ihre E-Mail Adresse ein', //20
+      'Fotos hinzufügen', //21
     ],
     stepHeader: [
       '',
@@ -1894,6 +1897,7 @@ export default new LocalizedStrings({
       'Detalles del anuncio', //18
       'Seleccione su subcategoría de oferta', //19
       'Introduce tu correo electrónico', //20
+      'Agregar fotos', // 21
     ],
     stepHeader: [
       '',
@@ -2444,6 +2448,7 @@ export default new LocalizedStrings({
       'Reklam Ayrıntıları', //18
       'Teklif alt kategorinizi seçin', //19
       'E-postanızı giriniz', //20
+      'Fotoğraf ekle', //21
     ],
     stepHeader: [
       '',
@@ -2987,6 +2992,7 @@ export default new LocalizedStrings({
       "Détails de l'annonce", //18
       "Sélectionnez votre sous-catégorie d'offre", //19
       'Entrer votre Email', //20
+      'Ajouter des photos', // 21
     ],
     stepHeader: [
       '',
@@ -3539,6 +3545,7 @@ export default new LocalizedStrings({
       'Szczegóły reklamy', //18
       'Wybierz podkategorię swojej oferty', //19
       'Wprowadź swój email', //20
+      'Dodaj zdjęcia', // 21
     ],
     stepHeader: [
       '',
@@ -4081,6 +4088,7 @@ export default new LocalizedStrings({
       '複習', //18
       '選擇您的廣告子類別', //19
       '輸入你的電子郵箱', //20
+      '添加照片', // 21
     ],
     stepHeader: [
       '',

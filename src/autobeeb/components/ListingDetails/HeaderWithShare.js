@@ -13,7 +13,7 @@ import {Languages} from '../../../common';
 import {AppIcon, Icons} from '../shared/AppIcon';
 import {screenWidth} from '../../constants/Layout';
 
-const HeaderWithShare = ({name, listingId, typeId}) => {
+const HeaderWithShare = ({name, listingId, typeId, backCkick}) => {
   const navigation = useNavigation();
 
   const getShareMessage = () => {
@@ -49,7 +49,13 @@ const HeaderWithShare = ({name, listingId, typeId}) => {
           <TouchableOpacity
             hitSlop={{top: 10, right: 10, bottom: 10, left: 10}}
             style={styles.closeButton}
-            onPress={() => navigation.goBack()}>
+            onPress={() => {
+              if (backCkick) {
+                backCkick();
+              } else {
+                navigation.goBack();
+              }
+            }}>
             <AppIcon
               type={Icons.Ionicons}
               name={I18nManager.isRTL ? 'arrow-back' : 'arrow-forward'}

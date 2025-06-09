@@ -69,7 +69,11 @@ const BottomNavigationBar = ({appRoot}) => {
   return (
     <View style={styles.container}>
       {tabItems.map((item, index) => {
-        const isActive = item.active == firstScreenInStack;
+        const isActive =
+          item.active === firstScreenInStack ||
+          (item.route === 'ActiveOffers' &&
+            firstScreenInStack === 'SplashScreen'); // to handle PostOfferScreen
+
         return (
           <Pressable
             key={index}
