@@ -23,7 +23,6 @@ import {connect} from 'react-redux';
 import {Color, Languages, Styles, Constants} from '../common';
 import {NewHeader} from '../containers';
 import KS from '../services/KSAPI';
-import Toast from 'react-native-easy-toast';
 import PhoneInput from '../components/react-native-phone-input/lib/index';
 import CountryPicker from '../components/CountryModal/CountryPickerModal';
 import * as Animatable from 'react-native-animatable';
@@ -100,9 +99,15 @@ class EditProfile extends Component {
 
       if (!!this.props.route.params?.ChangePhone) {
         this.ChangePhoneModal.open();
+        setTimeout(() => {
+          this.phone2?.focus();
+        }, 400);
       }
       if (!!this.props.route.params?.ChangeEmail) {
         this.ChangeEmailModal.open();
+        setTimeout(() => {
+          this.newEmailRef?.focus();
+        }, 400);
       }
       if (!!this.props.route.params?.VerifyPhone) {
         this.VerifyPhoneModal.open();
@@ -294,10 +299,9 @@ class EditProfile extends Component {
         .then(data => {
           if (data.Success == 1) {
             if (data.Error) {
-              if (data.Error == -1)
-                this.toast.show(Languages.NumberAlreadyTaken);
+              if (data.Error == -1) toast(Languages.NumberAlreadyTaken, 2500);
               else {
-                this.toast.show(Languages.EmailAlreadyTaken);
+                toast(Languages.EmailAlreadyTaken, 2500);
               }
             } else {
               _this.props.storeUserData(data.User, () => {
@@ -312,14 +316,14 @@ class EditProfile extends Component {
               });
             }
           } else {
-            this.toast.show(Languages.SomethingWentWrong, 2500);
+            toast(Languages.SomethingWentWrong, 2500);
           }
         })
         .finally(() => {
           this.setState({AddLoader: false});
         });
     } else {
-      this.toast.show(Languages.InvalidNumber, 2500);
+      toast(Languages.InvalidNumber, 2500);
     }
   }
 
@@ -330,7 +334,7 @@ class EditProfile extends Component {
       cntry => cntry?.ISOCode?.toLowerCase() == this.phone2.getISOCode(),
     );
 
-    if (this.state.isPhone2Valid) {
+    if (this.phone2?.isValidNumber()) {
       if (country && country.EmailRegister && !this.props.user.Email) {
         this.ChangePhoneModal.close();
         this.AddEmailModal.open();
@@ -348,10 +352,9 @@ class EditProfile extends Component {
           .then(data => {
             if (data.Success == 1) {
               if (data.Error) {
-                if (data.Error == -1)
-                  this.toast.show(Languages.NumberAlreadyTaken);
+                if (data.Error == -1) toast(Languages.NumberAlreadyTaken, 2500);
                 else {
-                  this.toast.show(Languages.EmailAlreadyTaken);
+                  toast(Languages.EmailAlreadyTaken, 2500);
                 }
               } else {
                 _this.props.storeUserData(data.User, () => {
@@ -365,7 +368,7 @@ class EditProfile extends Component {
                 });
               }
             } else {
-              this.toast.show(Languages.SomethingWentWrong, 2500);
+              toast(Languages.SomethingWentWrong, 2500);
             }
           })
           .finally(() => {
@@ -373,7 +376,7 @@ class EditProfile extends Component {
           });
       }
     } else {
-      this.toast.show(Languages.InvalidNumber, 2500);
+      toast(Languages.InvalidNumber, 2500);
       this.setState({changeMobileLoading: false});
     }
   }
@@ -407,13 +410,6 @@ class EditProfile extends Component {
             contentContainerStyle={{flex: 1}}
             //  keyboardVerticalOffset={200}
             style={{flex: 1}}>
-            <Toast
-              textStyle={{fontFamily: 'Cairo-Regular', color: 'white'}}
-              position="top"
-              ref={instance => (this.toast = instance)}
-              style={{backgroundColor: Color.primary}}
-            />
-
             <AutobeebModal
               //coverScreen
               style={[styles.modalbox]}
@@ -464,11 +460,11 @@ class EditProfile extends Component {
                             _this.props.storeUserData(data.User);
                             this.NameModal.close();
                           } else {
-                            this.toast.show(Languages.SomethingWentWrong, 2500);
+                            toast.show(Languages.SomethingWentWrong, 2500);
                           }
                         });
                       } else {
-                        this.toast.show(Languages.invalidInfo, 2500);
+                        toast(Languages.invalidInfo, 2500);
                       }
                     }}>
                     <Text style={{color: 'white', textAlign: 'center'}}>
@@ -557,20 +553,17 @@ class EditProfile extends Component {
                           .then(data => {
                             if (data.Success == 1) {
                               _this.props.storeUserData(data.User);
-                              this.toast.show(Languages.passwordChanged, 1500);
+                              toast(Languages.passwordChanged, 1500);
                               this.PasswordModal.close();
                             } else {
-                              this.toast.show(
-                                Languages.SomethingWentWrong,
-                                2500,
-                              );
+                              toast(Languages.SomethingWentWrong, 2500);
                             }
                           })
                           .finally(() => {
                             this.setState({passLoader: false});
                           });
                       } else {
-                        this.toast.show(Languages.invalidInfo, 2500);
+                        toast(Languages.invalidInfo, 2500);
                       }
                     }}>
                     {this.state.passLoader ? (
@@ -649,9 +642,9 @@ class EditProfile extends Component {
                           if (data.Success == 1) {
                             if (data.Error) {
                               if (data.Error == -1)
-                                this.toast.show(Languages.NumberAlreadyTaken);
+                                toast(Languages.NumberAlreadyTaken, 2500);
                               else {
-                                this.toast.show(Languages.EmailAlreadyTaken);
+                                toast(Languages.EmailAlreadyTaken, 2500);
                               }
                             } else {
                               _this.props.storeUserData(data.User, () => {
@@ -664,11 +657,11 @@ class EditProfile extends Component {
                               });
                             }
                           } else {
-                            this.toast.show(Languages.SomethingWentWrong, 2500);
+                            toast(Languages.SomethingWentWrong, 2500);
                           }
                         });
                       } else {
-                        this.toast.show(Languages.invalidInfo, 2500);
+                        toast(Languages.invalidInfo, 2500);
                       }
                     }}>
                     <Text style={{color: 'white', textAlign: 'center'}}>
@@ -858,6 +851,7 @@ class EditProfile extends Component {
               //coverScreen
               style={[styles.modalbox]}
               fullScreen={true}
+              backdropOpacity={0.8}
               ref={instance => (this.ChangePhoneModal = instance)}
               keyboardResponsive={true}
               backButtonClose
@@ -877,7 +871,7 @@ class EditProfile extends Component {
                   }}>
                   <Text style={{}}>{Languages.CurrentPhone}</Text>
                   <Text style={{}}>
-                    {this.props.user && this.props.user?.Phone}
+                    {this.props.user && `\u200E${this.props.user?.Phone}`}
                   </Text>
                 </View>
 
@@ -896,12 +890,16 @@ class EditProfile extends Component {
                         paddingVertical: 12,
                       },
                       {
-                        borderColor: this.state.isPhone2Valid
-                          ? 'green'
-                          : '#eee',
-                        backgroundColor: this.state.isPhone2Valid
-                          ? 'rgba(0,255,0,0.2)'
-                          : '#fff',
+                        borderColor:
+                          this.phone2?.isValidNumber() &&
+                          this.state.newPhone != this.props.user?.Phone
+                            ? 'green'
+                            : '#eee',
+                        backgroundColor:
+                          this.phone2?.isValidNumber() &&
+                          this.state.newPhone != this.props.user?.Phone
+                            ? 'rgba(0,255,0,0.2)'
+                            : '#fff',
                       },
                     ]}>
                     {this.state.cca2 && (
@@ -909,70 +907,55 @@ class EditProfile extends Component {
                         ref={ref => {
                           this.phone2 = ref;
                         }}
-                        offset={15}
-                        style={{
-                          flexDirection: I18nManager.isRTL
-                            ? 'row-reverse'
-                            : 'row',
-                        }}
+                        offset={10}
+                        autoFocus
                         allowZeroAfterCountryCode={false}
                         initialCountry={
-                          this.props.user?.ISOCode?.toLowerCase() ||
-                          this.state.cca2?.toLowerCase()
+                          this.state.cca2 ? this.state.cca2.toLowerCase() : '+'
                         }
                         value={this.state.newPhone}
                         onChangePhoneNumber={newPhone => {
-                          this.setState({
-                            isPhone2Valid: this.phone2.isValidNumber(),
-                          });
-                          if (newPhone.length == 0) {
-                            this.setState({initialCountry: '+'});
-                          }
                           if (
-                            (this.props.user &&
-                              this.props.user?.EmailRegister &&
-                              this.props.user?.EmailApproved &&
-                              this.phone2.getISOCode() !=
-                                this.props.user?.ISOCode.toLowerCase()) ||
-                            (this.props.user &&
-                              this.props.user?.OTPConfirmed &&
-                              this.phone2.getISOCode() !=
-                                this.props.user?.ISOCode.toLowerCase())
+                            this.state.cca2 &&
+                            this.phone2.getISOCode() !=
+                              this.state.cca2.toLowerCase()
                           ) {
-                            //    console.log(this.phone2.getISOCode());
-                            //   console.log(this.props.user?.ISOCode);
-                            setTimeout(() => {
-                              this.phone2.selectCountry(
-                                this.props.user?.ISOCode.toLowerCase(),
-                              );
-                            }, 100);
+                            this.phone2.selectCountry(
+                              this.state.cca2.toLowerCase(),
+                            );
                             if (Platform.OS == 'ios') {
                               Keyboard.dismiss();
+
                               setTimeout(() => {
                                 this.phone2.focus();
                               }, 200);
                             }
-                            //  this.setState ({selection: {start: 4, end: 4}});
-                            //   alert ('hs');
                           } else {
-                            this.setState({
-                              newPhone,
-                            });
+                            if (newPhone.length == 0) {
+                              this.setState({initialCountry: '+'});
+                            }
+                            this.setState({newPhone});
                           }
                         }}
                         onPressFlag={() => {
-                          this.onPressFlag();
+                          // this.onPressFlag();
+                        }}
+                        textStyle={{height: 40, color: '#000'}}
+                        style={{
+                          paddingVertical: 0,
+                          gap: 5,
+                          flexDirection: I18nManager.isRTL
+                            ? 'row-reverse'
+                            : 'row',
+                          color: '#000',
                         }}
                         textProps={{
                           placeholder: Languages.EnterMobileOrEmail,
-                          keyboardType: 'default',
                           maxLength: 16,
-                          selection: this.state.selection || undefined,
                         }}
-                        textStyle={{color: '#000'}}
                         flagStyle={{
                           resizeMode: 'contain',
-                          borderRadius: 25,
+                          borderRadius: 15,
                           backgroundColor: 'transparent',
                           borderWidth: 0,
                         }}
@@ -1030,6 +1013,12 @@ class EditProfile extends Component {
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
+                    disabled={
+                      !(
+                        this.phone2?.isValidNumber() &&
+                        this.state.newPhone != this.props.user?.Phone
+                      )
+                    }
                     style={[styles.ChangeButton]}
                     onPress={() => {
                       if (this.state.CountriesData) {
@@ -1075,6 +1064,9 @@ class EditProfile extends Component {
                   {this.props.user && this.props.user?.Email}
                 </Text>
                 <TextInput
+                  ref={ref => {
+                    this.newEmailRef = ref;
+                  }}
                   placeholder={Languages.EnterNewEmail}
                   style={[
                     styles.modalTextinput,
@@ -1111,10 +1103,10 @@ class EditProfile extends Component {
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
+                    disabled={!this.validateEmail(this.state.newEmail)}
                     style={[styles.ChangeButton]}
                     onPress={() => {
-                      const _this = this;
-                      if (_this.validateEmail(this.state.newEmail)) {
+                      if (this.validateEmail(this.state.newEmail)) {
                         this.setState({addEamiloader: true});
                         KS.UpdateInfo({
                           userid: this.props.user && this.props.user?.ID,
@@ -1125,12 +1117,12 @@ class EditProfile extends Component {
                             if (data.Success == 1) {
                               if (data.Error) {
                                 if (data.Error == -1)
-                                  this.toast.show(Languages.NumberAlreadyTaken);
+                                  toast(Languages.NumberAlreadyTaken, 2500);
                                 else {
-                                  this.toast.show(Languages.EmailAlreadyTaken);
+                                  toast(Languages.EmailAlreadyTaken, 2500);
                                 }
                               } else {
-                                _this.props.storeUserData(data.User, () => {
+                                this.props.storeUserData(data.User, () => {
                                   this.ChangeEmailModal.close();
                                   if (data.Code) {
                                     this.resendInitCounter();
@@ -1140,17 +1132,14 @@ class EditProfile extends Component {
                                 });
                               }
                             } else {
-                              this.toast.show(
-                                Languages.SomethingWentWrong,
-                                2500,
-                              );
+                              toast(Languages.SomethingWentWrong, 2500);
                             }
                           })
                           .finally(() => {
                             this.setState({addEamiloader: false});
                           });
                       } else {
-                        this.toast.show(Languages.invalidInfo, 2500);
+                        toast(Languages.invalidInfo, 2500);
                       }
                     }}>
                     {this.state.addEamiloader ? (
@@ -1304,20 +1293,17 @@ class EditProfile extends Component {
                                   );
                                 }
                               } else {
-                                this.toast.show(Languages.WrongOTP, 1500);
+                                toast(Languages.WrongOTP, 1500);
                               }
                             } else {
-                              this.toast.show(
-                                Languages.SomethingWentWrong,
-                                2500,
-                              );
+                              toast(Languages.SomethingWentWrong, 2500);
                             }
                           })
                           .finally(() => {
                             this.setState({addEamiloader: false});
                           });
                       } else {
-                        this.toast.show(Languages.invalidInfo, 2500);
+                        toast(Languages.invalidInfo, 2500);
                       }
                     }}>
                     {this.state.addEamiloader ? (
@@ -1341,7 +1327,7 @@ class EditProfile extends Component {
               style={[styles.modalbox]}
               fullScreen={true}
               ref={instance => (this.VerifyPhoneModal = instance)}
-              keyboardResponsive={true}
+              keyboardResponsive={!true}
               onOpened={() => {
                 setTimeout(() => {
                   this.refs.verifyPhoneText &&
@@ -1470,20 +1456,17 @@ class EditProfile extends Component {
                                   );
                                 }
                               } else {
-                                this.toast.show(Languages.WrongOTP, 1500);
+                                toast(Languages.WrongOTP, 1500);
                               }
                             } else {
-                              this.toast.show(
-                                Languages.SomethingWentWrong,
-                                2500,
-                              );
+                              toast(Languages.SomethingWentWrong, 2500);
                             }
                           })
                           .finally(() => {
                             this.setState({changeMobileOTPLoading: false});
                           });
                       } else {
-                        this.toast.show(Languages.invalidInfo, 2500);
+                        toast(Languages.invalidInfo, 2500);
                         this.setState({changeMobileOTPLoading: false});
                       }
                     }}>
@@ -1659,6 +1642,9 @@ class EditProfile extends Component {
                     onPress={() => {
                       if (this.props.user && this.props.user?.Email) {
                         this.ChangeEmailModal.open();
+                        setTimeout(() => {
+                          this.newEmailRef?.focus();
+                        }, 400);
                       } else {
                         this.AddEmailModal.open();
                       }
@@ -1759,6 +1745,9 @@ class EditProfile extends Component {
                     onPress={() => {
                       if (this.props.user && this.props.user?.Phone) {
                         this.ChangePhoneModal.open();
+                        setTimeout(() => {
+                          this.phone2?.focus();
+                        }, 400);
                       } else {
                         this.AddPhoneModal.open();
                       }
@@ -2035,35 +2024,6 @@ class EditProfile extends Component {
     );
   }
 }
-function showToast(text, time = 3500) {
-  let toast = Toast.show(text, {
-    duration: time,
-    backgroundColor: Color.primary,
-    position: Toast.positions.BOTTOM,
-    shadow: true,
-    shadowColor: '#adb1b2',
-    animation: true,
-    hideOnPress: true,
-    delay: 0,
-    onShow: () => {
-      // calls on toast\`s appear animation start
-    },
-    onShown: () => {
-      // calls on toast\`s appear animation end.
-    },
-    onHide: () => {
-      // calls on toast\`s hide animation start.
-    },
-    onHidden: () => {
-      // calls on toast\`s hide animation end.
-    },
-  });
-
-  // You can manually hide the Toast, or it will automatically disappear after a `duration` ms timeout.
-  setTimeout(function () {
-    Toast.hide(toast);
-  }, time);
-}
 
 const styles = StyleSheet.create({
   textField: {
@@ -2191,13 +2151,10 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   modalbox: {
-    zIndex: 500,
-    elevation: 10,
     justifyContent: 'center',
-    marginBottom: 20,
     backgroundColor: 'transparent',
     flex: 1,
-    height: Dimensions.get('screen').height,
+    height: 'auto',
   },
   modalContent: {
     width: Dimensions.get('screen').width * 0.9,

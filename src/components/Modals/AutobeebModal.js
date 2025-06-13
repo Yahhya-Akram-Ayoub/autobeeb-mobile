@@ -91,7 +91,7 @@ const AutobeebModal = forwardRef((props, ref) => {
         ]}>
         {children}
       </Animated.View>
-      <MyToast />
+      {visible && <MyToast />}
     </Modal>
   );
 });

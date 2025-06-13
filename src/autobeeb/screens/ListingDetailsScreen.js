@@ -301,7 +301,7 @@ const ListingDetailsScreen = () => {
           isActive={listing?.status === 16}
         />
       )}
-      {showFeatures && (
+      {(__DEV__ || showFeatures) && (
         <FeaturesModal
           listingId={listing?.id}
           typeId={listing?.typeID}

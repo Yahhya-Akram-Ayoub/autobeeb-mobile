@@ -16,7 +16,7 @@ const HomeListingRow = () => {
 
   useEffect(() => {
     KS.FreeSearchCore({
-      pPageSize: 9,
+      pPageSize: 3,
       pPageNum: 1,
       pLangID: Languages.langID,
       // pCountryID :
@@ -26,7 +26,7 @@ const HomeListingRow = () => {
   }, []);
 
   const renderRecentSeenItem = ({item}) => {
-      const {imageBasePath, thumbURL} = item;
+    const {imageBasePath, thumbURL} = item;
 
     return (
       <TouchableOpacity
@@ -52,7 +52,12 @@ const HomeListingRow = () => {
   return (
     <View>
       <View style={styles.cardContainer}>
-        <Text style={styles.blackHeader}>{Languages.LatestNews}</Text>
+        <View style={styles.titleRow}>
+          <Text style={styles.blackHeader}>{Languages.newly_added_ads}</Text>
+          <TouchableOpacity>
+            <Text style={styles.ShowMore}>{Languages.ShowMore}</Text>
+          </TouchableOpacity>
+        </View>
         <FlatList
           keyExtractor={(item, index) =>
             item.ID?.toString() || index.toString()
@@ -65,7 +70,12 @@ const HomeListingRow = () => {
         />
       </View>
       <View style={styles.cardContainer}>
-        <Text style={styles.blackHeader}>{Languages.LatestNews}</Text>
+        <View style={styles.titleRow}>
+          <Text style={styles.blackHeader}>{Languages.RecentlyViewed}</Text>
+          <TouchableOpacity>
+            <Text style={styles.ShowMore}>{Languages.ShowMore}</Text>
+          </TouchableOpacity>
+        </View>
         <FlatList
           keyExtractor={(item, index) =>
             item.ID?.toString() || index.toString()
@@ -78,7 +88,48 @@ const HomeListingRow = () => {
         />
       </View>
       <View style={styles.cardContainer}>
-        <Text style={styles.blackHeader}>{Languages.LatestNews}</Text>
+        <View style={styles.titleRow}>
+          <Text style={styles.blackHeader}>{Languages.last_search}</Text>
+          <TouchableOpacity>
+            <Text style={styles.ShowMore}>{Languages.ShowMore}</Text>
+          </TouchableOpacity>
+        </View>
+        <FlatList
+          keyExtractor={(item, index) =>
+            item.ID?.toString() || index.toString()
+          }
+          contentContainerStyle={styles.recentSeenList}
+          keyboardShouldPersistTaps="handled"
+          showsHorizontalScrollIndicator={false}
+          data={lastListings}
+          renderItem={renderRecentSeenItem}
+        />
+      </View>
+      <View style={styles.cardContainer}>
+        <View style={styles.titleRow}>
+          <Text style={styles.blackHeader}>{Languages.suggested_ads}</Text>
+          <TouchableOpacity>
+            <Text style={styles.ShowMore}>{Languages.ShowMore}</Text>
+          </TouchableOpacity>
+        </View>
+        <FlatList
+          keyExtractor={(item, index) =>
+            item.ID?.toString() || index.toString()
+          }
+          contentContainerStyle={styles.recentSeenList}
+          keyboardShouldPersistTaps="handled"
+          showsHorizontalScrollIndicator={false}
+          data={lastListings}
+          renderItem={renderRecentSeenItem}
+        />
+      </View>
+      <View style={styles.cardContainer}>
+        <View style={styles.titleRow}>
+          <Text style={styles.blackHeader}>{Languages.featured_ads}</Text>
+          <TouchableOpacity>
+            <Text style={styles.ShowMore}>{Languages.ShowMore}</Text>
+          </TouchableOpacity>
+        </View>
         <FlatList
           keyExtractor={(item, index) =>
             item.ID?.toString() || index.toString()
@@ -135,13 +186,26 @@ const styles = StyleSheet.create({
   },
   blackHeader: {
     paddingHorizontal: 10,
-    width: '100%',
     paddingTop: 4,
     paddingBottom: 3,
     color: '#000',
-    fontSize: 18,
+    fontSize: 16,
     marginBottom: 5,
     fontFamily: Constants.fontFamilyBold,
+  },
+  ShowMore: {
+    paddingHorizontal: 10,
+    paddingTop: 4,
+    paddingBottom: 3,
+    color: Color.secondary,
+    fontSize: 12,
+    marginBottom: 5,
+    fontFamily: Constants.fontFamilyBold,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
 

@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginTop: 15,
     fontFamily: 'Cairo-Bold',
-    textAlign: 'left',
+    textAlign: 'center',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -297,12 +297,11 @@ const styles = StyleSheet.create({
     marginTop: 5,
     borderBottomLeftRadius: 5,
     borderBottomRightRadius: 5,
-    height: 60,
-
+    height: 50,
   },
   cancelButton: {
-    flex: 1,
     backgroundColor: '#fff',
+    flex: 1,
     height: '100%',
     borderBottomEndRadius: 5,
     alignItems: 'center',
@@ -311,9 +310,9 @@ const styles = StyleSheet.create({
   cancelText: {
     color: Color.secondary,
     textAlign: 'center',
-    paddingVertical: 14,
-    fontFamily: 'Cairo-Bold',
+    paddingVertical: 10,
     fontSize: 15,
+    fontFamily: Constants.fontFamilyBold,
   },
   confirmButton: {
     flex: 1,
@@ -328,6 +327,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingVertical: 10,
     fontSize: 15,
+    fontFamily: Constants.fontFamilyBold,
   },
   loader: {
     paddingVertical: 12,

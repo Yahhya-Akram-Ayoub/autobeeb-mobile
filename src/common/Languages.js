@@ -572,6 +572,10 @@ export default new LocalizedStrings({
     NumberViewsMyAds: 'Number of views of my ads',
     Style: 'Style',
     See_more: 'See More',
+    newly_added_ads: 'Newly added ads',
+    last_search: 'Last search',
+    suggested_ads: 'Suggested ads',
+    featured_ads: 'Featured Ads',
   },
   ar: {
     //Arabic
@@ -1291,6 +1295,10 @@ export default new LocalizedStrings({
     NumberViewsMyAds: 'عدد مشاهدات إعلاناتي',
     Style: 'النمط',
     See_more: 'المزيد',
+    newly_added_ads: 'إعلانات أضيفت حديثاً',
+    last_search: 'آخر عملية بحث',
+    suggested_ads: 'إعلانات مقترحه',
+    featured_ads: 'الإعلانات المميزه',
   },
   de: {
     langID: 3,
@@ -1844,6 +1852,10 @@ export default new LocalizedStrings({
     NumberViewsMyAds: 'Anzahl der Aufrufe meiner Anzeigen',
     Style: 'Style',
     See_more: 'Mehr sehen',
+    newly_added_ads: 'Neu hinzugefügt',
+    last_search: 'Letzte Suche',
+    suggested_ads: 'Vorgeschlagene',
+    featured_ads: 'Premium-Anzeigen',
   },
   es: {
     langID: 4,
@@ -2394,6 +2406,10 @@ export default new LocalizedStrings({
     NumberViewsMyAds: 'Número de visualizaciones de mis anuncios',
     Style: 'Style',
     See_more: 'Ver más',
+    newly_added_ads: 'Recién agregada',
+    last_search: 'Última búsqueda',
+    suggested_ads: 'Sugeridos',
+    featured_ads: 'Destacados',
   },
   tr: {
     langID: 5,
@@ -2939,6 +2955,10 @@ export default new LocalizedStrings({
     NumberViewsMyAds: 'Reklamlarımın görüntülenme sayısı',
     Style: 'Style',
     See_more: 'Daha fazla gör',
+    newly_added_ads: 'Yeni eklendi',
+    last_search: 'Son arama',
+    suggested_ads: 'Önerilen',
+    featured_ads: 'Öne çıkan',
   },
   fr: {
     langID: 6,
@@ -3492,6 +3512,10 @@ export default new LocalizedStrings({
     NumberViewsMyAds: 'Nombre de vues de mes annonces',
     Style: 'Style',
     See_more: 'Voir plus',
+    newly_added_ads: 'Nouvellement ajouté',
+    last_search: 'Dernière recherche',
+    suggested_ads: 'Suggérées',
+    featured_ads: 'En vedette',
   },
   pl: {
     langID: 7,
@@ -4036,6 +4060,10 @@ export default new LocalizedStrings({
     NumberViewsMyAds: 'Liczba wyświetleń moich reklam',
     Style: 'Style',
     See_more: 'Zobacz więcej',
+    newly_added_ads: 'Nowo dodane',
+    last_search: 'Ostatnie wyszukiwanie',
+    suggested_ads: 'Sugerowane',
+    featured_ads: 'Wyróżniony',
   },
   zh: {
     //English
@@ -4552,5 +4580,9 @@ export default new LocalizedStrings({
     NumberViewsMyAds: '我的廣告的瀏覽次數',
     Style: 'Style',
     See_more: '查看更多',
+    newly_added_ads: '新添加',
+    last_search: '上次搜索',
+    suggested_ads: '推荐广告',
+    featured_ads: '精选广告',
   },
 });
