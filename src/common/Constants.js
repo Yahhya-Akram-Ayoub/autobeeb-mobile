@@ -405,8 +405,8 @@ const Constants = {
       UserRent: [2, 21, 5, 6, 7, 4, 13, 8, 18],
       GuestRent: [2, 21, 5, 6, 7, 4, 13, 16, 20, 17, 8, 18],
       //Cars Wanted
-      UserWanted: [2, 21, 5, 6, 7, 4, 10, 14, 12, 8, 18],
-      GuestWanted: [2, 21, 5, 6, 7, 4, 10, 14, 12, 16, 20, 17, 8, 18],
+      UserWanted: [2, 5, 6, 7, 4, 10, 14, 12, 8, 18],
+      GuestWanted: [2, 5, 6, 7, 4, 10, 14, 12, 16, 20, 17, 8, 18],
     },
     {
       //Trucks
@@ -418,8 +418,8 @@ const Constants = {
       UserRent: [2, 21, 4, 5, 6, 7, 13, 8, 18],
       GuestRent: [2, 21, 4, 5, 6, 7, 13, 16, 20, 17, 8, 18],
       //Trucks Wanted
-      UserWanted: [2, 21, 4, 5, 6, 7, 10, 14, 12, 8, 18],
-      GuestWanted: [2, 21, 4, 5, 6, 7, 10, 14, 12, 16, 20, 17, 8, 18],
+      UserWanted: [2, 4, 5, 6, 7, 10, 14, 12, 8, 18],
+      GuestWanted: [2, 4, 5, 6, 7, 10, 14, 12, 16, 20, 17, 8, 18],
     },
     {
       //Equipments
@@ -431,8 +431,8 @@ const Constants = {
       UserRent: [2, 21, 3, 4, 5, 6, 7, 13, 8, 18],
       GuestRent: [2, 21, 3, 4, 5, 6, 7, 13, 16, 20, 17, 8, 18],
       //Equipments Wanted
-      UserWanted: [2, 21, 3, 4, 5, 6, 7, 10, 12, 8, 18],
-      GuestWanted: [2, 21, 3, 4, 5, 6, 7, 10, 12, 16, 20, 17, 8, 18],
+      UserWanted: [2, 3, 4, 5, 6, 7, 10, 12, 8, 18],
+      GuestWanted: [2, 3, 4, 5, 6, 7, 10, 12, 16, 20, 17, 8, 18],
     },
     {
       //Buses & Van
@@ -444,8 +444,8 @@ const Constants = {
       UserRent: [2, 21, 4, 5, 6, 7, 13, 8, 18],
       GuestRent: [2, 21, 4, 5, 6, 7, 13, 16, 20, 17, 8, 18],
       //Buses & Van Wanted
-      UserWanted: [2, 21, 4, 5, 6, 7, 10, 14, 12, 8, 18],
-      GuestWanted: [2, 21, 4, 5, 6, 7, 10, 14, 12, 16, 20, 17, 8, 18],
+      UserWanted: [2, 4, 5, 6, 7, 10, 14, 12, 8, 18],
+      GuestWanted: [2, 4, 5, 6, 7, 10, 14, 12, 16, 20, 17, 8, 18],
     },
     {
       //Trailer
@@ -457,8 +457,8 @@ const Constants = {
       UserRent: [2, 21, 4, 7, 13, 8, 18],
       GuestRent: [2, 21, 4, 7, 13, 16, 20, 17, 8, 18],
       //Trailer Wanted
-      UserWanted: [2, 21, 4, 7, 10, 12, 8, 18],
-      GuestWanted: [2, 21, 4, 7, 10, 12, 16, 20, 17, 8, 18],
+      UserWanted: [2, 4, 7, 10, 12, 8, 18],
+      GuestWanted: [2, 4, 7, 10, 12, 16, 20, 17, 8, 18],
     },
     {
       //Spare Parts missing title page after 8
@@ -467,8 +467,8 @@ const Constants = {
       UserSell: [2, 21, 3, 4, 5, 6, 10, 8, 18],
       GuestSell: [2, 21, 3, 4, 5, 6, 10, 16, 20, 17, 8, 18],
       //Spare Parts For Wanted
-      UserWanted: [2, 21, 3, 4, 5, 6, 7, 10, 8, 18],
-      GuestWanted: [2, 21, 3, 4, 5, 6, 7, 10, 16, 20, 17, 8, 18],
+      UserWanted: [2, 3, 4, 5, 6, 7, 10, 8, 18],
+      GuestWanted: [2, 3, 4, 5, 6, 7, 10, 16, 20, 17, 8, 18],
     },
     {
       //Cars Spare Parts
@@ -477,8 +477,8 @@ const Constants = {
       UserSell: [2, 21, 3, 4, 19, 5, 6, 7, 10, 8, 18],
       GuestSell: [2, 21, 3, 4, 19, 5, 6, 7, 10, 16, 20, 17, 8, 18],
       //Spare Parts For Wanted
-      UserWanted: [2, 21, 3, 4, 19, 5, 6, 7, 10, 8, 18],
-      GuestWanted: [2, 21, 3, 4, 19, 5, 6, 7, 10, 16, 20, 17, 8, 18],
+      UserWanted: [2, 3, 4, 19, 5, 6, 7, 10, 8, 18],
+      GuestWanted: [2, 3, 4, 19, 5, 6, 7, 10, 16, 20, 17, 8, 18],
     },
     {
       //Trucks Spare Parts
@@ -487,8 +487,8 @@ const Constants = {
       UserSell: [2, 21, 3, 4, 19, 5, 6, 7, 10, 8, 18],
       GuestSell: [2, 21, 3, 4, 19, 5, 6, 7, 10, 16, 20, 17, 8, 18],
       //Spare Parts For Wanted
-      UserWanted: [2, 21, 3, 4, 19, 5, 6, 7, 10, 8, 18],
-      GuestWanted: [2, 21, 3, 4, 19, 5, 6, 7, 10, 16, 20, 17, 8, 18],
+      UserWanted: [2, 3, 4, 19, 5, 6, 7, 10, 8, 18],
+      GuestWanted: [2, 3, 4, 19, 5, 6, 7, 10, 16, 20, 17, 8, 18],
     },
     {
       //Trailer Spare Parts
@@ -497,8 +497,8 @@ const Constants = {
       UserSell: [2, 21, 3, 4, 19, 5, 6, 7, 10, 8, 18],
       GuestSell: [2, 21, 3, 4, 19, 5, 6, 7, 10, 16, 20, 17, 8, 18],
       //Spare Parts For Wanted
-      UserWanted: [2, 21, 3, 4, 19, 5, 6, 7, 10, 8, 18],
-      GuestWanted: [2, 21, 3, 4, 19, 5, 6, 7, 10, 16, 20, 17, 8, 18],
+      UserWanted: [2, 3, 4, 19, 5, 6, 7, 10, 8, 18],
+      GuestWanted: [2, 3, 4, 19, 5, 6, 7, 10, 16, 20, 17, 8, 18],
     },
     {
       //Buses & Van Spare Parts
@@ -507,8 +507,8 @@ const Constants = {
       UserSell: [2, 21, 3, 4, 19, 5, 6, 7, 10, 8, 18],
       GuestSell: [2, 21, 3, 4, 19, 5, 6, 7, 10, 16, 20, 17, 8, 18],
       //Spare Parts For Wanted
-      UserWanted: [2, 21, 3, 4, 19, 5, 6, 7, 10, 8, 18],
-      GuestWanted: [2, 21, 3, 4, 19, 5, 6, 7, 10, 16, 20, 17, 8, 18],
+      UserWanted: [2, 3, 4, 19, 5, 6, 7, 10, 8, 18],
+      GuestWanted: [2, 3, 4, 19, 5, 6, 7, 10, 16, 20, 17, 8, 18],
     },
     {
       //Equipment Spare Parts
@@ -517,8 +517,8 @@ const Constants = {
       UserSell: [2, 21, 3, 4, 19, 5, 6, 7, 10, 8, 18],
       GuestSell: [2, 21, 3, 4, 19, 5, 6, 7, 10, 16, 20, 17, 8, 18],
       //Spare Parts For Wanted
-      UserWanted: [2, 21, 3, 4, 19, 5, 6, 7, 10, 8, 18],
-      GuestWanted: [2, 21, 3, 4, 19, 5, 6, 7, 10, 16, 20, 17, 8, 18],
+      UserWanted: [2, 3, 4, 19, 5, 6, 7, 10, 8, 18],
+      GuestWanted: [2, 3, 4, 19, 5, 6, 7, 10, 16, 20, 17, 8, 18],
     },
     {
       //Accessories Spare Parts
@@ -527,8 +527,8 @@ const Constants = {
       UserSell: [2, 21, 3, 4, 10, 8, 18],
       GuestSell: [2, 21, 3, 4, 10, 16, 20, 17, 8, 18],
       //Spare Parts For Wanted
-      UserWanted: [2, 21, 3, 4, 10, 8, 18],
-      GuestWanted: [2, 21, 3, 4, 10, 16, 20, 17, 8, 18],
+      UserWanted: [2, 3, 4, 10, 8, 18],
+      GuestWanted: [2, 3, 4, 10, 16, 20, 17, 8, 18],
     },
     {
       //Regulation Spare Parts
@@ -537,8 +537,8 @@ const Constants = {
       UserSell: [2, 21, 3, 4, 8, 18],
       GuestSell: [2, 21, 3, 4, 16, 20, 17, 8, 18],
       //Spare Parts For Wanted
-      UserWanted: [2, 21, 3, 4, 8, 18],
-      GuestWanted: [2, 21, 3, 4, 16, 20, 17, 8, 18],
+      UserWanted: [2, 3, 4, 8, 18],
+      GuestWanted: [2, 3, 4, 16, 20, 17, 8, 18],
     },
     {
       //Equipments Sections 1
@@ -550,8 +550,8 @@ const Constants = {
       UserRent: [2, 21, 3, 4, 19, 5, 6, 7, 13, 8, 18],
       GuestRent: [2, 21, 3, 4, 19, 5, 6, 7, 13, 16, 20, 17, 8, 18],
       //Equipments Wanted
-      UserWanted: [2, 21, 3, 4, 19, 5, 6, 7, 10, 12, 8, 18],
-      GuestWanted: [2, 21, 3, 4, 19, 5, 6, 7, 10, 12, 16, 20, 17, 8, 18],
+      UserWanted: [2, 3, 4, 19, 5, 6, 7, 10, 12, 8, 18],
+      GuestWanted: [2, 3, 4, 19, 5, 6, 7, 10, 12, 16, 20, 17, 8, 18],
     },
     {
       //Equipments Sections 2
@@ -563,8 +563,8 @@ const Constants = {
       UserRent: [2, 21, 3, 4, 19, 5, 6, 7, 13, 8, 18],
       GuestRent: [2, 21, 3, 4, 19, 5, 6, 7, 13, 16, 20, 17, 8, 18],
       //Equipments Wanted
-      UserWanted: [2, 21, 3, 4, 19, 5, 6, 7, 10, 12, 8, 18],
-      GuestWanted: [2, 21, 3, 4, 19, 5, 6, 7, 10, 12, 16, 20, 17, 8, 18],
+      UserWanted: [2, 3, 4, 19, 5, 6, 7, 10, 12, 8, 18],
+      GuestWanted: [2, 3, 4, 19, 5, 6, 7, 10, 12, 16, 20, 17, 8, 18],
     },
     {
       //Equipments Sections 3
@@ -576,8 +576,8 @@ const Constants = {
       UserRent: [2, 21, 3, 4, 19, 5, 6, 7, 13, 8, 18],
       GuestRent: [2, 21, 3, 4, 19, 5, 6, 7, 13, 16, 20, 17, 8, 18],
       //Equipments Wanted
-      UserWanted: [2, 21, 3, 4, 19, 5, 6, 7, 10, 12, 8, 18],
-      GuestWanted: [2, 21, 3, 4, 19, 5, 6, 7, 10, 12, 16, 20, 17, 8, 18],
+      UserWanted: [2, 3, 4, 19, 5, 6, 7, 10, 12, 8, 18],
+      GuestWanted: [2, 3, 4, 19, 5, 6, 7, 10, 12, 16, 20, 17, 8, 18],
     },
   ],
 };

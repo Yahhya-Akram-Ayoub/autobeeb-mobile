@@ -9,12 +9,14 @@ import {
   FlatList,
   ActivityIndicator,
   Image,
+  StyleSheet,
 } from 'react-native';
 import KS from '../services/KSAPI';
 import {Languages, Color} from '../common';
 import IconIon from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
 import IconFe from 'react-native-vector-icons/Feather';
+import {screenWidth} from '../autobeeb/constants/Layout';
 
 export class SearchScreen extends Component {
   constructor(props) {
@@ -73,22 +75,10 @@ export class SearchScreen extends Component {
   render() {
     const _this = this;
     return (
-      <View style={{flex: 1, backgroundColor: '#fff'}}>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            // marginTop: Platform.select({ios: 40, android: 36}),
-            borderBottomWidth: 1,
-            borderBottomColor: '#000',
-          }}>
+      <View style={styles.container}>
+        <View style={styles.headerContainer}>
           <TouchableOpacity
-            style={{
-              paddingVertical: 6,
-              width: 50,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
+            style={styles.backButton}
             onPress={() => {
               this.props.navigation.goBack();
             }}>
@@ -99,19 +89,10 @@ export class SearchScreen extends Component {
             />
           </TouchableOpacity>
 
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
+          <View style={styles.searchInputContainer}>
             <TextInput
               ref={'SearchInput'}
-              style={{
-                flex: 0.9,
-                fontSize: 18,
-                textAlign: I18nManager.isRTL ? 'right' : 'left',
-                fontFamily: 'Cairo-Regular',
-              }}
+              style={styles.searchInput}
               value={this.state.query}
               placeholder={Languages.SearchByMakeOrModel}
               onChangeText={text => {
@@ -149,7 +130,7 @@ export class SearchScreen extends Component {
             />
             {!!this.state.query && (
               <TouchableOpacity
-                style={{}}
+                style={styles.clearButton}
                 onPress={() => {
                   this.setState({query: 0, Suggestions: []});
                 }}>
@@ -157,7 +138,7 @@ export class SearchScreen extends Component {
                   name="close-circle"
                   color={'#555'}
                   size={27}
-                  style={{}}
+                  style={styles.clearIcon}
                 />
               </TouchableOpacity>
             )}
@@ -165,8 +146,7 @@ export class SearchScreen extends Component {
         </View>
 
         {this.state.isLoading && (
-          <View
-            style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={'#F85502'} />
           </View>
         )}
@@ -176,7 +156,6 @@ export class SearchScreen extends Component {
         this.state.Suggestions.length > 0 &&
         !!this.state.query ? (
           <FlatList
-            //  contentContainerStyle={{ flex: 1 }}
             keyExtractor={(item, index) => index.toString()}
             keyboardShouldPersistTaps="handled"
             extraData={this.state.Suggestions}
@@ -184,15 +163,7 @@ export class SearchScreen extends Component {
             renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
-                  style={{
-                    borderBottomWidth: 1,
-                    borderBottomColor: '#ccc',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    paddingVertical: 10,
-                    paddingHorizontal: 15,
-                  }}
+                  style={styles.suggestionItem}
                   onPress={() => {
                     this.props.navigation.replace('SearchResult', {
                       query: item.Label,
@@ -205,43 +176,11 @@ export class SearchScreen extends Component {
                       },
                     });
                     this.props.updateRecentlySearched(item.Label);
-
-                    // KS.MakesGet({
-                    //   langID: Languages.langID,
-                    //   listingType: item.ListingType.ID
-                    // }).then(data => {
-                    //   let AllMakes = {
-                    //     //  FullImagePath: "yaz",
-                    //     ID: "",
-                    //     All: true,
-
-                    //     Image: require("../images/SellTypes/BlueAll.png"),
-                    //     AllMake: true,
-                    //     Name: Languages.AllMakes
-                    //   };
-                    //   data.unshift(AllMakes);
-
-                    //   _this.props.navigation.replace("ListingsScreen", {
-                    //     ListingType: item.ListingType,
-                    //     SellType: Constants.sellTypesFilter[0],
-                    //     selectedMake: { Name: item.MakeName, ID: item.MakeID },
-                    //     selectedModel: {
-                    //       ID: item.ModelID,
-                    //       Name: item.ModelName
-                    //     },
-                    //     Makes: data
-                    //   });
-                    // });
                   }}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                    }}>
-                    <Text style={{color: '#000'}}>{item.Label}</Text>
+                  <View style={styles.suggestionContent}>
+                    <Text style={styles.suggestionText}>{item.Label}</Text>
                     {false && item.ModelID == '' && (
-                      <Text style={{color: Color.primary}}>
+                      <Text style={styles.suggestionType}>
                         {Languages.In + item.ListingType.Name}
                       </Text>
                     )}
@@ -257,43 +196,24 @@ export class SearchScreen extends Component {
             }}
           />
         ) : (
-          <View style={{}}>
+          <View style={styles.emptyContainer}>
             {!this.state.isLoading && this.props.recentSearched?.length > 0 && (
-              <View style={{marginTop: 5}}>
-                <Text
-                  style={{
-                    fontFamily: 'Cairo-Bold',
-                    textAlign: 'left',
-                    marginHorizontal: 7,
-                  }}>
+              <View style={styles.recentSearchContainer}>
+                <Text style={styles.sectionTitle}>
                   {Languages.LatestSearches}
                 </Text>
 
                 <FlatList
-                  //  contentContainerStyle={{ flex: 1 }}
                   keyExtractor={(item, index) => index.toString()}
                   horizontal
-                  contentContainerStyle={{
-                    paddingHorizontal: 4,
-                    width: '100%',
-                  }}
+                  contentContainerStyle={styles.recentSearchList}
                   keyboardShouldPersistTaps="handled"
                   showsHorizontalScrollIndicator={false}
                   data={this.props.recentSearched}
                   renderItem={({item, index}) => {
                     return (
                       <TouchableOpacity
-                        style={{
-                          borderWidth: 1,
-                          borderColor: '#ccc',
-                          backgroundColor: 'white',
-                          marginTop: 5,
-                          elevation: 1,
-                          paddingVertical: 5,
-                          paddingHorizontal: 15,
-                          borderRadius: 5,
-                          marginHorizontal: 3,
-                        }}
+                        style={styles.recentSearchItem}
                         onPress={() => {
                           //alert(JSON.stringify(item));
                           this.props.updateRecentlySearched(item);
@@ -326,13 +246,8 @@ export class SearchScreen extends Component {
                             }
                           });
                         }}>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                          }}>
-                          <Text style={{color: '#000'}}>{item}</Text>
+                        <View style={styles.recentSearchItemContent}>
+                          <Text style={styles.recentSearchText}>{item}</Text>
                         </View>
                       </TouchableOpacity>
                     );
@@ -343,31 +258,15 @@ export class SearchScreen extends Component {
 
             {!this.state.isLoading &&
               this.state.recentSeenListings?.length > 0 && (
-                <View
-                  style={{
-                    marginHorizontal: 0,
-                    marginTop: Dimensions.get('screen').height * 0.15,
-
-                    justifyContent: 'center',
-                    //   backgroundColor: "blue",
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: 'Cairo-Bold',
-                      textAlign: 'left',
-                      marginHorizontal: 7,
-                    }}>
+                <View style={styles.recentListingsContainer}>
+                  <Text style={styles.sectionTitle}>
                     {Languages.RecentlyViewed}:
                   </Text>
 
                   <FlatList
                     keyExtractor={(item, index) => index.toString()}
                     horizontal
-                    //   inverted={I18nManager.isRTL}
-                    contentContainerStyle={{
-                      paddingHorizontal: 2,
-                      width: '100%',
-                    }}
+                    contentContainerStyle={styles.recentListingsList}
                     keyboardShouldPersistTaps="handled"
                     showsHorizontalScrollIndicator={false}
                     data={this.state.recentSeenListings}
@@ -380,28 +279,9 @@ export class SearchScreen extends Component {
                                 'RecentlyViewedScreen',
                               );
                             }}
-                            style={{
-                              flexGrow: 1,
-                              backgroundColor: 'red',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                              width: Dimensions.get('window').width * 0.4,
-                              overflow: 'hidden',
-                              borderWidth: 1,
-                              borderColor: '#ccc',
-                              backgroundColor: 'white',
-                              marginTop: 5,
-                              elevation: 1,
-                              marginHorizontal: 7,
-                              borderRadius: 5,
-                            }}>
-                            <View
-                              style={{
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                              }}>
-                              <Text style={{color: 'gray'}}>
+                            style={styles.seeMoreButton}>
+                            <View style={styles.seeMoreContent}>
+                              <Text style={styles.seeMoreText}>
                                 {Languages.ShowMore}
                               </Text>
                               <IconFe
@@ -410,7 +290,7 @@ export class SearchScreen extends Component {
                                     ? 'chevrons-left'
                                     : 'chevrons-right'
                                 }
-                                style={{marginTop: 3, marginLeft: 10}}
+                                style={styles.seeMoreIcon}
                                 color={'gray'}
                                 size={20}></IconFe>
                             </View>
@@ -419,69 +299,37 @@ export class SearchScreen extends Component {
                       } else
                         return (
                           <TouchableOpacity
-                            style={{
-                              overflow: 'hidden',
-                              borderWidth: 1,
-                              borderColor: '#ccc',
-                              backgroundColor: 'white',
-                              marginTop: 5,
-                              elevation: 1,
-
-                              borderRadius: 5,
-                              marginHorizontal: 5,
-                              width: Dimensions.get('window').width * 0.4,
-                            }}
+                            style={styles.listingItem}
                             onPress={() => {
                               this.props.navigation.replace('CarDetails', {
                                 item: item,
                                 id: item.ID,
                               });
                             }}>
-                            {item.Images.length > 0 ? (
+                            {item.Images?.length > 0 ||
+                            item.images?.length > 0 ? (
                               <Image
-                                style={{
-                                  width: Dimensions.get('window').width * 0.4,
-                                  height: Dimensions.get('window').width * 0.4,
-
-                                  //  borderColor: "#fff"
-                                }}
+                                style={styles.listingImage}
                                 source={{
                                   uri:
                                     'https://autobeeb.com/' +
-                                    item.FullImagePath +
+                                    (item.FullImagePath || item.fullImagePath) +
                                     '_400x400.jpg',
                                 }}
                                 resizeMode="cover"
                               />
                             ) : (
                               <Image
-                                style={{
-                                  width: Dimensions.get('window').width * 0.35,
-                                  height: Dimensions.get('window').width * 0.4,
-                                  alignSelf: 'center',
-                                  //  borderColor: "#fff"
-                                }}
+                                style={styles.placeholderImage}
                                 source={require('../images/placeholder.png')}
                                 resizeMode="contain"
                               />
                             )}
 
-                            <View
-                              style={{
-                                //  backgroundColor: "red",
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                justifyContent: 'space-around',
-                              }}>
+                            <View style={styles.listingInfo}>
                               {false && (
                                 <Image
-                                  style={{
-                                    width: 22,
-                                    height: 22,
-                                    // marginLeft: 12,
-                                    // marginRight: 6,
-                                    //       flex: 1
-                                  }}
+                                  style={styles.brandImage}
                                   resizeMode="contain"
                                   source={
                                     item.TitleFullImagePath
@@ -514,12 +362,7 @@ export class SearchScreen extends Component {
                               )}
                               <Text
                                 numberOfLines={1}
-                                style={{
-                                  color: '#000',
-                                  paddingVertical: 5,
-                                  paddingHorizontal: 5,
-                                  fontSize: 14,
-                                }}>
+                                style={styles.listingName}>
                                 {item.Name}
                               </Text>
                             </View>
@@ -527,39 +370,24 @@ export class SearchScreen extends Component {
                             {!!item.CountryName && (
                               <Text
                                 numberOfLines={1}
-                                style={{
-                                  //     color: Color.primary,
-                                  fontSize: 18,
-
-                                  fontSize: 13,
-
-                                  textAlign: 'center',
-                                }}>
+                                style={styles.locationText}>
                                 {item.CountryName} / {item.CityName}
                               </Text>
                             )}
 
-                            <View
-                              style={{
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                justifyContent: 'space-around',
-                              }}>
+                            <View style={styles.priceContainer}>
                               {!!item.FormatedPrice && (
                                 <Text
                                   numberOfLines={1}
-                                  style={{
-                                    color: Color.primary,
-                                    fontSize: 18,
-                                    fontFamily: 'Cairo-Bold',
-                                    fontSize: 12,
-                                    paddingLeft: 5,
-                                    textAlign:
-                                      item.PaymentMethod != 2
-                                        ? 'center'
-                                        : 'left',
-                                    flex: 6,
-                                  }}>
+                                  style={[
+                                    styles.priceText,
+                                    {
+                                      textAlign:
+                                        item.PaymentMethod != 2
+                                          ? 'center'
+                                          : 'left',
+                                    },
+                                  ]}>
                                   {item.FormatedPrice}
                                 </Text>
                               )}
@@ -568,12 +396,7 @@ export class SearchScreen extends Component {
                                 item.PaymentMethod == 2 && (
                                   <Text
                                     numberOfLines={1}
-                                    style={{
-                                      color: '#2B9531',
-                                      fontSize: 12,
-                                      flex: 5,
-                                      textAlign: 'center',
-                                    }}>
+                                    style={styles.installmentText}>
                                     {Languages.Installments}
                                   </Text>
                                 )}
@@ -591,19 +414,199 @@ export class SearchScreen extends Component {
   }
 }
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#000',
+  },
+  backButton: {
+    paddingVertical: 6,
+    width: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  searchInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  searchInput: {
+    flex: 0.9,
+    fontSize: 18,
+    textAlign: I18nManager.isRTL ? 'right' : 'left',
+    fontFamily: 'Cairo-Regular',
+  },
+  clearButton: {},
+  clearIcon: {},
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  suggestionItem: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+  },
+  suggestionContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  suggestionText: {
+    color: '#000',
+  },
+  suggestionType: {
+    color: Color.primary,
+  },
+  emptyContainer: {},
+  recentSearchContainer: {
+    marginTop: 5,
+  },
+  sectionTitle: {
+    fontFamily: 'Cairo-Bold',
+    textAlign: 'left',
+    marginHorizontal: 7,
+  },
+  recentSearchList: {
+    paddingHorizontal: 4,
+    width: screenWidth,
+  },
+  recentSearchItem: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    backgroundColor: 'white',
+    marginTop: 5,
+    elevation: 1,
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    marginHorizontal: 3,
+  },
+  recentSearchItemContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  recentSearchText: {
+    color: '#000',
+  },
+  recentListingsContainer: {
+    marginHorizontal: 0,
+    marginTop: Dimensions.get('screen').height * 0.15,
+    justifyContent: 'center',
+  },
+  recentListingsList: {
+    paddingHorizontal: 2,
+    width: '100%',
+  },
+  seeMoreButton: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: Dimensions.get('window').width * 0.4,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    backgroundColor: 'white',
+    marginTop: 5,
+    elevation: 1,
+    marginHorizontal: 7,
+    borderRadius: 5,
+  },
+  seeMoreContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  seeMoreText: {
+    color: 'gray',
+  },
+  seeMoreIcon: {
+    marginTop: 3,
+    marginLeft: 10,
+  },
+  listingItem: {
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    backgroundColor: 'white',
+    marginTop: 5,
+    elevation: 1,
+    borderRadius: 5,
+    marginHorizontal: 5,
+    width: Dimensions.get('window').width * 0.4,
+  },
+  listingImage: {
+    width: Dimensions.get('window').width * 0.4,
+    height: Dimensions.get('window').width * 0.4,
+  },
+  placeholderImage: {
+    width: Dimensions.get('window').width * 0.35,
+    height: Dimensions.get('window').width * 0.4,
+    alignSelf: 'center',
+  },
+  listingInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
+  brandImage: {
+    width: 22,
+    height: 22,
+  },
+  listingName: {
+    color: '#000',
+    paddingVertical: 5,
+    paddingHorizontal: 5,
+    fontSize: 14,
+  },
+  locationText: {
+    fontSize: 13,
+    textAlign: 'center',
+  },
+  priceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
+  priceText: {
+    color: Color.primary,
+    fontSize: 12,
+    fontFamily: 'Cairo-Bold',
+    paddingLeft: 5,
+    flex: 6,
+  },
+  installmentText: {
+    color: '#2B9531',
+    fontSize: 12,
+    flex: 5,
+    textAlign: 'center',
+  },
+});
+
 const mapDispatchToProps = dispatch => {
-  const {actions} = require('../redux/RecentListingsRedux');
+  const {actions, recentFreeSeach} = require('../redux/RecentListingsRedux');
 
   return {
-    updateRecentlySearched: (searchStatement, callback) => {
-      actions.updateRecentlySearched(dispatch, searchStatement, callback);
+    updateRecentlySearched: searchStatement => {
+      dispatch(recentFreeSeach(searchStatement));
     },
   };
 };
 
 const mapStateToProps = ({recentListings}) => ({
-  recentSearched: recentListings.recentSearched,
-  recentSeenListings: recentListings.recentSeenListings,
+  recentSearched: recentListings.recentFreeSeach.map(x => x.keyword),
+  recentSeenListings: recentListings.recentOpenListings,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchScreen);

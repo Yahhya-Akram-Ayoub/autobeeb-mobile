@@ -728,9 +728,6 @@ const mapDispatchToProps = dispatch => {
   return {
     storeUserData: (user, callback) =>
       UserActions.actions.storeUserData(dispatch, user, callback),
-    updateRecentlySeenListings: (listing, callback) => {
-      actions.updateRecentlySeenListings(dispatch, listing, callback);
-    },
   };
 };
 

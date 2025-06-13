@@ -37,6 +37,7 @@ import KS from '../services/KSAPI';
 import {LogoSpinner} from '../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CommonActions} from '@react-navigation/native';
+import {screenWidth} from '../autobeeb/constants/Layout';
 
 var ImagePicker = NativeModules.ImageCropPicker;
 
@@ -433,20 +434,7 @@ class ListingReview extends Component {
     return (
       <View>
         <Image
-          style={[
-            {
-              width: 90,
-              height: 90,
-              borderRadius: 10,
-              resizeMode: 'cover',
-              marginBottom: 7,
-            },
-            index === 0 && {
-              borderWidth: 3,
-              borderColor: Color.primary,
-            },
-            styles.imageBox,
-          ]}
+          style={styles.imageBox}
           source={
             typeof image === 'string'
               ? {
@@ -455,27 +443,16 @@ class ListingReview extends Component {
               : image
           }
         />
+        {index === 0 && (
+          <IconFa
+            name="home"
+            size={20}
+            color={Color.primary}
+            style={styles.mainImageIcon}
+          />
+        )}
       </View>
     );
-  }
-
-  deleteImage(listingID, fileName, index) {
-    let isPrimary = index === 0;
-    this.setState({imagePendingDelete: true});
-    KS.ListingImageDelete({
-      id: listingID,
-      fileName: fileName,
-      primary: isPrimary,
-    }).then(result => {
-      this.setState({imagePendingDelete: false});
-
-      if (result.Success == 1) {
-        this.state.imagesEdit.splice(index, 1);
-        this.setState({imagesEdit: this.state.imagesEdit});
-      } else {
-        alert('Error Delete Image : ' + JSON.stringify(result.Message));
-      }
-    });
   }
 
   renderRow = (value, step, singleEdit) => {
@@ -716,6 +693,7 @@ class ListingReview extends Component {
       </View>
     );
   };
+
   renderBoardNumber = () => {
     return (
       <View
@@ -822,46 +800,98 @@ class ListingReview extends Component {
           }}>
           <Text
             style={{
-              fontFamily: Constants.fontFamilySemiBold,
+              fontFamily: Constants.fontFamily,
               fontSize: 18,
-              paddingHorizontal: 8,
+              paddingHorizontal: 2,
               color: '#383737',
             }}>
-            {'Edit listing images'}
+            {Languages.addPhotos}
           </Text>
         </TouchableOpacity>
-        <FlatList
-          ref={ins => (this.imagesListRef = ins)}
-          keyExtractor={(item, index) => index.toString()}
-          extraData={this.state.images}
-          data={this.state.images}
-          horizontal
-          inverted={Platform.OS == 'ios' && I18nManager.isRTL}
-          contentContainerStyle={{
-            flexGrow: 1,
-            //        flexDirection: I18nManager.isRTL ? "row-reverse" : "row"
-          }}
-          renderItem={({item, index}) => {
-            return (
-              <View
-                key={index}
-                style={{
-                  marginHorizontal: 3,
-                  overflow: 'visible',
-                  paddingVertical: 18,
-                  paddingHorizontal: 5,
-                }}>
-                {this.renderImage(item, index)}
-              </View>
-            );
-          }}
-        />
+        {this.state.images?.length > 0 ? (
+          <FlatList
+            ref={ins => (this.imagesListRef = ins)}
+            keyExtractor={(item, index) => index.toString()}
+            extraData={this.state.images}
+            data={this.state.images}
+            horizontal
+            inverted={Platform.OS == 'ios' && I18nManager.isRTL}
+            contentContainerStyle={{
+              flexGrow: 1,
+            }}
+            renderItem={({item, index}) => {
+              return (
+                <View
+                  key={index}
+                  style={{
+                    marginHorizontal: 3,
+                    overflow: 'visible',
+                    paddingVertical: 18,
+                    paddingHorizontal: 5,
+                  }}>
+                  {this.renderImage(item, index)}
+                </View>
+              );
+            }}
+          />
+        ) : (
+          <TouchableOpacity
+            onPress={() => {
+              this.props.goToStep(Steps.Images, true);
+            }}
+            style={styles.addBox}>
+            <IconFa
+              name="file-image-o"
+              size={40}
+              color={Color.primary}
+              style={{marginVertical: 5}}
+            />
+            <IconFa
+              name="plus"
+              size={20}
+              color={Color.primary}
+              style={styles.AbsulatePlus}
+            />
+          </TouchableOpacity>
+        )}
       </View>
     );
   };
   cleanupImage(image) {
     this.setState({images: this.state.images.filter(x => x !== image)});
     ImagePicker.cleanSingle(image ? image.uri : null);
+  }
+
+  convertToNumber(number) {
+    if (number) {
+      if (!number) return '';
+
+      const arabicToEnglishMap = {
+        '٠': '0',
+        '١': '1',
+        '٢': '2',
+        '٣': '3',
+        '٤': '4',
+        '٥': '5',
+        '٦': '6',
+        '٧': '7',
+        '٨': '8',
+        '٩': '9',
+        '٫': '.',
+        '،': '.',
+        ',': '.',
+      };
+
+      const result = number
+        .toString()
+        .split('')
+        .map(char => arabicToEnglishMap[char] ?? char)
+        .join('');
+
+      console.log({number, result});
+
+      return result;
+    } else return '';
   }
 
   PublishOffer() {
@@ -906,17 +936,17 @@ class ListingReview extends Component {
         userName,
         cityID,
         description: this.props.description,
-        title: this.props.title,
+        title: this.convertToNumber(this.props.title),
         price: this.props.price,
         condition: condition?.ID,
         gearBox: gearBox?.ID,
         fuelType: fuelType?.ID,
         colorID,
         paymentMethod: paymentMethod?.ID,
-        consumption: mileage,
+        consumption: this.convertToNumber(mileage),
         sectionID,
-        boardNumber: this.props.boardNumber,
-        partNumber: this.props.partNumber,
+        boardNumber: this.convertToNumber(this.props.boardNumber),
+        partNumber: this.convertToNumber(this.props.partNumber),
         otpconfirmed:
           (this.props.userData && this.props.userData?.OTPConfirmed) || false,
         langID: Languages.langID,
@@ -1261,6 +1291,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: 'white',
   },
+  imageBox: {
+    width: 90,
+    height: 90,
+    borderRadius: 10,
+    resizeMode: 'cover',
+    marginBottom: 7,
+  },
   ValueButton: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -1277,22 +1314,23 @@ const styles = StyleSheet.create({
     color: '#aaa',
   },
   addBox: {
-    backgroundColor: '#f8f8f8',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowOffset: {
-      width: 1,
-      height: 2,
-    },
-    width: 90,
-    height: 90,
-    justifyContent: 'center',
+    width: screenWidth / 4,
+    height: screenWidth / 4,
+    borderWidth: 1,
+    borderColor: Color.primary,
+    borderRadius: 10,
     alignItems: 'center',
-    borderRadius: 2,
-    marginRight: 10,
-    marginBottom: 10,
+    justifyContent: 'center',
+    position: 'relative',
+    overflow: 'hidden',
+    marginVertical: 8,
   },
+  AbsulatePlus: {
+    position: 'absolute',
+    top: 12,
+    right: 5,
+  },
+  mainImageIcon: {position: 'absolute', top: 3, start: 3},
 });
 
 const mapStateToProps = ({user, menu}) => ({

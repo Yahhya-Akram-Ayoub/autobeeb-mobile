@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
   },
   memberSince: {
     lineHeight: 24,
-    fontSize: 12,
+    fontSize: 13,
     color: Color.blackTextSecondary,
     fontFamily: Constants.fontFamilySemiBold,
   },

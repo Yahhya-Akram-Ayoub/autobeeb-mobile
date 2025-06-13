@@ -15,15 +15,6 @@ import {AppLink} from '../shared/StaticData';
 import {screenWidth} from '../../constants/Layout';
 
 const ListingDetailsExtras = ({listingId, typeId, name}) => {
-  const navigation = useNavigation();
-  const {user, userCountry} = useSelector(state => state.user);
-
-  const handlePaymentNavigation = () => {
-    navigation.navigate('PaymentDetailsAutobeeb', {
-      user: user,
-    });
-  };
-
   const getShareMessage = () => {
     const baseUrl =
       Languages.langID === 2 // arabic
@@ -211,7 +202,7 @@ const styles = StyleSheet.create({
     maxWidth: '94%',
   },
   adviceText: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: Constants.fontFamilySemiBold,
     color: '#000',
   },

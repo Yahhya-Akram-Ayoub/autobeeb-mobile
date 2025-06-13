@@ -61,7 +61,7 @@ class MakesScreen extends Component {
         key={index}
         style={styles.row}
         onPress={() => {
-          if (!!this.props.route.params?.navigationOption) {
+          if (this.props.route.params?.navigationOption) {
             this.props.navigation.navigate('ListingsScreen', {
               ListingType: (this.props.route.params?.navigationOption ?? 0)
                 .ListingType,

@@ -34,7 +34,8 @@ const ListingAddImages = ({
   const [images, setImages] = useState(pImages ?? []);
   const [mainImage, setMainImage] = useState(0); // Store index
   const dialogRef = useRef(null);
-  const maxImages = listingType !== 32 && sellType !== 4 ? 15 : 1;
+  const isNeededListing = sellType === 4;
+  const maxImages = listingType !== 32 && !isNeededListing ? 15 : 1;
 
   const updateImages = newImages => {
     setImages(newImages.slice(0, maxImages));
@@ -225,15 +226,7 @@ const ListingAddImages = ({
         );
 
       return (
-        <View
-          key={index}
-          style={[
-            styles.addBox,
-            mainImage === index && {
-              borderWidth: 3,
-              borderColor: Color.primary,
-            },
-          ]}>
+        <View key={index} style={[styles.addBox]}>
           <TouchableOpacity
             onPress={() => {
               moveIndexToStart(index);
@@ -248,6 +241,15 @@ const ListingAddImages = ({
                   : item
               }
             />
+
+            {mainImage === index && (
+              <IconFa
+                name="home"
+                size={20}
+                color={Color.primary}
+                style={styles.mainImageIcon}
+              />
+            )}
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.removeButton}
@@ -266,13 +268,13 @@ const ListingAddImages = ({
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Text style={styles.limitText}>
+        {/* <Text style={styles.limitText}>
           {images.length === maxImages
             ? Languages.limitHighlightedImage.replace('15', maxImages)
             : images.length > 0 && mainImage === null
             ? Languages.highlightedImage
             : ''}
-        </Text>
+        </Text> */}
 
         {maxImages === 1 && !images.length ? (
           <TouchableOpacity
@@ -296,13 +298,11 @@ const ListingAddImages = ({
           <View key={0} style={styles.addBoxOnImage}>
             <TouchableOpacity onPress={() => setMainImage(0)}>
               <Image
-                style={[
-                  {maxWidth: '100%', maxHeight: '100%', resizeMode: 'contain'},
-                  mainImage === 0 && {
-                    borderWidth: 3,
-                    borderColor: Color.primary,
-                  },
-                ]}
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '100%',
+                  resizeMode: 'contain',
+                }}
                 source={
                   typeof item === 'string'
                     ? {
@@ -310,6 +310,12 @@ const ListingAddImages = ({
                       }
                     : images[0]
                 }
+              />
+              <IconFa
+                name="home"
+                size={20}
+                color={Color.primary}
+                style={styles.mainImageIcon}
               />
             </TouchableOpacity>
             <TouchableOpacity
@@ -337,7 +343,7 @@ const ListingAddImages = ({
         onPress={() => onClick({images, mainImage: images[0]})}
         style={{
           backgroundColor:
-            !images.length || images.length > maxImages
+            !isNeededListing && (!images.length || images.length > maxImages)
               ? 'gray'
               : Color.primary,
           width: '100%',
@@ -348,7 +354,9 @@ const ListingAddImages = ({
           position: 'absolute',
           bottom: 65,
         }}
-        disabled={!images.length || images.length > maxImages}>
+        disabled={
+          !isNeededListing && (!images.length || images.length > maxImages)
+        }>
         <Text
           style={{
             color: '#fff',
@@ -453,4 +461,5 @@ const styles = StyleSheet.create({
     fontFamily: Constants.fontFamilySemiBold,
     paddingVertical: 6,
   },
+  mainImageIcon: {position: 'absolute', top: 3, start: 15},
 });

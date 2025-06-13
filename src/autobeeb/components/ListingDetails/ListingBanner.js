@@ -31,7 +31,13 @@ const ListingBanner = ({
   const [hasImages, setHasImages] = useState(images?.length > 0);
 
   useEffect(() => {
-    console.log({isNeedRefresh});
+    if ((!photos || !photos.length) && images?.length) {
+      setHasImages(images?.length > 0);
+      setPhotos(images);
+    }
+  }, [images]);
+
+  useEffect(() => {
     if (isNeedRefresh)
       setTimeout(() => {
         refreshImages();

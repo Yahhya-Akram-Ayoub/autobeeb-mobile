@@ -30,8 +30,7 @@ const ListingPopupHandler = ({
   const warningPopupRef = useRef();
 
   useEffect(() => {
-    if (!listingId || !user) return;
- 
+    if (!listingId) return;
     AsyncStorage.getItem('warningShown', async (error, data) => {
       if (!data && ownerId !== user?.ID) {
         await AsyncStorage.setItem('warningShown', 'true');
@@ -42,14 +41,12 @@ const ListingPopupHandler = ({
       } else if (isActive && ownerId === user?.ID) {
         const _key = 'ItemNeedSharePoup';
         AsyncStorage.getItem(_key, (_error, _item) => {
-          console.log({listingId, _item});
           if (_item?.includes(`${listingId},`)) {
             AsyncStorage.setItem(
               _key,
               _item.replace(`${listingId},`, `${listingId}-1,`),
             );
-          } else console.log({listingId, _item});
-          if (_item?.includes(`${listingId}-1,`)) {
+          } else if (_item?.includes(`${listingId}-1,`)) {
             AsyncStorage.setItem(
               _key,
               _item.replace(`${listingId}-1,`, `${listingId}-2,`),

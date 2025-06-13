@@ -632,7 +632,6 @@ KensoftApi.prototype.GetFeaturedListings = function (data, callback) {
   });
 };
 
-
 KensoftApi.prototype.DeleteOffer = function (data, callback) {
   var requestUrl = this.url + '/Services/DeleteOffer?';
   requestUrl += this.join(data, '&');
@@ -1236,6 +1235,15 @@ KensoftApi.prototype.IncreaseScViews = function (data, callback) {
 
 KensoftApi.prototype.GetCountryCore = function (data, callback) {
   let _requestUrl = `${this.coreApiV1}Country/Get?`;
+  data = Object.fromEntries(
+    Object.entries(data).filter(([_, v]) => v !== null),
+  );
+  _requestUrl += this.join(data, '&');
+  return this._request(_requestUrl, callback);
+};
+
+KensoftApi.prototype.FreeSearchCore = function (data, callback) {
+  let _requestUrl = `${this.coreApiV1}Listings/List/FreeSearchAsync?`;
   data = Object.fromEntries(
     Object.entries(data).filter(([_, v]) => v !== null),
   );

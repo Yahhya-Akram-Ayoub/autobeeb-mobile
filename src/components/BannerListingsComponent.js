@@ -163,7 +163,7 @@ class BannerListings extends PureComponent {
                   id: item.ID,
                 })
               }>
-              {item.Images && item.Images.length > 1 && (
+              {item?.Images && item.Images?.length > 1 && (
                 <TouchableOpacity
                   hitSlop={{top: 15, bottom: 15, right: 15, left: 15}}
                   onPress={() => {

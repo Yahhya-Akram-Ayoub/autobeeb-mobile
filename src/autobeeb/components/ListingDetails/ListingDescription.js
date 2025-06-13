@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   description: {
     color: Color.blackTextSecondary,
     fontFamily: Constants.fontFamilyBold,
-    fontSize: 14,
+    fontSize: 15,
   },
   showMoreText: {
     color: Color.primary,

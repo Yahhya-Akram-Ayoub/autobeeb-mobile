@@ -5,3 +5,4 @@ export {OffersScreen} from './OffersScreen';
 export {ErrorScreen} from './ErrorScreen';
 export {ListingDetailsScreen} from './ListingDetailsScreen';
 export {ListingReportScreen} from './ListingReportScreen';
+export {SearchScreen} from './SearchScreen';

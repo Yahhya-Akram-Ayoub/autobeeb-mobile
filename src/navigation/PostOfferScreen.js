@@ -310,25 +310,6 @@ class PostOfferScreen extends Component {
     }
   };
 
-  convertToNumber(number) {
-    if (number) {
-      number = number + '';
-      return number
-        .replace(/٠/g, '0')
-        .replace(/،/g, '.')
-        .replace(/٫/g, '.')
-        .replace(/,/g, '.')
-        .replace(/١/g, '1')
-        .replace(/٢/g, '2')
-        .replace(/٣/g, '3')
-        .replace(/٤/g, '4')
-        .replace(/٥/g, '5')
-        .replace(/٦/g, '6')
-        .replace(/٧/g, '7')
-        .replace(/٨/g, '8')
-        .replace(/٩/g, '9');
-    } else return '';
-  }
 
   handleBackPress = () => {
     this.handleBack();
@@ -1110,8 +1091,11 @@ class PostOfferScreen extends Component {
             }}
             onChangeText={mileage => {
               this.setState({
-                mileage: this.convertToNumber(mileage),
+                mileage: mileage,
               });
+              // this.setState({
+              //   mileage: this.convertToNumber(mileage),
+              // });
             }}
             mileage={this.state.mileage}
             FindStep={() => {
@@ -1369,24 +1353,30 @@ class PostOfferScreen extends Component {
             }}
             price={this.state.price}
             onChangeTitle={title => {
-              if (title == ' ') return;
-              let formattedTitle = this.convertToNumber(title);
-              this.setState({title: formattedTitle});
+              this.setState({title: title});
+
+              // if (title == ' ') return;
+              // let formattedTitle = this.convertToNumber(title);
+              // this.setState({title: formattedTitle});
             }}
             onChangePartNumber={PartNumber => {
-              if (PartNumber == ' ') return;
+              this.setState({PartNumber: PartNumber});
 
-              let formattedPartNumber = this.convertToNumber(PartNumber);
-              this.setState({PartNumber: formattedPartNumber});
+              // if (!PartNumber || !PartNumber?.trim()) return;
+
+              // let formattedPartNumber = this.convertToNumber(PartNumber);
+              // this.setState({PartNumber: formattedPartNumber});
             }}
             partNumber={this.state.PartNumber}
             title={this.state.title}
             onChangeBoard={boardNumber => {
-              if (boardNumber == ' ') return;
+              this.setState({boardNumber: boardNumber});
 
-              let formattedBoardNumber = this.convertToNumber(boardNumber);
+              // if (boardNumber == ' ') return;
 
-              this.setState({boardNumber: formattedBoardNumber});
+              // let formattedBoardNumber = this.convertToNumber(boardNumber);
+
+              // this.setState({boardNumber: formattedBoardNumber});
             }}
             boardNumber={this.state.boardNumber}
             navigation={this.props.navigation}

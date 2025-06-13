@@ -29,29 +29,30 @@ const ListingInformation = ({
   colorLabel,
   id,
   dateAdded,
+  sectionName,
 }) => {
   const renderFuelType = value => {
     return Constants.FilterFuelTypes.find(FT => FT.ID === value)?.Name ?? '';
   };
   const renderGearBox = value => {
-    return Constants.FilterFuelTypes.find(FT => FT.ID === value)?.Name ?? '';
+    return Constants.gearBoxTrucks.find(FT => FT.ID === value)?.Name ?? '';
   };
-  const renderSection = listing => {
+  const renderSection = () => {
+    console.log({categoryID, typeID});
     try {
-      const {TypeID, SectionName} = listing;
-      const words = SectionName?.split(' ') || [];
+      const words = sectionName?.split(' ') || [];
 
-      if (TypeID === 4 && Languages.langID !== 2) {
+      if (typeID === 4 && Languages.langID !== 2) {
         return words[0];
       }
 
-      if (TypeID === 32 && words.length > 2) {
+      if (typeID === 32 && words.length > 2) {
         return Languages.langID === 2 ? words[2] : words[0];
       }
 
-      return SectionName;
+      return sectionName;
     } catch {
-      return listing?.SectionName ?? '';
+      return sectionName ?? '';
     }
   };
 
@@ -76,7 +77,7 @@ const ListingInformation = ({
       {!!sellType && (
         <View style={styles.sectionHalf}>
           <Text style={styles.sectionTitle}>{Languages.SellType}</Text>
-          <View style={styles.row}>
+          <View style={`${typeName}`.length < 15 ? styles.row : styles.col}>
             <Text style={styles.sectionValue}>{typeName + ' '}</Text>
             <Text
               style={[
@@ -118,12 +119,14 @@ const ListingInformation = ({
             <Text numberOfLines={1} style={styles.sectionValue}>
               {categoryName}
             </Text>
-            <Image
-              style={styles.categoryImage}
-              source={{
-                uri: `https://autobeeb.com/content/newlistingcategories/${typeID}${categoryID}/${categoryID}_50x50.jpg`,
-              }}
-            />
+            {typeID === 16 && (
+              <Image
+                style={styles.categoryImage}
+                source={{
+                  uri: `https://autobeeb.com/content/newlistingcategories/${typeID}${categoryID}/${categoryID}_50x50.jpg`,
+                }}
+              />
+            )}
           </View>
         </View>
       )}
@@ -317,7 +320,7 @@ const styles = StyleSheet.create({
     fontFamily: Constants.fontFamilyBold,
   },
   sectionValue: {
-    fontSize: 13,
+    fontSize: 14,
     textAlign: 'left',
     color: '#283B77',
     fontFamily: Constants.fontFamilyBold,
@@ -325,6 +328,10 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  col: {
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
   },
   spaceBetween: {
     flexDirection: 'row',

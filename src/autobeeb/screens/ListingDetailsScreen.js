@@ -35,10 +35,11 @@ import {
 } from '@react-navigation/native';
 import React, {useEffect, useRef, useState} from 'react';
 import KS from '../../services/KSAPI';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Languages} from '../../common';
 import {BottomNavigationBar} from '../../components';
 import {screenWidth} from '../constants/Layout';
+import {actions, recentOpenListings} from '../../redux/RecentListingsRedux';
 
 const ListingDetailsScreen = () => {
   const bottomBarTranslate = useRef(new Animated.Value(0)).current;
@@ -48,10 +49,9 @@ const ListingDetailsScreen = () => {
   const route = useRoute();
   const {id, isNewUser, showFeatures, isNeedRefresh} = route.params;
   const navigation = useNavigation();
-  __DEV__ && console.log({id});
   const user = useSelector(state => state.user.user);
   const ViewingCurrency = useSelector(state => state.menu.ViewingCurrency);
-
+  const dispatch = useDispatch();
   const [listing, setListing] = useState();
   const [loading, setLoading] = useState(true);
   const [refreshFeatures, setRefreshFeatures] = useState(false);
@@ -100,7 +100,9 @@ const ListingDetailsScreen = () => {
       increaseViews: true,
     })
       .then(res => {
+        __DEV__ && console.log({res});
         setListing(res);
+        dispatch(recentOpenListings(res));
       })
       .finally(() => {
         setLoading(false);
@@ -212,6 +214,7 @@ const ListingDetailsScreen = () => {
           colorLabel={listing?.colorLabel}
           id={listing?.id}
           dateAdded={listing?.dateAdded}
+          sectionName={listing?.typeName}
         />
         {!loading && (
           <>

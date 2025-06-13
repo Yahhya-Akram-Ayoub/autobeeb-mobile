@@ -124,27 +124,27 @@ export const FuelTypesList = memo(({onPress}) => {
 export const PaymentList = memo(({onPress}) => {
   return (
     <View style={styles.OptionsTypes}>
-      <Pressable
+      <TouchableOpacity
         onPress={() => {
           onPress('condition', 1);
         }}
         style={[styles.OptionBtn]}>
         <Text style={[styles.TextOptionBtn]}>{Languages.New}</Text>
-      </Pressable>
-      <Pressable
+      </TouchableOpacity>
+      <TouchableOpacity
         onPress={() => {
           onPress('condition', 2);
         }}
         style={[styles.OptionBtn]}>
         <Text style={[styles.TextOptionBtn]}>{Languages.Used}</Text>
-      </Pressable>
-      <Pressable
+      </TouchableOpacity>
+      <TouchableOpacity
         onPress={() => {
           onPress('payment', 1);
         }}
         style={[styles.OptionBtn, {borderColor: '#006400'}]}>
         <Text style={[styles.TextOptionBtn]}>{Languages.Installments}</Text>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 });
@@ -154,7 +154,7 @@ export const RenderCategoryItem = ({item, onPress}) => {
   }
 
   return (
-    <Pressable style={styles.Category} onPress={onPress}>
+    <TouchableOpacity style={styles.Category} onPress={onPress}>
       {item.fullImagePath && (
         <FastImage
           style={styles.CategoryImage}
@@ -167,7 +167,7 @@ export const RenderCategoryItem = ({item, onPress}) => {
       <Text numberOfLines={1} style={styles.MakeText}>
         {item.name}
       </Text>
-    </Pressable>
+    </TouchableOpacity>
   );
 };
 export const RenderMakeItem = ({item, onPress}) => {
@@ -176,7 +176,7 @@ export const RenderMakeItem = ({item, onPress}) => {
   }
 
   return (
-    <Pressable style={styles.Make} onPress={onPress}>
+    <TouchableOpacity style={styles.Make} onPress={onPress}>
       {item.fullImagePath ? (
         <FastImage
           style={styles.MakeImage}
@@ -195,7 +195,7 @@ export const RenderMakeItem = ({item, onPress}) => {
           {item.name}
         </Text>
       )}
-    </Pressable>
+    </TouchableOpacity>
   );
 };
 export const RenderSectionItem = ({item, onPress}) => {
@@ -204,7 +204,7 @@ export const RenderSectionItem = ({item, onPress}) => {
   }
 
   return (
-    <Pressable
+    <TouchableOpacity
       onPress={onPress}
       style={[styles.Section, item.id === 64 && {borderColor: Color.primary}]}>
       {item.fullImagePath && (
@@ -221,7 +221,7 @@ export const RenderSectionItem = ({item, onPress}) => {
           {`${item.name}`.replace('قطع غيار', '')}
         </Text>
       )}
-    </Pressable>
+    </TouchableOpacity>
   );
 };
 export const CategoriesList = memo(({categories, onPress}) => {
@@ -302,9 +302,9 @@ export const MakesList = memo(({makes, onPress}) => {
 
 const RenderFuelItem = ({item, onPress}) => {
   return (
-    <Pressable style={[styles.FuelBtn]} onPress={onPress}>
+    <TouchableOpacity style={[styles.FuelBtn]} onPress={onPress}>
       <Text style={[styles.TextBtn]}>{item.Name}</Text>
-    </Pressable>
+    </TouchableOpacity>
   );
 };
 

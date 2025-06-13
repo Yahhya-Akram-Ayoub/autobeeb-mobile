@@ -36,3 +36,4 @@ export {default as ReportListingForm} from './ListingDetails/ReportListingForm';
 export {default as ListingPopupHandler} from './ListingDetails/ListingPopupHandler';
 export {default as useKeyboard} from './shared/useKeyboard';
 export {default as FeaturesModal} from './ListingDetails/FeaturesModal';
+export {default as HomeListingRow} from './Home/HomeListingRow';

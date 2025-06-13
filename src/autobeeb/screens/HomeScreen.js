@@ -5,6 +5,7 @@ import {
   BlogsRow,
   DealersRow,
   HomeBanner,
+  HomeListingRow,
   HomeTabs,
 } from '../components';
 import Layout from '../constants/Layout';
@@ -53,6 +54,7 @@ const HomeScreen = () => {
         <HomeTabs />
         <AddOfferBtn />
         <BlogsRow />
+        <HomeListingRow />
         <DealersRow />
         <View style={{height: 10}} />
       </ScrollView>

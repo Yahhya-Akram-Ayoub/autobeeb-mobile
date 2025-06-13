@@ -10,7 +10,6 @@ import SellTypeScreen from '../../../navigation/SellTypeScreen';
 import ChatScreen from '../../../navigation/ChatScreen';
 import LoginScreen from '../../../navigation/LoginScreen';
 import RegisterScreen from '../../../navigation/RegisterScreen';
-import SearchScreen from '../../../navigation/SearchScreen';
 import ListingsScreen from '../../../navigation/ListingsScreen';
 import ForgotPassword from '../../../navigation/ForgotPassword';
 import SettingScreen from '../../../navigation/SettingScreen';
@@ -42,6 +41,7 @@ import {
   ErrorScreen,
   ListingDetailsScreen,
   ListingReportScreen,
+  SearchScreen,
 } from '../../screens';
 import {TranstionSettings} from './Transtion';
 

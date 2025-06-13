@@ -15,7 +15,7 @@ const ListingInfoBox = ({
     return Constants.FilterFuelTypes.find(FT => FT.ID === value)?.Name ?? '';
   };
   const renderGearBox = value => {
-    return Constants.FilterFuelTypes.find(FT => FT.ID === value)?.Name ?? '';
+    return Constants.gearBoxTrucks.find(FT => FT.ID === value)?.Name ?? '';
   };
 
   if (loading)

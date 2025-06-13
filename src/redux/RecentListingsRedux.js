@@ -1,113 +1,95 @@
 const types = {
-  SET_RECENT_SEEN_LISTINGS: "SET_RECENT_SEEN_LISTINGS",
-  SET_RECENT_SEARCHED: "SET_RECENT_SEARCHED",
+  SET_RECENT_SEEN_LISTINGS: 'SET_RECENT_OPEN_LISTINGS',
+  SET_RECENT_SEARCHED: 'SET_RECENT_KEYWORD_SEARCHED',
+  SET_RECENT_FILTER_SEARCHED: 'SET_RECENT_FILTER_SEARCHED',
+  SET_RECENT_SEARCHED_LISTINGS: 'SET_RECENT_KEYWORD_SEARCHED_LISTINGS',
+  SET_RECENT_FILTER_SEARCHED_LISTINGS: 'SET_RECENT_FILTER_SEARCHED_LISTINGS',
 };
 
 const initialState = {
-  recentSeenListings: [],
-  recentSearched: [],
+  recentOpenListings: [], // {id , title , type , mainImage }
+  recentFreeSeach: [], // keywords
+  recentFreeSeachListings: [], // Listings
+  recentFilterSeach: [], // type , make , model , section , fueltypes
+  recentFilterSeachListings: [], // Listings
 };
 
-export const actions = {
-  updateRecentlySeenListings: (dispatch, listing, callback) => {
-    //alert (JSON.stringify (country));
-    dispatch({ type: types.SET_RECENT_SEEN_LISTINGS, payload: { listing } });
-    if (callback) {
-      callback();
-    }
-  },
-
-  updateRecentlySearched: (dispatch, searchStatement, callback) => {
-    dispatch({ type: types.SET_RECENT_SEARCHED, payload: { searchStatement } });
-    if (callback) {
-      callback();
-    }
-  },
+export const recentOpenListings = obj => {
+  if (!obj) return;
+  return {
+    type: types.SET_RECENT_SEEN_LISTINGS,
+    payload: {
+      id: obj.id,
+      // title: obj.type === 32 ? obj.title : obj.name,
+      // type: obj.type,
+      // imagesCount: obj.images?.length,
+      // mainImage: obj.images?.[0],
+      // imageBasePath: obj.imageBasePath,
+    },
+  };
+};
+export const recentFreeSeach = keyword => {
+  if (!keyword) return;
+  return {
+    type: types.SET_RECENT_SEARCHED,
+    payload: {
+      keyword,
+    },
+  };
+};
+export const recentFilterSeach = obj => {
+  if (!obj) return;
+  return {
+    type: types.SET_RECENT_FILTER_SEARCHED,
+    payload: {
+      type: obj.type,
+      make: obj.make,
+      model: obj.model,
+      section: obj.section,
+      fueltype: obj.fueltype,
+    },
+  };
 };
 
 export const reducer = (state = initialState, action) => {
-  const { type, payload } = action;
+  const {type, payload} = action;
 
   switch (type) {
     case types.SET_RECENT_SEEN_LISTINGS: {
-      let tempRecentSeen = [...state.recentSeenListings];
-      // console.log("recent seen before update:", tempRecentSeen);
-      if (tempRecentSeen.some((item) => item?.ID == payload.listing.ID)) {
-        //item already there
-        let index = tempRecentSeen.findIndex(
-          (item) => item?.ID == payload.listing.ID
-        );
-        let existingItem = tempRecentSeen.splice(index, 1)[0];
-        tempRecentSeen.unshift(existingItem);
-        // console.log(index);
-        // console.log(existingItem);
-
-        // console.log(tempRecentSeen);
-
-        return {
-          ...state,
-          recentSeenListings: tempRecentSeen,
-        };
+      let tempRecentSeen = state.recentOpenListings;
+      if (tempRecentSeen.length >= 16) {
+        tempRecentSeen = tempRecentSeen.slice(0, 15);
       }
-
-      if (tempRecentSeen.length >= 100) {
-        tempRecentSeen.pop();
-        tempRecentSeen.unshift(payload.listing);
-      } else {
-        tempRecentSeen.unshift(payload.listing);
-      }
-      // console.log("recent seen ((after)) update:", tempRecentSeen);
-
-      //  alert(JSON.stringify(tempRecentSeen));
+      tempRecentSeen = [payload, ...tempRecentSeen];
 
       return {
         ...state,
-        recentSeenListings: tempRecentSeen,
+        recentOpenListings: tempRecentSeen,
       };
     }
+
     case types.SET_RECENT_SEARCHED: {
-      let tempRecentSearch = [...state.recentSearched];
-      // console.log("recent search before update:", tempRecentSearch);
-      if (
-        tempRecentSearch.some(
-          (item) =>
-            item?.toLowerCase().replace(/ /g, "") ==
-            payload.searchStatement.toLowerCase().replace(/ /g, "")
-        )
-      ) {
-        //item already there
-        // return state;
-        let index = tempRecentSearch.findIndex(
-          (item) =>
-            item?.toLowerCase().replace(/ /g, "") ==
-            payload.searchStatement.toLowerCase().replace(/ /g, "")
-        );
-        let existingItem = tempRecentSearch.splice(index, 1)[0];
-        tempRecentSearch.unshift(existingItem);
-        // console.log(index);
-        // console.log(existingItem);
-
-        // console.log(tempRecentSearch);
-
-        return {
-          ...state,
-          recentSearched: tempRecentSearch,
-        };
+      let tempRecentSeen = state.recentFreeSeach.filter(item => item.keyword !== payload.keyword);
+      if (tempRecentSeen.length >= 6) {
+        tempRecentSeen = tempRecentSeen.slice(0, 5);
       }
-
-      if (tempRecentSearch.length >= 20) {
-        tempRecentSearch.pop();
-        tempRecentSearch.unshift(payload.searchStatement);
-      } else {
-        tempRecentSearch.unshift(payload.searchStatement);
-      }
-      // console.log("recent search ((after)) update:", tempRecentSearch);
-
-      //  alert(JSON.stringify(tempRecentSearch));
+      tempRecentSeen = [payload, ...tempRecentSeen];
 
       return {
         ...state,
-        recentSearched: tempRecentSearch,
+        recentFreeSeach: tempRecentSeen,
+      };
+    }
+    case types.SET_RECENT_FILTER_SEARCHED: {
+      let tempRecentSeen = state.recentFilterSeach;
+      if (tempRecentSeen.length >= 3) {
+        tempRecentSeen = tempRecentSeen.slice(0, 2);
+      }
+      tempRecentSeen = [payload, ...tempRecentSeen];
+
+      return {
+        ...state,
+        recentFilterSeach: tempRecentSeen,
       };
     }
 

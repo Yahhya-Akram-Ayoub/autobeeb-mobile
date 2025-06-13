@@ -23,7 +23,7 @@ import {useNavigation} from '@react-navigation/native';
 const _defaultArray = arrayOfNull(6);
 
 const FilterTabBox = memo(({Tab}) => {
-  const isMake = Tab.ID !== 16;
+  const isMake = Tab.ID !== 16 && Tab.ID !== 4;
   const isForRent = Tab.ID !== 32;
   const isCategory = Tab.ID !== 1;
   const isSection = Tab.ID === 32 || Tab.ID === 4;
@@ -70,10 +70,11 @@ const FilterTabBox = memo(({Tab}) => {
   };
 
   const LoadCategory = () => {
-    const _listingType = Tab.ID === 4 ? 8192 : Tab.ID === 32 ? 64 : Tab.ID;
+    const _listingType = Tab.ID === 32 ? 64 : Tab.ID;
     KS.GetCategoriesCore({
       LangId: Languages.langID,
-      ListingType: _listingType,
+      ListingType: _listingType === 4 ? 0 : _listingType,
+      ParentListingType: _listingType === 4 ? _listingType : 0,
     }).then(res => {
       if (Tab.ID === 16) res.categories.unshift(AllCategories);
       setCategories(deepClone(res.categories));
@@ -85,6 +86,12 @@ const FilterTabBox = memo(({Tab}) => {
       navigation.navigate('MakesScreen', {
         ListingType: Tab,
         SellType: Constants.sellTypes[0],
+        navigationOption: {
+          SectionID: section?.id,
+          selectedSection: NormlizeObj(section),
+          ListingType: Tab,
+          SellType: Constants.sellTypes[0],
+        },
       });
     } else {
       navigation.navigate('ListingsScreen', {
@@ -161,7 +168,10 @@ const FilterTabBox = memo(({Tab}) => {
             categories={categories}
             onPress={category => {
               if (isSection) {
-                CategoryNavigation(category, sections[0]);
+                CategoryNavigation(category, {
+                  id: category.typeId,
+                  name: category.typeName,
+                });
               } else {
                 CategoryNavigation(category);
               }
@@ -184,6 +194,7 @@ const FilterTabBox = memo(({Tab}) => {
               opacity: 0,
               margin: 0,
               position: 'absolute',
+              zIndex: -100,
             },
           ]}>
           <PaymentList

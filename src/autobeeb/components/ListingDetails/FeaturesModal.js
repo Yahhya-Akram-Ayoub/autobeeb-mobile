@@ -291,16 +291,22 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     borderTopColor: '#ccc',
     borderTopWidth: 1,
     marginTop: 5,
     borderBottomLeftRadius: 5,
     borderBottomRightRadius: 5,
-    justifyContent: 'center',
+    height: 60,
+
   },
   cancelButton: {
     flex: 1,
     backgroundColor: '#fff',
+    height: '100%',
+    borderBottomEndRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   cancelText: {
     color: Color.secondary,
@@ -311,8 +317,11 @@ const styles = StyleSheet.create({
   },
   confirmButton: {
     flex: 1,
+    height: '100%',
     backgroundColor: Color.secondary,
-    borderRadius: 5,
+    borderBottomStartRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   confirmText: {
     color: '#fff',

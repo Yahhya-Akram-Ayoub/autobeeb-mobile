@@ -46,7 +46,7 @@ const DealersRow = () => {
   return (
     <View style={styles.rowContainer}>
       <View style={styles.headerContainer}>
-        <TouchableOpacity onPressIn={goToDealersScreen}>
+        <TouchableOpacity onPress={goToDealersScreen}>
           <View style={styles.titleRow}>
             <AppIcon
               type={Icons.FontAwesome}
@@ -59,7 +59,7 @@ const DealersRow = () => {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity onPressIn={goToDealersScreen}>
+        <TouchableOpacity onPress={goToDealersScreen}>
           <Text style={styles.viewAll}>{Languages.ViewAll}</Text>
         </TouchableOpacity>
       </View>
