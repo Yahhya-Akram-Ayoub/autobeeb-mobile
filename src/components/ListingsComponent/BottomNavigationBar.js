@@ -7,7 +7,7 @@ import {
 } from '@react-navigation/native';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons'; // or your preferred icon lib
 import {useSelector} from 'react-redux';
-import {Color, Languages} from '../../common';
+import {Color, Constants, Languages} from '../../common';
 import IconIon from 'react-native-vector-icons/Ionicons';
 
 const BottomNavigationBar = ({appRoot}) => {
@@ -96,15 +96,15 @@ const BottomNavigationBar = ({appRoot}) => {
                   />
                 )}
               </View>
-
-              {item.hasBadge && unreadMessages > 0 && (
-                <View style={styles.badge}>
-                  <Text numberOfLines={1} style={styles.badgeText}>
-                    {unreadMessages}
-                  </Text>
-                </View>
-              )}
             </View>
+
+            {item.hasBadge && unreadMessages > 0 && (
+              <View style={styles.badge}>
+                <Text numberOfLines={1} style={styles.badgeText}>
+                  {unreadMessages < 100 ? unreadMessages : '99+'}
+                </Text>
+              </View>
+            )}
             <Text style={styles.label}>{item.label}</Text>
           </Pressable>
         );
@@ -134,15 +134,16 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 12,
     lineHeight: 17,
-    // color: Color.tabBarInactive,
+    color: Color.blackTextSecondary,
+    fontFamily: Constants.fontFamily,
   },
   iconWrapper: {
     position: 'relative',
   },
   badge: {
     position: 'absolute',
-    top: -6,
-    right: -10,
+    right: 22,
+    top: -3,
     backgroundColor: 'red',
     borderRadius: 10,
     minWidth: 18,
@@ -152,9 +153,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
   },
   badgeText: {
-    color: 'white',
+    color: '#fff',
     fontSize: 10,
-    fontWeight: 'bold',
+    fontFamily: Constants.fontFamilyBold,
   },
   activeIcon: {
     backgroundColor: 'rgba(179, 157, 219, 0.45)',

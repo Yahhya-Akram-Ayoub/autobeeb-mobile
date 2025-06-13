@@ -180,19 +180,7 @@ const ListingAddImages = ({
   };
 
   const confirmImageDelete = (image, index) => {
-    dialogRef.current?.pop({
-      title: Languages.DeleteConfirm,
-      btns: [
-        {
-          text: Languages.Ok,
-          callback: () => deleteImageByPath(image, index),
-        },
-        {
-          text: Languages.Cancel,
-          callback: () => dialogRef.current?.close(),
-        },
-      ],
-    });
+    deleteImageByPath(image, index);
   };
   const moveIndexToStart = index => {
     if (index < 0 || index >= images.length) return images; // invalid index

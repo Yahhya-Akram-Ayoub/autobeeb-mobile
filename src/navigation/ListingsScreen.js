@@ -231,18 +231,20 @@ class ListingsScreen extends Component {
             : true),
         OnPress: () => {
           this.setState({isModelLoading: true});
-          KS.ModelsGet({
+          const _modalParams = {
             langID: Languages.langID,
             listingType:
               this.props.route.params?.ListingType?.ID == 32 &&
               this.state.selectedSection[0] &&
-              this.state.selectedSection[0].RelatedEntity
-                ? this.state.selectedSection[0].RelatedEntity
+              this.state.selectedSection[0].ID
+                ? 1
                 : this.props.route.params?.ListingType?.ID == 4
                 ? this.state.selectedSection[0].ID
                 : this.props.route.params?.ListingType?.ID || '',
             makeID: this.state.selectedMake && this.state.selectedMake[0].ID,
-          }).then(data => {
+          };
+
+          KS.ModelsGet(_modalParams).then(data => {
             data.unshift(All);
             this.setState({
               Models: data,
@@ -421,7 +423,12 @@ class ListingsScreen extends Component {
                 ),
               };
               if (!newState.selectedSection?.length)
-                newState = {selectedSection: [All]};
+                newState = {
+                  selectedSection: [All],
+                  selectedMake: [AllMakes],
+                  selectedModel: [All],
+                  selectedCategory: [All],
+                };
               break;
             case 'M':
               newState = {
@@ -3507,9 +3514,8 @@ class ListingsScreen extends Component {
                           langID: Languages.langID,
                           listingType:
                             this.props.route.params?.ListingType?.ID == 32 &&
-                            this.state.selectedSection[0] &&
-                            this.state.selectedSection[0].RelatedEntity
-                              ? this.state.selectedSection[0].RelatedEntity
+                            this.state.selectedSection[0]
+                              ? 1
                               : this.props.route.params?.ListingType?.ID == 4
                               ? this.state.selectedSection[0].ID
                               : this.props.route.params?.ListingType?.ID || '',

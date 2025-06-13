@@ -6,7 +6,6 @@ import FastImage from 'react-native-fast-image';
 import {Color, Constants, Languages} from '../../../common';
 import {AppIcon, Icons} from './AppIcon';
 import KS from '../../../services/KSAPI';
-import {screenWidth} from '../../constants/Layout';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 
@@ -59,7 +58,7 @@ const DealerBanner = ({userId, dealer, listingId}) => {
       Linking.openURL(`tel:${number}`);
     } else {
       setShowPhone(true);
-      KS.UpdateMobileClick({UserId: user.ID, ListingId: listingId});
+      KS.UpdateMobileClick({UserId: user.id, ListingId: listingId});
     }
   };
   if (!user) return <View />;
@@ -71,7 +70,7 @@ const DealerBanner = ({userId, dealer, listingId}) => {
         differentCountry && styles.containerStylesDC,
       ]}
       onPress={() =>
-        navigation.navigate('DealerProfileScreen', {userid: user.ID})
+        navigation.navigate('DealerProfileScreen', {userid: user.id})
       }>
       <FastImage
         style={styles.coverStyle}

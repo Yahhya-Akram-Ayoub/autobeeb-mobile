@@ -12,6 +12,7 @@ import {AppLink} from '../shared/StaticData';
 import {Languages} from '../../../common';
 import {AppIcon, Icons} from '../shared/AppIcon';
 import {screenWidth} from '../../constants/Layout';
+import ShareLib from 'react-native-share';
 
 const HeaderWithShare = ({name, listingId, typeId, backCkick}) => {
   const navigation = useNavigation();
@@ -33,9 +34,10 @@ const HeaderWithShare = ({name, listingId, typeId, backCkick}) => {
 
       const message = `${Languages.CheckOffer}\n${url}\n\n${Languages.DownloadAutobeeb}\n${AppLink}`;
 
-      await Share.share({
+      await ShareLib.shareSingle({
         message,
         title: Languages.CheckOffer,
+        social: ShareLib.Social.FACEBOOK,
       });
     } catch (error) {
       console.warn('Share failed:', error);

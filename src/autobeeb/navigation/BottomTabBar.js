@@ -1,6 +1,6 @@
 import React, {useRef, useEffect} from 'react';
 import {View, Pressable, Text, Animated, StyleSheet} from 'react-native';
-import {Color} from '../../common';
+import {Color, Constants} from '../../common';
 import {useSelector} from 'react-redux';
 import {AppIcon, Icons} from '../components/shared/AppIcon';
 
@@ -78,12 +78,14 @@ const BottomTabBar = ({state, descriptors, navigation}) => {
                   color={isFocused ? Color.secondary : '#000'}
                 />
               )}
-              {showBadge && unreadMessages > 0 && (
-                <View style={styles.badgeStyle}>
-                  <Text style={styles.badgeText}>{unreadMessages}</Text>
-                </View>
-              )}
             </Animated.View>
+            {showBadge && unreadMessages > 0 && (
+              <View style={styles.badgeStyle}>
+                <Text style={styles.badgeText}>
+                  {unreadMessages < 100 ? unreadMessages : '99+'}
+                </Text>
+              </View>
+            )}
             <Text style={styles.label}>{label}</Text>
           </Pressable>
         );
@@ -123,19 +125,20 @@ const styles = StyleSheet.create({
   },
   badgeStyle: {
     position: 'absolute',
-    right: -6,
-    top: -4,
+    right: 22,
+    top: 0,
     backgroundColor: 'red',
-    borderRadius: 8,
-    paddingHorizontal: 4,
-    minWidth: 16,
-    height: 16,
+    borderRadius: 10,
+    minWidth: 18,
+    height: 18,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 4,
   },
   badgeText: {
-    color: 'white',
+    color: '#fff',
     fontSize: 10,
+    fontFamily: Constants.fontFamilyBold,
   },
 });
 

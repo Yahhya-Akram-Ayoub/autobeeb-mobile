@@ -1,19 +1,16 @@
-import React, {useEffect, useRef} from 'react';
-import {View, Pressable, Text, Animated, StyleSheet} from 'react-native';
+import {useEffect} from 'react';
+import {StyleSheet} from 'react-native';
 import {
   useNavigation,
   getFocusedRouteNameFromRoute,
   CommonActions,
 } from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
-import IconIon from 'react-native-vector-icons/Ionicons';
 import messaging from '@react-native-firebase/messaging';
 import {useSelector} from 'react-redux';
 import {ChatStack, OffersStack, ProfileStack, HomeStack} from './Stacks';
 import KS from '../../services/KSAPI';
-import {Color, Languages} from '../../common';
-import {CardStyleInterpolators} from '@react-navigation/stack';
+import {Languages} from '../../common';
 import BottomTabBar from './BottomTabBar';
 
 const Tab = createBottomTabNavigator();
@@ -26,7 +23,6 @@ const hideOnScreens = [
 ];
 
 const BottomNavigation = ({navigationRef}) => {
-  const {unreadMessages} = useSelector(state => state.chat || {});
   const navigation = useNavigation();
 
   const navigateToChatScreen = ({SessionId, UserId}) => {
