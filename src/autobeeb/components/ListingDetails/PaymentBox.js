@@ -6,7 +6,7 @@ import {screenWidth} from '../../constants/Layout';
 
 const PaymentBox = () => {
   const navigation = useNavigation();
-  const user = useSelector(state => state.user.user);
+  const user = useSelector(state => state.user.user ?? state.user.tempUser);
   const userCountry = useSelector(state => state.user.userCountry);
   const shouldShowPayment = !!user && !!userCountry && !!userCountry.withFee;
 

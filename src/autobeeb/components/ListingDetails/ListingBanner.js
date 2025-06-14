@@ -25,7 +25,7 @@ const ListingBanner = ({
   isNeedRefresh,
 }) => {
   const isEmpty = images?.length === 0;
-  const user = useSelector(state => state.user.user);
+  const user = useSelector(state => state.user.user ?? state.user.tempUser);
   const [loadingRefersh, setLoadingRefersh] = useState(false);
   const [photos, setPhotos] = useState(images ?? []);
   const [hasImages, setHasImages] = useState(images?.length > 0);

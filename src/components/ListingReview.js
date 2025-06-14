@@ -975,6 +975,8 @@ class ListingReview extends Component {
         this.setState({disablePublish: false});
         if (data.Success === 1) {
           KS.ListingInitInfo({listingID: data.ID, langid: Languages.langID});
+
+          __DEV__ && console.log({new: data});
           if (data.User) {
             this.props.storeUserData(data.User);
           }
@@ -987,12 +989,26 @@ class ListingReview extends Component {
               (data.EmailRegister && !data.EmailConfirmed) ||
               (data.OTPConfirmed === false && !data.EmailRegister);
 
-              if (isNewUser) {
+            if (isNewUser && data.IsNewUser) {
               this.props.storeUserData({ID: data.UserID}, () => {
                 setTimeout(() => {
                   this.navigateToOfferScreen(data.ID, isNewUser);
                 }, 500);
               });
+            } else if (isNewUser && !data.IsNewUser) {
+              // this in case register user add listing without login
+              this.props.storeTempUserData({
+                ID: data.UserID,
+                EmailRegister: data.EmailRegister,
+                Phone: data.Phone,
+                Email: data.Email,
+                OTPConfirmed: false,
+                EmailConfirmed: false,
+                IsUserTemp: true,
+              });
+              setTimeout(() => {
+                this.navigateToOfferScreen(data.ID, isNewUser);
+              }, 200);
             } else {
               toast(Languages.PublishSuccess, 3500);
               this.navigateToOfferScreen(data.ID, false);
@@ -1348,6 +1364,8 @@ const mapDispatchToProps = dispatch => {
     },
     storeUserData: (user, callback) =>
       UserActions.actions.storeUserData(dispatch, user, callback),
+    storeTempUserData: tempUser =>
+      UserActions.actions.storeTempUserData(dispatch, tempUser),
   };
 };
 const Steps = Object.freeze({

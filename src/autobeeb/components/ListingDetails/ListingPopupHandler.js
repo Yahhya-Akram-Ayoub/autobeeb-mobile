@@ -24,7 +24,7 @@ const ListingPopupHandler = ({
   ownerId,
   isActive,
 }) => {
-  const user = useSelector(state => state.user.user);
+  const user = useSelector(state => state.user.user ?? state.user.tempUser);
   const [firstLoad, setFirstLoad] = useState(0);
   const isSharePopupRef = useRef();
   const warningPopupRef = useRef();

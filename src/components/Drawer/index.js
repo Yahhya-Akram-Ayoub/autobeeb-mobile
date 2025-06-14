@@ -191,7 +191,7 @@ class Drawer extends Component {
   AppLink() {
     return `https://cutt.ly/AUTOBEEB${Languages.getLanguage()}`;
   }
-  
+
   share() {
     Share.share({
       message: Languages.DownloadAutobeeb + '\n \n' + this.AppLink(),

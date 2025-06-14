@@ -108,7 +108,7 @@ export default new LocalizedStrings({
     Login: 'Login',
     EnterMobileOrEmail: 'Enter through Mobile Number',
     EnterOTP: 'Enter the 5 digit OTP',
-    WeSendUOTP: 'We have just sent you an OTP via SMS',
+    WeSendUOTP: 'We have just sent you an OTP',
     WrongOTP: 'Wrong OTP ! Please try again',
     EnterYourName: 'Enter your name',
     Name: 'Name',

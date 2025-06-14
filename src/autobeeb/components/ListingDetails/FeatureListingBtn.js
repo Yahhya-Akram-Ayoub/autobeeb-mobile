@@ -21,7 +21,7 @@ const FeatureListingBtn = ({
   ownerId,
   openOTPModale,
 }) => {
-  const user = useSelector(state => state.user.user);
+  const user = useSelector(state => state.user.user ?? state.user.tempUser);
   const navigation = useNavigation();
   const {EmailRegister, OTPConfirmed, EmailConfirmed, ID, Email, Phone} =
     user ?? {};

@@ -20,7 +20,7 @@ const AskListingOwner = ({
   isDealer,
   listing,
 }) => {
-  const user = useSelector(state => state.user.user);
+  const user = useSelector(state => state.user.user ?? state.user.tempUser);
   const navigation = useNavigation();
 
   const sendMessage = messaeg => {

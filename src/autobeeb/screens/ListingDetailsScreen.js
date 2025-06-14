@@ -49,7 +49,7 @@ const ListingDetailsScreen = () => {
   const route = useRoute();
   const {id, isNewUser, showFeatures, isNeedRefresh} = route.params;
   const navigation = useNavigation();
-  const user = useSelector(state => state.user.user);
+  const user = useSelector(state => state.user.user ?? state.user.tempUser);
   const ViewingCurrency = useSelector(state => state.menu.ViewingCurrency);
   const dispatch = useDispatch();
   const [listing, setListing] = useState();
@@ -174,6 +174,7 @@ const ListingDetailsScreen = () => {
           isPendingDelete={listing?.status === 64 || listing?.status === 1}
           listingId={listing?.id}
           openOTPModal={openOTPModal}
+          isNewUser={isNewUser}
         />
         <ListingInfoBox
           loading={loading}

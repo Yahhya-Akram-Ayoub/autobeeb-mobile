@@ -8,7 +8,7 @@ import KS from '../../../services/KSAPI';
 import {screenWidth} from '../../constants/Layout';
 
 const FavoriteReportButtons = ({ownerId, loading, listingId, isFavorite}) => {
-  const user = useSelector(state => state.user.user);
+  const user = useSelector(state => state.user.user ?? state.user.tempUser);
   const navigation = useNavigation();
   const [favorite, setFavorite] = useState();
 

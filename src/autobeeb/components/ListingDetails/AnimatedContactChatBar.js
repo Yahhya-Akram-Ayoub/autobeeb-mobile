@@ -7,7 +7,7 @@ import {Color, Languages} from '../../../common';
 import {useSelector} from 'react-redux';
 
 const AnimatedContactChatBar = ({listing, ownerId, ownerName}) => {
-  const user = useSelector(state => state.user.user);
+  const user = useSelector(state => state.user.user ?? state.user.tempUser);
   const navigation = useNavigation();
   const isOnline = false; // handle later
 

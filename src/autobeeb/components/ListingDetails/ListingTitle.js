@@ -24,8 +24,9 @@ const ListingTitle = ({
   listingId,
   openOTPModal,
   isPendingDelete,
+  isNewUser,
 }) => {
-  const user = useSelector(x => x.user.user);
+  const user = useSelector(x => x.user.user ?? x.user.tempUser);
   const [openModal, setOpenModal] = useState(false);
   const [oTP, setOTP] = useState(null);
   const dispatch = useDispatch();
@@ -49,9 +50,9 @@ const ListingTitle = ({
   }, [openOTPModal]);
 
   const notOtpConfirmed =
-    OTPConfirmed === false && !EmailRegister && ownerId === ID;
+    OTPConfirmed === false && !EmailRegister && (ownerId === ID || isNewUser);
   const notEmailConfirmed =
-    EmailConfirmed === false && EmailRegister && ownerId === ID;
+    EmailConfirmed === false && EmailRegister && (ownerId === ID || isNewUser);
 
   const checkOTP = () => {
     KS.UserVerifyOTP({
@@ -67,7 +68,7 @@ const ListingTitle = ({
           KS.TransferListing({
             userid: ID,
             listingID: listingId,
-            });
+          });
 
         toast(Languages.PublishSuccess, 3500);
 
@@ -89,12 +90,21 @@ const ListingTitle = ({
 
   const resendCode = () => {
     setOTP('');
+    console.log({
+      ResendOTP: {
+        userID: ID,
+        otpType: EmailRegister ? 2 : 0,
+        username: EmailRegister ? Email : Phone,
+      },
+    });
     KS.ResendOTP({
       userID: ID,
-      otpType: EmailRegister ? 2 : 0,
+      otpType: EmailRegister ? 2 : 1,
+      username: EmailRegister ? Email : Phone,
     }).then(data => {
+      console.log({data});
       if (data.Success === 1) {
-        toast(Languages.sent);
+        toast(Languages.WeSendUOTP);
       } else toast(Languages.SomethingWentWrong);
     });
   };

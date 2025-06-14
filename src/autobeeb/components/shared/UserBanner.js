@@ -73,19 +73,23 @@ const UserBanner = ({user: userData, userId, listingId}) => {
             Moment(user.registrationDate).format('YYYY-MM-DD')}
         </Text>
 
-        <TouchableOpacity style={styles.callButton} onPress={handlePhonePress}>
-          <AppIcon
-            type={Icons.FontAwesome}
-            name="phone"
-            size={16}
-            color={Color.secondary}
-          />
-          <Text numberOfLines={1} style={styles.phoneText}>
-            {showPhone
-              ? `\u200E${user.phone}`
-              : `${user.phone}`.replace(/.{4}$/, 'xxxx')}
-          </Text>
-        </TouchableOpacity>
+        {user.phone && (
+          <TouchableOpacity
+            style={styles.callButton}
+            onPress={handlePhonePress}>
+            <AppIcon
+              type={Icons.FontAwesome}
+              name="phone"
+              size={16}
+              color={Color.secondary}
+            />
+            <Text numberOfLines={1} style={styles.phoneText}>
+              {showPhone
+                ? `\u200E${user.phone}`
+                : `${user.phone}`.replace(/.{4}$/, 'xxxx')}
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </TouchableOpacity>
   );

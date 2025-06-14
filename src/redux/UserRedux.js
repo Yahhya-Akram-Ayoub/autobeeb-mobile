@@ -13,6 +13,7 @@ FCM.requestPermission();
 const types = {
   LOGOUT: 'LOGOUT',
   LOGIN: 'LOGIN_SUCCESS',
+  TEMP_LOGIN: 'TEMP_LOGIN',
   USER_COUNTRY: 'USER_COUNTRY',
   LOGINDATE: 'LOGIN_DATE',
   USER_LISTING_FETCH_PENDING: 'USER_LISTING_FETCH_PENDING',
@@ -93,6 +94,12 @@ export const actions = {
       if (callback) callback(data);
     });
   },
+  storeTempUserData(dispatch, tempUser) {
+    dispatch({
+      type: types.TEMP_LOGIN,
+      tempUser: {...tempUser},
+    });
+  },
 
   GoogleSignin(dispatch, email, callback) {
     const _this = this;
@@ -160,6 +167,7 @@ const initialState = {
   error: false,
   errorMessage: '',
   userCountry: null,
+  tempUser: null, // in case user regestered and try toa dd offer without login
 };
 
 export const reducer = (state = initialState, action) => {
@@ -178,7 +186,9 @@ export const reducer = (state = initialState, action) => {
     case types.LOGOUT:
       return {...state, user: null};
     case types.LOGIN:
-      return {...state, user: user};
+      return {...state, user: user, tempUser: null};
+    case types.TEMP_LOGIN:
+      return {...state, tempUser: action.tempUser};
     case types.USER_COUNTRY:
       return {...state, userCountry: userCountry};
     case types.USER_USERNAME_UPDATE:

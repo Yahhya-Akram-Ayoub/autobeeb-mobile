@@ -38,7 +38,7 @@ const ListingInformation = ({
     return Constants.gearBoxTrucks.find(FT => FT.ID === value)?.Name ?? '';
   };
   const renderSection = () => {
-    console.log({categoryID, typeID});
+  
     try {
       const words = sectionName?.split(' ') || [];
 
