@@ -21,9 +21,9 @@ const ListingTitle = ({
   formatedPrice,
   paymentMethod,
   ownerId,
-  status,
   listingId,
   openOTPModal,
+  isPendingDelete,
 }) => {
   const user = useSelector(x => x.user.user);
   const [openModal, setOpenModal] = useState(false);
@@ -52,7 +52,6 @@ const ListingTitle = ({
     OTPConfirmed === false && !EmailRegister && ownerId === ID;
   const notEmailConfirmed =
     EmailConfirmed === false && EmailRegister && ownerId === ID;
-  const isPendingDelete = status === 64; //pendingDelete= 64
 
   const checkOTP = () => {
     KS.UserVerifyOTP({
@@ -68,7 +67,7 @@ const ListingTitle = ({
           KS.TransferListing({
             userid: ID,
             listingID: listingId,
-          });
+            });
 
         toast(Languages.PublishSuccess, 3500);
 

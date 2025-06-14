@@ -51,23 +51,21 @@ const FeaturesModal = ({
 
   useEffect(() => {
     if (listingId) {
-      if (!isPendingDelete) {
-        KS.FeaturesGet({
-          langid: Languages.langID,
-          selltype: sellType,
-          typeID: section || typeId,
-        }).then(data => {
-          if (data?.Success === 1) {
-            if (data.Features?.length > 0) {
-              setFeaturesSwitch(data.FeaturesSwitch || []);
-              setFeaturesDropDown(data.FeaturesDropDown || []);
-              setFeaturesLoaded(true);
+      KS.FeaturesGet({
+        langid: Languages.langID,
+        selltype: sellType,
+        typeID: section || typeId,
+      }).then(data => {
+        if (data?.Success === 1) {
+          if (data.Features?.length > 0) {
+            setFeaturesSwitch(data.FeaturesSwitch || []);
+            setFeaturesDropDown(data.FeaturesDropDown || []);
+            setFeaturesLoaded(true);
 
-              modalRef.current?.open();
-            }
+            modalRef.current?.open();
           }
-        });
-      }
+        }
+      });
     }
   }, [listingId]);
 

@@ -171,7 +171,7 @@ const ListingDetailsScreen = () => {
           formatedPrice={listing?.formatedPrice}
           paymentMethod={listing?.paymentMethod}
           ownerId={listing?.ownerID}
-          status={listing?.status}
+          isPendingDelete={listing?.status === 64 || listing?.status === 1}
           listingId={listing?.id}
           openOTPModal={openOTPModal}
         />
@@ -301,13 +301,13 @@ const ListingDetailsScreen = () => {
           isActive={listing?.status === 16}
         />
       )}
-      {(__DEV__ || showFeatures) && (
+      {showFeatures && (
         <FeaturesModal
           listingId={listing?.id}
           typeId={listing?.typeID}
           sellType={listing?.sellType}
           section={listing?.section}
-          isPendingDelete={listing?.status === 64}
+          isPendingDelete={listing?.status === 64 || listing?.status === 1}
           isNewUser={isNewUser}
           isSpecial={listing?.isSpecial}
           openOTPModale={handleOpenOTPModal}

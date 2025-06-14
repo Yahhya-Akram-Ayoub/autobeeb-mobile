@@ -1113,6 +1113,7 @@ class PostOfferScreen extends Component {
       case Steps.Phone:
         return (
           <ListingPhone
+            navigation={this.props.navigation}
             step={Steps.Phone}
             currentStep={this.state.step}
             user={this.props.user}
@@ -1354,29 +1355,14 @@ class PostOfferScreen extends Component {
             price={this.state.price}
             onChangeTitle={title => {
               this.setState({title: title});
-
-              // if (title == ' ') return;
-              // let formattedTitle = this.convertToNumber(title);
-              // this.setState({title: formattedTitle});
             }}
             onChangePartNumber={PartNumber => {
               this.setState({PartNumber: PartNumber});
-
-              // if (!PartNumber || !PartNumber?.trim()) return;
-
-              // let formattedPartNumber = this.convertToNumber(PartNumber);
-              // this.setState({PartNumber: formattedPartNumber});
             }}
             partNumber={this.state.PartNumber}
             title={this.state.title}
             onChangeBoard={boardNumber => {
               this.setState({boardNumber: boardNumber});
-
-              // if (boardNumber == ' ') return;
-
-              // let formattedBoardNumber = this.convertToNumber(boardNumber);
-
-              // this.setState({boardNumber: formattedBoardNumber});
             }}
             boardNumber={this.state.boardNumber}
             navigation={this.props.navigation}

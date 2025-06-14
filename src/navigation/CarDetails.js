@@ -422,9 +422,9 @@ class CarDetails extends Component {
   }
 
   componentWillUnmount() {
-    this.backHandler.remove();
-    this.keyboardWillShowSub.remove();
-    this.keyboardWillHideSub.remove();
+    this.backHandler?.remove();
+    this.keyboardWillShowSub?.remove();
+    this.keyboardWillHideSub?.remove();
   }
 
   handleBackPress = () => {

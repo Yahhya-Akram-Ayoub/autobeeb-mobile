@@ -209,6 +209,7 @@ class ListingReview extends Component {
       })
       .catch(err => {});
   }
+
   navigateToOfferScreen(id, isNewUser) {
     this.props.navigation.dispatch(
       CommonActions.reset({
@@ -248,6 +249,7 @@ class ListingReview extends Component {
       }),
     );
   }
+
   checkSwearCountry(_CountriesData) {
     if (
       !!this.props.userData &&
@@ -981,10 +983,11 @@ class ListingReview extends Component {
             toast(Languages.AccountBlocked, 3500);
           } else {
             const isNewUser =
+              !(this.props.userData && this.props.userData?.ID) ||
               (data.EmailRegister && !data.EmailConfirmed) ||
-              (data.OTPConfirmed == false && !data.EmailRegister);
+              (data.OTPConfirmed === false && !data.EmailRegister);
 
-            if (isNewUser) {
+              if (isNewUser) {
               this.props.storeUserData({ID: data.UserID}, () => {
                 setTimeout(() => {
                   this.navigateToOfferScreen(data.ID, isNewUser);
@@ -995,12 +998,8 @@ class ListingReview extends Component {
               this.navigateToOfferScreen(data.ID, false);
             }
           }
-        } else if (data.Status === 1) {
-          // to be tested
-          this.navigateToOfferScreen(data.ID, false);
         } else {
-          console.log(data);
-          alert(data.Message);
+          toast(data.Message);
         }
         this.setState({isLoading: false});
       },
