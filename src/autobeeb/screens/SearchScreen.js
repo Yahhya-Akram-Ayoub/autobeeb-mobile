@@ -23,17 +23,19 @@ const SearchScreen = () => {
   const dispatch = useDispatch();
   const route = useRoute();
   const navigation = useNavigation();
+  const user = useSelector(state => state.user.user);
   const recentSearched = useSelector(state =>
     state.recentListings.recentFreeSeach.map(x => x.keyword),
   );
   const recentSeenListings = useSelector(
     state => state.recentListings.recentOpenListings,
   );
-
+  const [listings, setListings] = useState([]);
   const [query, setQuery] = useState('');
   const [Suggestions, setSuggestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [isListingLoading, setIsListingLoading] = useState(false);
+  const {ViewingCountry, ViewingCurrency} = useSelector(state => state.menu);
   const searchInputRef = useRef(null);
   const timeoutRef = useRef(null);
 
@@ -57,6 +59,35 @@ const SearchScreen = () => {
       .replace(/٩/g, '9');
   };
 
+  const loadRecentSeenListings = () => {
+    const addSeeMore = __DEV__ || recentSeenListings.length > 10;
+    const Ids = recentSeenListings
+      .slice(0, 9)
+      .map(x => `ids=${x.id}&`)
+      .join('&');
+
+    setIsListingLoading(true);
+
+    KS.GetListingsByIdsCore({
+      p: `&${Ids}`,
+      userId: user?.ID,
+      currencyId: ViewingCurrency.ID,
+      langId: Languages.langID,
+      increaseViews: false,
+    })
+      .then(res => {
+        const _list = res;
+        if (addSeeMore) {
+          setListings([..._list, {SeeMore: true}]);
+        } else {
+          setListings(_list);
+        }
+      })
+      .finally(() => {
+        setIsListingLoading(false);
+      });
+  };
+
   // On mount: handle route param query and truncate recentSeenListings
   useEffect(() => {
     if (route?.params?.query) {
@@ -72,7 +103,7 @@ const SearchScreen = () => {
         }
       });
     }
-
+    loadRecentSeenListings();
     // Cleanup on unmount - clear timeout if any
     return () => {
       if (timeoutRef.current) {
@@ -107,12 +138,12 @@ const SearchScreen = () => {
 
   // Submit search query handler
   const onSubmitEditing = () => {
+    if (!query) dispatch(recentFreeSeach(query));
+
     navigation.replace('SearchResult', {
       submitted: true,
       query,
     });
-
-    if (!query) dispatch(recentFreeSeach(query));
   };
 
   // Clear search input
@@ -144,6 +175,8 @@ const SearchScreen = () => {
       <TouchableOpacity
         style={styles.suggestionItem}
         onPress={() => {
+          dispatch(recentFreeSeach(item.Label));
+
           navigation.replace('SearchResult', {
             query: item.Label,
             MakeID: item.MakeID,
@@ -151,7 +184,6 @@ const SearchScreen = () => {
             Make: {ID: parseInt(item.MakeID), Name: item.MakeName},
             Model: {ID: parseInt(item.ModelID), Name: item.ModelName},
           });
-          dispatch(recentFreeSeach(item.Label));
         }}>
         <View style={styles.suggestionContent}>
           <Text style={styles.suggestionText}>{item.Label}</Text>
@@ -185,7 +217,7 @@ const SearchScreen = () => {
       return (
         <TouchableOpacity
           onPress={() => navigation.navigate('RecentlyViewedScreen')}
-          style={styles.seeMoreButton}>
+          style={styles.listingItem}>
           <View style={styles.seeMoreContent}>
             <Text style={styles.seeMoreText}>{Languages.ShowMore}</Text>
             <AppIcon
@@ -199,17 +231,18 @@ const SearchScreen = () => {
         </TouchableOpacity>
       );
     } else {
-      const {imageBasePath, imagesCount, id, title, mainImage} = item;
+      const {thumbURL, id, name, fullImagePath, typeID, title} = item;
+
       return (
         <TouchableOpacity
           style={styles.listingItem}
-          onPress={() => navigation.replace('CarDetails', {item, id: item.ID})}>
+          onPress={() => navigation.replace('CarDetails', {id})}>
           <FastImage
             style={styles.listingImage}
             source={
-              imageBasePath && mainImage
+              thumbURL
                 ? {
-                    uri: `https://autobeeb.com/${imageBasePath}${mainImage}_400x400.jpg`,
+                    uri: `https://autobeeb.com/${fullImagePath}_400x400.jpg`,
                   }
                 : require('../../images/placeholder.png')
             }
@@ -217,31 +250,31 @@ const SearchScreen = () => {
           />
           <View style={styles.listingInfo}>
             <Text numberOfLines={1} style={styles.listingName}>
-              {title}
+              {typeID === 32 ? title : name}
             </Text>
           </View>
 
-          {!!item.CountryName && (
+          {!!item.countryName && (
             <Text numberOfLines={1} style={styles.locationText}>
-              {item.CountryName} / {item.CityName}
+              {item.countryName} / {item.cityName}
             </Text>
           )}
 
           <View style={styles.priceContainer}>
-            {!!item.FormatedPrice && (
+            {!!item.formatedPrice && (
               <Text
                 numberOfLines={1}
                 style={[
                   styles.priceText,
                   {
-                    textAlign: item.PaymentMethod !== 2 ? 'center' : 'left',
+                    textAlign: item.paymentMethod !== 2 ? 'center' : 'left',
                   },
                 ]}>
-                {item.FormatedPrice}
+                {item.formatedPrice}
               </Text>
             )}
 
-            {item.PaymentMethod === 2 && (
+            {item.paymentMethod === 2 && (
               <Text numberOfLines={1} style={styles.installmentText}>
                 {Languages.Installments}
               </Text>
@@ -323,21 +356,19 @@ const SearchScreen = () => {
             </View>
           )}
 
-          {!isLoading && recentSeenListings.length > 0 && (
+          {!isLoading && !isListingLoading && listings.length > 0 && (
             <View style={styles.recentSeenContainer}>
               <Text style={styles.sectionTitle}>
                 {Languages.RecentlyViewed}
               </Text>
 
               <FlatList
-                keyExtractor={(item, index) =>
-                  item.ID?.toString() || index.toString()
-                }
+                keyExtractor={(item, index) => `${item.id}-${index}`}
                 horizontal
                 contentContainerStyle={styles.recentSeenList}
                 keyboardShouldPersistTaps="handled"
                 showsHorizontalScrollIndicator={false}
-                data={recentSeenListings}
+                data={listings}
                 renderItem={renderRecentSeenItem}
               />
             </View>
@@ -418,7 +449,8 @@ const styles = StyleSheet.create({
   },
   recentSearchList: {
     height: 60,
-    alignSelf: 'center',
+    alignSelf: 'flex-start',
+    minWidth: '100%',
     zIndex: 20,
     gap: 6,
     marginTop: 8,
@@ -466,6 +498,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    alignSelf: 'center',
+    height: '100%',
   },
   seeMoreText: {
     color: 'gray',
@@ -475,19 +509,27 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   listingItem: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    backgroundColor: 'white',
-    marginTop: 5,
-    elevation: 1,
-    borderRadius: 5,
-    marginHorizontal: 5,
-    width: screenWidth / 2,
-    height: screenWidth / 2,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    marginHorizontal: 8,
+    marginVertical: 8,
+    width: screenWidth * 0.4,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+    height: screenHeight / 3.1,
   },
   listingImage: {
-    width: screenWidth / 2,
-    height: screenWidth / 2,
+    width: '100%',
+    height: screenWidth * 0.4,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
   },
   placeholderImage: {
     width: screenWidth * 0.35,
@@ -495,47 +537,51 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   listingInfo: {
+    paddingHorizontal: 8,
+    paddingTop: 6,
+    minHeight: 40,
+    justifyContent: 'center',
+  },
+  listingName: {
+    fontSize: 14,
+    color: '#333',
+    fontFamily: 'Cairo-Bold',
+  },
+  priceContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+    paddingHorizontal: 8,
+    width: '100%',
+    marginTop: 6,
+  },
+  priceText: {
+    color: Color.primary,
+    fontSize: 13,
+    fontFamily: 'Cairo-Bold',
   },
   brandImage: {
     width: 22,
     height: 22,
   },
-  listingName: {
-    color: '#000',
-    paddingVertical: 5,
-    paddingHorizontal: 5,
-    fontSize: 14,
-  },
+
   locationText: {
     fontSize: 13,
     textAlign: 'center',
   },
-  priceContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-  },
-  priceText: {
-    color: Color.primary,
-    fontSize: 12,
-    fontFamily: 'Cairo-Bold',
-    paddingLeft: 5,
-    flex: 6,
-  },
   installmentText: {
     color: '#2B9531',
     fontSize: 12,
-    flex: 5,
     textAlign: 'center',
   },
   recentSeenContainer: {
     width: screenWidth,
-    overflow: 'hidden',
+    minHeight: screenHeight / 2,
   },
-  recentSeenList: {},
+  recentSeenList: {
+    paddingEnd: 10,
+    gap: 0,
+  },
 });
 
 export {SearchScreen};

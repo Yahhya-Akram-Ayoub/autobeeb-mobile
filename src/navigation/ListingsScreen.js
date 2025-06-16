@@ -688,7 +688,7 @@ class ListingsScreen extends Component {
       selectedModel: [this.props.route.params?.selectedModel || All],
     });
 
-    KS.ListingsGet({
+    const _params = {
       typeID: (this.props.route.params?.ListingType || {ID: ''}).ID || '',
       langid: Languages.langID,
       PageNum: 1,
@@ -715,7 +715,11 @@ class ListingsScreen extends Component {
             .map(item => item.ID)
             .reduce((a, b) => a + b, '')) ||
         '',
-    }).then(data => {
+    };
+    
+    this.props.recentFilterSeach(_params);
+
+    KS.ListingsGet(_params).then(data => {
       if (data.Success) {
         this.countListingsViews(
           data.Listings.map(x => x.ID),
@@ -805,90 +809,87 @@ class ListingsScreen extends Component {
     if (!onEndReached) {
       this.filterModal.close();
     }
-
-    KS.ListingsGet(
-      {
-        asc: asc ? (asc == 'false' ? false : true) : false, // if it was sent check the string for true or false because i don want it to resolve to true always
-        sortBy: sortBy ? sortBy : 'date',
-        typeID: this.props.route.params?.ListingType?.ID || '',
-        langid: Languages.langID,
-        PageNum: _page,
-        pagesize: PageSize,
-        makeID:
-          (this.state.selectedMake &&
-            this.state.selectedMake.map(item => item.ID).join(',')) ||
-          '',
-        modelid:
-          (this.state.selectedModel &&
+    const _params = {
+      asc: asc ? (asc == 'false' ? false : true) : false, // if it was sent check the string for true or false because i don want it to resolve to true always
+      sortBy: sortBy ? sortBy : 'date',
+      typeID: this.props.route.params?.ListingType?.ID || '',
+      langid: Languages.langID,
+      PageNum: _page,
+      pagesize: PageSize,
+      makeID:
+        (this.state.selectedMake &&
+          this.state.selectedMake.map(item => item.ID).join(',')) ||
+        '',
+      modelid:
+        (this.state.selectedModel &&
+          this.state.selectedModel.map(item => item.ID) &&
+          this.state.selectedModel.map(item => item.ID).join(',')) != 'NaN'
+          ? this.state.selectedModel &&
             this.state.selectedModel.map(item => item.ID) &&
-            this.state.selectedModel.map(item => item.ID).join(',')) != 'NaN'
-            ? this.state.selectedModel &&
-              this.state.selectedModel.map(item => item.ID) &&
-              this.state.selectedModel.map(item => item.ID).join(',')
-            : '',
-        cityID:
-          (this.state.selectedCity &&
-            this.state.selectedCity.map(item => item.ID).join(',')) ||
-          '',
-        color:
-          (this.state.selectedColor &&
-            this.state.selectedColor.map(item => item.ID).join(',')) ||
-          '',
-        categoryid:
-          (this.state.selectedCategory &&
-            this.state.selectedCategory.map(item => item.ID).join(',')) ||
-          '',
+            this.state.selectedModel.map(item => item.ID).join(',')
+          : '',
+      cityID:
+        (this.state.selectedCity &&
+          this.state.selectedCity.map(item => item.ID).join(',')) ||
+        '',
+      color:
+        (this.state.selectedColor &&
+          this.state.selectedColor.map(item => item.ID).join(',')) ||
+        '',
+      categoryid:
+        (this.state.selectedCategory &&
+          this.state.selectedCategory.map(item => item.ID).join(',')) ||
+        '',
 
-        sellType: this.state.sellType.ID || '',
+      sellType: this.state.sellType.ID || '',
 
-        fuelType:
-          (this.state.selectedFuelType &&
-            this.state.selectedFuelType
-              .map(item => item.ID)
-              .reduce((a, b) => a + b, 0)) ||
-          '',
+      fuelType:
+        (this.state.selectedFuelType &&
+          this.state.selectedFuelType
+            .map(item => item.ID)
+            .reduce((a, b) => a + b, 0)) ||
+        '',
 
-        minyear: this.state.selectedMinYear || '',
-        maxYear: this.state.selectedMaxYear || '',
-        minPrice: this.state.selectedMinPrice || '',
-        maxPrice: this.state.selectedMaxPrice || '',
-        minConsumption: this.state.selectedMinMileage || '',
-        maxConsumption: this.state.selectedMaxMileage || '',
-        condition:
-          (this.state.selectedStatus &&
-            this.state.selectedStatus
-              .map(item => item.ID)
-              .reduce((a, b) => a + b, 0)) ||
-          '',
-        gearBox:
-          (this.state.selectedGearBox &&
-            this.state.selectedGearBox
-              .map(item => item.ID)
-              .reduce((a, b) => a + b, 0)) ||
-          '',
-        paymentMethod:
-          (this.state.selectedPaymentMethod &&
-            this.state.selectedPaymentMethod
-              .map(item => item.ID)
-              .reduce((a, b) => a + b, 0)) ||
-          '',
-        rentPeriod:
-          (this.state.selectedRentPeriod &&
-            this.state.selectedRentPeriod
-              .map(item => item.ID)
-              .reduce((a, b) => a + b, 0)) ||
-          '',
+      minyear: this.state.selectedMinYear || '',
+      maxYear: this.state.selectedMaxYear || '',
+      minPrice: this.state.selectedMinPrice || '',
+      maxPrice: this.state.selectedMaxPrice || '',
+      minConsumption: this.state.selectedMinMileage || '',
+      maxConsumption: this.state.selectedMaxMileage || '',
+      condition:
+        (this.state.selectedStatus &&
+          this.state.selectedStatus
+            .map(item => item.ID)
+            .reduce((a, b) => a + b, 0)) ||
+        '',
+      gearBox:
+        (this.state.selectedGearBox &&
+          this.state.selectedGearBox
+            .map(item => item.ID)
+            .reduce((a, b) => a + b, 0)) ||
+        '',
+      paymentMethod:
+        (this.state.selectedPaymentMethod &&
+          this.state.selectedPaymentMethod
+            .map(item => item.ID)
+            .reduce((a, b) => a + b, 0)) ||
+        '',
+      rentPeriod:
+        (this.state.selectedRentPeriod &&
+          this.state.selectedRentPeriod
+            .map(item => item.ID)
+            .reduce((a, b) => a + b, 0)) ||
+        '',
 
-        section:
-          (this.state.selectedSection && this.state.selectedSection[0].ID) ||
-          '',
-        isocode: this.props.ViewingCountry.cca2 || '',
-        cur: this.state.currency?.ID || '',
-        partNumber: this.state.PartNumber,
-      },
-      null,
-      this.filterController?.signal,
-    ).then(data => {
+      section:
+        (this.state.selectedSection && this.state.selectedSection[0].ID) || '',
+      isocode: this.props.ViewingCountry.cca2 || '',
+      cur: this.state.currency?.ID || '',
+      partNumber: this.state.PartNumber,
+    };
+
+    this.props.recentFilterSeach(_params);
+    KS.ListingsGet(_params, null, this.filterController?.signal).then(data => {
       if (data.Success) {
         this.countListingsViews(
           data.Listings.map(x => x.ID),
@@ -1688,7 +1689,8 @@ class ListingsScreen extends Component {
           this.setState({sellType: SellType, page: 1, isLoading: true}, () => {
             this.ResetFilters();
             this.SellTypeModal.close();
-            KS.ListingsGet({
+
+            const _params = {
               typeID: this.props.route.params?.ListingType?.ID || '',
               langid: Languages.langID,
               PageNum: 1,
@@ -1763,7 +1765,11 @@ class ListingsScreen extends Component {
               isocode: this.props.ViewingCountry.cca2 || '',
               cur: this.state.currency?.ID || '',
               partNumber: this.state.PartNumber,
-            }).then(data => {
+            };
+
+            this.props.recentFilterSeach(_params);
+
+            KS.ListingsGet(_params).then(data => {
               if (data.Success) {
                 this.countListingsViews(
                   data.Listings.map(x => x.ID),
@@ -1834,7 +1840,7 @@ class ListingsScreen extends Component {
           this.setState({currency: Currency, page: 1, isLoading: true});
           //   this.ResetFilters();
           this.CurrencyModal.close();
-          KS.ListingsGet({
+          const _params = {
             asc: this.state.sortOption ? this.state.sortOption.asc : 'false', // if it was sent check the string for true or false because i don want it to resolve to true always
             sortBy: this.state.sortOption
               ? this.state.sortOption.sortBy
@@ -1914,7 +1920,11 @@ class ListingsScreen extends Component {
               '',
             isocode: this.props.ViewingCountry.cca2 || '',
             partNumber: this.state.PartNumber,
-          }).then(data => {
+          };
+
+          this.props.recentFilterSeach(_params);
+
+          KS.ListingsGet(_params).then(data => {
             if (data.Success) {
               this.countListingsViews(
                 data.Listings.map(x => x.ID),
@@ -5439,10 +5449,12 @@ const mapStateToProps = ({menu, user}) => ({
 
 const mapDispatchToProps = dispatch => {
   const {actions} = require('../redux/MenuRedux');
+  const {recentFilterSeach} = require('../redux/RecentListingsRedux');
 
   return {
     setViewingCountry: (country, callback) =>
       actions.setViewingCountry(dispatch, country, callback),
+    recentFilterSeach: filterObj => dispatch(recentFilterSeach(filterObj)),
   };
 };
 

@@ -1,89 +1,80 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Text, View, FlatList} from 'react-native';
+import {useSelector} from 'react-redux';
 import {Languages} from '../common';
-import {connect} from 'react-redux';
 import {NewHeader} from '../containers';
 import {BannerListingsComponent} from '../components';
 import AddButton from '../components/AddAdvButton';
+import {useNavigation} from '@react-navigation/native';
 
-export class RecentlyViewedScreen extends Component {
-  constructor(props) {
-    super(props);
+const RecentlyViewedScreen = () => {
+  const navigation = useNavigation();
+  const user = useSelector(state => state.user.user);
+  const ViewingCountry = useSelector(state => state.menu.ViewingCountry);
+  const recentOpenListings = useSelector(
+    state => state.recentListings.recentSeenListings,
+  );
 
-    this.state = {
-      //   isLoading: true,
-      //   Favorites: [],
-    };
-  }
+  const ITEMS_PER_PAGE = 10;
+  const [page, setPage] = useState(1);
+  const [visibleItems, setVisibleItems] = useState([]);
 
-  static navigationOptions = ({navigation}) => ({
-    tabBarVisible: true,
-  });
+  useEffect(() => {
+    if (recentOpenListings?.length) {
+      loadMoreItems();
+    }
+  }, [recentOpenListings]);
 
-  render() {
-    // if (this.state.isLoading) {
-    //   return (
-    //     <View style={{ flex: 1 }}>
-    //       <NewHeader navigation={this.props.navigation} back />
-    //       <LogoSpinner fullStretch />
-    //     </View>
-    //   );
-    // }
-    return (
-      <View style={{flex: 1, backgroundColor: 'white'}}>
-        <NewHeader back navigation={this.props.navigation} />
-        <AddButton navigation={this.props.navigation} />
-        <FlatList
-          keyExtractor={(item, index) => index.toString()}
-          contentContainerStyle={{
-            alignItems: 'center',
-            paddingVertical: 10,
-            //   flex: 1,
-            //  paddingVertical: 20
-          }}
-          data={this.props.recentSeenListings}
-          renderItem={({item, index}) => {
-            return (
-              <BannerListingsComponent
-                key={item.ID}
-                user={this.props.user}
-                item={item}
-                navigation={this.props.navigation}
-                AppCountryCode={this.props.ViewingCountry?.cca2}
-              />
-            );
-          }}
-          ListEmptyComponent={() => {
-            return (
-              <View
-                style={{
-                  flex: 1,
+  const loadMoreItems = () => {
+    const start = (page - 1) * ITEMS_PER_PAGE;
+    const end = start + ITEMS_PER_PAGE;
+    const nextItems = recentOpenListings.slice(start, end);
+    setVisibleItems(prev => [...prev, ...nextItems]);
+    setPage(prev => prev + 1);
+  };
 
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text
-                  style={{
-                    fontFamily: 'Cairo-Bold',
-                    fontSize: 21,
-                    textAlign: 'center',
-                    color: 'black',
-                  }}>
-                  {Languages.NoOffers}
-                </Text>
-              </View>
-            );
-          }}
-        />
-      </View>
-    );
-  }
-}
+  const renderItem = ({item}) => (
+    <BannerListingsComponent
+      key={item.ID}
+      user={user}
+      item={item}
+      navigation={navigation}
+      AppCountryCode={ViewingCountry?.cca2}
+    />
+  );
 
-const mapStateToProps = ({user, menu, recentListings}) => ({
-  user: user.user,
-  ViewingCountry: menu.ViewingCountry,
-  recentSeenListings: recentListings.recentSeenListings,
-});
+  return (
+    <View style={{flex: 1, backgroundColor: 'white'}}>
+      <NewHeader back navigation={navigation} />
+      <AddButton navigation={navigation} />
 
-export default connect(mapStateToProps)(RecentlyViewedScreen);
+      <FlatList
+        data={visibleItems}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => item?.ID?.toString() || index.toString()}
+        contentContainerStyle={{
+          alignItems: 'center',
+          paddingVertical: 10,
+        }}
+        ListEmptyComponent={() => (
+          <View
+            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <Text
+              style={{
+                fontFamily: 'Cairo-Bold',
+                fontSize: 21,
+                textAlign: 'center',
+                color: 'black',
+              }}>
+              {Languages.NoOffers}
+            </Text>
+          </View>
+        )}
+        onEndReached={loadMoreItems}
+        onEndReachedThreshold={0.5}
+      />
+    </View>
+  );
+};
+
+export default RecentlyViewedScreen;

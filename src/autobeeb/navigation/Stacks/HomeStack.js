@@ -33,7 +33,6 @@ import BlogDetails from '../../../navigation/BlogDetails';
 import BlogsScreen from '../../../navigation/BlogsScreen';
 import CliQScreen from '../../../navigation/CliQScreen';
 import PaymentDetailsAutobeeb from '../../../navigation/PaymentDetailsAutobeeb';
-import RecentlyViewedScreen from '../../../navigation/RecentlyViewedScreen';
 import SubscriptionsScreen from '../../../navigation/SubscriptionsScreen';
 import CarDetails from '../../../navigation/CarDetails';
 import {
@@ -42,6 +41,7 @@ import {
   ListingDetailsScreen,
   ListingReportScreen,
   SearchScreen,
+  RecentlyViewedScreen,
 } from '../../screens';
 import {TranstionSettings} from './Transtion';
 

@@ -1,211 +1,279 @@
-import {useNavigation} from '@react-navigation/native';
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ScrollView,
+  Dimensions,
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {screenWidth} from '../../constants/Layout';
-import {Color, Constants, Languages} from '../../../common';
-import {useEffect, useState} from 'react';
-import KS from '../../../services/KSAPI';
+import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
+import KS from '../../../services/KSAPI';
+import {Color, Constants, Languages} from '../../../common';
+import {screenWidth} from '../../constants/Layout';
+import {SkeletonLoader} from '../shared/Skeleton';
+
+const ITEM_SIZE = (screenWidth - 40) / 3;
 
 const HomeListingRow = () => {
-  const [lastListings, setLastListings] = useState([]);
+  const user = useSelector(state => state.user.user);
+  const {ViewingCountry, ViewingCurrency} = useSelector(state => state.menu);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRecentlyLoading, setIsRecentlyLoading] = useState(true);
+  const recentIds = useSelector(
+    state => state.recentListings.recentOpenListings,
+  );
+  const recentSearched = useSelector(state =>
+    state.recentListings.recentFreeSeach.filter(
+      x => x.langId === Languages.langID,
+    ),
+  );
+  const recentFilterSeach = useSelector(
+    state => state.recentListings.recentFilterSeach,
+  );
+  const [sections, setSections] = useState({
+    new: [],
+    recent: [],
+    search: [],
+    suggested: [],
+    featured: [],
+  });
+
   const navigation = useNavigation();
-  const ViewingCountry = useSelector(state => state.menu.ViewingCountry);
-  const moveToDeatails = item =>
-    navigation.replace('CarDetails', {id: item.id});
+
+  const moveToDetails = item => navigation.replace('CarDetails', {id: item.id});
 
   useEffect(() => {
-    KS.FreeSearchCore({
-      pPageSize: 3,
-      pPageNum: 1,
-      pLangID: Languages.langID,
-      // pCountryID :
-    }).then(res => {
-      setLastListings(res.listings);
-    });
+    loadListings();
+    loadData();
   }, []);
 
-  const renderRecentSeenItem = ({item}) => {
-    const {imageBasePath, thumbURL} = item;
+  const loadData = async () => {
+    let _searchTerm = recentSearched?.[0];
+    let _recentFilterSeach = recentFilterSeach;
+
+    if (_searchTerm.date < _recentFilterSeach.date) _searchTerm = null;
+    let {country} = await KS.GetCountryCore({
+      LangId: Languages.langID,
+      Iso: ViewingCountry?.cca2,
+    });
+
+    KS.HomeListingCore({
+      GetRecently: true,
+      GetFeatures: true,
+      GetIntrested: !!_recentFilterSeach?.filter,
+      GetFilter: !_searchTerm?.keyword && !!_recentFilterSeach?.filter,
+      GetSearch: !!_searchTerm?.keyword,
+      SearchQuery: _searchTerm?.keyword,
+      LangId: Languages.langID,
+      CountryId: country.id,
+      ...(_recentFilterSeach?.filter ?? {}),
+    })
+      .then(res => {
+        console.log({res});
+        setSections(prev => {
+          return {
+            ...prev,
+            new: res.recentlyListings,
+            search: [
+              ...(res?.searchListings ?? []),
+              ...(res?.searchParts ?? []),
+            ],
+            suggested: res.intrestedListings,
+            featured: res.featureListings,
+          };
+        });
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  const loadListings = async () => {
+    const idsToFetch = recentIds.slice(0, 3);
+    if (idsToFetch.length === 0) return;
+
+    const idQuery = idsToFetch.map(x => `ids=${x.id}`).join('&');
+    setIsRecentlyLoading(true);
+
+    try {
+      const res = await KS.GetListingsByIdsCore({
+        p: `&${idQuery}`,
+        userId: user?.ID,
+        currencyId: ViewingCurrency?.ID,
+        langId: 1,
+        increaseViews: false,
+      });
+      setSections(prev => {
+        return {...prev, recent: res || []};
+      });
+    } finally {
+      setIsRecentlyLoading(false);
+    }
+  };
+
+  const renderCard = item => (
+    <TouchableOpacity
+      key={item.id.toString()}
+      style={styles.card}
+      onPress={() => moveToDetails(item)}>
+      <FastImage
+        source={
+          item.thumbURL
+            ? {
+                uri: `https://autobeeb.com/${item.fullImagePath}_400x400.jpg`,
+              }
+            : require('../../../images/placeholder.png')
+        }
+        style={styles.image}
+        resizeMode="cover"
+      />
+    </TouchableOpacity>
+  );
+
+  const renderSkeleton = count =>
+    Array.from({length: count}).map((_, i) => (
+      <SkeletonLoader
+        key={`skeleton-${i}`}
+        containerStyle={styles.skeletonBox}
+        borderRadius={3}
+        shimmerColors={['#E0E0E0', '#F8F8F8', '#E0E0E0']}
+        animationDuration={1200}
+      />
+    ));
+
+  const renderSection = (
+    titleKey,
+    data,
+    maxItems = 3,
+    navigateTo = () => {},
+  ) => {
+    if (
+      (isLoading && titleKey !== 'RecentlyViewed') ||
+      (isRecentlyLoading && titleKey === 'RecentlyViewed')
+    ) {
+      return (
+        <View style={styles.cardContainer}>
+          <View style={styles.titleRow}>
+            <Text style={styles.blackHeader}>{Languages[titleKey]}</Text>
+            <TouchableOpacity disabled={true}>
+              <Text style={styles.showMore}>{Languages.ShowMore}</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.grid}>{renderSkeleton(maxItems)}</View>
+        </View>
+      );
+    }
+
+    if (!data || !data.length) return null;
 
     return (
-      <TouchableOpacity
-        style={styles.listingItem}
-        onPress={() => {
-          moveToDeatails(item);
-        }}>
-        <FastImage
-          style={styles.listingImage}
-          source={
-            thumbURL
-              ? {
-                  uri: `https://autobeeb.com/${imageBasePath}${thumbURL}_400x400.jpg`,
-                }
-              : require('../../../images/placeholder.png')
-          }
-          resizeMode={'contain'}
-        />
-      </TouchableOpacity>
+      <View style={styles.cardContainer}>
+        <View style={styles.titleRow}>
+          <Text style={styles.blackHeader}>{Languages[titleKey]}</Text>
+          <TouchableOpacity onPress={navigateTo}>
+            <Text style={styles.showMore}>{Languages.ShowMore}</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.grid}>
+          {data.slice(0, maxItems).map(renderCard)}
+        </View>
+      </View>
     );
   };
 
   return (
-    <View>
-      <View style={styles.cardContainer}>
-        <View style={styles.titleRow}>
-          <Text style={styles.blackHeader}>{Languages.newly_added_ads}</Text>
-          <TouchableOpacity>
-            <Text style={styles.ShowMore}>{Languages.ShowMore}</Text>
-          </TouchableOpacity>
-        </View>
-        <FlatList
-          keyExtractor={(item, index) =>
-            item.ID?.toString() || index.toString()
-          }
-          contentContainerStyle={styles.recentSeenList}
-          keyboardShouldPersistTaps="handled"
-          showsHorizontalScrollIndicator={false}
-          data={lastListings}
-          renderItem={renderRecentSeenItem}
-        />
-      </View>
-      <View style={styles.cardContainer}>
-        <View style={styles.titleRow}>
-          <Text style={styles.blackHeader}>{Languages.RecentlyViewed}</Text>
-          <TouchableOpacity>
-            <Text style={styles.ShowMore}>{Languages.ShowMore}</Text>
-          </TouchableOpacity>
-        </View>
-        <FlatList
-          keyExtractor={(item, index) =>
-            item.ID?.toString() || index.toString()
-          }
-          contentContainerStyle={styles.recentSeenList}
-          keyboardShouldPersistTaps="handled"
-          showsHorizontalScrollIndicator={false}
-          data={lastListings}
-          renderItem={renderRecentSeenItem}
-        />
-      </View>
-      <View style={styles.cardContainer}>
-        <View style={styles.titleRow}>
-          <Text style={styles.blackHeader}>{Languages.last_search}</Text>
-          <TouchableOpacity>
-            <Text style={styles.ShowMore}>{Languages.ShowMore}</Text>
-          </TouchableOpacity>
-        </View>
-        <FlatList
-          keyExtractor={(item, index) =>
-            item.ID?.toString() || index.toString()
-          }
-          contentContainerStyle={styles.recentSeenList}
-          keyboardShouldPersistTaps="handled"
-          showsHorizontalScrollIndicator={false}
-          data={lastListings}
-          renderItem={renderRecentSeenItem}
-        />
-      </View>
-      <View style={styles.cardContainer}>
-        <View style={styles.titleRow}>
-          <Text style={styles.blackHeader}>{Languages.suggested_ads}</Text>
-          <TouchableOpacity>
-            <Text style={styles.ShowMore}>{Languages.ShowMore}</Text>
-          </TouchableOpacity>
-        </View>
-        <FlatList
-          keyExtractor={(item, index) =>
-            item.ID?.toString() || index.toString()
-          }
-          contentContainerStyle={styles.recentSeenList}
-          keyboardShouldPersistTaps="handled"
-          showsHorizontalScrollIndicator={false}
-          data={lastListings}
-          renderItem={renderRecentSeenItem}
-        />
-      </View>
-      <View style={styles.cardContainer}>
-        <View style={styles.titleRow}>
-          <Text style={styles.blackHeader}>{Languages.featured_ads}</Text>
-          <TouchableOpacity>
-            <Text style={styles.ShowMore}>{Languages.ShowMore}</Text>
-          </TouchableOpacity>
-        </View>
-        <FlatList
-          keyExtractor={(item, index) =>
-            item.ID?.toString() || index.toString()
-          }
-          contentContainerStyle={styles.recentSeenList}
-          keyboardShouldPersistTaps="handled"
-          showsHorizontalScrollIndicator={false}
-          data={lastListings}
-          renderItem={renderRecentSeenItem}
-        />
-      </View>
-    </View>
+    <ScrollView contentContainerStyle={{paddingBottom: 20}}>
+      {renderSection('newly_added_ads', sections.new, 9, () => {
+        navigation.replace('SearchResult', {
+          submitted: true,
+          query: '',
+        });
+      })}
+
+      {renderSection('RecentlyViewed', sections.recent, 3, () => {
+        navigation.navigate('RecentlyViewedScreen');
+      })}
+
+      {renderSection('last_search', sections.search, 3, () => {
+        if (
+          recentSearched?.[0] &&
+          recentFilterSeach &&
+          recentSearched?.[0].date < recentFilterSeach.date
+        ) {
+        } else if (recentSearched?.[0]) {
+          navigation.replace('SearchResult', {
+            submitted: true,
+            query: recentSearched?.[0]?.keyword ?? '',
+          });
+        } else if (recentFilterSeach?.filter) {
+        }
+      })}
+
+      {renderSection('suggested_ads', sections.suggested, 3)}
+      {renderSection('featured_ads', sections.featured, 3)}
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  listingItem: {
-    width: (screenWidth - 30) / 3 - 8,
-    height: (screenWidth - 30) / 3 - 8,
-    borderWidth: 1,
-    marginBottom: 6,
-    borderRadius: 3,
-    overflow: 'hidden',
-  },
-  listingImage: {
-    width: (screenWidth - 30) / 3 - 8,
-    height: (screenWidth - 30) / 3 - 8,
-  },
-  recentSeenList: {
-    justifyContent: 'space-around',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    width: screenWidth - 30,
-    paddingHorizontal: 4,
-  },
   cardContainer: {
     backgroundColor: '#fff',
     borderTopWidth: 1,
     borderColor: '#eee',
     shadowColor: Color.secondary,
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    marginBottom: 8,
-    shadowOpacity: 0.29,
-    shadowRadius: 4.65,
-    elevation: 7,
+    shadowOffset: {width: 0, height: 3},
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 5,
+    marginBottom: 12,
+    padding: 10,
+    borderRadius: 10,
     width: screenWidth - 14,
     alignSelf: 'center',
-    borderRadius: 10,
-    padding: 8,
-    justifyContent: 'space-around',
-  },
-  blackHeader: {
-    paddingHorizontal: 10,
-    paddingTop: 4,
-    paddingBottom: 3,
-    color: '#000',
-    fontSize: 16,
-    marginBottom: 5,
-    fontFamily: Constants.fontFamilyBold,
-  },
-  ShowMore: {
-    paddingHorizontal: 10,
-    paddingTop: 4,
-    paddingBottom: 3,
-    color: Color.secondary,
-    fontSize: 12,
-    marginBottom: 5,
-    fontFamily: Constants.fontFamilyBold,
   },
   titleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 8,
+  },
+  blackHeader: {
+    fontSize: 16,
+    fontFamily: Constants.fontFamilyBold,
+    color: '#000',
+  },
+  showMore: {
+    fontSize: 12,
+    fontFamily: Constants.fontFamilyBold,
+    color: Color.secondary,
+  },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  card: {
+    width: ITEM_SIZE,
+    height: ITEM_SIZE,
+    marginBottom: 10,
+    borderRadius: 8,
+    overflow: 'hidden',
+    backgroundColor: '#fff',
+    elevation: 2,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+  },
+  skeletonBox: {
+    width: ITEM_SIZE,
+    height: ITEM_SIZE,
+    marginBottom: 10,
+    borderRadius: 8,
+    backgroundColor: '#eee',
   },
 });
 

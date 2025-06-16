@@ -1296,6 +1296,24 @@ KensoftApi.prototype.GetListingCore = function (data, callback) {
   return this._request(_requestUrl, callback);
 };
 
+KensoftApi.prototype.GetListingsByIdsCore = function (data, callback) {
+  let _requestUrl = `${this.coreApiV1}Listings/List/ListingsByIdsAsync?`;
+  data = Object.fromEntries(
+    Object.entries(data).filter(([_, v]) => v !== null && v !== undefined),
+  );
+  _requestUrl += this.join(data, '&');
+  return this._request(_requestUrl, callback);
+};
+
+KensoftApi.prototype.HomeListingCore = function (data, callback) {
+  let _requestUrl = `${this.coreApiV1}Listings/List/HomeListingAsync?`;
+  data = Object.fromEntries(
+    Object.entries(data).filter(([_, v]) => v !== null && v !== undefined),
+  );
+  _requestUrl += this.join(data, '&');
+  return this._request(_requestUrl, callback);
+};
+
 KensoftApi.prototype.GetFeaturesCore = function (data, callback) {
   let _requestUrl = `${this.coreApiV1}Listings/List/FeaturesAsync?`;
   data = Object.fromEntries(

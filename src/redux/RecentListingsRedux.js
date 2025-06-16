@@ -1,3 +1,5 @@
+import {Languages} from '../common';
+
 const types = {
   SET_RECENT_SEEN_LISTINGS: 'SET_RECENT_OPEN_LISTINGS',
   SET_RECENT_SEARCHED: 'SET_RECENT_KEYWORD_SEARCHED',
@@ -9,9 +11,7 @@ const types = {
 const initialState = {
   recentOpenListings: [], // {id , title , type , mainImage }
   recentFreeSeach: [], // keywords
-  recentFreeSeachListings: [], // Listings
-  recentFilterSeach: [], // type , make , model , section , fueltypes
-  recentFilterSeachListings: [], // Listings
+  recentFilterSeach: null, // type , make , model , section , fueltypes
 };
 
 export const recentOpenListings = obj => {
@@ -34,19 +34,52 @@ export const recentFreeSeach = keyword => {
     type: types.SET_RECENT_SEARCHED,
     payload: {
       keyword,
+      date: new Date(),
+      langId: Languages.langID,
     },
   };
 };
+
+const toNullableNumber = value => {
+  const num = Number(value);
+  return isNaN(num) || num === 0 ? null : num;
+};
+
 export const recentFilterSeach = obj => {
   if (!obj) return;
   return {
     type: types.SET_RECENT_FILTER_SEARCHED,
     payload: {
-      type: obj.type,
-      make: obj.make,
-      model: obj.model,
-      section: obj.section,
-      fueltype: obj.fueltype,
+      filter: {
+        asc: obj.asc,
+        sortBy: obj.sortBy,
+        typeId: toNullableNumber(obj.typeID) ?? 1,
+        pageNum: obj.PageNum,
+        pageSize: obj.pagesize,
+        makeId: toNullableNumber(obj.makeID),
+        modelId: toNullableNumber(obj.modelid),
+        cityId: toNullableNumber(obj.cityID),
+        color: obj.color || null,
+        sellType: toNullableNumber(obj.sellType) ?? 1,
+        categoryId: toNullableNumber(obj.categoryid),
+        fuelType: toNullableNumber(obj.fuelType),
+        minYear: toNullableNumber(obj.minyear),
+        maxYear: toNullableNumber(obj.maxYear),
+        minPrice: toNullableNumber(obj.minPrice),
+        maxPrice: toNullableNumber(obj.maxPrice),
+        minConsumption: toNullableNumber(obj.minConsumption),
+        maxConsumption: toNullableNumber(obj.maxConsumption),
+        condition: toNullableNumber(obj.condition),
+        gearBox: toNullableNumber(obj.gearBox),
+        paymentMethod: toNullableNumber(obj.paymentMethod),
+        rentPeriod: toNullableNumber(obj.rentPeriod),
+        section: toNullableNumber(obj.section),
+        isoCode: obj.isocode || null,
+        cur: obj.cur || null,
+        partNumber: obj.partNumber || null,
+      },
+      date: new Date(),
+      langId: Languages.langID,
     },
   };
 };
@@ -56,22 +89,32 @@ export const reducer = (state = initialState, action) => {
 
   switch (type) {
     case types.SET_RECENT_SEEN_LISTINGS: {
-      let tempRecentSeen = state.recentOpenListings;
-      if (tempRecentSeen.length >= 16) {
-        tempRecentSeen = tempRecentSeen.slice(0, 15);
-      }
-      tempRecentSeen = [payload, ...tempRecentSeen];
+      if (payload.id) {
+        let tempRecentSeen = state.recentOpenListings.filter(
+          x => x.id !== payload.id && !!x.id,
+        );
+        if (tempRecentSeen.length >= 100) {
+          tempRecentSeen = tempRecentSeen.slice(0, 99);
+        }
+        tempRecentSeen = [payload, ...tempRecentSeen];
 
-      return {
-        ...state,
-        recentOpenListings: tempRecentSeen,
-      };
+        return {
+          ...state,
+          recentOpenListings: tempRecentSeen,
+        };
+      } else {
+        return {
+          ...state,
+        };
+      }
     }
 
     case types.SET_RECENT_SEARCHED: {
-      let tempRecentSeen = state.recentFreeSeach.filter(item => item.keyword !== payload.keyword);
-      if (tempRecentSeen.length >= 6) {
-        tempRecentSeen = tempRecentSeen.slice(0, 5);
+      let tempRecentSeen = state.recentFreeSeach.filter(
+        item => item.keyword !== payload.keyword,
+      );
+      if (tempRecentSeen.length >= 20) {
+        tempRecentSeen = tempRecentSeen.slice(0, 19);
       }
       tempRecentSeen = [payload, ...tempRecentSeen];
 
@@ -81,15 +124,9 @@ export const reducer = (state = initialState, action) => {
       };
     }
     case types.SET_RECENT_FILTER_SEARCHED: {
-      let tempRecentSeen = state.recentFilterSeach;
-      if (tempRecentSeen.length >= 3) {
-        tempRecentSeen = tempRecentSeen.slice(0, 2);
-      }
-      tempRecentSeen = [payload, ...tempRecentSeen];
-
       return {
         ...state,
-        recentFilterSeach: tempRecentSeen,
+        recentFilterSeach: payload,
       };
     }
 

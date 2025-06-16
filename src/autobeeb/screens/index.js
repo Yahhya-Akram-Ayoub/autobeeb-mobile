@@ -6,3 +6,4 @@ export {ErrorScreen} from './ErrorScreen';
 export {ListingDetailsScreen} from './ListingDetailsScreen';
 export {ListingReportScreen} from './ListingReportScreen';
 export {SearchScreen} from './SearchScreen';
+export {RecentlyViewedScreen} from './RecentlyViewedScreen';
