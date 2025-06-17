@@ -1125,7 +1125,7 @@ export default new LocalizedStrings({
     AllCountries: 'كل الدول',
     TryAgain: 'حاول مرة اخرى',
     DealerDetails: 'معلومات التاجر',
-    DealerOffers: 'إعلانات مشابهة',
+    DealerOffers: 'إعلانات التاجر',
     Hrs: ' Hrs',
     KM: ' KM',
     WhatAreYouLookingFor: 'عن ماذا تبحث',

@@ -138,7 +138,7 @@ const SearchScreen = () => {
 
   // Submit search query handler
   const onSubmitEditing = () => {
-    if (!query) dispatch(recentFreeSeach(query));
+    if (query) dispatch(recentFreeSeach(query));
 
     navigation.replace('SearchResult', {
       submitted: true,
@@ -210,7 +210,7 @@ const SearchScreen = () => {
       </TouchableOpacity>
     );
   };
-
+  const navigateToDetails = id => navigation.replace('CarDetails', {id});
   // Render recently seen listings item
   const renderRecentSeenItem = ({item}) => {
     if (item.SeeMore) {
@@ -231,56 +231,14 @@ const SearchScreen = () => {
         </TouchableOpacity>
       );
     } else {
-      const {thumbURL, id, name, fullImagePath, typeID, title} = item;
-
       return (
-        <TouchableOpacity
-          style={styles.listingItem}
-          onPress={() => navigation.replace('CarDetails', {id})}>
-          <FastImage
-            style={styles.listingImage}
-            source={
-              thumbURL
-                ? {
-                    uri: `https://autobeeb.com/${fullImagePath}_400x400.jpg`,
-                  }
-                : require('../../images/placeholder.png')
-            }
-            resizeMode={'contain'}
-          />
-          <View style={styles.listingInfo}>
-            <Text numberOfLines={1} style={styles.listingName}>
-              {typeID === 32 ? title : name}
-            </Text>
-          </View>
-
-          {!!item.countryName && (
-            <Text numberOfLines={1} style={styles.locationText}>
-              {item.countryName} / {item.cityName}
-            </Text>
-          )}
-
-          <View style={styles.priceContainer}>
-            {!!item.formatedPrice && (
-              <Text
-                numberOfLines={1}
-                style={[
-                  styles.priceText,
-                  {
-                    textAlign: item.paymentMethod !== 2 ? 'center' : 'left',
-                  },
-                ]}>
-                {item.formatedPrice}
-              </Text>
-            )}
-
-            {item.paymentMethod === 2 && (
-              <Text numberOfLines={1} style={styles.installmentText}>
-                {Languages.Installments}
-              </Text>
-            )}
-          </View>
-        </TouchableOpacity>
+        <RecentSeenListingCard
+          item={item}
+          navigation={navigation}
+          onPress={() => {
+            navigateToDetails(item.ID);
+          }}
+        />
       );
     }
   };
@@ -376,6 +334,62 @@ const SearchScreen = () => {
         </View>
       )}
     </View>
+  );
+};
+
+const RecentSeenListingCard = ({item, onPress}) => {
+  const [imageError, setImageError] = useState(false);
+
+  return (
+    <TouchableOpacity style={styles.listingItem} onPress={onPress}>
+      <FastImage
+        style={styles.listingImage}
+        source={
+          imageError || !item.thumbURL
+            ? require('../../images/placeholder.png')
+            : {uri: `https://autobeeb.com/${item.fullImagePath}_400x400.jpg`}
+        }
+        resizeMode={'contain'}
+        onError={() => setImageError(true)}
+      />
+      <View style={styles.listingInfo}>
+        <Text numberOfLines={1} style={styles.listingName}>
+          {item.name}
+        </Text>
+      </View>
+
+      {!!item.countryName && (
+        <Text numberOfLines={1} style={styles.locationText}>
+          {item.countryName} / {item.cityName}
+        </Text>
+      )}
+
+      <View
+        style={[
+          styles.priceContainer,
+          item.paymentMethod !== 2 && {justifyContent: 'center'},
+        ]}>
+        {!!item.formatedPrice ? (
+          <Text
+            numberOfLines={1}
+            style={[
+              styles.priceText,
+              {
+                textAlign: item.paymentMethod !== 2 ? 'center' : 'left',
+              },
+            ]}>
+            {item.formatedPrice}
+          </Text>
+        ) : (
+          <View />
+        )}
+        {item.paymentMethod === 2 && (
+          <Text numberOfLines={1} style={styles.installmentText}>
+            {Languages.Installments}
+          </Text>
+        )}
+      </View>
+    </TouchableOpacity>
   );
 };
 
@@ -546,6 +560,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#333',
     fontFamily: 'Cairo-Bold',
+    textAlign: 'center',
   },
   priceContainer: {
     flexDirection: 'row',

@@ -20,7 +20,9 @@ import {screenWidth} from '../constants/Layout';
 import FastImage from 'react-native-fast-image';
 import {AddAdvButtonSquare, AppHeader} from '../components';
 import {actions} from '../../redux/HomeRedux';
+import {SkeletonLoader} from '../components/shared/Skeleton';
 
+let pageNumber = 1;
 const RecentlyViewedScreen = ({navigation}) => {
   const contactBoxTranslate = useRef(new Animated.Value(100)).current;
   const lastScrollY = useRef(0);
@@ -31,14 +33,14 @@ const RecentlyViewedScreen = ({navigation}) => {
   );
   const {ViewingCountry, ViewingCurrency} = useSelector(state => state.menu);
   const dispatch = useDispatch();
-  const [page, setPage] = useState(1);
   const [listings, setListings] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const ITEMS_PER_PAGE = 10;
 
-  const loadListings = async pageNumber => {
+  const loadListings = async () => {
     const start = (pageNumber - 1) * ITEMS_PER_PAGE;
+    pageNumber++;
     const end = start + ITEMS_PER_PAGE;
 
     const idsToFetch = recentIds.slice(start, end);
@@ -52,28 +54,27 @@ const RecentlyViewedScreen = ({navigation}) => {
         p: `&${idQuery}`,
         userId: user?.ID,
         currencyId: ViewingCurrency?.ID,
-        langId: 1,
+        langId: Languages.langID,
         increaseViews: false,
       });
 
       setListings(prev => [...prev, ...res]);
-      setPage(pageNumber + 1);
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
+    pageNumber = 1;
     setListings([]);
-    setPage(1);
-    loadListings(1);
+    loadListings();
   }, [recentIds]);
 
   const handleScroll = event => {
     const currentY = event?.nativeEvent?.contentOffset?.y;
     const direction =
       currentY !== 0 && currentY > lastScrollY.current ? 'down' : 'up';
-    
+
     if (currentY < 100) {
       lastScrollY.current = currentY;
       return;
@@ -105,70 +106,51 @@ const RecentlyViewedScreen = ({navigation}) => {
       user?.ID,
     );
   };
-  const renderItem = ({item}) => (
-    <TouchableOpacity
-      onPress={() => navigation.navigate('CarDetails', {id: item.ID})}
-      style={styles.cardContainer}>
-      <FastImage
-        source={
-          item.thumbURL
-            ? {uri: `https://autobeeb.com/${item.fullImagePath}_750x420.jpg`}
-            : require('../../images/placeholder.png')
-        }
-        style={styles.cardImage}
-        resizeMode="cover"
+
+  const renderSkeletons = () =>
+    Array.from({length: 2}).map((_, i) => (
+      <SkeletonLoader
+        key={`skeleton-${i}`}
+        containerStyle={styles.skeletonBox}
+        borderRadius={3}
+        shimmerColors={['#E0E0E0', '#F8F8F8', '#E0E0E0']}
+        animationDuration={1200}
       />
-
-      <View style={styles.cardContent}>
-        <Text numberOfLines={1} style={styles.cardTitle}>
-          {item.typeID === 32 ? item.title : item.name}
-        </Text>
-
-        {!!item.countryName && (
-          <Text numberOfLines={1} style={styles.cardLocation}>
-            {item.countryName} / {item.cityName}
-          </Text>
-        )}
-
-        <View style={styles.cardPriceRow}>
-          {!!item.formatedPrice && (
-            <Text style={styles.cardPrice}>{item.formatedPrice}</Text>
-          )}
-          {item.paymentMethod === 2 && (
-            <Text style={styles.cardInstallment}>{Languages.Installments}</Text>
-          )}
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
+    ));
+  const navigateToDetails = id => () => navigation.navigate('CarDetails', {id});
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <AppHeader onCountryChange={refreshScreen} />
-      <Text style={styles.sectionTitle}>{Languages.RecentlyViewed}</Text>
       <FlatList
         data={listings}
-        renderItem={renderItem}
+        renderItem={({item}) => (
+          <RenderListingItem
+            item={item}
+            onPress={() => {
+              navigateToDetails(item.ID);
+            }}
+          />
+        )}
+        ListHeaderComponent={() => (
+          <Text style={styles.sectionTitle}>{Languages.RecentlyViewed}</Text>
+        )}
         keyExtractor={(item, index) => `${item.id}-${index}`}
-        contentContainerStyle={{
-          alignItems: 'center',
-          paddingVertical: 10,
-          paddingBottom: 40,
-        }}
+        contentContainerStyle={styles.list}
         onScroll={handleScroll}
-        onEndReached={() => loadListings(page)}
+        onEndReached={loadListings}
         onEndReachedThreshold={0.6}
-        ListFooterComponent={() =>
-          isLoading ? (
-            <ActivityIndicator
-              size="small"
-              color="#999"
-              style={{marginVertical: 20}}
-            />
-          ) : null
-        }
         ListEmptyComponent={() =>
-          !isLoading && (
+          isLoading ? (
+            <View
+              style={{
+                width: screenWidth,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              {renderSkeletons()}
+            </View>
+          ) : (
             <View
               style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
               <Text
@@ -198,6 +180,46 @@ const RecentlyViewedScreen = ({navigation}) => {
   );
 };
 
+const RenderListingItem = ({item, onPress}) => {
+  const [imageError, setImageError] = useState(false);
+
+  return (
+    <TouchableOpacity onPress={onPress} style={styles.cardContainer}>
+      <FastImage
+        source={
+          imageError || !item.thumbURL
+            ? require('../../images/placeholder.png')
+            : {uri: `https://autobeeb.com/${item.fullImagePath}_750x420.jpg`}
+        }
+        style={styles.cardImage}
+        resizeMode="cover"
+        onError={() => setImageError(true)}
+      />
+
+      <View style={styles.cardContent}>
+        <Text numberOfLines={1} style={styles.cardTitle}>
+          {item.typeID === 32 ? item.title : item.name}
+        </Text>
+
+        {!!item.countryName && (
+          <Text numberOfLines={1} style={styles.cardLocation}>
+            {item.countryName} / {item.cityName}
+          </Text>
+        )}
+
+        <View style={styles.cardPriceRow}>
+          {!!item.formatedPrice && (
+            <Text style={styles.cardPrice}>{item.formatedPrice}</Text>
+          )}
+          {item.paymentMethod === 2 && (
+            <Text style={styles.cardInstallment}>{Languages.Installments}</Text>
+          )}
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
 const styles = StyleSheet.create({
   cardContainer: {
     backgroundColor: '#fff',
@@ -211,6 +233,14 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 3,
     width: screenWidth - 24, // full width with padding
+  },
+  skeletonBox: {
+    backgroundColor: '#eee',
+    width: screenWidth - 24,
+    height: screenWidth * 0.5 + 80,
+    alignSelf: 'center',
+    borderRadius: 10,
+    marginBottom: 12,
   },
   cardImage: {
     width: '100%',
@@ -252,6 +282,12 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 18,
     paddingVertical: 6,
+  },
+  list: {
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingBottom: 40,
+    width: screenWidth,
   },
 });
 

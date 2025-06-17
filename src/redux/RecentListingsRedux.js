@@ -45,7 +45,7 @@ const toNullableNumber = value => {
   return isNaN(num) || num === 0 ? null : num;
 };
 
-export const recentFilterSeach = obj => {
+export const recentFilterSeach = (obj, selectedEntities) => {
   if (!obj) return;
   return {
     type: types.SET_RECENT_FILTER_SEARCHED,
@@ -78,6 +78,7 @@ export const recentFilterSeach = obj => {
         cur: obj.cur || null,
         partNumber: obj.partNumber || null,
       },
+      selectedEntities,
       date: new Date(),
       langId: Languages.langID,
     },

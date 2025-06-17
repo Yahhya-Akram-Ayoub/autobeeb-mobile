@@ -46,9 +46,9 @@ const ListingInformation = ({
         return words[0];
       }
 
-      if (typeID === 32 && words.length > 2) {
-        return Languages.langID === 2 ? words[2] : words[0];
-      }
+      // if (typeID === 32 && words.length > 2) {
+      //   return Languages.langID === 2 ? words[2] : words[0];
+      // }
 
       return sectionName;
     } catch {

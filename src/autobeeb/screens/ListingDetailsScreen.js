@@ -10,6 +10,7 @@ import {
   AddAdvButtonSquare,
   AnimatedContactChatBar,
   AskListingOwner,
+  DealerListingsSection,
   FavoriteReportButtons,
   FeatureListingBtn,
   FeaturesModal,
@@ -147,7 +148,7 @@ const ListingDetailsScreen = () => {
     <View>
       {!loading && listing && (
         <HeaderWithShare
-          name={listing?.isSparePart ? listing?.title : listing?.name}
+          name={listing?.name}
           listingId={listing?.id}
           typeId={listing?.typeID}
         />
@@ -164,7 +165,7 @@ const ListingDetailsScreen = () => {
         <ListingTitle
           loading={loading}
           countryName={listing?.countryName}
-          name={listing?.isSparePart ? listing?.title : listing?.name}
+          name={listing?.name}
           cityName={listing?.cityName}
           isSpecial={listing?.isSpecial}
           sellType={listing?.sellType}
@@ -215,7 +216,7 @@ const ListingDetailsScreen = () => {
           colorLabel={listing?.colorLabel}
           id={listing?.id}
           dateAdded={listing?.dateAdded}
-          sectionName={listing?.typeName}
+          sectionName={listing?.sectionName}
         />
         {!loading && (
           <>
@@ -249,12 +250,16 @@ const ListingDetailsScreen = () => {
             />
             <SellerDetailsSection loading={loading} userId={listing?.ownerID} />
             <ListingAutobeebBanner />
+
+            {listing?.isDealer && (
+              <DealerListingsSection dealerId={listing?.ownerID} />
+            )}
+
             <RelatedListingsSection
               countryId={listing?.categoryID}
               cityId={listing?.cityID}
             />
-            <PostYourOfferBanner />
-            <View style={{height: 80}} />
+            <View style={{height: 110}} />
           </>
         )}
       </ScrollView>

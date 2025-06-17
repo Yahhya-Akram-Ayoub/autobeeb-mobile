@@ -54,6 +54,7 @@ const HomeScreen = () => {
         <HomeTabs />
         <AddOfferBtn />
         <BlogsRow />
+        
         <HomeListingRow />
         <DealersRow />
         <View style={{height: 10}} />

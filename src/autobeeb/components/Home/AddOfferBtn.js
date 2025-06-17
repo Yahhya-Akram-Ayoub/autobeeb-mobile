@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Text, TouchableOpacity, View, Animated, StyleSheet} from 'react-native';
-import Layout from '../../constants/Layout';
+import Layout, {screenWidth} from '../../constants/Layout';
 import {useNavigation} from '@react-navigation/native';
 import {Color, Languages} from '../../../common';
 import {AppIcon, Icons} from '../index';
@@ -58,92 +58,101 @@ const AddOfferBtn = () => {
 
   if (paymentPending) {
     return (
-      <TouchableOpacity
-        style={styles.pendingContainer}
-        onPress={() => {
-          navigation.navigate('SubscriptionsScreen', {
-            ISOCode: user?.ISOCode,
-            User: user,
-            Plans: [], // Placeholder for plans if needed
-          });
-        }}>
-        <View style={styles.innerRow}>
-          <Text style={styles.pendingText}>
-            {Languages.AccountIsPaymentPending}
-          </Text>
-        </View>
-      </TouchableOpacity>
+      <View style={styles.cardWrapper}>
+        <TouchableOpacity
+          style={styles.pendingContainer}
+          onPress={() => {
+            navigation.navigate('SubscriptionsScreen', {
+              ISOCode: user?.ISOCode,
+              User: user,
+              Plans: [],
+            });
+          }}>
+          <View style={styles.innerRow}>
+            <Text style={styles.pendingText}>
+              {Languages.AccountIsPaymentPending}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
     );
   }
 
   return (
-    <TouchableOpacity style={styles.container} onPress={navigateToScreen}>
-      <View style={styles.innerRow}>
-        <AppIcon
-          type={Icons.FontAwesome}
-          name="plus"
-          size={25}
-          color="white"
-          style={{marginRight: 5}}
-        />
-        <Text style={styles.offerText}>{Languages.PostYourOffer}</Text>
-        <Animated.Text style={[styles.freeText, {opacity: fadeAnim}]}>
-          {' ' + Languages.FREE}
-        </Animated.Text>
-      </View>
-    </TouchableOpacity>
+    <View style={styles.cardWrapper}>
+      <TouchableOpacity style={styles.card} onPress={navigateToScreen}>
+        <View style={styles.innerRow}>
+          <AppIcon
+            type={Icons.FontAwesome}
+            name="plus"
+            size={20}
+            color="white"
+            style={{marginRight: 8}}
+          />
+          <Text style={styles.offerText}>{Languages.PostYourOffer}</Text>
+          <Animated.Text style={[styles.freeText, {opacity: fadeAnim}]}>
+            {' '}
+            {' ' + Languages.FREE}
+          </Animated.Text>
+        </View>
+      </TouchableOpacity>
+    </View>
   );
 };
 
 export default AddOfferBtn;
 
 const styles = StyleSheet.create({
-  container: {
-    width: Layout.screenWidth * 0.96,
-    marginVertical: 5,
+  cardWrapper: {
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderColor: '#eee',
+    shadowColor: Color.secondary,
+    shadowOffset: {width: 0, height: 3},
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 5,
+    marginBottom: 12,
+    padding: 10,
+    borderRadius: 10,
+    width: screenWidth - 14,
     alignSelf: 'center',
-    flexDirection: 'row',
-    elevation: 1,
-    borderRadius: 5,
-    marginBottom: 10,
+  },
+  card: {
     backgroundColor: Color.primary,
-    minHeight: 60,
-  },
-  pendingContainer: {
-    width: Layout.screenWidth * 0.96,
-    marginVertical: 5,
-    alignSelf: 'center',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
     flexDirection: 'row',
-    elevation: 1,
-    borderRadius: 5,
-    marginBottom: 10,
-    backgroundColor: 'red',
-    minHeight: 60,
-  },
-  innerRow: {
-    flexDirection: 'row',
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  pendingContainer: {
+    backgroundColor: 'red',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  innerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   offerText: {
     color: '#fff',
-    textAlign: 'center',
-    padding: 10,
-    fontFamily: 'Cairo-Regular',
-    fontSize: 22,
+    fontSize: 18,
+    fontFamily: 'Cairo-Bold',
   },
   freeText: {
     color: '#fff',
-    fontSize: 22,
-    fontFamily: 'Cairo-Regular',
+    fontSize: 18,
+    fontFamily: 'Cairo-Bold',
   },
   pendingText: {
     color: '#fff',
-    textAlign: 'center',
-    padding: 5,
+    fontSize: 16,
     fontFamily: 'Cairo-Regular',
-    fontSize: 18,
-    lineHeight: 28.5,
   },
 });

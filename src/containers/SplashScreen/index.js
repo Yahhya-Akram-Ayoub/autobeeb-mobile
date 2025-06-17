@@ -59,7 +59,6 @@ class SplashScreen extends Component {
           langid: Languages.langID,
           isoCode: data,
         }).then(curr => {
-          console.log(JSON.stringify(curr));
           global.ViewingCurrency = curr.currency;
           this.props.setViewingCurrency(curr.currency);
           AsyncStorage.getItem('user', (error, result) => {
@@ -170,10 +169,8 @@ const mapDispatchToProps = dispatch => {
     login: user => useractions.login(dispatch, user),
     setViewingCountry: (country, callback) =>
       MenuActions.setViewingCountry(dispatch, country, callback),
-
     setViewingCurrency: (currency, callback) =>
       MenuActions.setViewingCurrency(dispatch, currency, callback),
-
     HomeScreenGet: (userId, langId, isoCode, listingsCount, cur, callback) =>
       HomeRedux.HomeScreenGet(
         dispatch,
@@ -184,8 +181,8 @@ const mapDispatchToProps = dispatch => {
         callback,
         userId,
       ),
-
     editChat: data => dispatch(data),
+    setAllowFeature: flag => dispatch(MenuActions.setAllowFeature(flag)),
   };
 };
 

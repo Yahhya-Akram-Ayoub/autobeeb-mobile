@@ -174,6 +174,36 @@ class ListingsScreen extends Component {
     tabBarVisible: navigation.state.params.tabBarVisible,
   });
 
+  selectedFilters = () => {
+    const getFirstOrNull = arr =>
+      Array.isArray(arr) && arr.length > 0 ? arr[0] : null;
+    console.log({
+      ListingType: this.props.route.params?.ListingType,
+      SellType: this.props.route.params?.SellType,
+    });
+    return {
+      ListingType: this.props.route.params?.ListingType || null,
+      SellType: this.props.route.params?.SellType || null,
+      selectedSection: getFirstOrNull(this.state.selectedSection),
+      selectedMake: getFirstOrNull(this.state.selectedMake),
+      selectedModel: getFirstOrNull(this.state.selectedModel),
+      selectedCategory: getFirstOrNull(this.state.selectedCategory),
+      selectedCity: getFirstOrNull(this.state.selectedCity),
+      selectedRentPeriod: getFirstOrNull(this.state.selectedRentPeriod),
+      selectedStatus: getFirstOrNull(this.state.selectedStatus),
+      selectedGearBox: getFirstOrNull(this.state.selectedGearBox),
+      selectedFuelType: getFirstOrNull(this.state.selectedFuelType),
+      selectedPaymentMethod: getFirstOrNull(this.state.selectedPaymentMethod),
+      selectedColor: getFirstOrNull(this.state.selectedColor),
+      selectedMinMileage: this.state.selectedMinMileage || '',
+      selectedMaxMileage: this.state.selectedMaxMileage || '',
+      selectedMinYear: this.state.selectedMinYear || '',
+      selectedMaxYear: this.state.selectedMaxYear || '',
+      selectedMinPrice: this.state.selectedMinPrice || '',
+      selectedMaxPrice: this.state.selectedMaxPrice || '',
+    };
+  };
+
   Filters = () => {
     return [
       {
@@ -716,8 +746,8 @@ class ListingsScreen extends Component {
             .reduce((a, b) => a + b, '')) ||
         '',
     };
-    
-    this.props.recentFilterSeach(_params);
+
+    this.props.recentFilterSeach(_params, this.selectedFilters());
 
     KS.ListingsGet(_params).then(data => {
       if (data.Success) {
@@ -888,7 +918,7 @@ class ListingsScreen extends Component {
       partNumber: this.state.PartNumber,
     };
 
-    this.props.recentFilterSeach(_params);
+    this.props.recentFilterSeach(_params, this.selectedFilters());
     KS.ListingsGet(_params, null, this.filterController?.signal).then(data => {
       if (data.Success) {
         this.countListingsViews(
@@ -1767,7 +1797,7 @@ class ListingsScreen extends Component {
               partNumber: this.state.PartNumber,
             };
 
-            this.props.recentFilterSeach(_params);
+            this.props.recentFilterSeach(_params, this.selectedFilters());
 
             KS.ListingsGet(_params).then(data => {
               if (data.Success) {
@@ -1922,7 +1952,7 @@ class ListingsScreen extends Component {
             partNumber: this.state.PartNumber,
           };
 
-          this.props.recentFilterSeach(_params);
+          this.props.recentFilterSeach(_params, this.selectedFilters());
 
           KS.ListingsGet(_params).then(data => {
             if (data.Success) {
@@ -5454,7 +5484,8 @@ const mapDispatchToProps = dispatch => {
   return {
     setViewingCountry: (country, callback) =>
       actions.setViewingCountry(dispatch, country, callback),
-    recentFilterSeach: filterObj => dispatch(recentFilterSeach(filterObj)),
+    recentFilterSeach: (filterObj, selectedEntities) =>
+      dispatch(recentFilterSeach(filterObj, selectedEntities)),
   };
 };
 

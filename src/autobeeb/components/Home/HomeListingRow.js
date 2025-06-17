@@ -14,14 +14,17 @@ import KS from '../../../services/KSAPI';
 import {Color, Constants, Languages} from '../../../common';
 import {screenWidth} from '../../constants/Layout';
 import {SkeletonLoader} from '../shared/Skeleton';
+import {getCache, setCache} from '..';
 
 const ITEM_SIZE = (screenWidth - 40) / 3;
+const CACHE_KEY = 'home_listing_cache';
 
 const HomeListingRow = () => {
   const user = useSelector(state => state.user.user);
   const {ViewingCountry, ViewingCurrency} = useSelector(state => state.menu);
   const [isLoading, setIsLoading] = useState(true);
   const [isRecentlyLoading, setIsRecentlyLoading] = useState(true);
+  const {homePageData, isFetching} = useSelector(state => state.home);
   const recentIds = useSelector(
     state => state.recentListings.recentOpenListings,
   );
@@ -52,7 +55,30 @@ const HomeListingRow = () => {
 
   const loadData = async () => {
     let _searchTerm = recentSearched?.[0];
-    let _recentFilterSeach = recentFilterSeach;
+    let _recentFilterSeach =
+      recentFilterSeach?.langId === Languages.langID ? recentFilterSeach : null;
+    console.log({_searchTerm});
+    // Cache area
+    const cacheKey = `${CACHE_KEY}_${
+      Languages.langID
+    }_${_searchTerm?.keyword}_${JSON.stringify(_recentFilterSeach?.filter ?? {})}`;
+
+    const cachedData = await getCache(cacheKey);
+    if (cachedData) {
+      setSections({
+        new: cachedData.recentlyListings,
+        search: [
+          ...(cachedData.searchListings ?? []),
+          ...(cachedData.searchParts ?? []),
+        ],
+        suggested: cachedData.intrestedListings,
+        featured: cachedData.featureListings,
+        recent: sections.recent, // Keep recent from separate API
+      });
+      setIsLoading(false);
+      return;
+    }
+    // End cache area
 
     if (_searchTerm.date < _recentFilterSeach.date) _searchTerm = null;
     let {country} = await KS.GetCountryCore({
@@ -72,7 +98,6 @@ const HomeListingRow = () => {
       ...(_recentFilterSeach?.filter ?? {}),
     })
       .then(res => {
-        console.log({res});
         setSections(prev => {
           return {
             ...prev,
@@ -85,6 +110,8 @@ const HomeListingRow = () => {
             featured: res.featureListings,
           };
         });
+
+        setCache(cacheKey, res);
       })
       .finally(() => {
         setIsLoading(false);
@@ -113,25 +140,6 @@ const HomeListingRow = () => {
       setIsRecentlyLoading(false);
     }
   };
-
-  const renderCard = item => (
-    <TouchableOpacity
-      key={item.id.toString()}
-      style={styles.card}
-      onPress={() => moveToDetails(item)}>
-      <FastImage
-        source={
-          item.thumbURL
-            ? {
-                uri: `https://autobeeb.com/${item.fullImagePath}_400x400.jpg`,
-              }
-            : require('../../../images/placeholder.png')
-        }
-        style={styles.image}
-        resizeMode="cover"
-      />
-    </TouchableOpacity>
-  );
 
   const renderSkeleton = count =>
     Array.from({length: count}).map((_, i) => (
@@ -178,14 +186,20 @@ const HomeListingRow = () => {
           </TouchableOpacity>
         </View>
         <View style={styles.grid}>
-          {data.slice(0, maxItems).map(renderCard)}
+          {data.slice(0, maxItems).map(item => (
+            <ListingCard
+              key={item.id.toString()}
+              item={item}
+              onPress={moveToDetails}
+            />
+          ))}
         </View>
       </View>
     );
   };
 
   return (
-    <ScrollView contentContainerStyle={{paddingBottom: 20}}>
+    <ScrollView>
       {renderSection('newly_added_ads', sections.new, 9, () => {
         navigation.replace('SearchResult', {
           submitted: true,
@@ -203,18 +217,60 @@ const HomeListingRow = () => {
           recentFilterSeach &&
           recentSearched?.[0].date < recentFilterSeach.date
         ) {
+          navigation.navigate(
+            'ListingsScreen',
+            recentFilterSeach.selectedEntities,
+          );
         } else if (recentSearched?.[0]) {
           navigation.replace('SearchResult', {
             submitted: true,
             query: recentSearched?.[0]?.keyword ?? '',
           });
         } else if (recentFilterSeach?.filter) {
+          navigation.navigate(
+            'ListingsScreen',
+            recentFilterSeach.selectedEntities,
+          );
         }
       })}
 
-      {renderSection('suggested_ads', sections.suggested, 3)}
-      {renderSection('featured_ads', sections.featured, 3)}
+      {renderSection('suggested_ads', sections.suggested, 3, () => {
+        navigation.navigate('ListingsScreen', {
+          ListingType: recentFilterSeach?.selectedEntities?.ListingType,
+          SellType: recentFilterSeach?.selectedEntities?.SellType,
+          selectedSection: recentFilterSeach?.selectedEntities?.selectedSection,
+          selectedFuelType:
+            recentFilterSeach?.selectedEntities?.selectedFuelType,
+        });
+      })}
+
+      {renderSection('featured_ads', sections.featured, 3, () => {
+        navigation.navigate('ListingsScreen', {
+          ListingType: homePageData?.MainTypes[0] ?? {},
+          SellType: Constants.sellTypes[0],
+        });
+      })}
     </ScrollView>
+  );
+};
+const ListingCard = ({item, onPress}) => {
+  const [imageError, setImageError] = useState(false);
+
+  return (
+    <TouchableOpacity style={styles.card} onPress={() => onPress(item)}>
+      <FastImage
+        source={
+          imageError || !item.thumbURL
+            ? require('../../../images/placeholder.png')
+            : {
+                uri: `https://autobeeb.com/${item.fullImagePath}_400x400.jpg`,
+              }
+        }
+        style={styles.image}
+        resizeMode="cover"
+        onError={() => setImageError(true)}
+      />
+    </TouchableOpacity>
   );
 };
 
