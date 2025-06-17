@@ -189,7 +189,7 @@ const HomeListingRow = () => {
             <Text style={styles.showMore}>{Languages.ShowMore}</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.grid}>
+        <View style={data.length < 3 ? styles.grid2 : styles.grid}>
           {data.slice(0, maxItems).map(item => (
             <ListingCard
               key={item.id.toString()}
@@ -245,13 +245,15 @@ const HomeListingRow = () => {
           selectedSection: recentFilterSeach?.selectedEntities?.selectedSection,
           selectedFuelType:
             recentFilterSeach?.selectedEntities?.selectedFuelType,
+          selectedCategory:
+            recentFilterSeach?.selectedEntities?.selectedCategory,
         });
       })}
 
       {renderSection('featured_ads', sections.featured, 3, () => {
-        navigation.navigate('ListingsScreen', {
-          ListingType: homePageData?.MainTypes[0] ?? {},
-          SellType: Constants.sellTypes[0],
+        navigation.replace('SearchResult', {
+          submitted: true,
+          query: '',
         });
       })}
     </ScrollView>
@@ -270,8 +272,8 @@ const ListingCard = ({item, onPress}) => {
                 uri: `https://autobeeb.com/${item.fullImagePath}_400x400.jpg`,
               }
         }
-        style={styles.image}
-        resizeMode="cover"
+        style={[styles.image]}
+        resizeMode={imageError || !item.thumbURL ? 'contain' : 'cover'}
         onError={() => setImageError(true)}
       />
     </TouchableOpacity>
@@ -314,6 +316,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
+  },
+  grid2: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start',
+    gap: 6,
   },
   card: {
     width: ITEM_SIZE,

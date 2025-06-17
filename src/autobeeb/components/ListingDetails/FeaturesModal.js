@@ -29,6 +29,7 @@ const FeaturesModal = ({
   reloadFeatures,
 }) => {
   const navigation = useNavigation();
+  const {AllowFeature} = useSelector(state => state.menu);
   const [featuresSwitch, setFeaturesSwitch] = useState([]);
   const [featuresDropDown, setFeaturesDropDown] = useState([]);
   const [featuresLoaded, setFeaturesLoaded] = useState(false);
@@ -44,7 +45,7 @@ const FeaturesModal = ({
   const onClosed = () => {
     if (isNewUser || isPendingDelete) {
       openOTPModale();
-    } else if (!isSpecial && typeId !== '32' && `${sellType}` !== '4') {
+    } else if (!isSpecial && typeId !== '32' && `${sellType}` !== '4' && AllowFeature) {
       navigation.navigate('SpecialPlans', {listingId});
     }
   };
@@ -63,6 +64,8 @@ const FeaturesModal = ({
             setFeaturesLoaded(true);
 
             modalRef.current?.open();
+          } else {
+            onClosed();
           }
         }
       });

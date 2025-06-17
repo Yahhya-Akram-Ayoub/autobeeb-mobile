@@ -422,7 +422,7 @@ const styles = StyleSheet.create({
   ActiveOptionText: {
     color: '#000',
     position: 'absolute',
-    backgroundColor: '#F8F8F8',
+    backgroundColor: '#f2f0f0',
     width: '100%',
     textAlign: 'center',
     height: 60,

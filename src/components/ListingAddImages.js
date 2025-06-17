@@ -256,14 +256,6 @@ const ListingAddImages = ({
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* <Text style={styles.limitText}>
-          {images.length === maxImages
-            ? Languages.limitHighlightedImage.replace('15', maxImages)
-            : images.length > 0 && mainImage === null
-            ? Languages.highlightedImage
-            : ''}
-        </Text> */}
-
         {maxImages === 1 && !images.length ? (
           <TouchableOpacity
             onPress={showImageOptions}
@@ -325,8 +317,6 @@ const ListingAddImages = ({
           />
         )}
       </ScrollView>
-
-      <DialogBox ref={dialogRef} />
       <TouchableOpacity
         onPress={() => onClick({images, mainImage: images[0]})}
         style={{
@@ -334,13 +324,12 @@ const ListingAddImages = ({
             !isNeededListing && (!images.length || images.length > maxImages)
               ? 'gray'
               : Color.primary,
-          width: '100%',
+          width: '97%',
           height: 50,
           justifyContent: 'center',
           alignItems: 'center',
           borderRadius: 3,
-          position: 'absolute',
-          bottom: 65,
+          marginVertical: 6,
         }}
         disabled={
           !isNeededListing && (!images.length || images.length > maxImages)
@@ -354,6 +343,7 @@ const ListingAddImages = ({
           {Languages.Continue}
         </Text>
       </TouchableOpacity>
+      <DialogBox ref={dialogRef} />
     </View>
   );
 };
@@ -363,10 +353,10 @@ export default ListingAddImages;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    paddingBottom: 125,
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: '89%',
+    height: screenHeight - 140,
   },
   addBoxOnImage: {
     width: screenWidth / 1.3,

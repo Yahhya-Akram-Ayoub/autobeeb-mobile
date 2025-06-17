@@ -63,6 +63,17 @@ class SplashScreen extends Component {
           this.props.setViewingCurrency(curr.currency);
           AsyncStorage.getItem('user', (error, result) => {
             const user = JSON.parse(result);
+            
+            // check features plans
+            KS.GetFeaturesPlansCore({
+              userId: user?.ID,
+              langId: Languages.langID,
+              iso: data,
+            }).then(res => {
+              this.props.setAllowFeature(res?.plans && res?.plans?.length);
+            });
+            // end check features plans
+
             this.props.HomeScreenGet(
               user?.ID,
               Languages.langID,

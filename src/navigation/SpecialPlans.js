@@ -15,7 +15,7 @@ import {
   BackHandler,
   Modal,
 } from 'react-native';
-import {connect, useSelector} from 'react-redux';
+import {connect, useDispatch, useSelector} from 'react-redux';
 import {Languages, Color, Constants} from '../common';
 import {AutobeebModal, LogoSpinner} from '../components';
 import HTML, {IGNORED_TAGS} from 'react-native-render-html';
@@ -28,6 +28,7 @@ import IconFa from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {actions} from '../redux/MenuRedux';
 
 const screenWidth = Dimensions.get('screen').width;
 const DurationType = {
@@ -214,6 +215,7 @@ const BankCountries = ['979'];
 const SpecialPlans = ({route, pOffer, pOnClose}) => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const Currency = useSelector(state => state.menu.ViewingCurrency);
   const User = useSelector(state => state.user.user);
   const [plans, setPlans] = useState([]);
@@ -287,6 +289,7 @@ const SpecialPlans = ({route, pOffer, pOnClose}) => {
       cur: Currency.ID,
     })
       .then(res => {
+        dispatch(actions.setAllowFeature(res?.Plans && res?.Plans?.length));
         let _plans = res.Plans.map(plan => {
           return {
             ...plan,
@@ -297,6 +300,7 @@ const SpecialPlans = ({route, pOffer, pOnClose}) => {
           };
         });
 
+        if (!_plans.length) navigation.goBack();
         setPlans([..._plans]);
       })
       .catch(err => {

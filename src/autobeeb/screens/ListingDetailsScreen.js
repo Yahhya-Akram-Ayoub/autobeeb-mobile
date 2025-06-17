@@ -51,7 +51,7 @@ const ListingDetailsScreen = () => {
   const {id, isNewUser, showFeatures, isNeedRefresh} = route.params;
   const navigation = useNavigation();
   const user = useSelector(state => state.user.user ?? state.user.tempUser);
-  const ViewingCurrency = useSelector(state => state.menu.ViewingCurrency);
+  const {ViewingCurrency, AllowFeature} = useSelector(state => state.menu);
   const dispatch = useDispatch();
   const [listing, setListing] = useState();
   const [loading, setLoading] = useState(true);
@@ -186,14 +186,16 @@ const ListingDetailsScreen = () => {
           consumption={listing?.consumption}
           gearBox={listing?.gearbox}
         />
-        <FeatureListingBtn
-          loading={loading}
-          listingId={listing?.id}
-          isSpecial={listing?.isSpecial}
-          secialExpiryDate={listing?.specialExpiryDate}
-          ownerId={listing?.ownerID}
-          openOTPModale={handleOpenOTPModal}
-        />
+        {AllowFeature && (
+          <FeatureListingBtn
+            loading={loading}
+            listingId={listing?.id}
+            isSpecial={listing?.isSpecial}
+            secialExpiryDate={listing?.specialExpiryDate}
+            ownerId={listing?.ownerID}
+            openOTPModale={handleOpenOTPModal}
+          />
+        )}
         <ListingInformation
           loading={loading}
           sellType={listing?.sellType}

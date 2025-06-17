@@ -117,7 +117,7 @@ const RecentlyViewedScreen = ({navigation}) => {
         animationDuration={1200}
       />
     ));
-  const navigateToDetails = id => () => navigation.navigate('CarDetails', {id});
+  const navigateToDetails = id => navigation.navigate('CarDetails', {id});
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
@@ -128,7 +128,7 @@ const RecentlyViewedScreen = ({navigation}) => {
           <RenderListingItem
             item={item}
             onPress={() => {
-              navigateToDetails(item.ID);
+              navigateToDetails(item.id);
             }}
           />
         )}
@@ -192,7 +192,7 @@ const RenderListingItem = ({item, onPress}) => {
             : {uri: `https://autobeeb.com/${item.fullImagePath}_750x420.jpg`}
         }
         style={styles.cardImage}
-        resizeMode="cover"
+        resizeMode={imageError || !item.thumbURL ? 'contain' : 'cover'}
         onError={() => setImageError(true)}
       />
 

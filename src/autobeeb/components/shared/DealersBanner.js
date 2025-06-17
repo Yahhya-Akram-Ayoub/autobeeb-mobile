@@ -15,7 +15,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import IconFa from 'react-native-vector-icons/FontAwesome';
 import Moment from 'moment';
 import KS from '../../../services/KSAPI';
-import {Color, Languages} from '../../../common';
+import {Color, Constants, Languages} from '../../../common';
 
 const screenWidth = Dimensions.get('window').width;
 const CARD_WIDTH = screenWidth * 0.8;
@@ -197,6 +197,7 @@ const styles = StyleSheet.create({
   adsText: {
     color: '#fff',
     fontSize: 12,
+    fontFamily: Constants.fontFamilySemiBold,
   },
   gradientOverlay: {
     flex: 1,
@@ -232,7 +233,7 @@ const styles = StyleSheet.create({
   name: {
     color: '#fff',
     fontSize: 15,
-    fontWeight: 'bold',
+    fontFamily: Constants.fontFamilyBold,
   },
   locationRow: {
     flexDirection: 'row',
@@ -247,6 +248,7 @@ const styles = StyleSheet.create({
   locationText: {
     color: '#fff',
     fontSize: 13,
+    fontFamily: Constants.fontFamilySemiBold,
   },
   memberSince: {
     color: '#fff',

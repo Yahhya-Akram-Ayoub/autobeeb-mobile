@@ -2,6 +2,7 @@ import KS from '../services/KSAPI';
 import {Languages} from '../common';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
+import {actions as actionsMenu} from './MenuRedux';
 
 FCM = messaging();
 // check to make sure the user is authenticated
@@ -88,6 +89,15 @@ export const actions = {
     });
   },
   storeUserData(dispatch, data, callback) {
+    if (data) {
+      KS.GetFeaturesPlansCore({
+        userId: data?.ID,
+        langId: Languages.langID,
+      }).then(res => {
+        dispatch(actionsMenu.setAllowFeature(res?.plans && res?.plans?.length));
+      });
+    }
+
     const _this = this;
     AsyncStorage.setItem('user', JSON.stringify(data), () => {
       _this.login(dispatch, data);

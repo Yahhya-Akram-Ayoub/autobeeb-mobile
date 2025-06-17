@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
   },
   ContainerActive: {
     gap: 10,
-    backgroundColor: '#F8F8F8',
+    backgroundColor: '#f2f0f0',
     padding: 10,
     borderRadius: 3,
   },

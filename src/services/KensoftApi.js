@@ -1323,6 +1323,15 @@ KensoftApi.prototype.GetFeaturesCore = function (data, callback) {
   return this._request(_requestUrl, callback);
 };
 
+KensoftApi.prototype.GetFeaturesPlansCore = function (data, callback) {
+  let _requestUrl = `${this.coreApiV1}lookups/List/FeaturesPlansAsync?`;
+  data = Object.fromEntries(
+    Object.entries(data).filter(([_, v]) => v !== null && v !== undefined),
+  );
+  _requestUrl += this.join(data, '&');
+  return this._request(_requestUrl, callback);
+};
+
 KensoftApi.prototype.UpdateMobileClick = function (data, callback) {
   let _requestUrl = `${this.url}/Services/UpdateMobileClick?`;
   _requestUrl += this.join(data, '&');

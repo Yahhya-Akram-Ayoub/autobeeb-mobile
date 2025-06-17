@@ -1105,11 +1105,7 @@ class ListingReview extends Component {
               nestedScrollEnabled
               keyboardShouldPersistTaps="never"
               ref={this.scrollviewRef}
-              style={{backgroundColor: '#eee'}}
-              contentContainerStyle={{
-                // flex: 1,
-                paddingBottom: this.state.paddingBottom,
-              }}>
+              style={{backgroundColor: '#eee'}}>
               {this.renderRow(
                 data.listingTypeLabel + ' ' + data.sellTypeLabel,
                 2,

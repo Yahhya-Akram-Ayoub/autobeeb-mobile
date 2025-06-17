@@ -38,7 +38,7 @@ import ListingEmail from '../components/ListingEmail';
 import {toast} from '../Omni';
 import IconEn from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Animatable from 'react-native-animatable';
-import {BottomNavigationBar, LogoSpinner} from '../components';
+import {LogoSpinner} from '../components';
 import {screenHeight} from '../autobeeb/constants/Layout';
 import ListingAddImages from '../components/ListingAddImages';
 import {CommonActions} from '@react-navigation/native';
@@ -309,7 +309,6 @@ class PostOfferScreen extends Component {
       }
     }
   };
-
 
   handleBackPress = () => {
     this.handleBack();
@@ -2028,7 +2027,6 @@ class PostOfferScreen extends Component {
         style={{
           flex: 1,
           backgroundColor: '#fff',
-          paddingBottom: 70, // hieght of buttom bar
         }}>
         {this.renderHeader()}
 
@@ -2039,18 +2037,6 @@ class PostOfferScreen extends Component {
           : this.state.limitFull && !this.state.EditOffer
           ? this.renderFullLimit()
           : this.renderPage(this.state.step)}
-
-        <View
-          style={{
-            position: 'absolute',
-            right: 0,
-            bottom: 0,
-            zIndex: 2000,
-            minHeight: 'auto',
-            minWidth: '100%',
-          }}>
-          <BottomNavigationBar appRoot={'App'} />
-        </View>
       </View>
     );
   }

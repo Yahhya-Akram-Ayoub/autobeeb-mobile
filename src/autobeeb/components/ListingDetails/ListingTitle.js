@@ -55,6 +55,15 @@ const ListingTitle = ({
     EmailConfirmed === false && EmailRegister && (ownerId === ID || isNewUser);
 
   const checkOTP = () => {
+    console.log({
+      user,
+      otpcode: oTP,
+      userid: ID,
+      username:
+        EmailRegister || (EmailRegister && EmailConfirmed === false)
+          ? Email
+          : Phone,
+    });
     KS.UserVerifyOTP({
       otpcode: oTP,
       userid: ID,
