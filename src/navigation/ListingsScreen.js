@@ -764,6 +764,7 @@ class ListingsScreen extends Component {
           ISOCode: data.ISOCode,
           isLoading: false,
           maximumPages: data.Pages,
+          btnloader: false,
         });
       }
     });
@@ -948,6 +949,7 @@ class ListingsScreen extends Component {
             NoRelatedOffers: data.NoRelatedOffers,
             NumberOfIntrested: data.NumberOfIntrested,
             isLoading: false,
+            btnloader: false,
           });
 
           setTimeout(() => {
@@ -962,6 +964,7 @@ class ListingsScreen extends Component {
             maximumPages: data.Pages,
             isLoading: false,
             query: undefined,
+            btnloader: false,
           });
         }
       }
@@ -1472,15 +1475,25 @@ class ListingsScreen extends Component {
           onPress={() => {
             onOkPress();
           }}>
-          <Text
+          <View
             style={{
-              color: '#fff',
-              textAlign: 'center',
               paddingVertical: 10,
-              fontSize: 15,
+              alignItems: 'center',
+              justifyContent: 'center',
             }}>
-            {Languages.OK}
-          </Text>
+            {this.state.btnloader ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              <Text
+                style={{
+                  color: '#fff',
+                  fontSize: 15,
+                  textAlign: 'center',
+                }}>
+                {Languages.OK}
+              </Text>
+            )}
+          </View>
         </TouchableOpacity>
       </View>
     );
@@ -1815,6 +1828,7 @@ class ListingsScreen extends Component {
                   NoRelatedOffers: data.NoRelatedOffers,
                   NumberOfIntrested: data.NumberOfIntrested,
                   isLoading: false,
+                  btnloader: false,
                 });
               }
               this.SellTypeModal.close();
@@ -1970,6 +1984,7 @@ class ListingsScreen extends Component {
                 NoRelatedOffers: data.NoRelatedOffers,
                 NumberOfIntrested: data.NumberOfIntrested,
                 isLoading: false,
+                btnloader: false,
               });
             }
             this.CurrencyModal.close();
@@ -3813,12 +3828,10 @@ class ListingsScreen extends Component {
 
               <FlatList
                 keyExtractor={(item, index) => index.toString()}
-                //keyboardShouldPersistTaps="handled"
                 showsVerticalScrollIndicator={false}
                 data={this.state.Makes || []}
                 style={{height: Dimensions.get('screen').height * 0.52}}
                 extraData={this.state}
-                //contentContainerStyle={{ flexGrow: 1 }}
                 renderItem={({item, index}) => {
                   return (
                     <TouchableOpacity
@@ -3936,11 +3949,14 @@ class ListingsScreen extends Component {
               },
               () => {
                 this.makeModal.close();
-                this.setState({text: '', Makes: this.state.FullMakes}, () => {
-                  if (!this.filterModal.isOpen) {
-                    this.filterResults();
-                  }
-                });
+                this.setState(
+                  {btnloader: true, text: '', Makes: this.state.FullMakes},
+                  () => {
+                    if (!this.filterModal.isOpen) {
+                      this.filterResults();
+                    }
+                  },
+                );
               },
             )}
           </View>
@@ -4462,7 +4478,7 @@ class ListingsScreen extends Component {
               },
               () => {
                 this.categoryModal.close();
-
+                this.setState({btnloader: true});
                 if (!this.filterModal.isOpen) {
                   this.filterResults();
                 }
@@ -4594,7 +4610,7 @@ class ListingsScreen extends Component {
                   this.modelModal.close();
                 },
                 () => {
-                  this.setState({modelSearch: ''});
+                  this.setState({modelSearch: '', btnloader: true});
                   this.modelModal.close();
                   if (!this.filterModal.isOpen) {
                     this.filterResults();
@@ -4722,6 +4738,7 @@ class ListingsScreen extends Component {
                   {
                     citySearch: '',
                     Cities: this.state.fullCities,
+                    btnloader: true,
                   },
                   () => {
                     if (!this.filterModal.isOpen) {
@@ -4877,6 +4894,7 @@ class ListingsScreen extends Component {
                     minYearsList: this.state.FullminYearsList,
                     selectedMinYear: this.state.minYear,
                     selectedMaxYear: this.state.maxYear,
+                    btnloader: true,
                   },
                   () => {
                     if (!this.filterModal.isOpen) {
@@ -5026,6 +5044,7 @@ class ListingsScreen extends Component {
                     minPricesList: this.state.FullminPricesList,
                     selectedMinPrice: this.state.minPrice,
                     selectedMaxPrice: this.state.maxPrice,
+                    btnloader: true,
                   },
                   () => {
                     if (!this.filterModal.isOpen) {
@@ -5179,6 +5198,7 @@ class ListingsScreen extends Component {
                     minMileagesList: this.state.FullminMileagesList,
                     selectedMinMileage: this.state.minMileage,
                     selectedMaxMileage: this.state.maxMileage,
+                    btnloader: true,
                   },
                   () => {
                     if (!this.filterModal.isOpen) {

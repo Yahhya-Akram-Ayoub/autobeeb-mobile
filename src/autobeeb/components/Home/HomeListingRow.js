@@ -59,11 +59,12 @@ const HomeListingRow = () => {
       recentFilterSeach?.langId === Languages.langID ? recentFilterSeach : null;
     console.log({_searchTerm});
     // Cache area
-    const cacheKey = `${CACHE_KEY}_${
-      Languages.langID
-    }_${_searchTerm?.keyword}_${JSON.stringify(_recentFilterSeach?.filter ?? {})}`;
+    const cacheKey = `${CACHE_KEY}_${Languages.langID}_${
+      _searchTerm?.keyword
+    }_${JSON.stringify(_recentFilterSeach?.filter ?? {})}`;
 
     const cachedData = await getCache(cacheKey);
+
     if (cachedData) {
       setSections({
         new: cachedData.recentlyListings,
@@ -80,7 +81,7 @@ const HomeListingRow = () => {
     }
     // End cache area
 
-    if (_searchTerm.date < _recentFilterSeach.date) _searchTerm = null;
+    if (_searchTerm?.date < _recentFilterSeach?.date) _searchTerm = null;
     let {country} = await KS.GetCountryCore({
       LangId: Languages.langID,
       Iso: ViewingCountry?.cca2,
@@ -110,7 +111,7 @@ const HomeListingRow = () => {
             featured: res.featureListings,
           };
         });
-
+        console.log({res});
         setCache(cacheKey, res);
       })
       .finally(() => {
@@ -119,8 +120,11 @@ const HomeListingRow = () => {
   };
 
   const loadListings = async () => {
-    const idsToFetch = recentIds.slice(0, 3);
-    if (idsToFetch.length === 0) return;
+    const idsToFetch = recentIds?.slice(0, 3);
+    if (!idsToFetch || idsToFetch.length === 0) {
+      setIsRecentlyLoading(false);
+      return;
+    }
 
     const idQuery = idsToFetch.map(x => `ids=${x.id}`).join('&');
     setIsRecentlyLoading(true);
