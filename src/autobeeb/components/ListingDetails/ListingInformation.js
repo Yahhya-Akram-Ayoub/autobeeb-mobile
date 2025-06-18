@@ -38,7 +38,6 @@ const ListingInformation = ({
     return Constants.gearBoxTrucks.find(FT => FT.ID === value)?.Name ?? '';
   };
   const renderSection = () => {
-  
     try {
       const words = sectionName?.split(' ') || [];
 
@@ -59,8 +58,9 @@ const ListingInformation = ({
   if (loading)
     return (
       <View style={[styles.boxContainerSkeleton]}>
-        {_arr.map(x => (
+        {_arr.map((x, i) => (
           <SkeletonLoader
+            key={`-${i}`}
             containerStyle={[styles.skeletonRow]}
             borderRadius={3}
             shimmerColors={['#E0E0E0', '#F8F8F8', '#E0E0E0']}

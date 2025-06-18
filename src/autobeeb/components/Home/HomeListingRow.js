@@ -57,13 +57,13 @@ const HomeListingRow = () => {
     let _searchTerm = recentSearched?.[0];
     let _recentFilterSeach =
       recentFilterSeach?.langId === Languages.langID ? recentFilterSeach : null;
-    console.log({_searchTerm});
+
     // Cache area
-    const cacheKey = `${CACHE_KEY}_${Languages.langID}_${
+    const cacheKey = `$${Languages.langID}_${
       _searchTerm?.keyword
     }_${JSON.stringify(_recentFilterSeach?.filter ?? {})}`;
 
-    const cachedData = await getCache(cacheKey);
+    const cachedData = await getCache(CACHE_KEY, cacheKey);
 
     if (cachedData) {
       setSections({
@@ -111,8 +111,8 @@ const HomeListingRow = () => {
             featured: res.featureListings,
           };
         });
-        console.log({res});
-        setCache(cacheKey, res);
+
+        setCache(CACHE_KEY, cacheKey, res);
       })
       .finally(() => {
         setIsLoading(false);

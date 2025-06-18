@@ -56,7 +56,7 @@ const AskListingOwner = ({
           Languages.condition,
           Languages.location,
         ].map(item => (
-          <TouchableOpacity onPress={() => sendMessage(item)}>
+          <TouchableOpacity key={item} onPress={() => sendMessage(item)}>
             <Text style={styles.QuestionPoup}>{item}</Text>
           </TouchableOpacity>
         ))}
@@ -67,7 +67,7 @@ const AskListingOwner = ({
             Languages.warranty,
             Languages.delivery,
           ].map(item => (
-            <TouchableOpacity onPress={() => sendMessage(item)}>
+            <TouchableOpacity key={item} onPress={() => sendMessage(item)}>
               <Text style={styles.QuestionPoup}>{item}</Text>
             </TouchableOpacity>
           ))}

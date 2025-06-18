@@ -250,17 +250,18 @@ const ListingDetailsScreen = () => {
               typeId={listing?.typeID}
               name={listing?.isSparePart ? listing?.title : listing?.name}
             />
-            <SellerDetailsSection loading={loading} userId={listing?.ownerID} />
+            <SellerDetailsSection
+              listingId={listing?.id}
+              loading={loading}
+              userId={listing?.ownerID}
+            />
             <ListingAutobeebBanner />
 
             {listing?.isDealer && (
               <DealerListingsSection dealerId={listing?.ownerID} />
             )}
 
-            <RelatedListingsSection
-              countryId={listing?.categoryID}
-              cityId={listing?.cityID}
-            />
+            <RelatedListingsSection listingId={listing?.id} />
             <View style={{height: 110}} />
           </>
         )}

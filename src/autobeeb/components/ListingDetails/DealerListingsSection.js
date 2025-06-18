@@ -6,11 +6,13 @@ import {screenWidth} from '../../constants/Layout';
 import KS from '../../../services/KSAPI';
 import {Color, Constants, Languages} from '../../../common';
 import {arrayOfNull} from '../shared/StaticData';
+import {SkeletonLoader} from '../shared/Skeleton';
 
 const DealerListingsSection = ({dealerId}) => {
   const navigation = useNavigation();
   const [relatedListings, setRelatedListings] = useState([]);
   const [failOverImagetedListings, setFailOverImage] = useState(arrayOfNull(9));
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (dealerId) {
@@ -20,16 +22,31 @@ const DealerListingsSection = ({dealerId}) => {
         page: 1,
         pagesize: 9,
         userid: dealerId,
-      }).then(data => {
-        console.log({Listings: data.Listings});
-        setRelatedListings(data.Listings);
-      });
+      })
+        .then(data => {
+          setRelatedListings(data.Listings);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
   }, [dealerId]);
 
-  if (relatedListings.length === 0) return <View />;
+  if (!loading && relatedListings.length === 0) return <View />;
 
   const renderItem = ({item, index}) => {
+    if (loading) {
+      return (
+        <SkeletonLoader
+          key={`skeleton-${index}`}
+          containerStyle={styles.skeletonBox}
+          borderRadius={3}
+          shimmerColors={['#E0E0E0', '#F8F8F8', '#E0E0E0']}
+          animationDuration={1200}
+        />
+      );
+    }
+
     return (
       <TouchableOpacity
         activeOpacity={0.6}
@@ -70,7 +87,7 @@ const DealerListingsSection = ({dealerId}) => {
       <View style={styles.listContainer}>
         <FlatList
           numColumns={3}
-          data={relatedListings}
+          data={loading ? arrayOfNull(9) : relatedListings}
           keyExtractor={(item, index) => index.toString()}
           renderItem={renderItem}
           contentContainerStyle={styles.flatListContent}
@@ -138,6 +155,16 @@ const styles = StyleSheet.create({
   priceText: {
     color: '#fff',
     paddingHorizontal: 5,
+  },
+  skeletonBox: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    maxWidth: '32%',
+    height: screenWidth / 3 - 10,
+    width: screenWidth / 3 - 10,
+    marginBottom: 4,
+    marginHorizontal: 2,
+    borderRadius: 5,
   },
 });
 

@@ -619,7 +619,17 @@ KensoftApi.prototype.GetListingsCore = function (data, callback) {
 
   return this._request(requestUrl, callback);
 };
+KensoftApi.prototype.RelatedListingsCore = function (data, callback) {
+  let requestUrl = `${this.coreApiV1}Listings/List/RelatedListingsAsyns?`;
 
+  data = Object.fromEntries(
+    Object.entries(data).filter(([_, v]) => v !== null),
+  );
+  requestUrl +=
+    this.join(data, '&') + `&CurrencyId=${global.ViewingCurrency.ID}`;
+
+  return this._request(requestUrl, callback);
+};
 KensoftApi.prototype.GetFeaturedListings = function (data, callback) {
   let _requestUrl = `${this.url}/Services/FeaturedListings?`;
 

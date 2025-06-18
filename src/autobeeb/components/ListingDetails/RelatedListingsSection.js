@@ -6,33 +6,44 @@ import {screenWidth} from '../../constants/Layout';
 import KS from '../../../services/KSAPI';
 import {Color, Constants, Languages} from '../../../common';
 import {arrayOfNull} from '../shared/StaticData';
+import {SkeletonLoader} from '../shared/Skeleton';
 
-const RelatedListingsSection = ({countryId, cityId}) => {
+const RelatedListingsSection = ({listingId}) => {
   const navigation = useNavigation();
   const [relatedListings, setRelatedListings] = useState([]);
   const [failOverImagetedListings, setFailOverImage] = useState(arrayOfNull(9));
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!!countryId && !!cityId) {
-      KS.GetListingsCore({
-        pLangID: Languages.langID,
-        pPageNum: 1,
-        pPageSize: 9,
-        pSortBy: 'random',
-        pAsc: 0,
-        pStrictCountry: false,
-        IncreaseViews: false,
-        pCountryID: cityId,
-        pCityID: countryId,
-      }).then(res => {
-        setRelatedListings(res.listings);
-      });
+    if (listingId) {
+      KS.RelatedListingsCore({
+        langId: Languages.langID,
+        listingId,
+      })
+        .then(res => {
+          setRelatedListings(res.listings);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
-  }, [countryId, cityId]);
+  }, [listingId]);
 
-  if (relatedListings.length === 0) return <View />;
+  if (!loading && relatedListings.length === 0) return <View />;
 
   const renderItem = ({item, index}) => {
+    if (loading) {
+      return (
+        <SkeletonLoader
+          key={`skeleton-${index}`}
+          containerStyle={styles.skeletonBox}
+          borderRadius={3}
+          shimmerColors={['#E0E0E0', '#F8F8F8', '#E0E0E0']}
+          animationDuration={1200}
+        />
+      );
+    }
+
     return (
       <TouchableOpacity
         activeOpacity={0.6}
@@ -73,7 +84,7 @@ const RelatedListingsSection = ({countryId, cityId}) => {
       <View style={styles.listContainer}>
         <FlatList
           numColumns={3}
-          data={relatedListings}
+          data={loading ? arrayOfNull(9) : relatedListings}
           keyExtractor={(item, index) => index.toString()}
           renderItem={renderItem}
           contentContainerStyle={styles.flatListContent}
@@ -141,6 +152,16 @@ const styles = StyleSheet.create({
   priceText: {
     color: '#fff',
     paddingHorizontal: 5,
+  },
+  skeletonBox: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    maxWidth: '32%',
+    height: screenWidth / 3 - 10,
+    width: screenWidth / 3 - 10,
+    marginBottom: 4,
+    marginHorizontal: 2,
+    borderRadius: 5,
   },
 });
 

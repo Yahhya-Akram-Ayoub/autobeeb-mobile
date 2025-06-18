@@ -55,15 +55,7 @@ const ListingTitle = ({
     EmailConfirmed === false && EmailRegister && (ownerId === ID || isNewUser);
 
   const checkOTP = () => {
-    console.log({
-      user,
-      otpcode: oTP,
-      userid: ID,
-      username:
-        EmailRegister || (EmailRegister && EmailConfirmed === false)
-          ? Email
-          : Phone,
-    });
+
     KS.UserVerifyOTP({
       otpcode: oTP,
       userid: ID,
@@ -99,19 +91,11 @@ const ListingTitle = ({
 
   const resendCode = () => {
     setOTP('');
-    console.log({
-      ResendOTP: {
-        userID: ID,
-        otpType: EmailRegister ? 2 : 0,
-        username: EmailRegister ? Email : Phone,
-      },
-    });
     KS.ResendOTP({
       userID: ID,
       otpType: EmailRegister ? 2 : 1,
       username: EmailRegister ? Email : Phone,
     }).then(data => {
-      console.log({data});
       if (data.Success === 1) {
         toast(Languages.WeSendUOTP);
       } else toast(Languages.SomethingWentWrong);
