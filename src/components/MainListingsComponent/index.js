@@ -338,62 +338,65 @@ class Cards extends PureComponent {
                       marginHorizontal: 7,
                       justifyContent: 'flex-start',
                     }}>
-                    <FastImage
-                      style={{
-                        width: 30,
-                        height: 30,
-                      }}
-                      resizeMode="contain"
-                      source={
-                        item.TitleFullImagePath
-                          ? {
-                              uri:
-                                'https://autobeeb.com/' +
-                                item.TitleFullImagePath +
-                                '_300x150.png',
-                            }
-                          : item.TypeID == 16
-                          ? {
-                              uri:
-                                'https://autobeeb.com/content/newlistingcategories/' +
-                                '16' +
-                                item.CategoryID +
-                                '/' +
-                                +item.CategoryID +
-                                '_300x150.png',
-                            }
-                          : {
-                              uri:
-                                'https://autobeeb.com/content/newlistingmakes/' +
-                                item.MakeID +
-                                '/' +
-                                item.MakeID +
-                                '_240x180.png',
-                            }
-                      }
-                    />
+                    {/* Inline Row for Image + First Text */}
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <FastImage
+                        style={{
+                          width: 16,
+                          height: 16,
+                          marginRight: 4,
+                        }}
+                        resizeMode="contain"
+                        source={
+                          item.TitleFullImagePath
+                            ? {
+                                uri:
+                                  'https://autobeeb.com/' +
+                                  item.TitleFullImagePath +
+                                  '_300x150.png',
+                              }
+                            : item.TypeID == 16
+                            ? {
+                                uri:
+                                  'https://autobeeb.com/content/newlistingcategories/' +
+                                  '16' +
+                                  item.CategoryID +
+                                  '/' +
+                                  +item.CategoryID +
+                                  '_300x150.png',
+                              }
+                            : {
+                                uri:
+                                  'https://autobeeb.com/content/newlistingmakes/' +
+                                  item.MakeID +
+                                  '/' +
+                                  item.MakeID +
+                                  '_240x180.png',
+                              }
+                        }
+                      />
+                      <Text
+                        numberOfLines={1}
+                        style={{
+                          color: '#000',
+                          fontSize: 15,
+                          textAlign: 'center',
+                        }}>
+                        {item.NameFirstPart}
+                      </Text>
+                    </View>
 
+                    {/* Second Line of Text */}
                     <Text
                       numberOfLines={1}
                       style={{
                         color: '#000',
                         fontSize: 15,
-                        //   flex: 5,
                         textAlign: 'center',
-                        paddingRight: 2,
                       }}>
-                      {item.NameFirstPart}
+                      {item.NameSecondPart}
                     </Text>
                   </View>
-                  <Text
-                    numberOfLines={1}
-                    style={{
-                      color: '#000',
-                      fontSize: 15,
-                      textAlign: 'center',
-                    }}>
-                    {item.NameSecondPart}
-                  </Text>
                 </View>
               ) : (
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>

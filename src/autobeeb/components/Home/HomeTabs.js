@@ -34,6 +34,7 @@ const HomeTabs = () => {
           ...item.selectedFuelType,
           Name: Languages[item.selectedFuelType?.Name],
         },
+        SectionID: item.SectionID,
         selectedSection: {
           ...item.selectedSection,
           Name: Languages[item.selectedSection?.Name],
