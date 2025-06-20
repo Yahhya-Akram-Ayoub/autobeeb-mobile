@@ -1393,9 +1393,7 @@ class SearchResult extends Component {
             ListHeaderComponent={
               <>
                 {this.state.Listings?.filter(
-                  x =>
-                    x.IsSpecial &&
-                    `${x.CountryID}` === `${this.state.Country?.ID}`,
+                  x => x.IsSpecial, // && `${x.CountryID}` === `${this.state.Country?.ID}`,
                 )?.length === 0 &&
                   !this.state.NoRelatedOffers &&
                   `${this.props.ViewingCountry?.cca2}`.toLowerCase() !==

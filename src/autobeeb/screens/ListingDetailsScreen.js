@@ -30,6 +30,7 @@ import {
   SellerDetailsSection,
 } from '../components';
 import {
+  CommonActions,
   useFocusEffect,
   useNavigation,
   useRoute,
@@ -41,6 +42,7 @@ import {Languages} from '../../common';
 import {BottomNavigationBar} from '../../components';
 import {screenWidth} from '../constants/Layout';
 import {actions, recentOpenListings} from '../../redux/RecentListingsRedux';
+import {toast} from '../../Omni';
 
 const ListingDetailsScreen = () => {
   const bottomBarTranslate = useRef(new Animated.Value(0)).current;
@@ -48,7 +50,7 @@ const ListingDetailsScreen = () => {
   const lastScrollY = useRef(0);
   const currentDirection = useRef(null);
   const route = useRoute();
-  const {id, isNewUser, showFeatures, isNeedRefresh} = route.params;
+  const {id, isNewUser, showFeatures, isNeedRefresh, screen} = route.params;
   const navigation = useNavigation();
   const user = useSelector(state => state.user.user ?? state.user.tempUser);
   const {ViewingCurrency, AllowFeature} = useSelector(state => state.menu);
@@ -75,7 +77,9 @@ const ListingDetailsScreen = () => {
         const state = navigation.getState();
         const currentRouteIndex = state.index;
 
-        if (currentRouteIndex === 0) {
+        if (screen === 'HomeScreen') {
+          navigation.navigate('HomeScreen');
+        } else if (currentRouteIndex === 0) {
           // Navigate to root of current stack
           navigation.navigate('ActiveOffers');
           return true; // Prevent default back behavior
@@ -102,8 +106,15 @@ const ListingDetailsScreen = () => {
     })
       .then(res => {
         __DEV__ && console.log({res});
-        setListing(res);
-        dispatch(recentOpenListings(res));
+        if (!res) {
+          setTimeout(() => {
+            toast(Languages.ThisOfferUnavalable);
+            navigation.goBack();
+          }, 1000);
+        } else {
+          setListing(res);
+          if (res.status === 16) dispatch(recentOpenListings(res));
+        }
       })
       .finally(() => {
         setLoading(false);

@@ -1,7 +1,7 @@
 import {memo, useEffect, useState} from 'react';
 import {Alert, Platform, StyleSheet, UIManager, View} from 'react-native';
 import Layout from '../../constants/Layout';
-import {Constants, Languages} from '../../../common';
+import {Color, Constants, Languages} from '../../../common';
 import KS from '../../../services/KSAPI';
 import {
   AllCategories,
@@ -213,7 +213,7 @@ export default FilterTabBox;
 const styles = StyleSheet.create({
   expandedBox: {
     width: Layout.screenWidth * 0.97,
-    backgroundColor: '#fff',
+    backgroundColor: '#f0f0f0',
     borderWidth: 0,
     borderTopWidth: 0,
     borderColor: '#ccc',
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
   },
   ContainerActive: {
     gap: 10,
-    backgroundColor: '#f2f0f0',
+    backgroundColor: '#fff',
     padding: 10,
     borderRadius: 3,
   },

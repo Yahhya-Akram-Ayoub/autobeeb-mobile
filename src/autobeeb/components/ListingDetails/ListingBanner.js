@@ -16,6 +16,7 @@ import {SkeletonLoader} from '../shared/Skeleton';
 import KS from '../../../services/KSAPI';
 import {useSelector} from 'react-redux';
 
+let refreshFlag = 0;
 const ListingBanner = ({
   listingId,
   loading,
@@ -39,8 +40,11 @@ const ListingBanner = ({
 
   useEffect(() => {
     if (isNeedRefresh)
-      setTimeout(() => {
-        refreshImages();
+      setInterval(() => {
+        if (refreshFlag < 4) {
+          refreshImages();
+          refreshFlag++;
+        }
       }, 5000);
   }, []);
 

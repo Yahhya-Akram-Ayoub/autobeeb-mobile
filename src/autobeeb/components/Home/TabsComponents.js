@@ -326,7 +326,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   TextSellBtn: {
-    color: '#000',
     fontFamily: Constants.fontFamilyBold,
     fontSize: 12,
   },
@@ -422,7 +421,7 @@ const styles = StyleSheet.create({
   ActiveOptionText: {
     color: '#000',
     position: 'absolute',
-    backgroundColor: '#f2f0f0',
+    backgroundColor: '#fff',
     width: '100%',
     textAlign: 'center',
     height: 60,

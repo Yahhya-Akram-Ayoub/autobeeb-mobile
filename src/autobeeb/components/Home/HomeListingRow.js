@@ -6,6 +6,7 @@ import {
   View,
   ScrollView,
   Dimensions,
+  Alert,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {useNavigation} from '@react-navigation/native';
@@ -24,7 +25,6 @@ const HomeListingRow = () => {
   const {ViewingCountry, ViewingCurrency} = useSelector(state => state.menu);
   const [isLoading, setIsLoading] = useState(true);
   const [isRecentlyLoading, setIsRecentlyLoading] = useState(true);
-  const {homePageData, isFetching} = useSelector(state => state.home);
   const recentIds = useSelector(
     state => state.recentListings.recentOpenListings,
   );
@@ -46,12 +46,18 @@ const HomeListingRow = () => {
 
   const navigation = useNavigation();
 
-  const moveToDetails = item => navigation.replace('CarDetails', {id: item.id});
+  const moveToDetails = item =>
+    navigation.replace('CarDetails', {id: item.id, screen: 'HomeScreen'});
 
   useEffect(() => {
     loadListings();
-    loadData();
-  }, []);
+    try {
+      loadData();
+    } catch (err) {
+      Alert.alert(JSON.stringify(err));
+      setIsLoading(false);
+    }
+  }, [ViewingCountry?.cca2]);
 
   const loadData = async () => {
     let _searchTerm = recentSearched?.[0];
@@ -59,7 +65,7 @@ const HomeListingRow = () => {
       recentFilterSeach?.langId === Languages.langID ? recentFilterSeach : null;
 
     // Cache area
-    const cacheKey = `$${Languages.langID}_${
+    const cacheKey = `$${Languages.langID}_${ViewingCountry?.cca2}_${
       _searchTerm?.keyword
     }_${JSON.stringify(_recentFilterSeach?.filter ?? {})}`;
 
@@ -95,7 +101,7 @@ const HomeListingRow = () => {
       GetSearch: !!_searchTerm?.keyword,
       SearchQuery: _searchTerm?.keyword,
       LangId: Languages.langID,
-      CountryId: country.id,
+      CountryId: country?.id,
       ...(_recentFilterSeach?.filter ?? {}),
     })
       .then(res => {

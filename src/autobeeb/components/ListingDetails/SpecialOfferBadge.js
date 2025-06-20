@@ -1,5 +1,5 @@
 import {View, Text, StyleSheet, I18nManager} from 'react-native';
-import {Color, Languages} from '../../../common';
+import {Color, Constants, Languages} from '../../../common';
 import SpecialSVG from './SpecialSVG';
 
 const SpecialOfferBadge = () => {
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     width: 5,
   },
   specialSignal: {
-    top: 20,
+    top: 40,
     right: -60,
     position: 'absolute',
     transform: I18nManager.isRTL ? [{rotate: '315deg'}] : [{rotate: '45deg'}],
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     paddingHorizontal: 0,
     zIndex: 1,
-    width: 200,
+    width: 250,
     backgroundColor: '#ff1c1a',
     letterSpacing: 0.5,
     backgroundImage: 'radial-gradient(circle, #ff1c1a, #bf0b00)',
@@ -52,12 +52,13 @@ const styles = StyleSheet.create({
   },
   specialSignalText: {
     color: '#e9ea7b',
-    fontSize: 12,
+    fontSize: 15,
     textAlign: 'center',
     borderWidth: 1,
     borderStyle: 'dotted',
     borderColor: '#e5e82c',
     paddingVertical: 2,
+    fontFamily: Constants.fontFamilyBold,
   },
   specialSignalTextOtherLang: {
     borderColor: '#ff1c1a',

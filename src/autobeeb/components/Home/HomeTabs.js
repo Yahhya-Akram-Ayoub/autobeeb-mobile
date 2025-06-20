@@ -11,7 +11,7 @@ import FastImage from 'react-native-fast-image';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {Tabs} from './StaticData.json';
-import {Languages} from '../../../common';
+import {Color, Languages} from '../../../common';
 import Layout from '../../constants/Layout';
 import TabSkeleton from './TabSkeleton';
 import FilterTabBox from './FilterTabBox';
@@ -90,7 +90,9 @@ const HomeTabs = () => {
                         : `https://autobeeb.com/${item.FullImagePath}_115x115.png`,
                     }}
                   />
-                  <Text style={styles.tabText} numberOfLines={1}>
+                  <Text
+                    style={[styles.tabText, isActive && styles.activeTabText]}
+                    numberOfLines={1}>
                     {item.NameKey ? Languages[item.NameKey] : item.Name}
                   </Text>
                 </TouchableOpacity>
@@ -132,6 +134,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: Layout.screenWidth * 0.01,
+    backgroundColor: '#f0f0f0',
   },
   homeBox: {
     width: Layout.screenWidth * 0.33,
@@ -151,18 +154,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: Layout.screenWidth * 0.31,
     height: Layout.screenWidth * 0.29,
-    borderBottomLeftRadius: 5,
-    borderBottomRightRadius: 5,
+    borderRadius: 5,
   },
   activeTabButton: {
     position: 'absolute',
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
-    backgroundColor: '#fff',
+    borderRadius: 0,
     borderBottomWidth: 0,
     borderColor: '#ccc',
     height: 120,
     borderWidth: 0,
+    backgroundColor: '#f0f0f0',
+  },
+  activeTabText: {
+    // color: 'white',
   },
   marginSpareParts: {
     marginTop: 3,

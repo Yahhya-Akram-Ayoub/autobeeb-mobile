@@ -74,7 +74,7 @@ const ListingTitle = ({
         toast(Languages.PublishSuccess, 3500);
 
         if (data.User) {
-          actions.login(dispatch, data.User);
+          actions.storeUserData(dispatch, data.User);
           setOpenModal(false);
           setTimeout(() => {
             navigation.navigate('SpecialPlans', {listingId});
