@@ -328,6 +328,7 @@ const styles = StyleSheet.create({
   TextSellBtn: {
     fontFamily: Constants.fontFamilyBold,
     fontSize: 12,
+    color: '#000',
   },
   Makes: {gap: 8},
   Make: {
@@ -421,7 +422,7 @@ const styles = StyleSheet.create({
   ActiveOptionText: {
     color: '#000',
     position: 'absolute',
-    backgroundColor: '#fff',
+    backgroundColor: '#f0f0f0',
     width: '100%',
     textAlign: 'center',
     height: 60,

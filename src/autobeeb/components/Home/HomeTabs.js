@@ -136,7 +136,8 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    padding: Layout.screenWidth * 0.01,
+    width: '100%',
+    paddingVertical: Layout.screenWidth * 0.01,
     backgroundColor: '#f0f0f0',
   },
   homeBox: {
@@ -171,18 +172,15 @@ const styles = StyleSheet.create({
 
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 0,
+    overflow: 'hidden',
   },
   activeTabButton: {
-    position: 'absolute',
-    borderColor: '#fff00',
     backgroundColor: '#f0f0f0',
+    transform: [{scale: 0.98}],
+    borderColor: Color.primary,
+    borderWidth: 1,
     borderRadius: 12,
-    height: 125,
-    borderBottomEndRadius: 0,
-    borderBottomStartRadius: 0,
-    justifyContent: 'flex-start',
-    gap: 8,
-    elevation: 0,
   },
   activeTabText: {
     // color: 'white',

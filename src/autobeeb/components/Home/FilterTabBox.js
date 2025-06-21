@@ -213,9 +213,8 @@ export default FilterTabBox;
 const styles = StyleSheet.create({
   expandedBox: {
     width: Layout.screenWidth - 10,
-    backgroundColor: '#f0f0f0',
-    borderBottomEndRadius: 12,
-    borderBottomStartRadius: 12,
+    backgroundColor: '#fff',
+    borderRadius: 12,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 3},
     shadowOpacity: 0.1,
@@ -225,16 +224,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     gap: 10,
     alignSelf: 'center',
-    borderTopWidth: 0,
+    marginTop: 4,
   },
   ContainerActive: {
     gap: 10,
-    backgroundColor: '#fff',
+    backgroundColor: '#f0f0f0',
     paddingVertical: 10,
     borderRadius: 3,
-    paddingHorizontal: 0,
     paddingEnd: 15,
     paddingStart: 8,
-    overflow: 'hidden',
   },
 });
