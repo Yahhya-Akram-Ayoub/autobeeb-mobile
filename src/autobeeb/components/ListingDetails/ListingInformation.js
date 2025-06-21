@@ -30,6 +30,7 @@ const ListingInformation = ({
   id,
   dateAdded,
   sectionName,
+  hideTypeSection,
 }) => {
   const renderFuelType = value => {
     return Constants.FilterFuelTypes.find(FT => FT.ID === value)?.Name ?? '';
@@ -74,7 +75,7 @@ const ListingInformation = ({
     <View style={[styles.boxContainer]}>
       <Text style={[styles.blackHeader]}>{Languages.Information}</Text>
 
-      {!!sellType && (
+      {!hideTypeSection && !!sellType && (
         <View style={styles.sectionHalf}>
           <Text style={styles.sectionTitle}>{Languages.SellType}</Text>
           <View style={`${typeName}`.length < 15 ? styles.row : styles.col}>

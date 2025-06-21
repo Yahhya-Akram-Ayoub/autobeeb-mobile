@@ -212,6 +212,7 @@ const ListingDetailsScreen = () => {
           sellType={listing?.sellType}
           typeName={listing?.typeName}
           section={listing?.section}
+          hideTypeSection={['2048', '4096'].includes(`${listing?.section}`)}
           partNumber={listing?.partNumber}
           categoryName={listing?.categoryName}
           categoryID={listing?.categoryID}

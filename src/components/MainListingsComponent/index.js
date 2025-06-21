@@ -342,8 +342,8 @@ class Cards extends PureComponent {
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <FastImage
                         style={{
-                          width: 16,
-                          height: 16,
+                          width: 30,
+                          height: 30,
                           marginRight: 4,
                         }}
                         resizeMode="contain"

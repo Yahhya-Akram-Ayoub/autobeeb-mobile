@@ -1055,6 +1055,7 @@ class EditProfile extends Component {
               style={[styles.modalbox]}
               fullScreen={true}
               ref={instance => (this.ChangeEmailModal = instance)}
+              backdropOpacity={0.8}
               keyboardResponsive={true}
               backButtonClose>
               <View style={styles.modalContent}>
@@ -1162,8 +1163,9 @@ class EditProfile extends Component {
               //coverScreen
               style={[styles.modalbox]}
               fullScreen={true}
-              ref={instance => (this.VerifyEmailModal = instance)}
+              backdropOpacity={0.8}
               keyboardResponsive={true}
+              ref={instance => (this.VerifyEmailModal = instance)}
               onClosed={() => {
                 this.setState({
                   emailVerificationCode: '',
@@ -1326,8 +1328,9 @@ class EditProfile extends Component {
               //coverScreen
               style={[styles.modalbox]}
               fullScreen={true}
+              backdropOpacity={0.8}
+              keyboardResponsive={true}
               ref={instance => (this.VerifyPhoneModal = instance)}
-              keyboardResponsive={!true}
               onOpened={() => {
                 setTimeout(() => {
                   this.refs.verifyPhoneText &&

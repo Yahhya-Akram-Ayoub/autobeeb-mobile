@@ -432,7 +432,7 @@ const styles = StyleSheet.create({
   },
   OptionsTypes: {
     flexDirection: 'row',
-    width: '100%',
+    flex: 1,
     justifyContent: 'space-around',
     gap: 10,
   },

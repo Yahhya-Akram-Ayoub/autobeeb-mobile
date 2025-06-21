@@ -70,7 +70,9 @@ const HomeTabs = () => {
             }
 
             return (
-              <View key={globalIndex} style={styles.homeBox}>
+              <View
+                key={globalIndex}
+                style={[styles.homeBox, styles.shadowWrapper]}>
                 <TouchableOpacity
                   onPress={() => handleTabPress(item, globalIndex)}
                   style={[
@@ -147,24 +149,40 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   tabButton: {
-    backgroundColor: 'white',
-    borderWidth: 1,
+    backgroundColor: '#fff',
+    borderRadius: 12,
     margin: 4,
-    borderColor: '#ccc',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
     width: Layout.screenWidth * 0.31,
-    height: Layout.screenWidth * 0.29,
-    borderRadius: 5,
+    height: Layout.screenWidth * 0.32,
+    // shadowColor: '#000',
+    // shadowOffset: {width: 0, height: 2},
+    // shadowOpacity: 0.15,
+    // shadowRadius: 12,
+    // elevation: 4,
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
+
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   activeTabButton: {
     position: 'absolute',
-    borderRadius: 0,
-    borderBottomWidth: 0,
-    borderColor: '#ccc',
-    height: 120,
-    borderWidth: 0,
+    borderColor: '#fff00',
     backgroundColor: '#f0f0f0',
+    borderRadius: 12,
+    height: 125,
+    borderBottomEndRadius: 0,
+    borderBottomStartRadius: 0,
+    justifyContent: 'flex-start',
+    gap: 8,
+    elevation: 0,
   },
   activeTabText: {
     // color: 'white',
@@ -186,6 +204,7 @@ const styles = StyleSheet.create({
   expandedBoxWrapper: {
     width: '100%',
     alignItems: 'center',
-    marginBottom: 0,
+    marginBottom: 6,
   },
+  shadowWrapper: {},
 });
