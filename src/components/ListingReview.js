@@ -457,7 +457,7 @@ class ListingReview extends Component {
     );
   }
 
-  renderRow = (value, step, singleEdit) => {
+  renderRow = (value, step, singleEdit, showSection) => {
     return (
       <View style={[styles.rowContainer]}>
         <TouchableOpacity
@@ -470,7 +470,7 @@ class ListingReview extends Component {
             // }
             if (step == 6 && !this.props.data.makeID) {
               Alert.alert('', Languages.ChooseMakeFirst);
-            } else if (step == 2) {
+            } else if (step == 2 || showSection) {
               this.props.goToStep(1);
             } else if (!value || step == 16 || singleEdit) {
               this.props.goToStep(step, true);
@@ -1094,7 +1094,11 @@ class ListingReview extends Component {
     if (this.props.EditOfferLoading) {
       return <Text style={{}}>{'Something went wrong while editing '}</Text>;
     }
-
+    const showSection =
+      `${data.sectionID}` === '4096' || `${data.sectionID}` === '2048';
+    const hideType =
+      `${data.sectionID}` === '4096' || `${data.sectionID}` === '2048';
+   
     return (
       <KeyboardAvoidingView
         behavior={Platform.select({ios: 'padding', android: ''})}
@@ -1106,11 +1110,13 @@ class ListingReview extends Component {
               keyboardShouldPersistTaps="never"
               ref={this.scrollviewRef}
               style={{backgroundColor: '#eee'}}>
-              {this.renderRow(
-                data.listingTypeLabel + ' ' + data.sellTypeLabel,
-                2,
-              )}
-              {stepArray.includes(3) && this.renderRow(data.sectionLabel, 3)}
+              {!hideType &&
+                this.renderRow(
+                  data.listingTypeLabel + ' ' + data.sellTypeLabel,
+                  2,
+                )}
+              {(showSection || stepArray.includes(3)) &&
+                this.renderRow(data.sectionLabel, 3, false, showSection)}
               {stepArray.includes(4) &&
                 this.renderRow(
                   data.subCategoryLabel

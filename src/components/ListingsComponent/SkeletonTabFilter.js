@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     marginEnd: 5,
   },
   skeletonBox: {
-    height: 28,
+    height: 32,
     width: 75,
     backgroundColor: '#e0e0e0',
     borderRadius: 3,

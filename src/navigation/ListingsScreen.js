@@ -61,7 +61,7 @@ import {
 import FeatueredListingsCards from '../components/ListingsComponent/FeatueredListingsCards';
 
 const BOTTOM_NAVIGATION_BAR_HEIGHT = 70;
-const FILTER_HEADER_HEIGHT = 113;
+const FILTER_HEADER_HEIGHT = 120;
 const FILTER_HEADER_HEIGHT_WITHOUT_TAGS = 85;
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 const BigFont = 22;
@@ -433,14 +433,9 @@ class ListingsScreen extends Component {
         ListingType: this.props.route.params?.ListingType,
         cca2: this.props.ViewingCountry?.cca2 || 'us',
       });
-    }
-    // else if (Type == 'S') {
-    //   this.props.navigation.replace('SectionsScreen', {
-    //     ListingType: this.props.route.params?.ListingType,
-    //     SellType: this.props.route.params?.SellType,
-    //   });
-    // }
-    else {
+    } else if (Type === 'S' && ['4096', '2048'].includes(`${Id}`)) {
+      this.props.navigation.navigate('HomeScreen');
+    } else {
       this.setState(
         prevState => {
           let newState;
@@ -673,7 +668,10 @@ class ListingsScreen extends Component {
       langID: Languages.langID,
       parentID: this.props.route.params?.ListingType?.ID,
     }).then(data => {
-      this.setState({Sections: data});
+      this.setState({
+        Sections:
+          data?.filter(x => !['4096', '2048'].includes(`${x.ID}`)) ?? [],
+      });
     });
 
     KS.TypeCategoriesGet({
@@ -2625,11 +2623,11 @@ class ListingsScreen extends Component {
                 (!!this.state.selectedMaxMileage ||
                   !!this.state.selectedMinMileage) && {
                   Name: `${
-                    !!this.state.selectedMinMileage
+                    this.state.selectedMinMileage
                       ? this.state.selectedMinMileage
                       : '0'
                   } - ${
-                    !!this.state.selectedMaxMileage
+                    this.state.selectedMaxMileage
                       ? this.state.selectedMaxMileage
                       : '∞'
                   }`,
@@ -2639,11 +2637,11 @@ class ListingsScreen extends Component {
                 (!!this.state.selectedMaxYear ||
                   !!this.state.selectedMinYear) && {
                   Name: `${
-                    !!this.state.selectedMinYear
+                    this.state.selectedMinYear
                       ? this.state.selectedMinYear
                       : '1960'
                   } - ${
-                    !!this.state.selectedMaxYear
+                    this.state.selectedMaxYear
                       ? this.state.selectedMaxYear
                       : `${new Date().getFullYear() + 1}`
                   }`,
@@ -2653,11 +2651,11 @@ class ListingsScreen extends Component {
                 (!!this.state.selectedMaxPrice ||
                   !!this.state.selectedMinPrice) && {
                   Name: `${
-                    !!this.state.selectedMinPrice
+                    this.state.selectedMinPrice
                       ? this.state.selectedMinPrice
                       : '0'
                   } - ${
-                    !!this.state.selectedMaxPrice
+                    this.state.selectedMaxPrice
                       ? this.state.selectedMaxPrice
                       : '∞'
                   }`,
@@ -5464,7 +5462,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
     flexDirection: 'row',
-    height: 28,
+    height: 32,
     paddingHorizontal: 6,
     marginEnd: 5,
     minWidth: 75,
@@ -5474,7 +5472,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     verticalAlign: 'middle',
     paddingEnd: 3,
-    fontSize: 12,
+    fontSize: 13,
     fontFamily: Constants.fontFamilyBold,
   },
   LoadingList: {

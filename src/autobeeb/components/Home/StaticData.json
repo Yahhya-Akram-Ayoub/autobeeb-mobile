@@ -50,5 +50,6 @@
       },
       "IsLink": true
     }
-  ]
+  ],
+  "SpecialSections": ["4096", "2048"]
 }

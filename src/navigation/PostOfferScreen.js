@@ -42,6 +42,7 @@ import {LogoSpinner} from '../components';
 import {screenHeight} from '../autobeeb/constants/Layout';
 import ListingAddImages from '../components/ListingAddImages';
 import {CommonActions} from '@react-navigation/native';
+import {Tabs} from '../autobeeb/components/Home/StaticData.json';
 
 class PostOfferScreen extends Component {
   constructor(props) {
@@ -422,8 +423,12 @@ class PostOfferScreen extends Component {
               this.setState({
                 listingType: item.ID,
                 listingTypeLabel: item.Name,
-                sectionID: undefined,
-                RelatedEntity: undefined,
+                sectionID: item.SectionID,
+                RelatedEntity: item.ID == 32 && item.SectionID ? 1 : undefined,
+                sectionLabel:
+                  item.ID == 32 && item.SectionID
+                    ? Languages[item.NameKey]
+                    : null,
                 step: this.state.step + 1,
                 stepLoader: true,
               });
@@ -440,7 +445,7 @@ class PostOfferScreen extends Component {
                 });
             }}
             currentStep={this.state.step}
-            types={this.props.homePageData.MainTypes}
+            types={[...this.props.homePageData.MainTypes, Tabs[1], Tabs[2]]}
           />
         );
 
@@ -533,7 +538,11 @@ class PostOfferScreen extends Component {
                 });
               });
             }}
-            Sections={this.state.Sections}
+            Sections={
+              this.state.Sections?.filter(
+                x => !['4096', '2048'].includes(`${x.ID}`),
+              ) ?? []
+            }
             FindStep={() => {
               this.FindStep(
                 this.state.step,

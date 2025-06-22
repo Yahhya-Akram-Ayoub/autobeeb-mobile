@@ -249,7 +249,9 @@ const ListingAddImages = ({
     },
     [images, mainImage],
   );
-
+  console.log({
+    imageBasePath: `https://autobeeb.com/${imageBasePath}${images[0]}_400x400.jpg`,
+  });
   const paddedImages = [...images];
   while (paddedImages.length < maxImages) paddedImages.push(null);
 
@@ -282,11 +284,13 @@ const ListingAddImages = ({
                   maxWidth: '100%',
                   maxHeight: '100%',
                   resizeMode: 'contain',
+                  width: screenWidth / 1.3,
+                  height: screenWidth / 1.3,
                 }}
                 source={
-                  typeof item === 'string'
+                  typeof images[0] === 'string'
                     ? {
-                        uri: `https://autobeeb.com/${imageBasePath}${images[0]}_400x400.jpg`,
+                        uri: `https://autobeeb.com/${imageBasePath}${images[0]}.png`,
                       }
                     : images[0]
                 }

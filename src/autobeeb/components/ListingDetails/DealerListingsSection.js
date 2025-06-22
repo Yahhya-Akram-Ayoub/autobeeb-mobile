@@ -22,6 +22,7 @@ const DealerListingsSection = ({dealerId}) => {
         page: 1,
         pagesize: 9,
         userid: dealerId,
+        orderby: 'random',
       })
         .then(data => {
           setRelatedListings(data.Listings);

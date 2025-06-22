@@ -63,7 +63,7 @@ const HomeListingRow = () => {
     let _searchTerm = recentSearched?.[0];
     let _recentFilterSeach =
       recentFilterSeach?.langId === Languages.langID ? recentFilterSeach : null;
-
+    console.log({_recentFilterSeach, _searchTerm});
     // Cache area
     const cacheKey = `$${Languages.langID}_${ViewingCountry?.cca2}_${
       _searchTerm?.keyword
@@ -232,7 +232,7 @@ const HomeListingRow = () => {
             recentFilterSeach.selectedEntities,
           );
         } else if (recentSearched?.[0]) {
-          navigation.replace('SearchResult', {
+          navigation.navigate('SearchResult', {
             submitted: true,
             query: recentSearched?.[0]?.keyword ?? '',
           });

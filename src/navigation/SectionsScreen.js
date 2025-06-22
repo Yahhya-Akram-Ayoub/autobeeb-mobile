@@ -48,7 +48,8 @@ class SectionsScreen extends Component {
       };
       data.unshift(All);
       this.setState({
-        Sections: data,
+        Sections:
+          data?.filter(x => !['4096', '2048'].includes(`${x.ID}`)) ?? [],
         isSectionsLoading: false,
         FullSections: data,
       });

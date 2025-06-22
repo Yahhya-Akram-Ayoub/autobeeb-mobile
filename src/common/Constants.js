@@ -471,6 +471,26 @@ const Constants = {
       GuestWanted: [2, 3, 4, 5, 6, 7, 10, 16, 20, 17, 8, 18],
     },
     {
+      //Spare Parts missing title page after 8
+      ID: 4096,
+      //Spare Parts For Sell
+      UserSell: [2, 21, 4, 5, 6, 10, 8, 18],
+      GuestSell: [2, 21, 4, 5, 6, 10, 16, 20, 17, 8, 18],
+      //Spare Parts For Wanted
+      UserWanted: [2, 4, 5, 6, 7, 10, 8, 18],
+      GuestWanted: [2, 4, 5, 6, 7, 10, 16, 20, 17, 8, 18],
+    },
+    {
+      //Spare Parts missing title page after 8
+      ID: 2048,
+      //Spare Parts For Sell
+      UserSell: [2, 21, 4, 5, 6, 10, 8, 18],
+      GuestSell: [2, 21, 4, 5, 6, 10, 16, 20, 17, 8, 18],
+      //Spare Parts For Wanted
+      UserWanted: [2, 4, 5, 6, 7, 10, 8, 18],
+      GuestWanted: [2, 4, 5, 6, 7, 10, 16, 20, 17, 8, 18],
+    },
+    {
       //Cars Spare Parts
       ID: 64,
       //Spare Parts For Sell
@@ -520,26 +540,26 @@ const Constants = {
       UserWanted: [2, 3, 4, 19, 5, 6, 7, 10, 8, 18],
       GuestWanted: [2, 3, 4, 19, 5, 6, 7, 10, 16, 20, 17, 8, 18],
     },
-    {
-      //Accessories Spare Parts
-      ID: 2048,
-      //Spare Parts For Sell
-      UserSell: [2, 21, 3, 4, 10, 8, 18],
-      GuestSell: [2, 21, 3, 4, 10, 16, 20, 17, 8, 18],
-      //Spare Parts For Wanted
-      UserWanted: [2, 3, 4, 10, 8, 18],
-      GuestWanted: [2, 3, 4, 10, 16, 20, 17, 8, 18],
-    },
-    {
-      //Regulation Spare Parts
-      ID: 4096,
-      //Spare Parts For Sell
-      UserSell: [2, 21, 3, 4, 8, 18],
-      GuestSell: [2, 21, 3, 4, 16, 20, 17, 8, 18],
-      //Spare Parts For Wanted
-      UserWanted: [2, 3, 4, 8, 18],
-      GuestWanted: [2, 3, 4, 16, 20, 17, 8, 18],
-    },
+    // {
+    //   //Accessories Spare Parts
+    //   ID: 2048,
+    //   //Spare Parts For Sell
+    //   UserSell: [2, 21, 3, 4, 10, 8, 18],
+    //   GuestSell: [2, 21, 3, 4, 10, 16, 20, 17, 8, 18],
+    //   //Spare Parts For Wanted
+    //   UserWanted: [2, 3, 4, 10, 8, 18],
+    //   GuestWanted: [2, 3, 4, 10, 16, 20, 17, 8, 18],
+    // },
+    // {
+    //   //Regulation Spare Parts
+    //   ID: 4096,
+    //   //Spare Parts For Sell
+    //   UserSell: [2, 21, 3, 4, 8, 18],
+    //   GuestSell: [2, 21, 3, 4, 16, 20, 17, 8, 18],
+    //   //Spare Parts For Wanted
+    //   UserWanted: [2, 3, 4, 8, 18],
+    //   GuestWanted: [2, 3, 4, 16, 20, 17, 8, 18],
+    // },
     {
       //Equipments Sections 1
       ID: 8192,

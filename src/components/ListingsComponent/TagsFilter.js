@@ -17,13 +17,13 @@ const TagsFilter = ({Tags, OnCelarFilter, OnDeleteFilter}) => {
         </Pressable>
       </View>
     ),
-    [OnCelarFilter]
+    [OnCelarFilter],
   );
   const handleDeleteFilter = useCallback(
     (Id, Type) => {
       OnDeleteFilter({Id, Type});
     },
-    [OnDeleteFilter]
+    [OnDeleteFilter],
   );
 
   if (!Tags || !Tags.filter(x => !!x.Id).length)
@@ -48,7 +48,7 @@ const TagsFilter = ({Tags, OnCelarFilter, OnDeleteFilter}) => {
                 style={{paddingHorizontal: 4}}
                 hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
                 onPress={() => handleDeleteFilter(item.Id, item.Type)}>
-                <IconMa name={'close'} size={15} color={Color.secondary} />
+                <IconMa name={'close'} size={17} color={Color.secondary} />
               </Pressable>
             </View>
           );
@@ -87,10 +87,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#1C7DA20f',
     borderWidth: 1,
     borderRadius: 100,
-    alignItems: 'center',
     justifyContent: 'space-around',
     flexDirection: 'row',
-    height: 28,
+    height: 34,
+    alignItems: 'center',
     paddingHorizontal: 6,
     marginEnd: 5,
     minWidth: 75,
@@ -100,7 +100,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     verticalAlign: 'middle',
     paddingEnd: 3,
-    fontSize: 12,
+    marginBottom: 3,
+    fontSize: 13,
     fontFamily: Constants.fontFamilyBold,
   },
   DeleteContainer: {
