@@ -170,7 +170,7 @@ class ChangePasswordScreen extends Component {
     this.setState({otp: ''});
     KS.ResendOTP({
       userID: this.props.user.ID,
-      otpType: this.props.user?.EmailRegister ? 2 : 0,
+      otpType: this.props.user?.EmailRegister ? 2 : 1,
     }).then(data => {
       //   alert(JSON.stringify(data));
       if (data.Success == 1) {

@@ -250,7 +250,10 @@ class ListingsScreen extends Component {
           this.state.selectedMake &&
           this.state.selectedMake.length == 1 &&
           !(
-            this.state.selectedMake[0].AllMake || this.state.selectedMake.All
+            this.state.selectedMake[0].AllMake ||
+            this.state.selectedMake.All ||
+            this.state.selectedMake[0].all ||
+            this.state.selectedMake.all
           ) &&
           (this.props.route.params?.ListingType?.ID == 32 &&
           this.state.selectedSection &&

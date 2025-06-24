@@ -161,9 +161,12 @@ const UserOptions = () => {
       iconColor: 'green',
       onPress: () =>
         navigation.navigate('ActiveOffers', {
-          userid: user?.ID,
-          status: 16,
-          active: true,
+          screen: 'ActiveOffers',
+          params: {
+            userid: user?.ID,
+            status: 16,
+            active: true,
+          },
         }),
       isDisplay: !!user,
       extraRight:
@@ -179,9 +182,12 @@ const UserOptions = () => {
       iconColor: 'red',
       onPress: () =>
         navigation.navigate('ActiveOffers', {
-          userid: user?.ID,
-          status: 10,
-          active: false,
+          screen: 'ActiveOffers',
+          params: {
+            userid: user?.ID,
+            status: 10,
+            active: false,
+          },
         }),
       isDisplay: !!user,
       extraRight:

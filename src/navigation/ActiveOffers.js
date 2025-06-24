@@ -39,7 +39,7 @@ class ActiveOffers extends Component {
       ListingsLoading: true,
       User: this.props.user,
       UserLoading: true,
-      active: this.props?.route?.params?.active || true,
+      active: !!this.props?.route?.params?.active,
       onActivateLoading: false,
       Listings: [],
     };
@@ -58,7 +58,10 @@ class ActiveOffers extends Component {
           if (data.User == null) {
             this.Logout();
           } else {
-            this.getUserListings(16, 1);
+            this.getUserListings(
+              this.props?.route?.params?.status === 10 ? -1 : 16,
+              1,
+            );
             this.setState({
               UserLoading: false,
               User: data.User,
@@ -235,15 +238,17 @@ class ActiveOffers extends Component {
   }
 
   resendCode() {
+    console.log({USer: this.state.User});
     this.setState({otp: ''});
     KS.ResendOTP({
       userID: this.state.User.ID,
-      otpType: this.state.User?.EmailRegister ? 2 : 0,
+      otpType: this.state.User?.EmailRegister ? 2 : 1,
     }).then(data => {
+      console.log({USerdata: data});
       if (data.Success == 1) {
-        //   alert(JSON.stringify(data));
+        toast(Languages.WeSendUOTP);
       } else {
-        alert('something went wrong');
+        toast('something went wrong');
       }
       //
     });

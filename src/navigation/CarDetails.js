@@ -596,7 +596,7 @@ class CarDetails extends Component {
       userID:
         this.props?.route?.params?.UserID ??
         (this.props.userData && this.props.userData.ID),
-      otpType: this.props.userData?.EmailRegister ? 2 : 0,
+      otpType: this.props.userData?.EmailRegister ? 2 : 1,
     }).then(data => {
       if (data.Success == 1) {
       } else {
