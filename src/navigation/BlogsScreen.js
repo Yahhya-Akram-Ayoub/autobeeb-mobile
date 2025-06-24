@@ -65,6 +65,8 @@ const BlogsScreen = ({navigation}) => {
   }, []);
 
   function getArticles(categoryID, onEndReached = false, search = '') {
+    setIsLoading(true);
+    setBlogs([]);
     KS.ArticlesGet({
       langId: Languages.langID,
       categoryid: categoryID,
@@ -72,10 +74,11 @@ const BlogsScreen = ({navigation}) => {
       sch: search,
       PageSize,
     }).then(data => {
+      setIsLoading(false);
       if (data?.Success == '1') {
         if (onEndReached && data.Articles?.length > 0) {
           let tempBlogs = Blogs;
-          tempBlogs = [...Blogs];//, {isBanner: true}];
+          tempBlogs = [...Blogs]; //, {isBanner: true}];
           // tempBlogs.push({ isBanner: true });
           tempBlogs = tempBlogs.concat(data.Articles);
 
@@ -115,63 +118,63 @@ const BlogsScreen = ({navigation}) => {
 
   let keyExtractor = React.useCallback((item, index) => index.toString(), []);
   let renderItem = React.useCallback(({item, index}) => {
-      return (
-        <TouchableOpacity
+    return (
+      <TouchableOpacity
+        style={{
+          width: Dimensions.get('screen').width,
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginBottom: 10,
+          elevation: 1,
+        }}
+        onPress={() => {
+          navigation.navigate('BlogDetails', {
+            Blog: item,
+          });
+        }}>
+        <View
           style={{
-            width: Dimensions.get('screen').width,
-            alignItems: 'center',
+            overflow: 'hidden',
+            borderBottomWidth: 1,
+            borderColor: '#eee',
+            backgroundColor: '#ddd',
+            alignSelf: 'center',
+            width: Dimensions.get('screen').width * 0.95,
+            height: (Dimensions.get('screen').width * 0.95) / 2,
             justifyContent: 'center',
-            marginBottom: 10,
-            elevation: 1,
-          }}
-          onPress={() => {
-            navigation.navigate('BlogDetails', {
-              Blog: item,
-            });
+            alignItems: 'center',
+            borderRadius: 5,
           }}>
-          <View
+          <Text
+            numberOfLines={1}
             style={{
-              overflow: 'hidden',
-              borderBottomWidth: 1,
-              borderColor: '#eee',
-              backgroundColor: '#ddd',
-              alignSelf: 'center',
-              width: Dimensions.get('screen').width * 0.95,
-              height: (Dimensions.get('screen').width * 0.95) / 2,
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderRadius: 5,
+              position: 'absolute',
+              bottom: 0,
+              textAlign: 'center',
+              padding: 5,
+              width: '100%',
+              color: '#fff',
+              backgroundColor: 'rgba(0,0,0,0.4)',
+              zIndex: 100,
             }}>
-            <Text
-              numberOfLines={1}
+            {item.Name}
+          </Text>
+          {
+            <Image
+              source={{
+                uri: `https://autobeeb.com/${item.FullImagePath}_1024x683.jpg`,
+              }}
               style={{
-                position: 'absolute',
-                bottom: 0,
-                textAlign: 'center',
-                padding: 5,
+                alignSelf: 'center',
                 width: '100%',
-                color: '#fff',
-                backgroundColor: 'rgba(0,0,0,0.4)',
-                zIndex: 100,
-              }}>
-              {item.Name}
-            </Text>
-            {
-              <Image
-                source={{
-                  uri: `https://autobeeb.com/${item.FullImagePath}_1024x683.jpg`,
-                }}
-                style={{
-                  alignSelf: 'center',
-                  width: '100%',
-                  height: '100%',
-                }}
-                resizeMode="cover"
-              />
-            }
-          </View>
-        </TouchableOpacity>
-      );
+                height: '100%',
+              }}
+              resizeMode="cover"
+            />
+          }
+        </View>
+      </TouchableOpacity>
+    );
   }, []);
 
   function renderCategories() {
@@ -212,9 +215,10 @@ const BlogsScreen = ({navigation}) => {
                   },
                 ]}
                 onPress={async () => {
-                  await setStateAsync(s => ({...s, Page: 1}));
-
-                  setMainCategory(item);
+                  if (!IsLoading) {
+                    await setStateAsync(s => ({...s, Page: 1}));
+                    setMainCategory(item);
+                  }
                 }}>
                 <Text
                   style={[
@@ -252,9 +256,11 @@ const BlogsScreen = ({navigation}) => {
               return (
                 <TouchableOpacity
                   onPress={async () => {
-                    await setStateAsync(s => ({...s, Page: 1}));
-                    setSelectedSubCategory(item);
-                    getArticles(item.ID);
+                    if (!IsLoading) {
+                      await setStateAsync(s => ({...s, Page: 1}));
+                      setSelectedSubCategory(item);
+                      getArticles(item.ID);
+                    }
                   }}>
                   <Animatable.View
                     animation="pulse"
@@ -302,9 +308,11 @@ const BlogsScreen = ({navigation}) => {
             <TouchableOpacity
               key={index}
               onPress={async () => {
-                await setStateAsync(s => ({...s, Page: 1}));
-                setSelectedSubCategory(item);
-                getArticles(item.ID);
+                if (!IsLoading) {
+                  await setStateAsync(s => ({...s, Page: 1}));
+                  setSelectedSubCategory(item);
+                  getArticles(item.ID);
+                }
               }}>
               <Animatable.View
                 animation="pulse"
@@ -362,13 +370,13 @@ const BlogsScreen = ({navigation}) => {
           getArticles(SelectedMainCateogry.ID, false, SearchText);
         }}
       />
+      {!!Categories?.length && renderCategories()}
       {IsLoading ? (
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
           <ActivityIndicator size="large" color={'#F85502'} />
         </View>
       ) : (
         <View style={{}}>
-          {renderCategories()}
           <FlatList
             style={{}}
             contentContainerStyle={{flexGrow: 1, paddingBottom: 200}}

@@ -77,9 +77,7 @@ const ListingDetailsScreen = () => {
         const state = navigation.getState();
         const currentRouteIndex = state.index;
 
-        if (screen === 'HomeScreen') {
-          navigation.navigate('HomeScreen');
-        } else if (currentRouteIndex === 0) {
+        if (currentRouteIndex === 0) {
           // Navigate to root of current stack
           navigation.navigate('ActiveOffers');
           return true; // Prevent default back behavior

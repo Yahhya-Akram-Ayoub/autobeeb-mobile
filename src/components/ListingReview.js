@@ -659,12 +659,9 @@ class ListingReview extends Component {
           style={{
             textAlign: 'left',
             color:
-              (data.sellType && data.sellType == 4) ||
-              (data.condition && data.condition.ID != 1)
-                ? 'black'
-                : this.props.partNumber && this.props.partNumber.length >= 3
+              this.props.partNumber && this.props.partNumber.length >= 3
                 ? 'green'
-                : 'crimson',
+                : 'black',
             fontFamily:
               (data.sellType && data.sellType == 4) ||
               (data.condition && data.condition.ID != 1)
@@ -1098,7 +1095,7 @@ class ListingReview extends Component {
       `${data.sectionID}` === '4096' || `${data.sectionID}` === '2048';
     const hideType =
       `${data.sectionID}` === '4096' || `${data.sectionID}` === '2048';
-   
+
     return (
       <KeyboardAvoidingView
         behavior={Platform.select({ios: 'padding', android: ''})}
@@ -1207,15 +1204,7 @@ class ListingReview extends Component {
                       !this.props.title) ||
                     (data.listingType == 32 &&
                       data.sectionID == 4096 &&
-                      !this.props.boardNumber) ||
-                    (data.condition &&
-                      data.condition.ID == 1 &&
-                      data.sellType &&
-                      data.sellType != 4 &&
-                      data.listingType == 32 &&
-                      data.sectionID < 2048 &&
-                      (!this.props.partNumber ||
-                        this.props.partNumber.length < 3))
+                      !this.props.boardNumber)
                       ? 'crimson'
                       : 'green',
                   paddingVertical: 12,
@@ -1235,16 +1224,6 @@ class ListingReview extends Component {
                   !this.props.boardNumber
                 ) {
                   Alert.alert('', Languages.PleaseEnterBoardNumber);
-                } else if (
-                  data.condition &&
-                  data.condition.ID == 1 &&
-                  data.sellType &&
-                  data.sellType != 4 &&
-                  data.listingType == 32 &&
-                  data.sectionID < 2048 &&
-                  (!this.props.partNumber || this.props.partNumber.length < 3)
-                ) {
-                  Alert.alert('', Languages.EnterPartNumber);
                 } else {
                   if (this.state.withSwear || this.state.withCommission) {
                     this.openSwearModal();

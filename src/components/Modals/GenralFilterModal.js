@@ -3,6 +3,12 @@ import {Pressable, StyleSheet} from 'react-native';
 import {Modal, View, FlatList, Text, TouchableOpacity} from 'react-native';
 import {Color, Languages} from '../../common';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
+let All = {
+  ID: '',
+  Image: require('../../images/SellTypes/BlueAll.png'),
+  All: true,
+  Name: Languages.All,
+};
 
 const GeneralFilterModal = ({
   DataList,
@@ -29,7 +35,6 @@ const GeneralFilterModal = ({
       setSelectedOptions(options);
     }
   };
-
 
   useEffect(() => {
     IsOpen != open && setOpen(!!IsOpen);

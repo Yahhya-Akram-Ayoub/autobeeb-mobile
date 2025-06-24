@@ -183,28 +183,22 @@ const BlogDetails = props => {
               <Text
                 style={[
                   {
-                    textAlign: 'center',
-                    backgroundColor: 'rgba(255,255,255,0.6)',
-                    color: 'black',
                     position: 'absolute',
-                    zIndex: 100,
-                    //  top: 25,
-                    //    right: 0,
+                    bottom: 10,
+                    paddingHorizontal: 10,
+                    paddingVertical: 4,
+                    fontSize: 14,
+                    color: '#fff',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    borderRadius: 12,
+                    overflow: 'hidden',
+                    zIndex: 10,
                     alignSelf: 'center',
-                    paddingHorizontal: 5,
-                    fontSize: 19,
-                    bottom: 0,
-                    borderTopLeftRadius: 50,
-                    paddingLeft: 20,
                   },
-                  I18nManager.isRTL
-                    ? {
-                        left: 0,
-                      }
-                    : {
-                        right: 0,
-                      },
-                ]}>{`${ImageIndex} / ${Blog?.ImageList?.length}`}</Text>
+                  I18nManager.isRTL ? {left: 10} : {right: 10},
+                ]}>
+                {`${ImageIndex} / ${Blog?.ImageList?.length}`}
+              </Text>
             )}
           </View>
           <View

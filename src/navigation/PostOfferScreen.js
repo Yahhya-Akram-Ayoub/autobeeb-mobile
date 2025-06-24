@@ -1485,6 +1485,10 @@ class PostOfferScreen extends Component {
       this.setState({step: Steps.Review, isEditing: false});
     } else if (this.state.step == 1) {
       this.props.navigation.goBack();
+    } else if (this.state.step == Steps.Images) {
+      this.setState({
+        step: Steps.SellType,
+      });
     } else if (this.state.step == 2) {
       this.setState({
         step: this.state.step - 1,

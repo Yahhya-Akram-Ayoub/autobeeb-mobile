@@ -1,19 +1,14 @@
-import React, {useState, useEffect, useRef} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import {
   Text,
   View,
   FlatList,
-  ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
   Animated,
   Easing,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {useNavigation} from '@react-navigation/native';
-import {BannerListingsComponent} from '../../components';
-import {NewHeader} from '../../containers';
-import AddAdvButton from '../../components/AddAdvButton';
 import {Constants, Languages} from '../../common';
 import KS from '../../services/KSAPI';
 import {screenWidth} from '../constants/Layout';
@@ -58,7 +53,12 @@ const RecentlyViewedScreen = ({navigation}) => {
         increaseViews: false,
       });
 
-      setListings(prev => [...prev, ...res]);
+      const idOrder = idsToFetch.map(x => x.id);
+      const sortedRes = idOrder
+        .map(id => res.find(item => item.id === id))
+        .filter(Boolean);
+
+      setListings(prev => [...prev, ...sortedRes]);
     } finally {
       setIsLoading(false);
     }
@@ -198,7 +198,7 @@ const RenderListingItem = ({item, onPress}) => {
 
       <View style={styles.cardContent}>
         <Text numberOfLines={1} style={styles.cardTitle}>
-          {item.typeID === 32 ? item.title : item.name}
+          {item.name}
         </Text>
 
         {!!item.countryName && (

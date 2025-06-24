@@ -47,7 +47,7 @@ const HomeListingRow = () => {
   const navigation = useNavigation();
 
   const moveToDetails = item =>
-    navigation.replace('CarDetails', {id: item.id, screen: 'HomeScreen'});
+    navigation.navigate('CarDetails', {id: item.id, screen: 'HomeScreen'});
 
   useEffect(() => {
     loadListings();
@@ -211,7 +211,7 @@ const HomeListingRow = () => {
   return (
     <ScrollView>
       {renderSection('newly_added_ads', sections.new, 9, () => {
-        navigation.replace('SearchResult', {
+        navigation.navigate('SearchResult', {
           submitted: true,
           query: '',
         });
@@ -257,7 +257,7 @@ const HomeListingRow = () => {
       })}
 
       {renderSection('featured_ads', sections.featured, 3, () => {
-        navigation.replace('SearchResult', {
+        navigation.navigate('SearchResult', {
           submitted: true,
           query: '',
         });
