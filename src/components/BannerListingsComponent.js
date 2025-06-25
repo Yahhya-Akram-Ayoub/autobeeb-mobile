@@ -132,7 +132,7 @@ class BannerListings extends PureComponent {
               key={item.ID}
               style={[
                 this.props.itemStyle || {
-                  elevation: 3,
+                  // elevation: 3,
                   borderTopWidth: DifferentCountry ? 0 : 1,
                   width: Dimensions.get('window').width * 0.95,
                   height: Dimensions.get('window').width / 1.77,
