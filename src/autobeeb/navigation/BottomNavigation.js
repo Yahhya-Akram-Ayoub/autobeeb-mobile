@@ -20,6 +20,7 @@ const hideOnScreens = [
   'SearchResult',
   'ListingReportScreen',
   'SpecialPlans',
+  'Search',
 ];
 
 const BottomNavigation = ({navigationRef}) => {

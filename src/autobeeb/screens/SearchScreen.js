@@ -155,19 +155,22 @@ const SearchScreen = () => {
     dispatch(recentFreeSeach(item));
     setIsLoading(true);
     setQuery(item);
-
-    KS.QuickSearch({
-      langid: Languages.langID,
+    navigation.replace('SearchResult', {
+      submitted: true,
       query: item,
-    }).then(data => {
-      if (data && data.Success) {
-        if (data.Suggestions && data.Suggestions.length === 0) {
-          searchInputRef.current && searchInputRef.current.focus();
-        }
-        setSuggestions(data.Suggestions);
-      }
-      setIsLoading(false);
     });
+    // KS.QuickSearch({
+    //   langid: Languages.langID,
+    //   query: item,
+    // }).then(data => {
+    //   if (data && data.Success) {
+    //     if (data.Suggestions && data.Suggestions.length === 0) {
+    //       searchInputRef.current && searchInputRef.current.focus();
+    //     }
+    //     setSuggestions(data.Suggestions);
+    //   }
+    //   setIsLoading(false);
+    // });
   };
   // Render a suggestion item
   const renderSuggestionItem = ({item}) => {

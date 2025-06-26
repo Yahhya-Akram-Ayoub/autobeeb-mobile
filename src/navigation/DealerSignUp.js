@@ -1388,7 +1388,7 @@ class DealerSignUp extends Component {
                     console.error(e);
                   },
                   (x, y, w, h) => {
-                    this.scrollViewRef.scrollTo({
+                    this.scrollViewRef?.scrollTo({
                       x: 0,
                       y: y,
                       animated: true,
@@ -1864,7 +1864,7 @@ class DealerSignUp extends Component {
                     placeholder={Languages.EnterPassword}
                     onFocus={data => {
                       setTimeout(data => {
-                        this.scrollViewRef.scrollToEnd();
+                        this.scrollViewRef?.scrollToEnd();
                       }, 500);
                     }}
                     style={[

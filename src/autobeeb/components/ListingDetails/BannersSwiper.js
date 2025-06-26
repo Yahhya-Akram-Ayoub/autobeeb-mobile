@@ -14,11 +14,11 @@ import {screenHeight, screenWidth} from '../../constants/Layout';
 import {AutobeebModal} from '../../../components';
 import HeaderWithShare from './HeaderWithShare';
 import {SkeletonLoader} from '../shared/Skeleton';
+import {Constants} from '../../../common';
 
 const BannersSwiper = ({images, imageBasePath}) => {
   const modalPhotoRef = useRef(null);
   const [imageIndex, setImageIndex] = useState(1);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const [failOverImages, setFailOverImages] = useState([]);
 
   const handleScroll = event => {
@@ -35,12 +35,7 @@ const BannersSwiper = ({images, imageBasePath}) => {
   };
 
   const openPhoto = index => {
-    setSelectedImageIndex(index);
     modalPhotoRef.current?.open?.();
-  };
-
-  const closePhoto = () => {
-    modalPhotoRef.current?.close?.();
   };
 
   return (
@@ -105,90 +100,55 @@ const BannersSwiper = ({images, imageBasePath}) => {
           typeId={1}
           backCkick={() => {
             modalPhotoRef.current.close();
+            setImageIndex(1);
           }}
         />
         <FlatList
-          style={styles.imageListModal}
-          keyExtractor={(item, index) => index.toString()}
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.imageListContent}
-          ItemSeparatorComponent={<View style={{height: 5}} />}
-          pagingEnabled={false}
-          onScroll={handleScroll}
-          initialNumToRender={16}
           data={images}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={styles.imageListContent}
           renderItem={({item, index}) => (
             <RenderPopupImage
               item={item}
-              index={index}
+              key={index}
               isFailOver={failOverImages?.includes(index)}
-              openPhoto={openPhoto}
               imageBasePath={imageBasePath}
             />
           )}
+          initialNumToRender={1}
+          maxToRenderPerBatch={1}
+          windowSize={2}
+          getItemLayout={(data, index) => ({
+            length: screenWidth,
+            offset: screenWidth * index,
+            index,
+          })}
+          onScroll={handleScroll}
         />
       </AutobeebModal>
     </>
   );
 };
 
-const RenderPopupImage = ({
-  item,
-  index,
-  isFailOver,
-  openPhoto,
-  imageBasePath,
-}) => {
-  const [imageSize, setImageSize] = useState({width: 0, height: 0});
-  const imageUri = `https://autobeeb.com/${imageBasePath}${item}.png`;
-
-  useEffect(() => {
-    if (!isFailOver) {
-      Image.getSize(
-        imageUri,
-        (width, height) => {
-          // scale down if needed
-          const scaleFactor = screenWidth / width;
-          const imageHeight = height * scaleFactor;
-          setImageSize({
-            width: screenWidth,
-            height: imageHeight > screenHeight ? screenHeight : imageHeight,
-          });
-        },
-        error => {
-          console.log('Failed to get image size:', error);
-        },
-      );
-    }
-  }, [imageUri]);
-
-  if (imageSize.width === 0 && !isFailOver)
-    return (
-      <SkeletonLoader
-        containerStyle={[styles.imageSkeleton]}
-        borderRadius={3}
-        shimmerColors={['#E0E0E0', '#F8F8F8', '#E0E0E0']}
-        animationDuration={1200}
-      />
-    );
+const RenderPopupImage = ({item, isFailOver, imageBasePath}) => {
+  const imageUri = `${Constants.coreApiV1}File/compressed?filePath=${imageBasePath}${item}.png`;
+  console.log({imageUri});
 
   return (
-    <TouchableOpacity activeOpacity={0.9} onPress={() => openPhoto(index)}>
+    <TouchableOpacity
+      style={{width: screenWidth, marginVertical: 6}}
+      activeOpacity={0.9}>
       <FastImage
-        style={[
-          isFailOver
-            ? styles.failOverImage
-            : {
-                width: imageSize.width || screenWidth,
-                height: imageSize.height || screenWidth / 1.2,
-              },
-        ]}
-        resizeMode={'contain'}
+        style={{width: screenWidth, aspectRatio: 1}}
+        resizeMode={FastImage.resizeMode.contain}
         source={
           isFailOver
-            ? require('../../../images/placeholder.png') // Replace if needed
+            ? require('../../../images/placeholder.png')
             : {
                 uri: imageUri,
+                priority: FastImage.priority.normal,
+                cache: FastImage.cacheControl.immutable,
               }
         }
       />

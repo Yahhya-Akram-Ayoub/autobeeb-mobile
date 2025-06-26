@@ -13,10 +13,9 @@ import {
 } from 'react-native';
 import MapView, {Marker} from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import {Languages} from '../common';
-import Permissions, {PERMISSIONS, check} from 'react-native-permissions';
-// import Geolocation from 'react-native-geolocation-service';
 import Geolocation from '@react-native-community/geolocation';
-
+import {check, request, PERMISSIONS} from 'react-native-permissions';
+import {promptForEnableLocationIfNeeded} from 'react-native-android-location-enabler';
 import AppIcon from 'react-native-vector-icons/FontAwesome';
 
 export class LocationSelect extends Component {
@@ -51,25 +50,23 @@ export class LocationSelect extends Component {
 
   checkPermission = () => {
     if (Platform.OS == 'android') {
-      Permissions.check('android.permission.ACCESS_FINE_LOCATION').then(
-        response => {
-          if (response != 'granted') {
-            Permissions.request('android.permission.ACCESS_FINE_LOCATION')
-              .then(value => {
-                if (value == 'granted') {
-                  this.watchPosition();
-                }
-              })
-              .catch(error => {});
-          } else if (response == 'granted') {
-            this.watchPosition();
-          }
-        },
-      );
+      check('android.permission.ACCESS_FINE_LOCATION').then(response => {
+        if (response != 'granted') {
+          request('android.permission.ACCESS_FINE_LOCATION')
+            .then(value => {
+              if (value == 'granted') {
+                this.watchPosition();
+              }
+            })
+            .catch(error => {});
+        } else if (response == 'granted') {
+          this.watchPosition();
+        }
+      });
     } else {
       check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE).then(response => {
         if (response != 'granted') {
-          Permissions.request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE)
+          request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE)
             .then(value => {
               if (value == 'granted') {
                 this.watchPosition();
@@ -94,9 +91,10 @@ export class LocationSelect extends Component {
     this.setState({appState: nextAppState});
   };
 
-  watchPosition = () => {
+  _watchPosition = () => {
     Geolocation.getCurrentPosition(
       position => {
+     
         let region = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -125,7 +123,26 @@ export class LocationSelect extends Component {
           ]);
         }
       },
+      {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 0,
+      },
     );
+  };
+
+  watchPosition = () => {
+    if (Platform.OS === 'android') {
+      // Prompt user to enable GPS
+      promptForEnableLocationIfNeeded({
+        interval: 10000,
+        fastInterval: 5000,
+      }).finally(() => {
+        this._watchPosition();
+      });
+    } else {
+      this._watchPosition();
+    }
   };
 
   render() {

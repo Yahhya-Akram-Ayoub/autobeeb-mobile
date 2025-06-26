@@ -106,7 +106,7 @@ class ListingReview extends Component {
   _keyboardDidShow() {
     if (Platform.OS == 'ios') {
       setTimeout(() => {
-        this.scrollviewRef.scrollToEnd();
+        this.scrollviewRef?.scrollToEnd();
       }, 100);
     }
     this.setState({paddingBottom: Platform.select({ios: 0, android: 50})});

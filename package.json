@@ -36,6 +36,7 @@
     "patch-package": "^8.0.0",
     "react": "19.0.0",
     "react-native": "0.79.1",
+    "react-native-android-location-enabler": "^2.0.1",
     "react-native-animatable": "^1.4.0",
     "react-native-autoheight-webview": "^1.6.5",
     "react-native-bootsplash": "^5.5.3",
