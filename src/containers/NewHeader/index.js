@@ -7,9 +7,10 @@ import {
   Platform,
   I18nManager,
   TextInput,
+  StyleSheet,
 } from 'react-native';
 import {connect} from 'react-redux';
-import {Languages, Constants, Styles, Color} from '../../common';
+import {Languages, Constants, Color} from '../../common';
 import {isIphoneX} from 'react-native-iphone-x-helper';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -19,7 +20,6 @@ import CountryPicker from '../../components/CountryModal/CountryPickerModal';
 class NewHeader extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       searchText: '',
       cca2: 'JO',
@@ -32,84 +32,41 @@ class NewHeader extends Component {
     return (
       <View
         style={[
-          Styles.Common.newMenu,
-          {
-            elevation: this.props.noElevation ? 0 : 2,
-            height: Constants.listingsHeaderHiegth,
-            alignItems: 'flex-end',
-            backgroundColor: this.props.blue && false ? '#1C7EA5' : '#fff',
-          },
-          Platform.OS == 'ios' &&
-            isIphoneX() && {
-              justifyContent: 'center',
-            },
+          styles.container,
+          this.props.noElevation && {elevation: 0},
+          Platform.OS === 'ios' && isIphoneX() && {justifyContent: 'center'},
         ]}>
-        <View
-          style={{
-            flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
-            backgroundColor: this.props.blue && false ? '#1C7EA5' : '#fff',
-            alignItems: 'center',
-            width: Dimensions.get('screen').width,
-            justifyContent: 'space-between',
-            flex: 1,
-            height: 60,
-            paddingHorizontal: I18nManager.isRTL ? 10 : 0,
-          }}>
-          <View style={{}}>
+        <View style={styles.innerContainer}>
+          <View style={styles.backButton}>
             {this.props.back ? (
               <TouchableOpacity
                 hitSlop={{top: 10, right: 10, bottom: 10, left: 10}}
-                style={{
-                  paddingLeft: 15,
-                }}
-                onPress={data => {
-                  this.props.navigation.goBack();
-                }}>
-                <Ionicons name="arrow-back" size={25} color={'black'} />
+                onPress={() => this.props.navigation.goBack()}>
+                <Ionicons
+                  name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'}
+                  size={25}
+                  color={'black'}
+                />
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
                 hitSlop={{top: 10, right: 10, bottom: 10, left: 10}}
-                style={{
-                  paddingLeft: 15,
-                }}
-                onPress={data => {
-                  this.props.navigation.navigate('DrawerStack');
-                }}>
+                onPress={() => this.props.navigation.navigate('DrawerStack')}>
                 <Entypo name="menu" size={35} color={'black'} />
               </TouchableOpacity>
             )}
           </View>
 
           {this.props.CustomSearchComponent ? (
-            <View
-              style={{
-                flexDirection: 'row',
-                borderBottomWidth: 1,
-                borderBottomColor:
-                  this.props.blue && false ? '#fff' : 'rgba(0,0,0,0.7)',
-                height: 40,
-
-                paddingHorizontal: 5,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
+            <View style={styles.searchContainer}>
               <IconFa
                 name="search"
                 size={18}
-                style={{marginRight: 5}}
-                color={this.props.blue && false ? '#fff' : 'rgba(0,0,0,0.7)'}
+                style={styles.searchIcon}
+                color={'rgba(0,0,0,0.7)'}
               />
               <TextInput
-                style={{
-                  color: 'gray',
-                  height: 40,
-                  fontSize: 16,
-                  marginTop: 10,
-                  width: Dimensions.get('screen').width * 0.45,
-                  fontFamily: 'Cairo-Regular',
-                  textAlign: I18nManager.isRTL ? 'right' : 'left',
-                }}
+                style={styles.searchInput}
                 placeholder={this.props.placeholder}
                 maxLength={26}
                 onChangeText={this.props.onChangeText}
@@ -119,92 +76,46 @@ class NewHeader extends Component {
             </View>
           ) : (
             <TouchableOpacity
-              style={[
-                {
-                  borderColor: Color.secondary,
-                  borderRadius: 5,
-                  paddingHorizontal: 3,
-                  paddingVertical: 11,
-                },
-              ]}
+              style={styles.touchableSearchBox}
               onPress={() => {
                 if (this.props.query) {
                   this.props.navigation.navigate('HomeScreen', {
                     screen: 'Search',
-                    params: {
-                      query: this.props.query,
-                    },
+                    params: {query: this.props.query},
                   });
-                  this.props.navigation.navigate('Search');
-                } else {
-                  this.props.navigation.navigate('HomeScreen', {
-                    screen: 'Search',
-                  });
-                  this.props.navigation.navigate('Search');
                 }
+                this.props.navigation.navigate('Search');
               }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  paddingHorizontal: 5,
-                  paddingVertical: 3,
-                  borderBottomWidth: 1,
-                  borderBottomColor:
-                    this.props.blue && false ? '#fff' : 'rgba(0,0,0,0.7)',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
+              <View style={styles.queryBox}>
                 <IconFa
                   name="search"
                   size={18}
-                  style={{marginRight: 5}}
-                  color={this.props.blue && false ? '#fff' : 'rgba(0,0,0,0.7)'}
+                  style={styles.searchIcon}
+                  color={'rgba(0,0,0,0.7)'}
                 />
-                <Text
-                  style={{
-                    color: this.props.blue && false ? '#fff' : 'gray',
-                    fontSize: 17,
-                    minWidth: Dimensions.get('screen').width * 0.45,
-                    textAlign: 'left',
-                    //     fontSize: 16
-                  }}>
-                  {this.props.query
-                    ? this.props.query
-                    : Languages.SearchByMakeOrModel}
+                <Text style={styles.queryText}>
+                  {this.props.query || Languages.SearchByMakeOrModel}
                 </Text>
               </View>
             </TouchableOpacity>
           )}
 
           <TouchableOpacity
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              alignContent: 'center',
-              marginRight: 15,
-              justifyContent: 'space-evenly',
-            }}
+            style={styles.countryButton}
             onPress={() => {
               this.countryPicker?.openModal();
             }}>
-            <View
-              style={{
-                marginBottom: 3,
-              }}>
+            <View style={styles.countryPickerBox}>
               {this.props.ViewingCountry && (
                 <CountryPicker
                   filterPlaceholder={Languages.Search}
                   hideAlphabetFilter
-                  ref={listView => (this.countryPicker = listView)}
+                  ref={ref => (this.countryPicker = ref)}
                   filterable
                   AllCountries
                   autoFocusFilter={false}
                   styles={{
-                    header: {
-                      paddingVertical: 15,
-                      borderBottomWidth: 1,
-                      borderBottomColor: Color.secondary,
-                    },
+                    header: styles.countryPickerHeader,
                   }}
                   closeable
                   transparent
@@ -212,28 +123,18 @@ class NewHeader extends Component {
                     this.setState({countryPickerShown: false});
                   }}
                   onChange={value => {
-                    if (this.props.onCountryChange) {
-                      this.setState(
-                        {
-                          cca2: value.cca2,
-                          countryName: value.name,
-                        },
-                        () => {
-                          this.props.setViewingCountry(value);
+                    this.setState(
+                      {
+                        cca2: value.cca2,
+                        countryName: value.name,
+                      },
+                      () => {
+                        this.props.setViewingCountry(value);
+                        if (this.props.onCountryChange) {
                           this.props.onCountryChange(value);
-                        },
-                      );
-                    } else {
-                      this.setState(
-                        {
-                          cca2: value.cca2,
-                          countryName: value.name,
-                        },
-                        () => {
-                          this.props.setViewingCountry(value);
-                        },
-                      );
-                    }
+                        }
+                      },
+                    );
                   }}
                   cca2={this.props.ViewingCountry.cca2}
                   translation={Languages.translation}
@@ -248,18 +149,102 @@ class NewHeader extends Component {
   }
 }
 
+const styles = StyleSheet.create({
+  container: {
+    zIndex: 1,
+    flexDirection: 'row',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    borderBottomWidth: 1,
+    elevation: 2,
+    height: Constants.listingsHeaderHiegth,
+    alignItems: 'flex-end',
+    backgroundColor: '#fff',
+  },
+  innerContainer: {
+    alignItems: 'center',
+    width: Dimensions.get('screen').width,
+    justifyContent: 'space-between',
+    flex: 1,
+    height: 60,
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+  },
+  backButton: {
+    flexDirection: 'row',
+    width: 35,
+    marginStart: 6,
+  },
+  searchContainer: {
+    borderBottomColor: 'rgba(0,0,0,0.7)',
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    height: 40,
+    paddingHorizontal: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  searchIcon: {
+    marginRight: 5,
+  },
+  searchInput: {
+    textAlign: I18nManager.isRTL ? 'right' : 'left',
+    color: 'gray',
+    height: 40,
+    fontSize: 16,
+    marginTop: 10,
+    width: Dimensions.get('screen').width * 0.45,
+    fontFamily: 'Cairo-Regular',
+  },
+  touchableSearchBox: {
+    borderColor: Color.secondary,
+    borderRadius: 5,
+    paddingHorizontal: 3,
+    paddingVertical: 11,
+  },
+  queryBox: {
+    flexDirection: 'row',
+    paddingHorizontal: 5,
+    paddingVertical: 3,
+    borderBottomWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomColor: 'rgba(0,0,0,0.7)',
+  },
+  queryText: {
+    color: 'gray',
+    fontSize: 17,
+    minWidth: Dimensions.get('screen').width * 0.45,
+    textAlign: 'left',
+  },
+  countryButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
+    marginRight: 15,
+    justifyContent: 'space-evenly',
+  },
+  countryPickerBox: {
+    marginBottom: 3,
+  },
+  countryPickerHeader: {
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: Color.secondary,
+  },
+});
+
 const mapStateToProps = ({menu}) => ({
   ViewingCountry: menu.ViewingCountry,
 });
 
 const mapDispatchToProps = dispatch => {
   const {actions} = require('../../redux/MenuRedux');
-
   return {
     setViewingCountry: (country, callback) =>
       actions.setViewingCountry(dispatch, country, callback),
-
-    //  fetchListings: (parentid) => Listingredux.actions.fetchListings(dispatch, parentid, 1)
   };
 };
 

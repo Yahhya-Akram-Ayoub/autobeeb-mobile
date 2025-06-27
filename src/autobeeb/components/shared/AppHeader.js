@@ -59,7 +59,7 @@ const AppHeader = ({
             {back ? (
               <AppIcon
                 type={Icons.Ionicons}
-                name="arrow-back"
+                name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'}
                 size={25}
                 color="black"
               />
@@ -169,13 +169,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flex: 1,
     height: 60,
-    flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
+    flexDirection: 'row',
     backgroundColor: '#fff',
-    paddingHorizontal: I18nManager.isRTL ? 10 : 0,
   },
   backButton: {
-    paddingLeft: 15,
+    width: 35,
+    marginStart: 6,
     hitSlop: {top: 10, right: 10, bottom: 10, left: 10},
+    flexDirection: 'row',
   },
   searchContainer: {
     borderBottomColor: 'rgba(0,0,0,0.7)',

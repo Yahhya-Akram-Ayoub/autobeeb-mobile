@@ -76,7 +76,7 @@ const FilterTabBox = memo(({Tab}) => {
       ListingType: _listingType === 4 ? 0 : _listingType,
       ParentListingType: _listingType === 4 ? _listingType : 0,
     }).then(res => {
-      if (Tab.ID === 16) res.categories.unshift(AllCategories);
+      if (Tab.ID === 16 || Tab.ID === 4) res.categories.unshift(AllCategories);
       setCategories(deepClone(res.categories));
     });
   };

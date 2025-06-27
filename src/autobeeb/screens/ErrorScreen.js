@@ -43,7 +43,7 @@ const ErrorScreen = () => {
 
   return (
     <View style={styles.container}>
-      <AppHeader onCountryChange={refreshScreen} />
+      <AppHeader back={true} onCountryChange={refreshScreen} />
       <View style={styles.content}>
         <Image
           style={styles.image}

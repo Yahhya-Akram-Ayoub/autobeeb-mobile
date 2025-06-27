@@ -48,6 +48,12 @@ const HeaderWithShare = ({name, listingId, typeId, backCkick}) => {
     <View style={styles.wrapper}>
       <View style={styles.headerContainer}>
         <View style={styles.row}>
+          <Pressable
+            onPress={() => onShare('facebook')}
+            style={styles.shareButton}>
+            <FacebookIcon size={32} />
+          </Pressable>
+
           <TouchableOpacity
             hitSlop={{top: 10, right: 10, bottom: 10, left: 10}}
             style={styles.closeButton}
@@ -60,17 +66,11 @@ const HeaderWithShare = ({name, listingId, typeId, backCkick}) => {
             }}>
             <AppIcon
               type={Icons.Ionicons}
-              name={I18nManager.isRTL ? 'arrow-back' : 'arrow-forward'}
+              name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'}
               size={20}
               color={'white'}
             />
           </TouchableOpacity>
-
-          <Pressable
-            onPress={() => onShare('facebook')}
-            style={styles.shareButton}>
-            <FacebookIcon size={32} />
-          </Pressable>
         </View>
       </View>
     </View>
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   closeButton: {
-    marginRight: 15,
+    marginLeft: 10,
     backgroundColor: 'rgba(0,0,0,0.5)',
     borderRadius: 100,
     padding: 7,
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   shareButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: 10,
+    marginRight: 10,
   },
 });
 

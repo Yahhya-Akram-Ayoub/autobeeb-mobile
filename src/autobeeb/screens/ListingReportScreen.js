@@ -36,7 +36,7 @@ const ListingReportScreen = () => {
         flex: 1,
         paddingBottom: insets.bottom,
       }}>
-      <AppHeader onCountryChange={refreshScreen} />
+      <AppHeader back={true} onCountryChange={refreshScreen} />
       <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={false}>
         <ReportListingForm listingId={listingId} />
       </ScrollView>

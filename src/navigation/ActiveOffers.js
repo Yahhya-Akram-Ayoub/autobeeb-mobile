@@ -287,7 +287,7 @@ class ActiveOffers extends Component {
     if (!this.props.user) {
       return (
         <View style={{flex: 1, backgroundColor: '#fff'}}>
-          <NewHeader navigation={this.props.navigation} />
+          <NewHeader navigation={this.props.navigation} back={true} />
           <View
             style={{justifyContent: 'center', flex: 1, alignItems: 'center'}}>
             <IconMC
@@ -330,6 +330,7 @@ class ActiveOffers extends Component {
       return (
         <View style={{flex: 1}}>
           <NewHeader
+            back={true}
             navigation={this.props.navigation}
             HomeScreen
             onCountryChange={item => {
@@ -388,6 +389,7 @@ class ActiveOffers extends Component {
           />
 
           <NewHeader
+            back={true}
             navigation={this.props.navigation}
             onCountryChange={item => {
               this.setState({cca2: item.cca2});
