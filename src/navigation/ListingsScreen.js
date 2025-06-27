@@ -177,10 +177,7 @@ class ListingsScreen extends Component {
   selectedFilters = () => {
     const getFirstOrNull = arr =>
       Array.isArray(arr) && arr.length > 0 ? arr[0] : null;
-    console.log({
-      ListingType: this.props.route.params?.ListingType,
-      SellType: this.props.route.params?.SellType,
-    });
+
     return {
       ListingType: this.props.route.params?.ListingType || null,
       SellType: this.props.route.params?.SellType || null,
@@ -2167,6 +2164,7 @@ class ListingsScreen extends Component {
                   let makes = this.state.selectedColor.filter(
                     make => make.ID > 0,
                   );
+                  console.log({item});
                   makes.push(item);
                   this.setState({
                     selectedColor: makes,
@@ -2430,14 +2428,12 @@ class ListingsScreen extends Component {
         selectedMaxPrice: '',
         selectedMaxYear: '',
         selectedModel: [All],
-        selectedCategory: [this.props.route.params?.selectedCategory ?? All],
+        selectedCategory: [All],
         selectedCity: [All],
         selectedColor: [All],
-        selectedFuelType: [this.props.route.params?.selectedFuelType ?? All],
+        selectedFuelType: [All],
         selectedGearBox: [All],
-        selectedPaymentMethod: [
-          this.props.route.params?.selectedPaymentMethod ?? All,
-        ],
+        selectedPaymentMethod: [All],
         selectedRentPeriod: [All],
         selectedSection: [this.props.route.params?.selectedSection ?? All],
         selectedStatus: [All],
@@ -2450,6 +2446,7 @@ class ListingsScreen extends Component {
         }
       },
     );
+    this.filterModal?.close();
   }
 
   renderFilterHeader() {
@@ -2621,7 +2618,7 @@ class ListingsScreen extends Component {
                   return {Name: i.Name, Id: i.ID, Type: 'P'};
                 }),
                 ...this.state.selectedColor.map(i => {
-                  return {Name: i.Name, Id: i.ID, Type: 'R'};
+                  return {Name: i.Name ? i.Name : i.Label, Id: i.ID, Type: 'R'};
                 }),
                 (!!this.state.selectedMaxMileage ||
                   !!this.state.selectedMinMileage) && {
@@ -3779,6 +3776,7 @@ class ListingsScreen extends Component {
               </TouchableOpacity>
 
               <TouchableOpacity
+                activeOpacity={0.9}
                 onPress={() => {
                   this.ResetFilters();
                 }}

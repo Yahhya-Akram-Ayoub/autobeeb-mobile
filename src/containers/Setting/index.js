@@ -144,7 +144,7 @@ class Setting extends Component {
                       this.props.setViewingCurrency(data);
                       setTimeout(() => {
                         RNRestart.restart();
-                      }, 2000);
+                      }, 1000);
                     },
                   },
                 ],

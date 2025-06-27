@@ -18,6 +18,7 @@ export const actions = {
   },
 
   setViewingCurrency: (dispatch, Currency, callback) => {
+    global.ViewingCurrency = Currency;
     dispatch({type: types.SET_CURRENCY, payload: {Currency}});
     if (callback) {
       callback(callback);

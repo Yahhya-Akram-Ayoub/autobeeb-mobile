@@ -59,11 +59,14 @@ class SplashScreen extends Component {
           langid: Languages.langID,
           isoCode: data,
         }).then(curr => {
-          global.ViewingCurrency = curr.currency;
-          this.props.setViewingCurrency(curr.currency);
+          if (!global.ViewingCurrency?.ID) {
+            global.ViewingCurrency = curr.currency;
+            this.props.setViewingCurrency(curr.currency);
+          }
+
           AsyncStorage.getItem('user', (error, result) => {
             const user = JSON.parse(result);
-            
+
             // check features plans
             KS.GetFeaturesPlansCore({
               userId: user?.ID,
@@ -79,7 +82,7 @@ class SplashScreen extends Component {
               Languages.langID,
               data,
               5,
-              curr.currency?.ID,
+              global.ViewingCurrency?.ID,
               () => {
                 this.setState({finishedLoadingHomescreen: true});
                 Timer.setTimeout(this.prepareData, minDisplayTime);

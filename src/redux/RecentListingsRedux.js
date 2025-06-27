@@ -112,7 +112,7 @@ export const reducer = (state = initialState, action) => {
 
     case types.SET_RECENT_SEARCHED: {
       let tempRecentSeen = state.recentFreeSeach.filter(
-        item => item.keyword !== payload.keyword,
+        item => `${item.keyword}`.trim() !== `${payload.keyword}`.trim(),
       );
       if (tempRecentSeen.length >= 20) {
         tempRecentSeen = tempRecentSeen.slice(0, 19);

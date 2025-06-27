@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useState} from 'react';
+import {useCallback, useMemo, useRef, useState} from 'react';
 import {Text} from 'react-native';
 import {FlatList, Pressable} from 'react-native';
 import {Dimensions, Modal, StyleSheet, View} from 'react-native';
@@ -7,18 +7,21 @@ import {Color, Constants, Languages} from '../../common';
 
 const {width} = Dimensions.get('screen');
 const TagsFilter = ({Tags, OnCelarFilter, OnDeleteFilter}) => {
-  const CelarFilter = useMemo(
-    () => (
-      <View style={styles.DeleteContainer}>
-        <Pressable style={styles.DeleteBtn} onPress={OnCelarFilter}>
-          <Text style={styles.DeleteText} numberOfLines={1}>
-            {Languages.Delete}
-          </Text>
-        </Pressable>
-      </View>
-    ),
-    [OnCelarFilter],
+  const listRef = useRef(null);
+  const CelarFilter = () => (
+    <View style={styles.DeleteContainer}>
+      <Pressable style={styles.DeleteBtn} onPress={handleClearFilter}>
+        <Text style={styles.DeleteText} numberOfLines={1}>
+          {Languages.Delete}
+        </Text>
+      </Pressable>
+    </View>
   );
+  const handleClearFilter = () => {
+    listRef.current?.scrollToOffset({animated: true, offset: 0});
+    OnCelarFilter?.();
+  };
+
   const handleDeleteFilter = useCallback(
     (Id, Type) => {
       OnDeleteFilter({Id, Type});
@@ -31,9 +34,10 @@ const TagsFilter = ({Tags, OnCelarFilter, OnDeleteFilter}) => {
 
   return (
     <View style={styles.HeaderRow}>
-      {CelarFilter}
+      <CelarFilter />
 
       <FlatList
+        ref={listRef}
         data={Tags.filter(x => !!x.Id)}
         horizontal
         contentContainerStyle={{minWidth: width - 62}}
