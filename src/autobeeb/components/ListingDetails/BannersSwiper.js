@@ -104,7 +104,9 @@ const BannersSwiper = ({images, imageBasePath}) => {
           }}
         />
         <FlatList
-          showsHorizontalScrollIndicator={false}
+          horizontal
+          pagingEnabled
+          showsVerticalScrollIndicator={false}
           data={images}
           keyExtractor={(item, index) => index.toString()}
           contentContainerStyle={styles.imageListContent}
@@ -118,7 +120,8 @@ const BannersSwiper = ({images, imageBasePath}) => {
           )}
           initialNumToRender={1}
           maxToRenderPerBatch={1}
-          windowSize={2}
+          windowSize={4}
+          removeClippedSubviews={true}
           getItemLayout={(data, index) => ({
             length: screenWidth,
             offset: screenWidth * index,
@@ -133,14 +136,41 @@ const BannersSwiper = ({images, imageBasePath}) => {
 
 const RenderPopupImage = ({item, isFailOver, imageBasePath}) => {
   const imageUri = `${Constants.coreApiV1}File/compressed?filePath=${imageBasePath}${item}.png`;
-  console.log({imageUri});
+  const [imageSize, setImageSize] = useState({
+    width: 0,
+    height: 0,
+  });
+
+  useEffect(() => {
+    if (!isFailOver) {
+      Image.getSize(
+        imageUri,
+        (width, height) => {
+          const scaleFactor = screenWidth / width;
+          const imageHeight = height * scaleFactor;
+          setImageSize({width: screenWidth, height: imageHeight});
+        },
+        error => {
+          console.log('Error getting image size:', error);
+        },
+      );
+    }
+  }, [imageUri, isFailOver]);
 
   return (
-    <TouchableOpacity
-      style={{width: screenWidth, marginVertical: 6}}
-      activeOpacity={0.9}>
+    <View
+      style={{
+        width: screenWidth,
+        height: screenHeight,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
       <FastImage
-        style={{width: screenWidth, aspectRatio: 1}}
+        style={{
+          width: imageSize.width,
+          height: imageSize.height,
+          alignSelf: 'center',
+        }}
         resizeMode={FastImage.resizeMode.contain}
         source={
           isFailOver
@@ -152,7 +182,7 @@ const RenderPopupImage = ({item, isFailOver, imageBasePath}) => {
               }
         }
       />
-    </TouchableOpacity>
+    </View>
   );
 };
 
@@ -168,7 +198,7 @@ const styles = StyleSheet.create({
   },
   imageListContent: {
     minWidth: '100%',
-    justifyContent: 'center',
+    height: screenHeight,
   },
   image: {
     height: screenWidth / 1.2,
