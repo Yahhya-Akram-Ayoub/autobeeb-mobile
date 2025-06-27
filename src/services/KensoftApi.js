@@ -1306,6 +1306,27 @@ KensoftApi.prototype.GetListingCore = function (data, callback) {
   return this._request(_requestUrl, callback);
 };
 
+KensoftApi.prototype.GetFilesInfoes = function (data) {
+  let _requestUrl = `${this.coreApiV1}File/infosizes`;
+
+  return new Promise((resolve, reject) => {
+    fetch(_requestUrl, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(data => {
+        resolve(data);
+      })
+      .catch(err => {
+        reject(err);
+      });
+  });
+};
+
 KensoftApi.prototype.GetListingsByIdsCore = function (data, callback) {
   let _requestUrl = `${this.coreApiV1}Listings/List/ListingsByIdsAsync?`;
   data = Object.fromEntries(

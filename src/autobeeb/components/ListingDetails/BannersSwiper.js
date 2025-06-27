@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react';
+import {useRef, useState} from 'react';
 import {
   Text,
   FlatList,
@@ -6,7 +6,6 @@ import {
   I18nManager,
   StyleSheet,
   View,
-  Image,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import IconFa from 'react-native-vector-icons/FontAwesome';
@@ -15,11 +14,14 @@ import {AutobeebModal} from '../../../components';
 import HeaderWithShare from './HeaderWithShare';
 import {SkeletonLoader} from '../shared/Skeleton';
 import {Constants} from '../../../common';
+import KS from '../../../services/KSAPI';
 
 const BannersSwiper = ({images, imageBasePath}) => {
   const modalPhotoRef = useRef(null);
   const [imageIndex, setImageIndex] = useState(1);
   const [failOverImages, setFailOverImages] = useState([]);
+  const [loader, setLoader] = useState(true);
+  const [imagesFullSize, setImagesFullSize] = useState([]);
 
   const handleScroll = event => {
     const offsetX = event.nativeEvent.contentOffset.x;
@@ -36,6 +38,28 @@ const BannersSwiper = ({images, imageBasePath}) => {
 
   const openPhoto = index => {
     modalPhotoRef.current?.open?.();
+    setLoader(true);
+
+    KS.GetFilesInfoes({
+      Paths: images.map(item => `${imageBasePath}${item}.png`),
+    })
+      .then(res => res.json())
+      .then(res => {
+        const _res = res.map(x => {
+          const scaleFactor = screenWidth / x.width;
+          const imageHeight = x.height * scaleFactor;
+          return {
+            width: screenWidth,
+            height: imageHeight,
+            path: x.path,
+          };
+        });
+
+        setImagesFullSize(_res);
+      })
+      .finally(() => {
+        setLoader(false);
+      });
   };
 
   return (
@@ -100,75 +124,58 @@ const BannersSwiper = ({images, imageBasePath}) => {
           typeId={1}
           backCkick={() => {
             modalPhotoRef.current.close();
-            setImageIndex(1);
           }}
         />
         <FlatList
-          horizontal
-          pagingEnabled
+          horizontal={false}
           showsVerticalScrollIndicator={false}
-          data={images}
+          data={loader ? [1, 1] : imagesFullSize}
           keyExtractor={(item, index) => index.toString()}
-          contentContainerStyle={styles.imageListContent}
-          renderItem={({item, index}) => (
-            <RenderPopupImage
-              item={item}
-              key={index}
-              isFailOver={failOverImages?.includes(index)}
-              imageBasePath={imageBasePath}
-            />
-          )}
-          initialNumToRender={1}
-          maxToRenderPerBatch={1}
-          windowSize={4}
-          removeClippedSubviews={true}
+          contentContainerStyle={styles.imageListContent2}
+          style={{height: screenHeight, flex: 1}}
+          renderItem={({item, index}) =>
+            loader ? (
+              <SkeletonLoader
+                key={`skeleton-${index}`}
+                containerStyle={styles.skeletonBox}
+                borderRadius={3}
+                shimmerColors={['#E0E0E0', '#F8F8F8', '#E0E0E0']}
+                animationDuration={1200}
+              />
+            ) : (
+              <RenderPopupImage
+                item={item}
+                key={index}
+                isFailOver={failOverImages?.includes(index)}
+                imageBasePath={imageBasePath}
+              />
+            )
+          }
           getItemLayout={(data, index) => ({
-            length: screenWidth,
-            offset: screenWidth * index,
+            length: screenHeight,
+            offset: screenHeight * index,
             index,
           })}
-          onScroll={handleScroll}
         />
       </AutobeebModal>
     </>
   );
 };
 
-const RenderPopupImage = ({item, isFailOver, imageBasePath}) => {
-  const imageUri = `${Constants.coreApiV1}File/compressed?filePath=${imageBasePath}${item}.png`;
-  const [imageSize, setImageSize] = useState({
-    width: 0,
-    height: 0,
-  });
-
-  useEffect(() => {
-    if (!isFailOver) {
-      Image.getSize(
-        imageUri,
-        (width, height) => {
-          const scaleFactor = screenWidth / width;
-          const imageHeight = height * scaleFactor;
-          setImageSize({width: screenWidth, height: imageHeight});
-        },
-        error => {
-          console.log('Error getting image size:', error);
-        },
-      );
-    }
-  }, [imageUri, isFailOver]);
+const RenderPopupImage = ({item: {path, width, height}, isFailOver}) => {
+  const imageUri = `${Constants.coreApiV1}File/compressed?filePath=${path}`;
 
   return (
     <View
       style={{
         width: screenWidth,
-        height: screenHeight,
         justifyContent: 'center',
         alignItems: 'center',
       }}>
       <FastImage
         style={{
-          width: imageSize.width,
-          height: imageSize.height,
+          width: width,
+          height: height,
           alignSelf: 'center',
         }}
         resizeMode={FastImage.resizeMode.contain}
@@ -177,8 +184,6 @@ const RenderPopupImage = ({item, isFailOver, imageBasePath}) => {
             ? require('../../../images/placeholder.png')
             : {
                 uri: imageUri,
-                priority: FastImage.priority.normal,
-                cache: FastImage.cacheControl.immutable,
               }
         }
       />
@@ -198,7 +203,10 @@ const styles = StyleSheet.create({
   },
   imageListContent: {
     minWidth: '100%',
-    height: screenHeight,
+  },
+  imageListContent2: {
+    minWidth: '100%',
+    gap: 10,
   },
   image: {
     height: screenWidth / 1.2,
@@ -226,6 +234,13 @@ const styles = StyleSheet.create({
   failOverImage: {
     width: screenWidth * 0.7,
     height: screenWidth / 1.2,
+  },
+  skeletonBox: {
+    width: screenWidth,
+    height: screenHeight,
+    marginBottom: 10,
+    borderRadius: 8,
+    backgroundColor: '#eee',
   },
 });
 
