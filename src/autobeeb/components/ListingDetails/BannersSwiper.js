@@ -6,6 +6,8 @@ import {
   I18nManager,
   StyleSheet,
   View,
+  Image,
+  ActivityIndicator,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import IconFa from 'react-native-vector-icons/FontAwesome';
@@ -46,11 +48,12 @@ const BannersSwiper = ({images, imageBasePath}) => {
       .then(res => res.json())
       .then(res => {
         const _res = res.map(x => {
+          console.log({server: x});
           const scaleFactor = screenWidth / x.width;
           const imageHeight = x.height * scaleFactor;
           return {
             width: screenWidth,
-            height: imageHeight,
+            height: imageHeight > screenHeight ? screenHeight : imageHeight,
             path: x.path,
           };
         });
@@ -151,6 +154,8 @@ const BannersSwiper = ({images, imageBasePath}) => {
               />
             )
           }
+          initialNumToRender={1}
+          maxToRenderPerBatch={2}
           getItemLayout={(data, index) => ({
             length: screenHeight,
             offset: screenHeight * index,
@@ -164,14 +169,17 @@ const BannersSwiper = ({images, imageBasePath}) => {
 
 const RenderPopupImage = ({item: {path, width, height}, isFailOver}) => {
   const imageUri = `${Constants.coreApiV1}File/compressed?filePath=${path}`;
+  const [loading, setLoading] = useState(true);
 
   return (
-    <View
-      style={{
-        width: screenWidth,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
+    <View style={[styles.ImageContiner, {height}]}>
+      {loading && (
+        <ActivityIndicator
+          size="large"
+          color="#888"
+          style={{position: 'absolute', zIndex: 1}}
+        />
+      )}
       <FastImage
         style={{
           width: width,
@@ -186,6 +194,8 @@ const RenderPopupImage = ({item: {path, width, height}, isFailOver}) => {
                 uri: imageUri,
               }
         }
+        onLoadEnd={() => setLoading(false)}
+        onError={() => setLoading(false)}
       />
     </View>
   );
@@ -241,6 +251,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 8,
     backgroundColor: '#eee',
+  },
+  ImageContiner: {
+    screenWidth,
+    minHeight: screenHeight / 3,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

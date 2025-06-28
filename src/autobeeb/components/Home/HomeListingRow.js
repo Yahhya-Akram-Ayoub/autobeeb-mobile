@@ -190,10 +190,13 @@ const HomeListingRow = () => {
       <View style={styles.cardContainer}>
         <View style={styles.titleRow}>
           <Text style={styles.blackHeader}>{Languages[titleKey]}</Text>
-          <TouchableOpacity onPress={navigateTo}>
-            <Text style={styles.showMore}>{Languages.ShowMore}</Text>
-          </TouchableOpacity>
+          {'newly_added_ads' !== titleKey && (
+            <TouchableOpacity onPress={navigateTo}>
+              <Text style={styles.showMore}>{Languages.ShowMore}</Text>
+            </TouchableOpacity>
+          )}
         </View>
+
         <View style={data.length < 3 ? styles.grid2 : styles.grid}>
           {data.slice(0, maxItems).map(item => (
             <ListingCard
@@ -244,10 +247,15 @@ const HomeListingRow = () => {
       })}
 
       {renderSection('suggested_ads', sections.suggested, 3, () => {
+        const withSection = ['4', '32'].includes(
+          `${recentFilterSeach?.selectedEntities?.ListingType}`,
+        );
         navigation.navigate('ListingsScreen', {
           ListingType: recentFilterSeach?.selectedEntities?.ListingType,
           SellType: recentFilterSeach?.selectedEntities?.SellType,
-          selectedSection: recentFilterSeach?.selectedEntities?.selectedSection,
+          selectedSection: withSection
+            ? recentFilterSeach?.selectedEntities?.selectedSection
+            : null,
           selectedFuelType:
             recentFilterSeach?.selectedEntities?.selectedFuelType,
           selectedCategory:
