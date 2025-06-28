@@ -41,7 +41,7 @@ const ListingBanner = ({
   useEffect(() => {
     if (isNeedRefresh)
       setInterval(() => {
-        if (refreshFlag < 4) {
+        if (refreshFlag < 5) {
           refreshImages();
           refreshFlag++;
         }

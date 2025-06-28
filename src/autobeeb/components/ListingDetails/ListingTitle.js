@@ -25,14 +25,15 @@ const ListingTitle = ({
   openOTPModal,
   isPendingDelete,
   isNewUser,
+  email,
+  phone,
 }) => {
   const user = useSelector(x => x.user.user ?? x.user.tempUser);
   const [openModal, setOpenModal] = useState(false);
   const [oTP, setOTP] = useState(null);
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const {EmailRegister, OTPConfirmed, EmailConfirmed, ID, Email, Phone} =
-    user ?? {};
+  const {EmailRegister, OTPConfirmed, EmailConfirmed, ID} = user ?? {};
   const renderPaymentMethod = method => {
     switch (`${method}`) {
       case '2':
@@ -55,14 +56,13 @@ const ListingTitle = ({
     EmailConfirmed === false && EmailRegister && (ownerId === ID || isNewUser);
 
   const checkOTP = () => {
-
     KS.UserVerifyOTP({
       otpcode: oTP,
       userid: ID,
       username:
         EmailRegister || (EmailRegister && EmailConfirmed === false)
-          ? Email
-          : Phone,
+          ? email
+          : phone,
     }).then(data => {
       if (data.OTPVerified === true || data.EmailConfirmed === true) {
         if (isPendingDelete)
@@ -94,7 +94,7 @@ const ListingTitle = ({
     KS.ResendOTP({
       userID: ID,
       otpType: EmailRegister ? 2 : 1,
-      username: EmailRegister ? Email : Phone,
+      username: EmailRegister ? email : phone,
     }).then(data => {
       if (data.Success === 1) {
         toast(Languages.WeSendUOTP);
@@ -180,6 +180,7 @@ const ListingTitle = ({
           </Text>
         </View>
       </View>
+
       {openModal && (
         <OTPModal
           isOpen={openModal}
@@ -191,8 +192,8 @@ const ListingTitle = ({
           pendingDelete={isPendingDelete}
           Username={
             EmailRegister || (EmailRegister && EmailConfirmed === false)
-              ? Email
-              : Phone
+              ? email
+              : phone
           }
           otp={oTP}
           onChange={otp => {

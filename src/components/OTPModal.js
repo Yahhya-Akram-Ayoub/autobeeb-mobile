@@ -12,6 +12,7 @@ import {
   Pressable,
   ActivityIndicator,
   Modal,
+  Keyboard,
 } from 'react-native';
 import {Languages, Color} from '../common';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -125,110 +126,76 @@ const OTPModal = ({
       entry="bottom"
       swipeToClose={false}
       backdropOpacity={0.5}>
-      <KeyboardAvoidingView behavior="padding">
-        <View style={styles.modelContainer}>
-          <TouchableOpacity
-            style={{
-              position: 'absolute',
-              top: 10,
-              zIndex: 10,
-              right: 10,
-            }}
-            onPress={() => {
-              close();
-            }}>
-            <IconMC name="close" size={30} color={Color.primary} />
-          </TouchableOpacity>
+      <View style={styles.modelContainer}>
+        <TouchableOpacity
+          style={{
+            position: 'absolute',
+            top: 10,
+            zIndex: 10,
+            right: 10,
+          }}
+          onPress={() => {
+            close();
+          }}>
+          <IconMC name="close" size={30} color={Color.primary} />
+        </TouchableOpacity>
 
-          <View style={{flex: 1, justifyContent: 'center'}}>
-            <Text style={styles.fontStyle}>{OTPMessage}</Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <Text style={styles.fontStyle}>
-                {Username?.startsWith('+')
-                  ? ` \u200E${Username}`
-                  : ` ${Username}`}
+        <View style={{flex: 1, justifyContent: 'center'}}>
+          <Text style={styles.fontStyle}>{OTPMessage}</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Text style={styles.fontStyle}>
+              {Username?.startsWith('+')
+                ? ` \u200E${Username}`
+                : ` ${Username}`}
+            </Text>
+          </View>
+          {pendingDelete ? (
+            <View style={{}}>
+              <Text style={styles.fontStyle}>{Languages.EnterItNow}</Text>
+              <Text style={{color: 'red', textAlign: 'center'}}>
+                {Languages.OrOfferDeleted}
               </Text>
             </View>
-            {pendingDelete ? (
-              <View style={{}}>
-                <Text style={styles.fontStyle}>{Languages.EnterItNow}</Text>
-                <Text style={{color: 'red', textAlign: 'center'}}>
-                  {Languages.OrOfferDeleted}
-                </Text>
-              </View>
-            ) : (
-              <Text style={styles.fontStyle}>{EnterMessage}</Text>
-            )}
-            {showOTP && (
-              <Pressable
-                onPress={() => {
-                  otpRef.current?.textInput.focus();
-                }}>
-                <OTPInput
-                  ref={otpRef}
-                  value={otp}
-                  onChange={_otp => {
-                    onChange(convertToNumber(_otp));
-                  }}
-                  containerStyle={{
-                    padding: 10,
-                    flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
-                  }}
-                  editable={true}
-                  cellStyle={{backgroundColor: '#fff', color: '#000'}}
-                  tintColor="#FB6C6A"
-                  offTintColor="#fff"
-                  onSubmitEditing={() => {
-                    if (otp && otp.length > 4) {
-                      checkOTP();
-                    } else {
-                      toast(Languages.EnterFullOTP);
-                    }
-                  }}
-                  otpLength={5}
-                  autoFocus={true}
-                />
-              </Pressable>
-            )}
-
-            <View
-              style={{
-                flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
-                alignItems: 'center',
-                justifyContent: 'space-around',
+          ) : (
+            <Text style={styles.fontStyle}>{EnterMessage}</Text>
+          )}
+          {showOTP && (
+            <Pressable
+              onPress={() => {
+                otpRef.current?.textInput.focus();
               }}>
-              <TouchableOpacity
-                disabled={disabledResetCode}
-                style={{
-                  alignSelf: 'center',
-                  backgroundColor: disabledResetCode ? 'gray' : Color.secondary,
-                  paddingVertical: 10,
-                  paddingHorizontal: 20,
-                  marginTop: 20,
-                  borderRadius: 15,
+              <OTPInput
+                ref={otpRef}
+                value={otp}
+                onFocus={() => {
+                  onChange(convertToNumber(''));
                 }}
-                onPress={() => {
-                  onChange('');
-                  resendCode();
-                  resendInitCounter();
-                }}>
-                <Text style={{color: '#fff'}}>{resendResetCodeCounter}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  alignSelf: 'center',
-                  backgroundColor: Color.primary,
-                  paddingVertical: 10,
-                  paddingHorizontal: 20,
-                  marginTop: 20,
-                  borderRadius: 15,
+                onChange={_otp => {
+                  onChange(convertToNumber(_otp));
+
+                  if (_otp && _otp.length > 4) {
+                    Keyboard.dismiss();
+                    setIsLoading(true);
+                    checkOTP();
+                    setTimeout(() => {
+                      setIsLoading(false);
+                    }, 2000);
+                  }
                 }}
-                onPress={() => {
+                containerStyle={{
+                  padding: 10,
+                  flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
+                }}
+                editable={true}
+                cellStyle={{backgroundColor: '#fff', color: '#000'}}
+                tintColor="#FB6C6A"
+                offTintColor="#fff"
+                onSubmitEditing={() => {
                   if (otp && otp.length > 4) {
                     setIsLoading(true);
                     checkOTP();
@@ -238,19 +205,72 @@ const OTPModal = ({
                   } else {
                     toast(Languages.EnterFullOTP);
                   }
-                }}>
-                {isLoading ? (
-                  <ActivityIndicator color={'#fff'} size={25} />
-                ) : (
-                  <Text style={{fontFamily: 'Cairo-Bold', color: '#fff'}}>
-                    {Languages.Verify}
-                  </Text>
-                )}
-              </TouchableOpacity>
-            </View>
+                }}
+                otpLength={5}
+                autoFocus={true}
+              />
+            </Pressable>
+          )}
+
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-around',
+            }}>
+            <TouchableOpacity
+              style={{
+                alignSelf: 'center',
+                backgroundColor: Color.primary,
+                paddingVertical: 10,
+                paddingHorizontal: 20,
+                marginTop: 20,
+                borderRadius: 15,
+                zIndex: 500,
+              }}
+              onPress={() => {
+                Keyboard.dismiss();
+
+                if (otp && otp.length > 4) {
+                  setIsLoading(true);
+                  checkOTP();
+                  setTimeout(() => {
+                    setIsLoading(false);
+                  }, 2000);
+                } else {
+                  toast(Languages.EnterFullOTP);
+                }
+              }}>
+              {isLoading ? (
+                <ActivityIndicator color={'#fff'} size={25} />
+              ) : (
+                <Text style={{fontFamily: 'Cairo-Bold', color: '#fff'}}>
+                  {Languages.Verify}
+                </Text>
+              )}
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              disabled={disabledResetCode}
+              style={{
+                alignSelf: 'center',
+                backgroundColor: disabledResetCode ? 'gray' : Color.secondary,
+                paddingVertical: 10,
+                paddingHorizontal: 20,
+                marginTop: 20,
+                borderRadius: 15,
+                zIndex: 500,
+              }}
+              onPress={() => {
+                onChange('');
+                resendCode();
+                resendInitCounter();
+              }}>
+              <Text style={{color: '#fff'}}>{resendResetCodeCounter}</Text>
+            </TouchableOpacity>
           </View>
         </View>
-      </KeyboardAvoidingView>
+      </View>
     </AutobeebModal>
   );
 };

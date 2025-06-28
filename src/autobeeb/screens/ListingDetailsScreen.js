@@ -162,7 +162,10 @@ const ListingDetailsScreen = () => {
           typeId={listing?.typeID}
         />
       )}
-      <ScrollView showsVerticalScrollIndicator={false} onScroll={handleScroll}>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        onScroll={handleScroll}>
         <ListingBanner
           loading={loading}
           images={listing?.images}
@@ -183,6 +186,8 @@ const ListingDetailsScreen = () => {
           ownerId={listing?.ownerID}
           isPendingDelete={listing?.status === 64 || listing?.status === 1}
           listingId={listing?.id}
+          phone={listing?.phone}
+          email={listing?.email}
           openOTPModal={openOTPModal}
           isNewUser={isNewUser}
         />
@@ -290,6 +295,7 @@ const ListingDetailsScreen = () => {
           ownerName={listing?.ownerName}
         />
       </Animated.View>
+
       <Animated.View
         style={[
           styles.addOfferSqueerBtn,

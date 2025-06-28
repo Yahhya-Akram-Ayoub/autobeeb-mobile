@@ -64,11 +64,6 @@ class ListingPhone extends Component {
           keyboardVerticalOffset={Platform.select({ios: 200, android: 100})}
           behavior={Platform.select({android: 'padding', ios: 'padding'})}>
           <View style={{}}>
-            {false && (
-              <Text style={{textAlign: 'center', paddingBottom: 15}}>
-                {Languages.EnterValidNumber}
-              </Text>
-            )}
             {this.state.cca2 && (
               <View
                 style={{
@@ -118,6 +113,9 @@ class ListingPhone extends Component {
                     this.props.user &&
                     this.props.user.EmailRegister &&
                     this.props.user?.Phone?.length > 0
+                  }
+                  initialValue={
+                    this.props.user?.Phone ? this.props.user?.Phone : null
                   }
                   value={this.props.phone}
                   onChangePhoneNumber={phone => {
