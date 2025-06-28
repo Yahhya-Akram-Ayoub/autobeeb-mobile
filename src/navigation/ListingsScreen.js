@@ -1445,25 +1445,27 @@ class ListingsScreen extends Component {
           justifyContent: 'center',
           //    backgroundColor: "#ff0"
         }}>
-        <TouchableOpacity
-          style={{
-            flex: 1,
-            backgroundColor: '#fff',
-          }}
-          onPress={() => {
-            onCancelPress();
-          }}>
-          <Text
+        {false && (
+          <TouchableOpacity
             style={{
-              color: Color.secondary,
-              textAlign: 'center',
-              paddingVertical: 14,
-              fontFamily: 'Cairo-Bold',
-              fontSize: 15,
+              flex: 1,
+              backgroundColor: '#fff',
+            }}
+            onPress={() => {
+              onCancelPress();
             }}>
-            {Languages.CANCEL}
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={{
+                color: Color.secondary,
+                textAlign: 'center',
+                paddingVertical: 14,
+                fontFamily: 'Cairo-Bold',
+                fontSize: 15,
+              }}>
+              {Languages.CANCEL}
+            </Text>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity
           style={{
             flex: 1,
