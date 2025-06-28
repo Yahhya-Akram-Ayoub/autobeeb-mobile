@@ -93,7 +93,7 @@ const FeatueredListingCard = ({
                 <FastImage
                   style={[styles.image, {width: imageWidth}]}
                   source={{
-                    uri: `https://autobeeb.com/${item.ImageBasePath}${img}_750x420.jpg`,
+                    uri: `https://autobeeb.com/${item.ImageBasePath}${img}_400x400.jpg`,
                     cache: FastImage.cacheControl.immutable,
                   }}
                   resizeMode={FastImage.resizeMode.cover}
@@ -283,15 +283,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     position: 'absolute',
     zIndex: 2,
-    left: 0,
+    start: 0,
     top: 0,
-    borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
   },
   imageCounter: {
     position: 'absolute',
     backgroundColor: '#122',
     bottom: 10,
-    left: 10,
+    end: 10,
     borderRadius: 5,
     paddingHorizontal: 10,
     paddingVertical: 3,

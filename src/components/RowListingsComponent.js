@@ -417,10 +417,7 @@ class RowListingsComponent extends PureComponent {
                       }}
                       resizeMode={FastImage.resizeMode.cover}
                       source={{
-                        uri:
-                          'https://autobeeb.com/wsImages/flags/' +
-                          item.ISOCode +
-                          '.png',
+                        uri: `https://autobeeb.com/wsImages/flags/${item.ISOCode}.png`,
                       }}
                     />
                   </View>
