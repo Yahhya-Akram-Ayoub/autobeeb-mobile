@@ -239,7 +239,7 @@ class MessagesScreen extends Component {
     if (!this.props.user) {
       return (
         <View style={{flex: 1, backgroundColor: '#fff'}}>
-          <NewHeader navigation={this.props.navigation} />
+          <NewHeader navigation={this.props.navigation} back={true} />
           <View
             style={{justifyContent: 'center', flex: 1, alignItems: 'center'}}>
             <IconMC

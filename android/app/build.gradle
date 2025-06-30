@@ -86,8 +86,8 @@ android {
         applicationId "com.autobeeb.autobeeb"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1543
-        versionName "1.5.17"
+        versionCode 1544
+        versionName "1.5.18"
         missingDimensionStrategy "store", "play"
     }
     signingConfigs {

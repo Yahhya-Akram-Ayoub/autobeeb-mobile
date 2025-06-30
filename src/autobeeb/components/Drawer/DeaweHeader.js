@@ -28,15 +28,7 @@ const DeaweHeader = () => {
   };
 
   if (!user) {
-    return (
-      <View style={styles.guestHeader}>
-        <Image
-          style={styles.logo}
-          resizeMode="contain"
-          source={require('../../../images/autobeeb.png')}
-        />
-      </View>
-    );
+    return <View />;
   }
 
   const bannerHeight = Layout.screenWidth / 1.77;

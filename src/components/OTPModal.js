@@ -177,15 +177,6 @@ const OTPModal = ({
                 }}
                 onChange={_otp => {
                   onChange(convertToNumber(_otp));
-
-                  if (_otp && _otp.length > 4) {
-                    Keyboard.dismiss();
-                    setIsLoading(true);
-                    checkOTP();
-                    setTimeout(() => {
-                      setIsLoading(false);
-                    }, 2000);
-                  }
                 }}
                 containerStyle={{
                   padding: 10,

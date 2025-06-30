@@ -33,7 +33,8 @@ const ListingTitle = ({
   const [oTP, setOTP] = useState(null);
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const {EmailRegister, OTPConfirmed, EmailConfirmed, ID} = user ?? {};
+  const {EmailRegister, OTPConfirmed, EmailConfirmed, ID, Email, Phone} =
+    user ?? {};
   const renderPaymentMethod = method => {
     switch (`${method}`) {
       case '2':
@@ -56,13 +57,19 @@ const ListingTitle = ({
     EmailConfirmed === false && EmailRegister && (ownerId === ID || isNewUser);
 
   const checkOTP = () => {
+    let username = '';
+    if (EmailRegister) username = email ? email : Email;
+    else username = phone ? phone : Phone;
+    console.log({
+      otpcode: oTP,
+      userid: ID,
+      username: username,
+    });
+
     KS.UserVerifyOTP({
       otpcode: oTP,
       userid: ID,
-      username:
-        EmailRegister || (EmailRegister && EmailConfirmed === false)
-          ? email
-          : phone,
+      username: username,
     }).then(data => {
       if (data.OTPVerified === true || data.EmailConfirmed === true) {
         if (isPendingDelete)
@@ -90,11 +97,15 @@ const ListingTitle = ({
   };
 
   const resendCode = () => {
+    let username = '';
+    if (EmailRegister) username = email ? email : Email;
+    else username = phone ? phone : Phone;
+
     setOTP('');
     KS.ResendOTP({
       userID: ID,
       otpType: EmailRegister ? 2 : 1,
-      username: EmailRegister ? email : phone,
+      username: username,
     }).then(data => {
       if (data.Success === 1) {
         toast(Languages.WeSendUOTP);
@@ -193,7 +204,11 @@ const ListingTitle = ({
           Username={
             EmailRegister || (EmailRegister && EmailConfirmed === false)
               ? email
+                ? email
+                : Email
               : phone
+              ? phone
+              : Phone
           }
           otp={oTP}
           onChange={otp => {
