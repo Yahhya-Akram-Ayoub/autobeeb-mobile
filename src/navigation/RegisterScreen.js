@@ -264,7 +264,6 @@ class RegisterScreen extends Component {
 
                 {!!this.props.route.params?.email == false && (
                   <TouchableOpacity
-                    // hitSlop={{top: 30, bottom: 30, right: 30, left: 30}}
                     style={{
                       borderWidth: 1,
                       borderColor:
@@ -289,112 +288,8 @@ class RegisterScreen extends Component {
                         textAlign: 'left',
                         color: '#383737',
                       }}>
-                      {this.state.username}
+                      {`\u200E${this.state.username}`}
                     </Text>
-                    {false && (
-                      <PhoneInput
-                        ref={ref => {
-                          this.phone = ref;
-                        }}
-                        onPress={() => {
-                          this.props.navigation.goBack();
-                        }}
-                        textStyle={{color: '#000'}}
-                        autoFocus
-                        disabled
-                        style={{
-                          flexDirection: I18nManager.isRTL
-                            ? 'row-reverse'
-                            : 'row',
-                        }}
-                        allowZeroAfterCountryCode={false}
-                        value={this.state.username}
-                        onChangePhoneNumber={username => {
-                          this.setState({username});
-                        }}
-                        onPressFlag={this.onPressFlag.bind(this)}
-                        textProps={{
-                          placeholder: Languages.EnterMobileOrEmail,
-                          keyboardType: 'default',
-                        }}
-                        flagStyle={{
-                          resizeMode: 'contain',
-                          borderRadius: 25,
-                          backgroundColor: 'transparent',
-                          borderWidth: 0,
-                        }}
-                      />
-                    )}
-
-                    {/* <CountryPicker
-                      filterPlaceholder={Languages.Search}
-                      hideAlphabetFilter
-                      ref={ref => {
-                        this.countryPicker = ref;
-                      }}
-                      onChange={value => this.selectCountry(value)}
-                      translation={Languages.translation}
-                      filterable
-                      textProps={{maxLength: 16}}
-                      autoFocusFilter={false}
-                      closeable
-                      transparent
-                      cca2={this.state.cca2}
-                    /> */}
-                    {/* <CountryPicker
-                      filterPlaceholder={Languages.Search}
-                      hideAlphabetFilter
-                      filterable
-                      autoFocusFilter={false}
-                      styles={{
-                        header: {
-                          paddingVertical: 15,
-                          borderBottomWidth: 1,
-                          borderBottomColor: Color.secondary,
-                        },
-                      }}
-                      closeable
-                      transparent
-                      onChange={value => this.selectCountry(value)}
-                      onSelect={value => {
-                        this.selectCountry(value);
-                        this.setState({showCountryPicker: false});
-                      }}
-                      cca2={this.state.cca2}
-                      translation={Languages.translation}>
-                      <View style={styles.inputWrap}>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            paddingEnd: 15,
-                          }}>
-                          <Text style={styles.text}>{Languages.Country}</Text>
-                          <CountryPicker
-                            filterPlaceholder={Languages.Search}
-                            hideAlphabetFilter
-                            filterable
-                            autoFocusFilter={false}
-                            styles={{
-                              header: {
-                                paddingVertical: 15,
-                                borderBottomWidth: 1,
-                                borderBottomColor: Color.secondary,
-                              },
-                            }}
-                            closeable
-                            transparent
-                            onChange={value => this.selectCountry(value)}
-                            onSelect={value => {
-                              this.selectCountry(value);
-                            }}
-                            cca2={this.state.cca2}
-                            translation={Languages.translation}
-                          />
-                        </View>
-                      </View>
-                    </CountryPicker> */}
                   </TouchableOpacity>
                 )}
                 {!!this.props.route.params?.email && (
@@ -439,7 +334,6 @@ class RegisterScreen extends Component {
 
                     <View
                       style={{
-                        backgroundColor: '#fff',
                         borderWidth: 1,
                         borderColor:
                           this.state.name && this.state.name?.length >= 3
@@ -480,7 +374,6 @@ class RegisterScreen extends Component {
 
                 <View
                   style={{
-                    backgroundColor: '#fff',
                     borderWidth: 1,
                     borderColor:
                       this.state.password &&

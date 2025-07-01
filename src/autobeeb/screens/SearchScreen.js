@@ -251,7 +251,13 @@ const SearchScreen = () => {
       <View style={styles.headerContainer}>
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => navigation.goBack()}>
+          onPress={() => {
+            if (navigation.canGoBack()) {
+              navigation.goBack();
+            } else {
+              navigation.navigate('HomeScreen');
+            }
+          }}>
           <AppIcon
             type={Icons.Ionicons}
             name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'}

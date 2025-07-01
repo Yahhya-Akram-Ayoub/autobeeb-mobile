@@ -48,6 +48,7 @@ const ListingTitle = ({
   };
 
   useEffect(() => {
+    __DEV__ && console.log({user});
     if (openOTPModal) setOpenModal(true);
   }, [openOTPModal]);
 
@@ -60,11 +61,6 @@ const ListingTitle = ({
     let username = '';
     if (EmailRegister) username = email ? email : Email;
     else username = phone ? phone : Phone;
-    console.log({
-      otpcode: oTP,
-      userid: ID,
-      username: username,
-    });
 
     KS.UserVerifyOTP({
       otpcode: oTP,

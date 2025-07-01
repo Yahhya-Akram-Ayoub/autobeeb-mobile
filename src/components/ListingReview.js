@@ -973,7 +973,6 @@ class ListingReview extends Component {
         if (data.Success === 1) {
           KS.ListingInitInfo({listingID: data.ID, langid: Languages.langID});
 
-          __DEV__ && console.log({new: data});
           if (data.User) {
             this.props.storeUserData(data.User);
           }
@@ -984,7 +983,9 @@ class ListingReview extends Component {
             const isNewUser =
               !(this.props.userData && this.props.userData?.ID) ||
               (data.EmailRegister && !data.EmailConfirmed) ||
-              (data.OTPConfirmed === false && !data.EmailRegister);
+              ((data.OTPConfirmed || this.props.userData?.OTPConfirmed) ===
+                false &&
+                !data.EmailRegister);
 
             if (isNewUser && data.IsNewUser) {
               this.props.storeUserData({ID: data.UserID}, () => {

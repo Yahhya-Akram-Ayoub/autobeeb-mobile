@@ -311,6 +311,36 @@ class PostOfferScreen extends Component {
     }
   };
 
+  navigateToDrawerScreen = (screen, params) => {
+    if (!screen) return;
+
+    this.props.navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'App',
+            state: {
+              routes: [
+                {
+                  name: 'DrawerStack',
+                  state: {
+                    routes: [
+                      {
+                        name: screen,
+                        params,
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      }),
+    );
+  };
+
   handleBackPress = () => {
     this.handleBack();
     return true;
@@ -1678,7 +1708,7 @@ class PostOfferScreen extends Component {
               paddingHorizontal: 20,
             }}
             onPress={() => {
-              this.props.navigation.replace('EditProfile', {
+              this.navigateToDrawerScreen('EditProfile', {
                 ChangePhone:
                   this.props.user?.EmailRegister &&
                   !this.props.user?.EmailConfirmed
@@ -1707,7 +1737,7 @@ class PostOfferScreen extends Component {
               paddingHorizontal: 20,
             }}
             onPress={() => {
-              this.props.navigation.replace('EditProfile', {
+              this.navigateToDrawerScreen('EditProfile', {
                 VerifyPhone: !(
                   this.props.user?.EmailRegister &&
                   !this.props.user?.EmailConfirmed
@@ -1865,7 +1895,7 @@ class PostOfferScreen extends Component {
                 width: '48%',
               }}
               onPress={() => {
-                this.props.navigation.navigate('DealerSignUp', {
+                this.navigateToDrawerScreen('DealerSignUp', {
                   BecomeADealer: true,
                 });
               }}>
@@ -1904,7 +1934,7 @@ class PostOfferScreen extends Component {
                 paddingHorizontal: 20,
               }}
               onPress={() => {
-                this.props.navigation.replace('SubscriptionsScreen', {
+                this.navigateToDrawerScreen('SubscriptionsScreen', {
                   ISOCode: this.props.user?.ISOCode,
                   User: this.props.user,
                 });

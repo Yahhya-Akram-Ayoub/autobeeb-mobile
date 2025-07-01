@@ -1360,9 +1360,11 @@ class EditProfile extends Component {
                   {Languages.WeHaveSentACode}
                 </Text>
                 <Text style={{textAlign: 'center'}}>
-                  {this.state.newPhone
-                    ? this.state.newPhone
-                    : this.props.user && this.props.user?.Phone}
+                  {`\u200E${
+                    this.state.newPhone
+                      ? this.state.newPhone
+                      : this.props.user && this.props.user?.Phone
+                  }`}
                 </Text>
                 <Text style={{textAlign: 'center'}}>
                   {Languages.ToVerifyAccount}
@@ -1397,6 +1399,7 @@ class EditProfile extends Component {
                       this.setState({
                         phoneVerificationCode: '',
                       });
+
                       KS.ResendOTP({
                         userID: this.props.user && this.props.user?.ID,
                         otpType: 1, //phone
@@ -1404,7 +1407,6 @@ class EditProfile extends Component {
                           ? this.state.newPhone
                           : this.props.user && this.props.user?.Phone,
                       }).then(data => {
-                        //     alert(JSON.stringify(data));
                         if (data.Success == 1) {
                           this.resendInitCounter();
                         } else {

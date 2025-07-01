@@ -78,13 +78,10 @@ class NewHeader extends Component {
             <TouchableOpacity
               style={styles.touchableSearchBox}
               onPress={() => {
-                if (this.props.query) {
-                  this.props.navigation.navigate('HomeScreen', {
-                    screen: 'Search',
-                    params: {query: this.props.query},
-                  });
-                }
-                this.props.navigation.navigate('Search');
+                this.props.navigation.navigate('HomeScreen', {
+                  screen: 'Search',
+                  params: {query: this.props.query},
+                });
               }}>
               <View style={styles.queryBox}>
                 <IconFa

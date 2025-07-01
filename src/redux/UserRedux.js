@@ -198,7 +198,7 @@ export const reducer = (state = initialState, action) => {
     case types.LOGIN:
       return {...state, user: user, tempUser: null};
     case types.TEMP_LOGIN:
-      return {...state, tempUser: action.tempUser};
+      return {...state, tempUser: action.tempUser, user: null};
     case types.USER_COUNTRY:
       return {...state, userCountry: userCountry};
     case types.USER_USERNAME_UPDATE:
