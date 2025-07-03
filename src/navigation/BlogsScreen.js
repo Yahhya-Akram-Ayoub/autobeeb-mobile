@@ -65,8 +65,10 @@ const BlogsScreen = ({navigation}) => {
   }, []);
 
   function getArticles(categoryID, onEndReached = false, search = '') {
-    setIsLoading(true);
-    setBlogs([]);
+    if (!onEndReached) {
+      setIsLoading(true);
+      setBlogs([]);
+    }
     KS.ArticlesGet({
       langId: Languages.langID,
       categoryid: categoryID,

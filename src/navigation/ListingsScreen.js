@@ -746,7 +746,6 @@ class ListingsScreen extends Component {
     };
 
     this.props.recentFilterSeach(_params, this.selectedFilters());
-
     KS.ListingsGet(_params).then(data => {
       if (data.Success) {
         this.countListingsViews(
@@ -2446,6 +2445,7 @@ class ListingsScreen extends Component {
         if (callback) {
           callback();
         }
+        this.filterResults();
       },
     );
     this.filterModal?.close();
@@ -3091,6 +3091,20 @@ class ListingsScreen extends Component {
                     />
                   )}
 
+                {!!this.state.NoRelatedOffers && (
+                  <>
+                    <Text style={styles.NoRelatedOffers}>
+                      {Languages.NoResultsFound}
+                    </Text>
+
+                    <View style={styles.Line} />
+
+                    <Text style={styles.OfferSimilerSearch}>
+                      {Languages.AdsMaybeOfInterestToYou} {' : '}
+                    </Text>
+                  </>
+                )}
+                
                 <FlatList
                   removeClippedSubviews
                   keyExtractor={this.keyExtractor}
@@ -5430,7 +5444,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row-reverse',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    gap: 10,
+    gap: 13,
     paddingHorizontal: 6,
     paddingVertical: 4,
   },

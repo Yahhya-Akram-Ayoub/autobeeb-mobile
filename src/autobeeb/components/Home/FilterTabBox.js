@@ -120,7 +120,7 @@ const FilterTabBox = memo(({Tab}) => {
     navigation.navigate('ListingsScreen', {
       ListingType: Tab,
       SellType: Constants.sellTypes[0],
-      selectedMake: AllMakes,
+      selectedMake: NormlizeObj(AllMakes),
       SectionID: section.id,
       selectedSection: NormlizeObj(section),
     });
@@ -130,7 +130,7 @@ const FilterTabBox = memo(({Tab}) => {
     navigation.navigate('ListingsScreen', {
       ListingType: Tab,
       SellType: Constants.sellTypes[0],
-      selectedMake: AllMakes,
+      selectedMake: NormlizeObj(AllMakes),
       selectedCategory: NormlizeObj(category),
       SectionID: section?.id,
       selectedSection: NormlizeObj(section),
@@ -138,8 +138,8 @@ const FilterTabBox = memo(({Tab}) => {
   };
 
   const NormlizeObj = obj => {
-    if (!obj) return null;
-    return {...obj, ID: obj.id, Name: obj.name};
+    if (!obj || (!obj?.id && !obj?.all)) return null;
+    return {...obj, ID: obj.id, Name: obj.name, All: obj.all};
   };
 
   return (

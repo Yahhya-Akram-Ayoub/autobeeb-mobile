@@ -48,7 +48,6 @@ const BannersSwiper = ({images, imageBasePath}) => {
       .then(res => res.json())
       .then(res => {
         const _res = res.map(x => {
-          console.log({server: x});
           const scaleFactor = screenWidth / x.width;
           const imageHeight = x.height * scaleFactor;
           return {
@@ -254,7 +253,7 @@ const styles = StyleSheet.create({
   },
   ImageContiner: {
     screenWidth,
-    minHeight: screenHeight / 3,
+    height: screenHeight / 3,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
