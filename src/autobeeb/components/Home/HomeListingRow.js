@@ -65,12 +65,14 @@ const HomeListingRow = () => {
       recentFilterSeach?.langId === Languages.langID ? recentFilterSeach : null;
     // Cache area
     const cacheKey = `$${Languages.langID}_${ViewingCountry?.cca2}_${
-      _searchTerm?.keyword
-    }_${JSON.stringify(_recentFilterSeach?.filter ?? {})}`;
+      recentIds?.[0]?.id
+    }_${_searchTerm?.keyword}_${JSON.stringify(
+      _recentFilterSeach?.filter ?? {},
+    )}`;
 
     const cachedData = await getCache(CACHE_KEY, cacheKey);
 
-    if (cachedData) {
+    if (!__DEV__ && cachedData) {
       setSections({
         new: cachedData.recentlyListings,
         search: [
@@ -99,6 +101,7 @@ const HomeListingRow = () => {
       GetFilter: !_searchTerm?.keyword && !!_recentFilterSeach?.filter,
       GetSearch: !!_searchTerm?.keyword,
       SearchQuery: _searchTerm?.keyword,
+      LastListingId: recentIds?.[0]?.id,
       LangId: Languages.langID,
       CountryId: country?.id,
       ...(_recentFilterSeach?.filter ?? {}),

@@ -3072,6 +3072,20 @@ class ListingsScreen extends Component {
             removeClippedSubviews
             ListHeaderComponent={
               <>
+                {!!this.state.NoRelatedOffers && (
+                  <>
+                    <Text style={styles.NoRelatedOffers}>
+                      {Languages.NoResultsFound}
+                    </Text>
+
+                    <View style={styles.Line} />
+
+                    <Text style={styles.OfferSimilerSearch}>
+                      {Languages.AdsMaybeOfInterestToYou} {' : '}
+                    </Text>
+                  </>
+                )}
+
                 {[
                   ...this.state.Listings.filter(
                     x =>
@@ -3091,20 +3105,6 @@ class ListingsScreen extends Component {
                     />
                   )}
 
-                {!!this.state.NoRelatedOffers && (
-                  <>
-                    <Text style={styles.NoRelatedOffers}>
-                      {Languages.NoResultsFound}
-                    </Text>
-
-                    <View style={styles.Line} />
-
-                    <Text style={styles.OfferSimilerSearch}>
-                      {Languages.AdsMaybeOfInterestToYou} {' : '}
-                    </Text>
-                  </>
-                )}
-                
                 <FlatList
                   removeClippedSubviews
                   keyExtractor={this.keyExtractor}
