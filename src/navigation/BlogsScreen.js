@@ -399,6 +399,7 @@ const BlogsScreen = ({navigation}) => {
                     ? SelectedSubCategory.ID
                     : SelectedMainCateogry.ID,
                   true,
+                  SearchText,
                 );
               }
             }}

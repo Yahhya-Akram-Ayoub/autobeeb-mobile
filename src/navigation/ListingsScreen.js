@@ -3112,6 +3112,7 @@ class ListingsScreen extends Component {
                     overflow: 'hidden',
                     minWidth: '100%',
                     flex: 3,
+                    marginBottom: 6,
                   }}
                   numColumns={1}
                   horizontal={false}
@@ -5409,23 +5410,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     textAlign: I18nManager.isRTL ? 'right' : 'left',
   },
-  NoRelatedOffers: {
+ NoRelatedOffers: {
     width: '90%',
     alignSelf: 'center',
     textAlign: 'center',
     paddingVertical: 5,
     fontSize: 18,
-    fontWeight: 700,
     marginVertical: 5,
+    fontFamily: Constants.fontFamilyBold,
   },
   OfferSimilerSearch: {
     width: '90%',
     color: Color.primary,
     alignSelf: 'center',
     paddingVertical: 5,
-    fontSize: 18,
-    fontWeight: 700,
+    fontSize: 16,
     marginVertical: 5,
+    fontFamily: Constants.fontFamilyBold,
   },
   Line: {
     width: '50%',

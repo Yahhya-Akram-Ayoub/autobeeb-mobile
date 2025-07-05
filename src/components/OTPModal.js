@@ -242,7 +242,7 @@ const OTPModal = ({
             </TouchableOpacity>
 
             <TouchableOpacity
-              disabled={disabledResetCode}
+              disabled={!__DEV__ && disabledResetCode}
               style={{
                 alignSelf: 'center',
                 backgroundColor: disabledResetCode ? 'gray' : Color.secondary,

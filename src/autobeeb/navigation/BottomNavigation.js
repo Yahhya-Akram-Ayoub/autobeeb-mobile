@@ -24,20 +24,24 @@ const hideOnScreens = [
 ];
 
 const BottomNavigation = ({navigationRef}) => {
-  const navigation = useNavigation();
-
   const navigateToChatScreen = ({SessionId, UserId}) => {
     KS.GetChatSession({SessionId, LangId: Languages.ID}).then(res => {
       const entity = res.Session?.RelatedEntity
         ? JSON.parse(res.Session.RelatedEntity)
         : {};
-      navigation.navigate('ChatScreen', {
-        targetID: UserId,
-        ownerName: res.Session.SecondPartyName,
-        description: entity?.Name,
-        entityID: entity?.ID,
-        sessionID: SessionId,
-      });
+
+      if (navigationRef.isReady()) {
+        navigationRef.navigate('MessagesScreen', {
+          screen: 'ChatScreen',
+          params: {
+            targetID: UserId,
+            ownerName: res.Session.SecondPartyName,
+            description: entity?.Name,
+            entityID: entity?.ID,
+            sessionID: SessionId,
+          },
+        });
+      }
     });
   };
 

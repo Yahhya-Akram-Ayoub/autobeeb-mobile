@@ -51,6 +51,7 @@ const RecentlyViewedScreen = ({navigation}) => {
         currencyId: ViewingCurrency?.ID,
         langId: Languages.langID,
         increaseViews: false,
+        Status: 16,
       });
 
       const idOrder = idsToFetch.map(x => x.id);

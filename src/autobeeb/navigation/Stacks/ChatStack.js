@@ -29,6 +29,7 @@ const ChatStack = ({stackRef}) => {
   return (
     <Stack.Navigator
       ref={stackRef}
+      initialRouteName={'MessagesScreen'}
       screenOptions={{
         headerShown: false,
         initialRouteName: 'MessagesScreen',

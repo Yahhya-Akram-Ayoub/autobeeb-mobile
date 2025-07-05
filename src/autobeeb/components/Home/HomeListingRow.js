@@ -144,6 +144,7 @@ const HomeListingRow = () => {
         currencyId: ViewingCurrency?.ID,
         langId: 1,
         increaseViews: false,
+        Status: 16,
       });
       setSections(prev => {
         return {...prev, recent: res || []};

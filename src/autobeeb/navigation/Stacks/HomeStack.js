@@ -89,6 +89,7 @@ const HomeStack = ({stackRef}) => {
   return (
     <Stack.Navigator
       ref={stackRef}
+      initialRouteName={'HomeScreen'}
       screenOptions={{
         headerShown: false,
         initialRouteName: 'HomeScreen',

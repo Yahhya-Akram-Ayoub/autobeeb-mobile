@@ -49,6 +49,7 @@ const ProfileStack = ({stackRef}) => {
   return (
     <Stack.Navigator
       ref={stackRef}
+      initialRouteName={'Drawer'}
       screenOptions={{
         headerShown: false,
         initialRouteName: 'Drawer',

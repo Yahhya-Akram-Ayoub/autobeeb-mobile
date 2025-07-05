@@ -39,6 +39,7 @@ const OffersStack = ({stackRef}) => {
   return (
     <Stack.Navigator
       ref={stackRef}
+      initialRouteName={'ActiveOffers'}
       screenOptions={{
         headerShown: false,
         initialRouteName: 'ActiveOffers',

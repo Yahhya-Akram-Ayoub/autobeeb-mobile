@@ -90,7 +90,7 @@ class ChatScreen extends Component {
     const result = [];
     let lastDateStr = null;
 
-    messages.forEach(msg => {
+    messages.forEach((msg, i) => {
       const date = new Date(msg.createdAt);
       const currentDateStr = date.toDateString(); // "Mon Apr 28 2025"
 
@@ -104,8 +104,15 @@ class ChatScreen extends Component {
         }
         lastDateStr = currentDateStr;
       }
-
+      
       result.push({...msg, type: 'message'});
+      if (messages.length === i + 1) {
+        result.push({
+          _id: `separator-${currentDateStr}`,
+          type: 'separator',
+          createdAt: currentDateStr.toString(),
+        });
+      }
     });
 
     return result;

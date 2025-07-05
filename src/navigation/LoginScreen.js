@@ -742,7 +742,6 @@ class LoginScreen extends Component {
                       ? 'green'
                       : '#eee',
                     borderWidth: 1,
-                    paddingVertical: 0,
                     color: '#383737',
                   }}
                   placeholderTextColor={'#38373770'}
@@ -773,7 +772,6 @@ class LoginScreen extends Component {
                   cca2={this.state.cca2}>
                   <View
                     style={{
-                      backgroundColor: '#fff',
                       borderWidth: 1,
                       borderColor:
                         this.phone && this.phone.isValidNumber()

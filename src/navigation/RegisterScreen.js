@@ -175,19 +175,25 @@ class RegisterScreen extends Component {
   }
 
   resendCode() {
-    KS.ForgotPasswordInit({
-      langid: Languages.langID,
-      username: this.props.route.params?.AuthData?.Username,
-    }).then(data => {
-      if (data && data.Success == 1) {
-        if (data.Status == 1) {
-          //       alert(JSON.stringify(data));
+    var _userName = `${this.state.username}`;
+    var EmailRegister = _userName.includes('@');
 
-          this.setState({openVerifyModal: true});
-        } else {
-          toast(Languages.PleaseCheckYourInput);
-        }
-      }
+    console.log({
+      userID: this.state.UserID,
+      otpType: EmailRegister ? 2 : 1,
+      username: this.state.username,
+    });
+
+    KS.ResendOTP({
+      userID: this.state.UserID,
+      otpType: EmailRegister ? 2 : 1,
+      username: this.state.username,
+    }).then(data => {
+      console.log({data});
+      if (data.Success === 1) {
+        toast(Languages.WeSendUOTP);
+        this.setState({openVerifyModal: true});
+      } else toast(Languages.SomethingWentWrong);
     });
   }
 
@@ -258,10 +264,6 @@ class RegisterScreen extends Component {
                 />
               </View>
               <View style={styles.subContain}>
-                {false && (
-                  <Text style={{color: '#000'}}>{Languages.Register}</Text>
-                )}
-
                 {!!this.props.route.params?.email == false && (
                   <TouchableOpacity
                     style={{
@@ -503,6 +505,8 @@ class RegisterScreen extends Component {
                           isocode: this.props.route.params?.isoCode ?? '',
                           otpconfirmed: AuthData.OTPConfirmed,
                         }).then(data => {
+                          console.log({data});
+
                           if (data && data.Success == 1) {
                             if (data.LoginSuccess) {
                               if (data.User && data.User.IsActive == false) {
@@ -510,9 +514,10 @@ class RegisterScreen extends Component {
                                 this.setState({
                                   isLoading: false,
                                   ButtonDisabled: false,
+                                  UserID: data?.UserID,
                                 });
                               } else {
-                                this.props.storeUserData(data.User, data => {
+                                this.props.storeUserData(data.User, _data => {
                                   if (
                                     !AuthData.OTPConfirmed &&
                                     !AuthData.EmailConfirmed
@@ -530,6 +535,7 @@ class RegisterScreen extends Component {
                                   this.setState({
                                     isLoading: false,
                                     ButtonDisabled: false,
+                                    UserID: data?.UserID,
                                   });
                                 });
                               }
@@ -538,12 +544,14 @@ class RegisterScreen extends Component {
                               this.setState({
                                 isLoading: false,
                                 ButtonDisabled: false,
+                                UserID: data?.UserID,
                               });
                             }
                           } else {
                             this.setState({
                               isLoading: false,
                               ButtonDisabled: false,
+                              UserID: data?.UserID,
                             });
                             alert('something went wrong');
                           }

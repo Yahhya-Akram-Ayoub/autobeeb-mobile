@@ -111,7 +111,7 @@ const FeatueredListingsCards = ({
 
   if (listings.length == 1)
     return (
-      <View style={{width: '100%'}}>
+      <View style={{width: '100%', marginBottom: 6}}>
         <FeatueredListingCard
           AllCountries={ISOCode == 'ALL'}
           AppCountryCode={ISOCode}
@@ -135,6 +135,7 @@ const FeatueredListingsCards = ({
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         nestedScrollEnabled={true}
+        contentContainerStyle={{marginBottom: 6}}
         renderItem={({index, item}) => {
           return (
             <FeatueredListingCard

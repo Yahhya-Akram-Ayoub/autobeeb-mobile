@@ -1346,6 +1346,7 @@ class EditProfile extends Component {
               backButtonClose>
               <View style={styles.modalContent}>
                 <TouchableOpacity
+                  hitSlop={{top: 40, right: 40, bottom: 40, left: 40}}
                   style={{position: 'absolute', top: 10, right: 10}}
                   onPress={() => {
                     this.VerifyPhoneModal.close();
@@ -1393,10 +1394,11 @@ class EditProfile extends Component {
                     alignSelf: 'flex-end',
                   }}>
                   <TouchableOpacity
-                    disabled={this.state.disabledResetCode}
+                    disabled={!__DEV__ && this.state.disabledResetCode}
                     style={styles.CancelButton}
                     onPress={() => {
                       this.setState({
+                        resendLoading: true,
                         phoneVerificationCode: '',
                       });
 
@@ -1406,18 +1408,33 @@ class EditProfile extends Component {
                         username: this.state.newPhone
                           ? this.state.newPhone
                           : this.props.user && this.props.user?.Phone,
-                      }).then(data => {
-                        if (data.Success == 1) {
-                          this.resendInitCounter();
-                        } else {
-                          alert('something went wrong');
-                        }
-                        //
-                      });
+                      })
+                        .then(data => {
+                          if (data.Success == 1) {
+                            toast(Languages.WeSendUOTP);
+                            this.resendInitCounter();
+                          } else {
+                            alert('something went wrong');
+                          }
+                          //
+                        })
+                        .finally(() => {
+                          this.setState({
+                            resendLoading: false,
+                          });
+                        });
                     }}>
-                    <Text style={{color: 'grey', textAlign: 'center'}}>
-                      {this.state.resendResetCodeCounter}
-                    </Text>
+                    {this.state.resendLoading ? (
+                      <ActivityIndicator
+                        size="small"
+                        color={Color.secondary}
+                        style={styles.loader}
+                      />
+                    ) : (
+                      <Text style={{color: 'grey', textAlign: 'center'}}>
+                        {this.state.resendResetCodeCounter}
+                      </Text>
+                    )}
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={[styles.ChangeButton]}
@@ -1471,7 +1488,7 @@ class EditProfile extends Component {
                             this.setState({changeMobileOTPLoading: false});
                           });
                       } else {
-                        toast(Languages.invalidInfo, 2500);
+                        toast(Languages.EnterFullOTP, 2500);
                         this.setState({changeMobileOTPLoading: false});
                       }
                     }}>

@@ -81,17 +81,18 @@ const HomeTabs = () => {
                   ]}>
                   <FastImage
                     style={[
-                      styles.fastImage,
-                      itemIndex === 2 &&
-                        rowIndex === 1 &&
-                        styles.marginSpareParts,
+                      itemIndex === 2 && rowIndex === 1
+                        ? styles.fastImage
+                        : styles.fastImage,
                     ]}
-                    resizeMode={FastImage.resizeMode.contain}
-                    source={{
-                      uri: item.Image
-                        ? item.Image
-                        : `https://autobeeb.com/${item.FullImagePath}_115x115.png`,
-                    }}
+                    resizeMode={
+                      itemIndex === 2 && rowIndex === 1
+                        ? FastImage.resizeMode.contain
+                        : FastImage.resizeMode.cover
+                    }
+                    source={
+                      item.Image ? typeImages[item.Image] : typeImages[item.ID]
+                    }
                   />
                   <Text
                     style={[styles.tabText, isActive && styles.activeTabText]}
@@ -130,6 +131,18 @@ const HomeTabs = () => {
   );
 };
 
+const typeImages = {
+  1: require('../../../images/types/1.png'),
+  2: require('../../../images/types/2.png'),
+  4: require('../../../images/types/4.png'),
+  8: require('../../../images/types/8.png'),
+  16: require('../../../images/types/16.png'),
+  32: require('../../../images/types/32.png'),
+  ElectricCars: require('../../../images/types/ElectricCars.png'),
+  Accessories: require('../../../images/types/Accessories.png'),
+  NumberPlates: require('../../../images/types/NumberPlates.png'),
+};
+
 export default HomeTabs;
 
 const styles = StyleSheet.create({
@@ -155,12 +168,6 @@ const styles = StyleSheet.create({
     margin: 4,
     width: Layout.screenWidth * 0.31,
     height: Layout.screenWidth * 0.32,
-    // shadowColor: '#000',
-    // shadowOffset: {width: 0, height: 2},
-    // shadowOpacity: 0.15,
-    // shadowRadius: 12,
-    // elevation: 4,
-
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -176,7 +183,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   activeTabButton: {
-    backgroundColor: '#f0f0f0',
+    //backgroundColor: '#f0f0f0',
     transform: [{scale: 0.98}],
     borderColor: Color.primary,
     borderWidth: 1,
@@ -186,18 +193,17 @@ const styles = StyleSheet.create({
     // color: 'white',
   },
   marginSpareParts: {
-    marginTop: 3,
-    marginBottom: -3,
+    width: '100%',
+    height: Layout.screenWidth * 0.32 - 40,
   },
   fastImage: {
-    width: 90,
-    height: 60,
+    width: Layout.screenWidth * 0.32 + 10,
+    height: Layout.screenWidth * 0.32 - 40,
   },
   tabText: {
     textAlign: 'center',
     fontSize: 16,
     color: '#000',
-    marginTop: 4,
   },
   expandedBoxWrapper: {
     width: '100%',

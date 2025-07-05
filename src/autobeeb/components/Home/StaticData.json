@@ -4,7 +4,7 @@
       "ID": 1,
       "NameKey": "ElectricCars",
       "Name": "",
-      "Image": "https://autobeeb.com/wsImages/ElectricCars.png",
+      "Image": "ElectricCars",
       "SellType": {
         "ID": 1,
         "Name": "ForSale"
@@ -20,7 +20,7 @@
       "ID": 32,
       "NameKey": "Accessories",
       "Name": "",
-      "Image": "https://autobeeb.com/wsImages/Accessories.png",
+      "Image": "Accessories",
       "SellType": {
         "ID": 1,
         "Name": "ForSale"
@@ -37,7 +37,7 @@
       "ID": 32,
       "NameKey": "Boards",
       "Name": "",
-      "Image": "https://autobeeb.com/wsImages/Board.png",
+      "Image": "NumberPlates",
       "SellType": {
         "ID": 1,
         "Name": "ForSale"
