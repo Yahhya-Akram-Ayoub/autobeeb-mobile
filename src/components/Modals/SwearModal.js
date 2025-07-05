@@ -38,8 +38,8 @@ const SwearModal = ({
         Cur: Curr,
       })
         .then(res => {
-          console.log({res});
-          if (!!res.Success) {
+          console.log({GetSwearPlan: res});
+          if (res.Success) {
             setPlan(res.Plan);
             setCurrency(res.Currency);
           } else {

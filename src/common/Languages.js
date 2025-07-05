@@ -451,7 +451,7 @@ export default new LocalizedStrings({
     EmailApprovalAlert:
       'Are you sure you want to select this country? After approval, you will not be able to change it to another country! You will only be able to change your phone number for the same country you have chosen',
     EmailPendingApproval:
-      'Your account is under study, Please check the phone number you entered, Then wait admin approval within a maximum of 24 hours.',
+      'Your account is under review, because the phone number is already used by another account, Make sure the number is correct! If it is, you should wait until we review your account, note that the account currently using your number is: ',
     EmailApprovalAccountReview:
       'Congratulations, your account is now under review, Please check the phone number you entered, after approval you will recieve {0} free Ad, Please wait a maximum of 24 hours.',
     CantAddOfferUntilVerifyEmail2:
@@ -1181,7 +1181,7 @@ export default new LocalizedStrings({
     EmailApprovalAlert:
       'هل أنت متأكد من اختيارك هذه الدولة؟ بعد الموافقة لن تستطيع تغيرها لدولة أخرى ! وسيكون بإمكانك تغيير رقم هاتفك لنفس الدولة التي اخترتها فقط',
     EmailPendingApproval:
-      'حسابك قيد المراجعة، الرجاء التأكد من رقم الهاتف الذي قمت بإدخاله، سيتم التحقق من الحساب في مدة أقصاها 24 ساعة',
+      'حسابك قيد المراجعة، والسبب أن رقم الهاتف الذي أدخلته مستخدم في حساب آخر، تأكد من صحة الرقم وإن كان صحيحاً فعليك الانتظار حتى نراجع حسابك، علماً بأن البريد الالكتروني الذي يستخدم رقمك هو: ',
     EmailApprovalAccountReview:
       'تهانينا، حسابك قيد المراجعة الآن، الرجاء التأكد من صحة رقم الهاتف الذي قمت بإدخاله، بعد الموافقة عليه ستحصل على {0} إعلانات مجانية، يرجى انتظار الموافقة في مدة أقصاها 24 ساعة',
     CantAddOfferUntilVerifyEmail2:
@@ -1754,7 +1754,7 @@ export default new LocalizedStrings({
     EmailApprovalAlert:
       'Möchten Sie dieses Land wirklich auswählen? Nach der Genehmigung können Sie es nicht mehr in ein anderes Land ändern! Sie können Ihre Telefonnummer nur für das von Ihnen ausgewählte Land ändern',
     EmailPendingApproval:
-      'Ihr Konto wird derzeit geprüft. Bitte warten Sie die Genehmigung durch den Administrator innerhalb von maximal 24 Stunden.',
+      'Ihr Konto wird überprüft, da die Telefonnummer bereits von einem anderen Konto verwendet wird. Stellen Sie sicher, dass die Nummer korrekt ist! Wenn dies der Fall ist, warten Sie bitte, bis wir Ihr Konto überprüft haben. Beachten Sie, dass das Konto, das Ihre Nummer derzeit verwendet, folgendes ist:',
     EmailApprovalAccountReview:
       'Herzlichen Glückwunsch, Ihr Konto wird derzeit überprüft. Nach der Genehmigung hat Ihr Konto {0} kostenlose Advs erhalten. Bitte warten Sie maximal 24 Stunden, bis Ihr Konto genehmigt ist.',
     CantAddOfferUntilVerifyEmail2:
@@ -2309,7 +2309,7 @@ export default new LocalizedStrings({
     EmailApprovalAlert:
       'Seguro que quieres seleccionar este país? ¡Después de la aprobación, no podrá cambiarlo a otro país! Solo puede cambiar su número de teléfono para el mismo país que ha elegido',
     EmailPendingApproval:
-      'Su cuenta está en estudio. Espere la aprobación del administrador dentro de un máximo de 24 horas.',
+      'Su cuenta está en revisión porque el número de teléfono ya está siendo utilizado por otra cuenta. ¡Asegúrese de que el número sea correcto! Si es así, espere a que revisemos su cuenta. Tenga en cuenta que la cuenta que usa su número actualmente es:',
     EmailApprovalAccountReview:
       'Enhorabuena, su cuenta está ahora en revisión. Después de la aprobación, su cuenta habrá recibido {0} Anuncios gratis. Espere mientras se aprueba su cuenta por un máximo de 24 horas.',
     CantAddOfferUntilVerifyEmail2:
@@ -2859,7 +2859,7 @@ export default new LocalizedStrings({
     EmailApprovalAlert:
       'Bu ülkeyi seçmek istediğinizden emin misiniz? Onaydan sonra başka bir ülkeyle değiştiremezsiniz! Telefon numaranızı yalnızca seçtiğiniz ülke için değiştirebilirsiniz.',
     EmailPendingApproval:
-      'Hesabınız inceleniyor, Lütfen en fazla 24 saat içinde yönetici onayını bekleyin.',
+      'Hesabınız inceleniyor, çünkü telefon numarası başka bir hesap tarafından kullanılıyor. Numaranın doğru olduğundan emin olun! Doğruysa, hesabınızı inceleyene kadar beklemelisiniz. Şu anda numaranızı kullanan hesabın şu olduğunu unutmayın:',
     EmailApprovalAccountReview:
       'Tebrikler, hesabınız şu anda inceleniyor. Onaydan sonra, hesabınıza {0} ücretsiz Reklam verilecektir. Hesabınız en fazla 24 saat onaylanırken lütfen bekleyin.',
     CantAddOfferUntilVerifyEmail2:
@@ -3414,7 +3414,7 @@ export default new LocalizedStrings({
     EmailApprovalAlert:
       'Voulez-vous vraiment sélectionner ce pays? Après approbation, vous ne pourrez plus le changer dans un autre pays! Vous ne pourrez changer votre numéro de téléphone que pour le même pays que vous avez choisi',
     EmailPendingApproval:
-      "Votre compte est à l'étude, veuillez attendre l'approbation de l'administrateur dans un délai maximum de 24 heures.",
+      "Votre compte est en cours de vérification, car le numéro de téléphone est déjà utilisé par un autre compte. Assurez-vous qu'il est correct ! Si c'est le cas, veuillez patienter jusqu'à ce que nous vérifiions votre compte. Notez que le compte actuellement utilisé par ce numéro de téléphone est :",
     EmailApprovalAccountReview:
       "Félicitations, votre compte est en cours d'examen. Après approbation, votre compte aura reçu {0} Advs gratuits. Veuillez patienter pendant l'approbation de votre compte pendant 24 heures maximum.",
     CantAddOfferUntilVerifyEmail2:
@@ -3965,7 +3965,7 @@ export default new LocalizedStrings({
     EmailApprovalAlert:
       'Czy na pewno chcesz wybrać ten kraj? Po zatwierdzeniu nie będzie można zmienić go na inny kraj! Będziesz mógł zmienić swój numer telefonu tylko dla tego samego kraju, który wybrałeś',
     EmailPendingApproval:
-      'Twoje konto jest w fazie badań. Poczekaj na zatwierdzenie przez administratora w ciągu maksymalnie 24 godzin.',
+      'Twoje konto jest w trakcie sprawdzania, ponieważ numer telefonu jest już używany przez inne konto. Upewnij się, że numer jest poprawny! Jeśli tak, powinieneś poczekać, aż sprawdzimy Twoje konto. Zwróć uwagę, że konto, które obecnie używa Twojego numeru, to:',
     EmailApprovalAccountReview:
       'Gratulacje, Twoje konto jest teraz sprawdzane. Po zatwierdzeniu twoje konto otrzyma {0} darmowych Advów. Poczekaj, aż Twoje konto zostanie zatwierdzone przez maksymalnie 24 godziny.',
     CantAddOfferUntilVerifyEmail2:
@@ -4498,7 +4498,7 @@ export default new LocalizedStrings({
     EmailApprovalAlert:
       '您確定要選擇這個國家嗎？批准後，您將無法將其更改為另一個國家！您將只能更改所選國家/地區的電話號碼',
     EmailPendingApproval:
-      '我們正在研究您的帳戶，請最多等待二十四小時的管理員批准',
+      '您的帐户正在接受审核，因为该电话号码已被其他帐户使用。请确保号码正确！如果正确，请等待我们审核您的帐户。请注意，当前使用您号码的帐户是：',
     EmailApprovalAccountReview:
       '恭喜，您的帳戶正在審核中。 批准後，您的帳戶將收到{0}個免費廣告。 請等待最多二十四個小時，以便您的帳戶獲得批准。',
     CantAddOfferUntilVerifyEmail2: '目前無法激活廣告。 您的帳戶正在接受審核',

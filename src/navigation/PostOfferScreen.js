@@ -309,6 +309,19 @@ class PostOfferScreen extends Component {
         });
       }
     }
+
+    if (
+      this.props.user?.EmailRegister &&
+      this.props.user?.EmailConfirmed &&
+      this.props.user?.EmailApproved === false
+    ) {
+      ks.GetApprovedAccountByPhone({
+        phone: this.props.user?.Phone?.replace('+', ''),
+      }).then(res => {
+        console.log({res});
+        this.setState({ApprovedEmail: res?.Email});
+      });
+    }
   };
 
   navigateToDrawerScreen = (screen, params) => {
@@ -1768,10 +1781,7 @@ class PostOfferScreen extends Component {
         }}>
         {
           <Text style={{color: '#000', textAlign: 'center', fontSize: 21}}>
-            {Languages.EmailApprovalAccountReview.replace(
-              '{0}',
-              this.state.countryLimit,
-            )}
+            {Languages.EmailPendingApproval + (this.state.ApprovedEmail ?? '')}
           </Text>
         }
         <View
@@ -1801,6 +1811,35 @@ class PostOfferScreen extends Component {
                 textAlign: 'center',
               }}>
               {Languages.Ok}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={{
+              backgroundColor: Color.secondary,
+              paddingVertical: 5,
+              borderRadius: 5,
+              flexGrow: 0,
+              marginTop: 15,
+              paddingHorizontal: 20,
+            }}
+            onPress={() => {
+              this.navigateToDrawerScreen('EditProfile', {
+                ChangePhone:
+                  this.props.user?.EmailRegister &&
+                  !this.props.user?.EmailConfirmed
+                    ? false
+                    : true,
+                ChangeEmail:
+                  this.props.user?.EmailRegister &&
+                  !this.props.user?.EmailConfirmed,
+              });
+            }}>
+            <Text style={{color: '#fff', fontSize: 20}}>
+              {this.props.user?.EmailRegister &&
+              !this.props.user?.EmailConfirmed
+                ? Languages.ChangeEmail
+                : Languages.ChangeNumber}
             </Text>
           </TouchableOpacity>
         </View>

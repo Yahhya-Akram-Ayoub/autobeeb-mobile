@@ -52,8 +52,8 @@ class ListingReview extends Component {
       imageBasePath: props.imageBasePath ?? null,
       openSwearModal: false,
       swearCountry: '',
-      withSwear: false,
-      withCommission: false,
+      WithSwear: false,
+      WithFee: false,
       description:
         (props?.route?.params?.Listing || {Description: ''}).Description || '',
       price: (props?.route?.params?.Listing || {Price: ''}).Price
@@ -262,10 +262,10 @@ class ListingReview extends Component {
       );
 
       if (_userCountry && _userCountry.WithSwear) {
-        this.setState({withSwear: _userCountry.WithSwear});
+        this.setState({WithSwear: _userCountry.WithSwear});
       }
       if (_userCountry && _userCountry.WithFee) {
-        this.setState({withCommission: _userCountry.WithFee});
+        this.setState({WithFee: _userCountry.WithFee});
       }
     }
 
@@ -286,8 +286,8 @@ class ListingReview extends Component {
       if (!!selectedCountry && !!selectedCountry?.WithSwear) {
         this.setState({withSwear: selectedCountry.WithSwear});
       }
-      if (!!selectedCountry && !!selectedCountry?.withCommission) {
-        this.setState({withCommission: selectedCountry.withCommission});
+      if (!!selectedCountry && !!selectedCountry?.WithFee) {
+        this.setState({WithFee: selectedCountry.WithFee});
       }
     }
   }
@@ -323,7 +323,7 @@ class ListingReview extends Component {
   pickMultiple() {
     let _maxFiles = 15 - (this.state.imagesEdit?.length ?? 0); // add validation for edit
     _maxFiles = _maxFiles < 0 ? 0 : _maxFiles;
-    // console.log({_maxFiles});
+
     const options = {
       mediaType: 'photo',
       multiple: true,
@@ -887,8 +887,6 @@ class ListingReview extends Component {
         .map(char => arabicToEnglishMap[char] ?? char)
         .join('');
 
-      console.log({number, result});
-
       return result;
     } else return '';
   }
@@ -972,7 +970,7 @@ class ListingReview extends Component {
         this.setState({disablePublish: false});
         if (data.Success === 1) {
           KS.ListingInitInfo({listingID: data.ID, langid: Languages.langID});
-
+          
           if (data.User) {
             this.props.storeUserData(data.User);
           }
@@ -1226,7 +1224,13 @@ class ListingReview extends Component {
                 ) {
                   Alert.alert('', Languages.PleaseEnterBoardNumber);
                 } else {
-                  if (this.state.withSwear || this.state.withCommission) {
+                  const {listingType, sellType} = this.props.data;
+
+                  if (
+                    (this.state.withSwear || this.state.WithFee) &&
+                    `${listingType}` !== '32' &&
+                    `${sellType}` === '1'
+                  ) {
                     this.openSwearModal();
                   } else {
                     this.setState({isLoading: true}, () => {
@@ -1261,7 +1265,7 @@ class ListingReview extends Component {
           }}
           Open={this.state.openSwearModal}
           IsSwear={this.state.withSwear}
-          IsCommission={this.state.withCommission}
+          IsCommission={this.state.WithFee}
           Lang={Languages.langID}
           Curr={this.state.currency.ID}
           Country={

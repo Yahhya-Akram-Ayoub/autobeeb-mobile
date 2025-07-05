@@ -131,6 +131,19 @@ class EditProfile extends Component {
         });
       }
     }
+
+    if (
+      this.props.user?.EmailRegister &&
+      this.props.user?.EmailConfirmed &&
+      this.props.user?.EmailApproved === false
+    ) {
+      KS.GetApprovedAccountByPhone({
+        phone: this.props.user?.Phone?.replace('+', ''),
+      }).then(res => {
+        console.log({res});
+        this.setState({ApprovedEmail: res?.Email});
+      });
+    }
   }
 
   selectCountry(country) {
@@ -1953,7 +1966,8 @@ class EditProfile extends Component {
                     }}>
                     {this.props.user.EmailApproved
                       ? Languages.MustVerifyToUse
-                      : Languages.EmailPendingApproval}
+                      : Languages.EmailPendingApproval +
+                        (this.state.ApprovedEmail ?? '')}
                   </Animatable.Text>
                 )}
                 {!this.props.user.OTPConfirmed &&

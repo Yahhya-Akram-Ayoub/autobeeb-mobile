@@ -1077,6 +1077,13 @@ KensoftApi.prototype.GenerateClientToken = function (data, callback, noEmbed) {
   return this._request(requestUrl, callback);
 };
 
+KensoftApi.prototype.GetApprovedAccountByPhone = function (data, callback, noEmbed) {
+  var requestUrl = this.url + '/services/GetApprovedAccountByPhone?';
+  requestUrl += this.join(data, '&');
+  return this._request(requestUrl, callback);
+};
+
+
 KensoftApi.prototype.ReportListing = function (data, callback, noEmbed) {
   var embedText = '_embed';
   if (typeof noEmbed !== 'undefined') {

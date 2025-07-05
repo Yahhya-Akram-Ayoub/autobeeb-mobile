@@ -12,7 +12,6 @@ import {
   FlatList,
 } from 'react-native';
 import {Color, Languages} from '../common';
-import {SpecialSVG} from '../components';
 import IconFa from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
 import Moment from 'moment';
@@ -33,7 +32,19 @@ class BannerListings extends PureComponent {
       Favorite: true,
     };
   }
-
+  componentDidMount() {
+    if (
+      this.props.user?.EmailRegister &&
+      this.props.user?.EmailConfirmed &&
+      this.props.user?.EmailApproved === false
+    ) {
+      KS.GetApprovedAccountByPhone({
+        phone: this.props.user?.Phone?.replace('+', ''),
+      }).then(res => {
+        this.setState({ApprovedEmail: res?.Email});
+      });
+    }
+  }
   getShareMessage = item => {
     return (
       (I18nManager.isRTL
@@ -959,7 +970,8 @@ class BannerListings extends PureComponent {
                   padding: 10,
                 }}>
                 <Text style={{color: '#000', textAlign: 'center'}}>
-                  {Languages.EmailPendingApproval}
+                  {Languages.EmailPendingApproval +
+                    (this.state.ApprovedEmail ?? '')}
                 </Text>
               </View>
             </View>

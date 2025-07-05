@@ -67,6 +67,7 @@ const ListingTitle = ({
       userid: ID,
       username: username,
     }).then(data => {
+      console.log({data});
       if (data.OTPVerified === true || data.EmailConfirmed === true) {
         if (isPendingDelete)
           KS.TransferListing({
@@ -74,7 +75,8 @@ const ListingTitle = ({
             listingID: listingId,
           });
 
-        toast(Languages.PublishSuccess, 3500);
+        if (data.User.EmailApproved !== false)
+          toast(Languages.PublishSuccess, 3500);
 
         if (data.User) {
           actions.storeUserData(dispatch, data.User);
