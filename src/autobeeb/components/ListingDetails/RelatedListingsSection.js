@@ -21,7 +21,6 @@ const RelatedListingsSection = ({listingId}) => {
       const cca2 = ViewingCountry?.cca2;
       KS.GetCountryCore({LangId: Languages.langID, Iso: cca2}).then(
         ({country}) => {
-          console.log({country});
           KS.RelatedListingsCore({
             langId: Languages.langID,
             listingId,

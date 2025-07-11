@@ -31,10 +31,10 @@ const initialState = {
 export const actions = {
   DoAddListing(dispatch, data, images, callback) {
     dispatch({type: types.ADD_OFFER_PENDING});
-    // console.log({responseJson: types.ADD_OFFER_PENDING});
+
     KS.DoAddListing(data)
       .then(responseJson => {
-        console.log({responseJson});
+
         if (callback) callback(responseJson);
         if (responseJson.Success) {
           if (!responseJson.IsUserActive) {

@@ -296,7 +296,7 @@ class PostOfferScreen extends Component {
         userID: this.props.user?.ID,
         langid: Languages.langID,
       });
-      if (UserData.User && UserData.User.EmailApproved == false) {
+      if (UserData.User && UserData.User?.EmailApproved === false) {
         let userCountry = this.state.CountriesData.find(
           country => country.ISOCode == this.props.user?.ISOCode,
         );

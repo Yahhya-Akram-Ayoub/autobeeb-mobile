@@ -954,7 +954,12 @@ class ListingReview extends Component {
         currency: this.state.currency ? this.state.currency.ID : '2',
         ID: this.props.data.ID || '',
         email: this.state.hideEmail ? '' : email,
-        mainimage: this.props.data.ID ? this.state.images[0] : '',
+        mainimage:
+          this.props.data.ID &&
+          this.state.images?.length &&
+          !this.state.images[0]?.data
+            ? this.state.images[0]
+            : '',
       },
       this.state.images,
       data => {
@@ -1007,7 +1012,7 @@ class ListingReview extends Component {
               }, 200);
             } else {
               if (
-                (data.User.EmailApproved !== false &&
+                (data.User?.EmailApproved !== false &&
                   data.EmailConfirmed === true &&
                   data.EmailRegister === true) ||
                 !data.EmailRegister
