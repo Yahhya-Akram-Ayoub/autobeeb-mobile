@@ -26,6 +26,8 @@ const AutobeebModal = forwardRef((props, ref) => {
     onClosed,
     fullScreen,
     keyboardResponsive = false,
+    backButtonClose = true,
+    onRequestClose = null,
   } = props;
 
   const [visible, setVisible] = useState(false);
@@ -52,6 +54,9 @@ const AutobeebModal = forwardRef((props, ref) => {
         if (onClosed) onClosed();
       });
     },
+    isOpen: () => {
+      return visible;
+    },
   }));
 
   return (
@@ -60,19 +65,23 @@ const AutobeebModal = forwardRef((props, ref) => {
       transparent
       animationType="none"
       onRequestClose={() => {
-        if (ref?.current) ref?.current?.close();
-        else {
-          Animated.timing(animatedValue, {
-            toValue: 0,
-            duration: 100,
-            useNativeDriver: true,
-          }).start(() => {
-            setVisible(false);
-            if (onClosed) onClosed();
-          });
+        if (onRequestClose) {
+          onRequestClose();
+        } else {
+          if (ref?.current) ref?.current?.close();
+          else {
+            Animated.timing(animatedValue, {
+              toValue: 0,
+              duration: 100,
+              useNativeDriver: true,
+            }).start(() => {
+              setVisible(false);
+              if (onClosed) onClosed();
+            });
+          }
         }
       }}
-      backButtonClose={true}
+      backButtonClose={backButtonClose}
       entry="bottom"
       backdropPressToClose
       swipeToClose={false}>

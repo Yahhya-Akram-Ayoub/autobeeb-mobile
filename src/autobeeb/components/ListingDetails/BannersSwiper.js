@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Text,
   FlatList,
@@ -6,7 +6,6 @@ import {
   I18nManager,
   StyleSheet,
   View,
-  Image,
   ActivityIndicator,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -17,6 +16,7 @@ import HeaderWithShare from './HeaderWithShare';
 import {SkeletonLoader} from '../shared/Skeleton';
 import {Constants} from '../../../common';
 import KS from '../../../services/KSAPI';
+import ImageViewer from 'react-native-image-zoom-viewer';
 
 const BannersSwiper = ({images, imageBasePath}) => {
   const modalPhotoRef = useRef(null);
@@ -24,6 +24,7 @@ const BannersSwiper = ({images, imageBasePath}) => {
   const [failOverImages, setFailOverImages] = useState([]);
   const [loader, setLoader] = useState(true);
   const [imagesFullSize, setImagesFullSize] = useState([]);
+  const [openIndex, setOpenIndex] = useState(-1);
 
   const handleScroll = event => {
     const offsetX = event.nativeEvent.contentOffset.x;
@@ -39,6 +40,7 @@ const BannersSwiper = ({images, imageBasePath}) => {
   };
 
   const openPhoto = index => {
+    setOpenIndex(-1);
     modalPhotoRef.current?.open?.();
     setLoader(true);
 
@@ -119,84 +121,146 @@ const BannersSwiper = ({images, imageBasePath}) => {
         fullScreen={true}
         animationDuration={200}
         style={styles.modalBoxWrap}
-        useNativeDriver={true}>
+        backButtonClose={false}
+        useNativeDriver={true}
+        onRequestClose={() => {
+          if (modalPhotoRef.current?.isOpen?.()) {
+            if (openIndex !== -1) {
+              setOpenIndex(-1);
+            } else {
+              modalPhotoRef.current?.close();
+            }
+          }
+        }}>
         <HeaderWithShare
           name={'name'}
           listingId={11}
           typeId={1}
           backCkick={() => {
-            modalPhotoRef.current.close();
+            if (openIndex === -1) {
+              modalPhotoRef.current.close();
+            } else {
+              setOpenIndex(-1);
+            }
           }}
         />
-        <FlatList
-          horizontal={false}
-          showsVerticalScrollIndicator={false}
-          data={loader ? [1, 1] : imagesFullSize}
-          keyExtractor={(item, index) => index.toString()}
-          contentContainerStyle={styles.imageListContent2}
-          style={{height: screenHeight, flex: 1}}
-          renderItem={({item, index}) =>
-            loader ? (
-              <SkeletonLoader
-                key={`skeleton-${index}`}
-                containerStyle={styles.skeletonBox}
-                borderRadius={3}
-                shimmerColors={['#E0E0E0', '#F8F8F8', '#E0E0E0']}
-                animationDuration={1200}
-              />
-            ) : (
-              <RenderPopupImage
-                item={item}
-                key={index}
-                isFailOver={failOverImages?.includes(index)}
-                imageBasePath={imageBasePath}
-              />
-            )
-          }
-          initialNumToRender={1}
-          maxToRenderPerBatch={2}
-          getItemLayout={(data, index) => ({
-            length: screenHeight,
-            offset: screenHeight * index,
-            index,
-          })}
-        />
+        {openIndex === -1 ? (
+          <FlatList
+            horizontal={false}
+            showsVerticalScrollIndicator={false}
+            data={loader ? [1, 1] : imagesFullSize}
+            keyExtractor={(item, index) => index.toString()}
+            contentContainerStyle={styles.imageListContent2}
+            style={{height: screenHeight, flex: 1}}
+            renderItem={({item, index}) =>
+              loader ? (
+                <SkeletonLoader
+                  key={`skeleton-${index}`}
+                  containerStyle={styles.skeletonBox}
+                  borderRadius={3}
+                  shimmerColors={['#E0E0E0', '#F8F8F8', '#E0E0E0']}
+                  animationDuration={1200}
+                />
+              ) : (
+                <RenderPopupImage
+                  item={item}
+                  key={index}
+                  isFailOver={failOverImages?.includes(index)}
+                  imageBasePath={imageBasePath}
+                  onPress={() => {
+                    setOpenIndex(index);
+                    // navigation.navigate('ImageZoomViewerScreen', {
+                    //   imagesFullSize,
+                    //   initialIndex: index,
+                    // });
+                  }}
+                />
+              )
+            }
+            initialNumToRender={1}
+            maxToRenderPerBatch={2}
+            getItemLayout={(data, index) => ({
+              length: screenHeight,
+              offset: screenHeight * index,
+              index,
+            })}
+          />
+        ) : (
+          <View style={{height: screenHeight}}>
+            <ImageViewer
+              imageUrls={imagesFullSize.map(item => ({
+                url: `${Constants.coreApiV1}File/compressed?filePath=${item.path}`,
+                width: item.width,
+                height: item.height,
+              }))}
+              index={openIndex}
+              enableSwipeDown
+              onSwipeDown={() => {
+                setOpenIndex(-1);
+              }}
+              backgroundColor="#fff"
+              saveToLocalByLongPress={false}
+              renderImage={props => (
+                <FastImage
+                  {...props}
+                  style={[
+                    props.style,
+                    {resizeMode: FastImage.resizeMode.contain},
+                  ]}
+                />
+              )}
+              renderIndicator={(currentIndex, allSize) => (
+                <View style={styles.counter2}>
+                  <Text style={styles.counterText}>
+                    {currentIndex} / {allSize}
+                  </Text>
+                </View>
+              )}
+            />
+          </View>
+        )}
       </AutobeebModal>
     </>
   );
 };
 
-const RenderPopupImage = ({item: {path, width, height}, isFailOver}) => {
+const RenderPopupImage = ({
+  item: {path, width, height},
+  isFailOver,
+  onPress,
+}) => {
   const imageUri = `${Constants.coreApiV1}File/compressed?filePath=${path}`;
   const [loading, setLoading] = useState(true);
 
   return (
-    <View style={[styles.ImageContiner, {height}]}>
-      {loading && (
-        <ActivityIndicator
-          size="large"
-          color="#888"
-          style={{position: 'absolute', zIndex: 1}}
+    <TouchableOpacity activeOpacity={0.9} onPress={onPress}>
+      <View style={[styles.ImageContiner, {height}]}>
+        {loading && (
+          <ActivityIndicator
+            size="large"
+            color="#888"
+            style={{position: 'absolute', zIndex: 1}}
+          />
+        )}
+        <FastImage
+          style={{
+            width: width,
+            height: height,
+            alignSelf: 'center',
+          }}
+          resizeMode={FastImage.resizeMode.contain}
+          source={
+            isFailOver
+              ? require('../../../images/placeholder.png')
+              : {
+                  uri: imageUri,
+                }
+          }
+          onLoadEnd={() => setLoading(false)}
+          onError={() => setLoading(false)}
         />
-      )}
-      <FastImage
-        style={{
-          width: width,
-          height: height,
-          alignSelf: 'center',
-        }}
-        resizeMode={FastImage.resizeMode.contain}
-        source={
-          isFailOver
-            ? require('../../../images/placeholder.png')
-            : {
-                uri: imageUri,
-              }
-        }
-        onLoadEnd={() => setLoading(false)}
-        onError={() => setLoading(false)}
-      />
-    </View>
+      </View>
+    </TouchableOpacity>
   );
 };
 
@@ -257,6 +321,19 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  counter2: {
+    position: 'absolute',
+    top: 50,
+    alignSelf: 'center',
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 10,
+  },
+  counterText: {
+    color: '#fff',
+    fontSize: 14,
   },
 });
 

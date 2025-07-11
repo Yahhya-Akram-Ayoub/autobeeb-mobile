@@ -1404,7 +1404,7 @@ class SearchResult extends Component {
                       langId={Languages.langID}
                       selectedCity={this.state.selectedCity}
                       type={(this.state.Listings ?? [{}])[0]?.TypeID}
-                      fallbackTypes={[1, 2, 4, 8]}
+                     // fallbackTypes={[1, 2, 4, 8]}
                     />
                   )}
 
