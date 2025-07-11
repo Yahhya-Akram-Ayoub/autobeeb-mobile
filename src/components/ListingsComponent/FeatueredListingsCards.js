@@ -135,7 +135,7 @@ const FeatueredListingsCards = ({
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         nestedScrollEnabled={true}
-        contentContainerStyle={{marginBottom: 6}}
+        contentContainerStyle={{marginBottom: 12}}
         renderItem={({index, item}) => {
           return (
             <FeatueredListingCard

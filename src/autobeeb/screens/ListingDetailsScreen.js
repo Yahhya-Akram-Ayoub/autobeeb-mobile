@@ -4,7 +4,9 @@ import {
   Easing,
   ScrollView,
   StyleSheet,
+  TouchableOpacity,
   View,
+  Text,
 } from 'react-native';
 import {
   AddAdvButtonSquare,
@@ -24,6 +26,7 @@ import {
   ListingInformation,
   ListingPopupHandler,
   ListingTitle,
+  OfferUnavailable,
   PaymentBox,
   PostYourOfferBanner,
   RelatedListingsSection,
@@ -152,6 +155,10 @@ const ListingDetailsScreen = () => {
 
     lastScrollY.current = currentY;
   };
+
+  if (!loading && !listing?.id) {
+    return <OfferUnavailable />;
+  }
 
   return (
     <View>

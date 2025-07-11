@@ -7,25 +7,34 @@ import KS from '../../../services/KSAPI';
 import {Color, Constants, Languages} from '../../../common';
 import {arrayOfNull} from '../shared/StaticData';
 import {SkeletonLoader} from '../shared/Skeleton';
+import {useSelector} from 'react-redux';
 
 const RelatedListingsSection = ({listingId}) => {
   const navigation = useNavigation();
   const [relatedListings, setRelatedListings] = useState([]);
   const [failOverImagetedListings, setFailOverImage] = useState(arrayOfNull(9));
   const [loading, setLoading] = useState(true);
+  const ViewingCountry = useSelector(state => state.menu.ViewingCountry);
 
   useEffect(() => {
     if (listingId) {
-      KS.RelatedListingsCore({
-        langId: Languages.langID,
-        listingId,
-      })
-        .then(res => {
-          setRelatedListings(res.listings);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+      const cca2 = ViewingCountry?.cca2;
+      KS.GetCountryCore({LangId: Languages.langID, Iso: cca2}).then(
+        ({country}) => {
+          console.log({country});
+          KS.RelatedListingsCore({
+            langId: Languages.langID,
+            listingId,
+            countryId: country.id,
+          })
+            .then(res => {
+              setRelatedListings(res.listings);
+            })
+            .finally(() => {
+              setLoading(false);
+            });
+        },
+      );
     }
   }, [listingId]);
 

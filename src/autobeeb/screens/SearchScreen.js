@@ -239,7 +239,9 @@ const SearchScreen = () => {
           item={item}
           navigation={navigation}
           onPress={() => {
-            navigateToDetails(item.ID);
+            console.log({item});
+            console.log({itemId: item.ID ? item.ID : item.id});
+            navigateToDetails(item.ID ? item.ID : item.id);
           }}
         />
       );

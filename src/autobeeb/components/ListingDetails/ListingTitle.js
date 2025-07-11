@@ -1,5 +1,5 @@
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
-import {Color, Languages} from '../../../common';
+import {Color, Constants, Languages} from '../../../common';
 import SpecialSVG from './SpecialSVG';
 import {useDispatch, useSelector} from 'react-redux';
 import {OTPModal} from '../../../components';
@@ -67,7 +67,6 @@ const ListingTitle = ({
       userid: ID,
       username: username,
     }).then(data => {
-      console.log({data});
       if (data.OTPVerified === true || data.EmailConfirmed === true) {
         if (isPendingDelete)
           KS.TransferListing({
@@ -75,7 +74,12 @@ const ListingTitle = ({
             listingID: listingId,
           });
 
-        if (data.User.EmailApproved !== false)
+        if (
+          (data.User.EmailApproved !== false &&
+            data.EmailConfirmed === true &&
+            data.EmailRegister === true) ||
+          !data.EmailRegister
+        )
           toast(Languages.PublishSuccess, 3500);
 
         if (data.User) {
@@ -257,9 +261,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   nameText: {
-    color: Color.secondary,
-    fontSize: 20,
-    textAlign: 'left',
+    // color: Color.secondary,
+    // fontSize: 20,
+    color: '#000',
+    fontSize: 19,
+    fontFamily: Constants.fontFamilyBold,
   },
   specialSVG: {
     marginLeft: 5,

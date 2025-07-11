@@ -13,7 +13,7 @@ import {Languages, Constants, Color} from '../../../common';
 import {isIphoneX} from 'react-native-iphone-x-helper';
 import CountryPicker from '../../../components/CountryModal/CountryPickerModal';
 import {actions as MenuActions} from '../../../redux/MenuRedux';
-import {useNavigation} from '@react-navigation/native';
+import {CommonActions, useNavigation} from '@react-navigation/native';
 import Layout from '../../constants/Layout';
 import {AppIcon, Icons} from '../index';
 
@@ -53,7 +53,18 @@ const AppHeader = ({
               if (back) {
                 navigation.goBack();
               } else {
-                navigation.navigate('DrawerStack');
+               // navigation.navigate('DrawerStack');
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: 'DrawerStack',
+                        state: {routes: [{name: 'Drawer'}]},
+                      },
+                    ],
+                  }),
+                );
               }
             }}>
             {back ? (

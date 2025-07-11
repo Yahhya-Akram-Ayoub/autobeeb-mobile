@@ -131,29 +131,7 @@ const DealerBanner = ({userId, dealer, listingId}) => {
           </View>
         </View>
         <View style={styles.phoneRow}>
-          {!!(user.phone && !user.hideMobile) && (
-            <TouchableOpacity
-              style={styles.phoneButton}
-              onPress={() => handlePhonePress(user.phone)}>
-              <Text style={[styles.phoneText]}>
-                {showPhone
-                  ? `\u200E${user.mobile || user.phone}`
-                  : `${user.mobile || user.phone}`.replace(/.{4}$/, 'xxxx')}
-              </Text>
-            </TouchableOpacity>
-          )}
-          {user.hideMobile && user.mobile && user.mobile !== user.phone && (
-            <TouchableOpacity
-              style={styles.phoneButton}
-              onPress={() => handlePhonePress(user.phone)}>
-              <Text style={[styles.phoneText]}>
-                {showPhone
-                  ? `\u200E${user.mobile}`
-                  : `${user.mobile}`.replace(/.{4}$/, 'xxxx')}
-              </Text>
-            </TouchableOpacity>
-          )}
-          {!!user.phone && (
+          {!!user.phone && !user.hideMobile && (
             <TouchableOpacity
               style={styles.phoneButton}
               onPress={() => {
@@ -168,10 +146,33 @@ const DealerBanner = ({userId, dealer, listingId}) => {
                     });
                 }
               }}>
-              <Text style={[styles.phoneText]}>
+              <Text style={styles.phoneText}>
                 {showPhone
-                  ? `\u200E${user.phone}`
-                  : `${user.phone}`.replace(/.{4}$/, 'xxxx')}
+                  ? `\u200E${user.phone || user.mobile}`
+                  : `${user.phone || user.mobile}`.replace(/.{4}$/, 'xxxx')}
+              </Text>
+            </TouchableOpacity>
+          )}
+
+          {user.mobile && user.mobile !== user.phone && (
+            <TouchableOpacity
+              style={styles.phoneButton}
+              onPress={() => {
+                if (showPhone) {
+                  Linking.openURL(`tel:${user.phone}`);
+                } else {
+                  setShowPhone(true);
+                  user.id &&
+                    KS.UpdateMobileClick({
+                      UserId: user.id,
+                      ListingId: listingId,
+                    });
+                }
+              }}>
+              <Text style={styles.phoneText}>
+                {showPhone
+                  ? `\u200E${user.mobile}`
+                  : `${user.mobile}`.replace(/.{4}$/, 'xxxx')}
               </Text>
             </TouchableOpacity>
           )}

@@ -1801,7 +1801,7 @@ class PostOfferScreen extends Component {
               paddingHorizontal: 20,
             }}
             onPress={() => {
-              this.props.navigation.navigate('HomeScreen');
+              this.props.navigation.goBack();
             }}>
             <Text
               style={{

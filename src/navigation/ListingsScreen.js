@@ -3112,7 +3112,7 @@ class ListingsScreen extends Component {
                     overflow: 'hidden',
                     minWidth: '100%',
                     flex: 3,
-                    marginBottom: 6,
+                    marginBottom: 12,
                   }}
                   numColumns={1}
                   horizontal={false}

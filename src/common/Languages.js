@@ -576,6 +576,7 @@ export default new LocalizedStrings({
     last_search: 'Last search',
     suggested_ads: 'Suggested ads',
     featured_ads: 'Featured Ads',
+    GoBack: 'Go back',
   },
   ar: {
     //Arabic
@@ -1299,6 +1300,7 @@ export default new LocalizedStrings({
     last_search: 'آخر عملية بحث',
     suggested_ads: 'إعلانات مقترحه',
     featured_ads: 'الإعلانات المميزه',
+    GoBack: 'العودة',
   },
   de: {
     langID: 3,

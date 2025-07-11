@@ -52,8 +52,8 @@ class ListingReview extends Component {
       imageBasePath: props.imageBasePath ?? null,
       openSwearModal: false,
       swearCountry: '',
-      WithSwear: false,
-      WithFee: false,
+      withSwear: false,
+      withFee: false,
       description:
         (props?.route?.params?.Listing || {Description: ''}).Description || '',
       price: (props?.route?.params?.Listing || {Price: ''}).Price
@@ -262,10 +262,10 @@ class ListingReview extends Component {
       );
 
       if (_userCountry && _userCountry.WithSwear) {
-        this.setState({WithSwear: _userCountry.WithSwear});
+        this.setState({withSwear: _userCountry.WithSwear});
       }
       if (_userCountry && _userCountry.WithFee) {
-        this.setState({WithFee: _userCountry.WithFee});
+        this.setState({withFee: _userCountry.WithFee});
       }
     }
 
@@ -287,7 +287,7 @@ class ListingReview extends Component {
         this.setState({withSwear: selectedCountry.WithSwear});
       }
       if (!!selectedCountry && !!selectedCountry?.WithFee) {
-        this.setState({WithFee: selectedCountry.WithFee});
+        this.setState({withFee: selectedCountry.WithFee});
       }
     }
   }
@@ -970,7 +970,7 @@ class ListingReview extends Component {
         this.setState({disablePublish: false});
         if (data.Success === 1) {
           KS.ListingInitInfo({listingID: data.ID, langid: Languages.langID});
-          
+
           if (data.User) {
             this.props.storeUserData(data.User);
           }
@@ -1006,7 +1006,14 @@ class ListingReview extends Component {
                 this.navigateToOfferScreen(data.ID, isNewUser);
               }, 200);
             } else {
-              toast(Languages.PublishSuccess, 3500);
+              if (
+                (data.User.EmailApproved !== false &&
+                  data.EmailConfirmed === true &&
+                  data.EmailRegister === true) ||
+                !data.EmailRegister
+              ) {
+                toast(Languages.PublishSuccess, 3500);
+              }
               this.navigateToOfferScreen(data.ID, false);
             }
           }
@@ -1227,7 +1234,7 @@ class ListingReview extends Component {
                   const {listingType, sellType} = this.props.data;
 
                   if (
-                    (this.state.withSwear || this.state.WithFee) &&
+                    (this.state.withSwear || this.state.withFee) &&
                     `${listingType}` !== '32' &&
                     `${sellType}` === '1'
                   ) {
@@ -1265,7 +1272,7 @@ class ListingReview extends Component {
           }}
           Open={this.state.openSwearModal}
           IsSwear={this.state.withSwear}
-          IsCommission={this.state.WithFee}
+          IsCommission={this.state.withFee}
           Lang={Languages.langID}
           Curr={this.state.currency.ID}
           Country={

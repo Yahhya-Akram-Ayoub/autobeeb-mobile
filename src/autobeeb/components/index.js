@@ -28,7 +28,7 @@ export {default as ListingAutobeebBanner} from './ListingDetails/ListingAutobeeb
 export {default as RelatedListingsSection} from './ListingDetails/RelatedListingsSection';
 export {default as PostYourOfferBanner} from './ListingDetails/PostYourOfferBanner';
 export {default as ListingDetailsExtras} from './ListingDetails/ListingDetailsExtras';
-export {default as PaymentBox} from './ListingDetails/PaymentBox';
+export {default as PaymentBox} from './ListingDetails/OfferUnavailable';
 export {default as AddAdvButtonSquare} from './ListingDetails/AddAdvButtonSquare';
 export {default as AnimatedContactChatBar} from './ListingDetails/AnimatedContactChatBar';
 export {default as HeaderWithShare} from './ListingDetails/HeaderWithShare';
@@ -37,5 +37,6 @@ export {default as ReportListingForm} from './ListingDetails/ReportListingForm';
 export {default as ListingPopupHandler} from './ListingDetails/ListingPopupHandler';
 export {default as useKeyboard} from './shared/useKeyboard';
 export {default as FeaturesModal} from './ListingDetails/FeaturesModal';
+export {default as OfferUnavailable} from './ListingDetails/OfferUnavailable';
 export {default as HomeListingRow} from './Home/HomeListingRow';
 export {clearCache, getCache, setCache} from './shared/CacheFunc';

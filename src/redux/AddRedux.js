@@ -34,7 +34,7 @@ export const actions = {
     // console.log({responseJson: types.ADD_OFFER_PENDING});
     KS.DoAddListing(data)
       .then(responseJson => {
-        //console.log({responseJson});
+        console.log({responseJson});
         if (callback) callback(responseJson);
         if (responseJson.Success) {
           if (!responseJson.IsUserActive) {
@@ -67,7 +67,7 @@ export const actions = {
                           .split('/')
                           [image.uri.split('/').length - 1].split('.')[1],
                       }),
-                    }
+                    },
                   )
                     .then(res => res.json())
                     .then(data => {

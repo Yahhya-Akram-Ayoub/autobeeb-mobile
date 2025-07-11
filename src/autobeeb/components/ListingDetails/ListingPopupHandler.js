@@ -43,12 +43,7 @@ const ListingPopupHandler = ({
         const _key = 'ItemNeedSharePoup';
         AsyncStorage.getItem(_key, (_error, _item) => {
           if (_item?.includes(`${listingId},`)) {
-            AsyncStorage.setItem(
-              _key,
-              _item.replace(`${listingId},`, `${listingId}-1,`),
-            );
-          } else if (_item?.includes(`${listingId}-1,`)) {
-            AsyncStorage.setItem(_key, _item.replace(`${listingId}-1,`, ''));
+            AsyncStorage.setItem(_key, _item.replace(`${listingId},`, ''));
             setFirstLoad(1);
             setTimeout(() => {
               isSharePopupRef.current?.open();

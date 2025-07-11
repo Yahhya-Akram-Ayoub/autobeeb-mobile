@@ -75,15 +75,19 @@ class ChatScreen extends Component {
     const yesterday = new Date();
     yesterday.setDate(today.getDate() - 1);
 
-    if (date.toDateString() === today.toDateString()) return 'Today';
-    if (date.toDateString() === yesterday.toDateString()) return 'Yesterday';
+    const isSameDate = (d1, d2) =>
+      d1.getFullYear() === d2.getFullYear() &&
+      d1.getMonth() === d2.getMonth() &&
+      d1.getDate() === d2.getDate();
 
-    return date.toLocaleDateString(undefined, {
-      weekday: 'short',
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
+    if (isSameDate(date, today)) return 'Today';
+    if (isSameDate(date, yesterday)) return 'Yesterday';
+
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+
+    return `${day}-${month}-${year}`;
   }
 
   insertDateSeparators(messages) {
@@ -104,7 +108,7 @@ class ChatScreen extends Component {
         }
         lastDateStr = currentDateStr;
       }
-      
+
       result.push({...msg, type: 'message'});
       if (messages.length === i + 1) {
         result.push({
