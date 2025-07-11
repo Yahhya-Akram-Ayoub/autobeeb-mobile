@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, StatusBar, I18nManager, LogBox, SafeAreaView} from 'react-native';
+import {View, StatusBar, I18nManager, LogBox} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Styles, Languages} from './common';
 import {MyToast, MyNetInfo} from './containers';
@@ -8,7 +8,7 @@ import {persistStore} from 'redux-persist';
 import {Provider} from 'react-redux';
 import thunk from 'redux-thunk';
 import reducers from './redux';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import {MySignalR, NotificationPermission} from './components';
 import AutobeebApp from './autobeeb/navigation/indesx';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';

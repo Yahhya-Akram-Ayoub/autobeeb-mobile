@@ -1,15 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
   ScrollView,
-  Dimensions,
   Alert,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import KS from '../../../services/KSAPI';
 import {Color, Constants, Languages} from '../../../common';
@@ -23,8 +22,6 @@ const CACHE_KEY = 'home_listing_cache';
 const HomeListingRow = () => {
   const user = useSelector(state => state.user.user);
   const {ViewingCountry, ViewingCurrency} = useSelector(state => state.menu);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isRecentlyLoading, setIsRecentlyLoading] = useState(true);
   const recentIds = useSelector(
     state => state.recentListings.recentOpenListings,
   );
@@ -36,6 +33,7 @@ const HomeListingRow = () => {
   const recentFilterSeach = useSelector(
     state => state.recentListings.recentFilterSeach,
   );
+
   const [sections, setSections] = useState({
     new: [],
     recent: [],
@@ -44,26 +42,71 @@ const HomeListingRow = () => {
     featured: [],
   });
 
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRecentlyLoading, setIsRecentlyLoading] = useState(true);
+
   const navigation = useNavigation();
 
   const moveToDetails = item =>
     navigation.navigate('CarDetails', {id: item.id, screen: 'HomeScreen'});
 
-  useEffect(() => {
-    loadListings();
-    try {
-      loadData();
-    } catch (err) {
-      Alert.alert(JSON.stringify(err));
-      setIsLoading(false);
+  useFocusEffect(
+    React.useCallback(() => {
+      setIsLoading(true);
+      setIsRecentlyLoading(true);
+
+      const refreshData = async () => {
+        try {
+          await loadListings();
+          await loadData();
+        } catch (err) {
+          Alert.alert('Error', JSON.stringify(err));
+          setIsLoading(false);
+          setIsRecentlyLoading(false);
+        }
+      };
+
+      refreshData();
+    }, [
+      ViewingCountry?.cca2,
+      navigation,
+      JSON.stringify(recentSearched),
+      JSON.stringify(recentFilterSeach),
+    ]),
+  );
+
+  const loadListings = async () => {
+    const idsToFetch = recentIds?.slice(0, 3);
+    if (!idsToFetch || idsToFetch.length === 0) {
+      setIsRecentlyLoading(false);
+      return;
     }
-  }, [ViewingCountry?.cca2]);
+
+    const idQuery = idsToFetch.map(x => `ids=${x.id}`).join('&');
+
+    try {
+      const res = await KS.GetListingsByIdsCore({
+        p: `&${idQuery}`,
+        userId: user?.ID,
+        currencyId: ViewingCurrency?.ID,
+        langId: Languages.langID,
+        increaseViews: false,
+        Status: 16,
+      });
+
+      setSections(prev => ({
+        ...prev,
+        recent: res || [],
+      }));
+    } finally {
+      setIsRecentlyLoading(false);
+    }
+  };
 
   const loadData = async () => {
     let _searchTerm = recentSearched?.[0];
     let _recentFilterSeach =
       recentFilterSeach?.langId === Languages.langID ? recentFilterSeach : null;
-    // Cache area
     const cacheKey = `$${Languages.langID}_${ViewingCountry?.cca2}_${
       recentIds?.[0]?.id
     }_${_searchTerm?.keyword}_${JSON.stringify(
@@ -72,8 +115,9 @@ const HomeListingRow = () => {
 
     const cachedData = await getCache(CACHE_KEY, cacheKey);
 
-    if (!__DEV__ && cachedData) {
-      setSections({
+    if (cachedData) {
+      setSections(prev => ({
+        ...prev,
         new: cachedData.recentlyListings,
         search: [
           ...(cachedData.searchListings ?? []),
@@ -81,20 +125,19 @@ const HomeListingRow = () => {
         ],
         suggested: cachedData.intrestedListings,
         featured: cachedData.featureListings,
-        recent: sections.recent, // Keep recent from separate API
-      });
+      }));
       setIsLoading(false);
       return;
     }
-    // End cache area
 
     if (_searchTerm?.date < _recentFilterSeach?.date) _searchTerm = null;
-    let {country} = await KS.GetCountryCore({
+
+    const {country} = await KS.GetCountryCore({
       LangId: Languages.langID,
       Iso: ViewingCountry?.cca2,
     });
 
-    KS.HomeListingCore({
+    const res = await KS.HomeListingCore({
       GetRecently: true,
       GetFeatures: true,
       GetIntrested: !!_recentFilterSeach?.filter,
@@ -105,53 +148,18 @@ const HomeListingRow = () => {
       LangId: Languages.langID,
       CountryId: country?.id,
       ...(_recentFilterSeach?.filter ?? {}),
-    })
-      .then(res => {
-        setSections(prev => {
-          return {
-            ...prev,
-            new: res.recentlyListings,
-            search: [
-              ...(res?.searchListings ?? []),
-              ...(res?.searchParts ?? []),
-            ],
-            suggested: res.intrestedListings,
-            featured: res.featureListings,
-          };
-        });
+    });
 
-        setCache(CACHE_KEY, cacheKey, res);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
+    setSections(prev => ({
+      ...prev,
+      new: res.recentlyListings,
+      search: [...(res?.searchListings ?? []), ...(res?.searchParts ?? [])],
+      suggested: res.intrestedListings,
+      featured: res.featureListings,
+    }));
 
-  const loadListings = async () => {
-    const idsToFetch = recentIds?.slice(0, 3);
-    if (!idsToFetch || idsToFetch.length === 0) {
-      setIsRecentlyLoading(false);
-      return;
-    }
-
-    const idQuery = idsToFetch.map(x => `ids=${x.id}`).join('&');
-    setIsRecentlyLoading(true);
-
-    try {
-      const res = await KS.GetListingsByIdsCore({
-        p: `&${idQuery}`,
-        userId: user?.ID,
-        currencyId: ViewingCurrency?.ID,
-        langId: 1,
-        increaseViews: false,
-        Status: 16,
-      });
-      setSections(prev => {
-        return {...prev, recent: res || []};
-      });
-    } finally {
-      setIsRecentlyLoading(false);
-    }
+    setCache(CACHE_KEY, cacheKey, res);
+    setIsLoading(false);
   };
 
   const renderSkeleton = count =>
@@ -171,15 +179,16 @@ const HomeListingRow = () => {
     maxItems = 3,
     navigateTo = () => {},
   ) => {
-    if (
+    const isLoadingSection =
       (isLoading && titleKey !== 'RecentlyViewed') ||
-      (isRecentlyLoading && titleKey === 'RecentlyViewed')
-    ) {
+      (isRecentlyLoading && titleKey === 'RecentlyViewed');
+
+    if (isLoadingSection) {
       return (
         <View style={styles.cardContainer}>
           <View style={styles.titleRow}>
             <Text style={styles.blackHeader}>{Languages[titleKey]}</Text>
-            <TouchableOpacity disabled={true}>
+            <TouchableOpacity disabled>
               <Text style={styles.showMore}>{Languages.ShowMore}</Text>
             </TouchableOpacity>
           </View>
@@ -216,16 +225,13 @@ const HomeListingRow = () => {
 
   return (
     <ScrollView>
-      {renderSection('newly_added_ads', sections.new, 9, () => {
-        navigation.navigate('SearchResult', {
-          submitted: true,
-          query: '',
-        });
-      })}
+      {renderSection('newly_added_ads', sections.new, 9, () =>
+        navigation.navigate('SearchResult', {submitted: true, query: ''}),
+      )}
 
-      {renderSection('RecentlyViewed', sections.recent, 3, () => {
-        navigation.navigate('RecentlyViewedScreen');
-      })}
+      {renderSection('RecentlyViewed', sections.recent, 3, () =>
+        navigation.navigate('RecentlyViewedScreen'),
+      )}
 
       {renderSection('last_search', sections.search, 3, () => {
         if (
@@ -267,15 +273,13 @@ const HomeListingRow = () => {
         });
       })}
 
-      {renderSection('featured_ads', sections.featured, 3, () => {
-        navigation.navigate('SearchResult', {
-          submitted: true,
-          query: '',
-        });
-      })}
+      {renderSection('featured_ads', sections.featured, 3, () =>
+        navigation.navigate('SearchResult', {submitted: true, query: ''}),
+      )}
     </ScrollView>
   );
 };
+
 const ListingCard = ({item, onPress}) => {
   const [imageError, setImageError] = useState(false);
 
@@ -289,7 +293,7 @@ const ListingCard = ({item, onPress}) => {
                 uri: `https://autobeeb.com/${item.fullImagePath}_400x400.jpg`,
               }
         }
-        style={[styles.image]}
+        style={styles.image}
         resizeMode={imageError || !item.thumbURL ? 'contain' : 'cover'}
         onError={() => setImageError(true)}
       />

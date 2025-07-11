@@ -13,6 +13,7 @@ import {Languages} from '../../../common';
 import {AppIcon, Icons} from '../shared/AppIcon';
 import {screenWidth} from '../../constants/Layout';
 import ShareLib from 'react-native-share';
+import {toast} from '../../../Omni';
 
 const HeaderWithShare = ({name, listingId, typeId, backCkick}) => {
   const navigation = useNavigation();
@@ -29,18 +30,20 @@ const HeaderWithShare = ({name, listingId, typeId, backCkick}) => {
   };
 
   const onShare = async () => {
+    const url = getShareMessage();
+
+    const message = `${Languages.CheckOffer}\n${url}\n\n${Languages.DownloadAutobeeb}\n${AppLink}`;
+    const options = {
+      url,
+      message,
+    };
+    options.social = ShareLib.Social.FACEBOOK;
+
     try {
-      const url = getShareMessage();
-
-      const message = `${Languages.CheckOffer}\n${url}\n\n${Languages.DownloadAutobeeb}\n${AppLink}`;
-
-      await ShareLib.shareSingle({
-        message,
-        title: Languages.CheckOffer,
-        social: ShareLib.Social.FACEBOOK,
-      });
+      await ShareLib.shareSingle(options);
     } catch (error) {
-      console.warn('Share failed:', error);
+      console.log('Error =>', ShareLib);
+      console.log('Error =>', error);
     }
   };
 
@@ -48,9 +51,7 @@ const HeaderWithShare = ({name, listingId, typeId, backCkick}) => {
     <View style={styles.wrapper}>
       <View style={styles.headerContainer}>
         <View style={styles.row}>
-          <Pressable
-            onPress={() => onShare('facebook')}
-            style={styles.shareButton}>
+          <Pressable onPress={() => onShare()} style={styles.shareButton}>
             <FacebookIcon size={32} />
           </Pressable>
 

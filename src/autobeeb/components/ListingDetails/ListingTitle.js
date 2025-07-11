@@ -48,7 +48,6 @@ const ListingTitle = ({
   };
 
   useEffect(() => {
-    __DEV__ && console.log({user});
     if (openOTPModal) setOpenModal(true);
   }, [openOTPModal]);
 

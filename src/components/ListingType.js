@@ -9,6 +9,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import {Languages} from '../common';
+import {screenHeight} from '../autobeeb/constants/Layout';
 
 const screenWidth = Dimensions.get('screen').width;
 
@@ -53,6 +54,7 @@ const ListingType = ({types = [], onClick}) => {
       keyExtractor={(item, index) => index.toString()}
       data={types}
       numColumns={2}
+      scrollEnabled={false}
       contentContainerStyle={styles.container}
       renderItem={renderItem}
     />
@@ -76,10 +78,11 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    maxHeight: screenHeight,
   },
   itemContainer: {
     width: screenWidth * 0.45,
-    height: screenWidth * 0.45,
+    height: screenWidth * 0.40,
     marginHorizontal: 5,
     marginVertical: 5,
     borderRadius: 10,
