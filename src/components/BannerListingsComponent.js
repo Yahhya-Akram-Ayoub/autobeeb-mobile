@@ -22,6 +22,7 @@ import {toast} from '../Omni';
 import KS from '../services/KSAPI';
 import Svg, {Path} from 'react-native-svg';
 import ShareLib from 'react-native-share';
+import { CommonActions } from '@react-navigation/native';
 
 // create a component
 class BannerListings extends PureComponent {
@@ -35,11 +36,12 @@ class BannerListings extends PureComponent {
   componentDidMount() {
     if (
       this.props.user?.EmailRegister &&
-      this.props.user?.EmailConfirmed &&
+      // this.props.user?.EmailConfirmed &&
       this.props.user?.EmailApproved === false
     ) {
       KS.GetApprovedAccountByPhone({
         phone: this.props.user?.Phone?.replace('+', ''),
+        email: this.props.user?.Email,
       }).then(res => {
         this.setState({ApprovedEmail: res?.Email});
       });
@@ -71,6 +73,35 @@ class BannerListings extends PureComponent {
       console.log('Error =>', ShareLib);
       console.log('Error =>', error);
     }
+  };
+  navigateToDrawerScreen = (screen, params) => {
+    if (!screen) return;
+
+    this.props.navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'App',
+            state: {
+              routes: [
+                {
+                  name: 'DrawerStack',
+                  state: {
+                    routes: [
+                      {
+                        name: screen,
+                        params,
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      }),
+    );
   };
 
   renderCurrency(Listing) {
@@ -974,6 +1005,39 @@ class BannerListings extends PureComponent {
                     (this.state.ApprovedEmail ?? '')}
                 </Text>
               </View>
+
+              <TouchableOpacity
+                style={{
+                  backgroundColor: Color.secondary,
+                  paddingVertical: 5,
+                  borderRadius: 5,
+                  flexGrow: 0,
+                  marginTop: 15,
+                  paddingHorizontal: 20,
+                  marginBottom: 15,
+                  width: '50%',
+                  alignSelf: 'center',
+                }}
+                onPress={() => {
+                  this.navigateToDrawerScreen('EditProfile', {
+                    ChangePhone:
+                      this.props.user?.EmailRegister &&
+                      !this.props.user?.EmailConfirmed
+                        ? false
+                        : true,
+                    ChangeEmail:
+                      this.props.user?.EmailRegister &&
+                      !this.props.user?.EmailConfirmed,
+                  });
+                }}>
+                <Text
+                  style={{color: '#fff', fontSize: 20, textAlign: 'center'}}>
+                  {this.props.user?.EmailRegister &&
+                  !this.props.user?.EmailConfirmed
+                    ? Languages.ChangeEmail
+                    : Languages.ChangeNumber}
+                </Text>
+              </TouchableOpacity>
             </View>
           )}
 

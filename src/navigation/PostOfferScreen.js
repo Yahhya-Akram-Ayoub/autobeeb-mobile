@@ -287,6 +287,18 @@ class PostOfferScreen extends Component {
       }
     }
 
+    this.focusListener = this.props.navigation.addListener('focus', () => {
+      this.handleOnFocus();
+    });
+  };
+
+  componentWillUnmount() {
+    if (this.focusListener) {
+      this.focusListener();
+    }
+  }
+  async handleOnFocus() {
+  
     if (
       this.props.user &&
       this.props.user?.EmailConfirmed &&
@@ -296,33 +308,40 @@ class PostOfferScreen extends Component {
         userID: this.props.user?.ID,
         langid: Languages.langID,
       });
+   
       if (UserData.User && UserData.User?.EmailApproved === false) {
-        let userCountry = this.state.CountriesData.find(
+        let userCountry = this.state.CountriesData?.find(
           country => country.ISOCode == this.props.user?.ISOCode,
         );
-
-        this.setState({
-          countryLimit: UserData.User.IsDealer
-            ? userCountry.DealerLimit
-            : userCountry.Limit,
-          showEmailNotApproved: true,
-        });
+        this.setState(
+          {
+            countryLimit: UserData.User.IsDealer
+              ? userCountry?.DealerLimit
+              : userCountry?.Limit,
+            showEmailNotApproved: true,
+          },
+          () => {
+            this.getApprvedEmailForNumber();
+          },
+        );
       }
     }
-
+  }
+  getApprvedEmailForNumber() {
     if (
       this.props.user?.EmailRegister &&
-      this.props.user?.EmailConfirmed &&
       this.props.user?.EmailApproved === false
     ) {
       ks.GetApprovedAccountByPhone({
         phone: this.props.user?.Phone?.replace('+', ''),
+        email: this.props.user?.Email,
       }).then(res => {
-        console.log({res});
-        this.setState({ApprovedEmail: res?.Email});
+        this.setState({ApprovedEmail: res?.Email}, () => {
+         // console.log({showEmailNotApproved: this.state.showEmailNotApproved});
+        });
       });
     }
-  };
+  }
 
   navigateToDrawerScreen = (screen, params) => {
     if (!screen) return;

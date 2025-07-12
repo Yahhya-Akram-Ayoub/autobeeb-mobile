@@ -156,7 +156,10 @@ const ListingDetailsScreen = () => {
     lastScrollY.current = currentY;
   };
 
-  if (!loading && !listing?.id) {
+  if (
+    !loading &&
+    (!listing?.id || (listing?.status !== 16 && listing?.ownerID !== user?.ID))
+  ) {
     return <OfferUnavailable />;
   }
 

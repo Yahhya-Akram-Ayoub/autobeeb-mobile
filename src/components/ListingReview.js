@@ -820,7 +820,10 @@ class ListingReview extends Component {
             }}
             renderItem={({item, index}) => {
               return (
-                <View
+                <TouchableOpacity
+                  onPress={() => {
+                    this.props.goToStep(Steps.Images, true);
+                  }}
                   key={index}
                   style={{
                     marginHorizontal: 3,
@@ -829,7 +832,7 @@ class ListingReview extends Component {
                     paddingHorizontal: 5,
                   }}>
                   {this.renderImage(item, index)}
-                </View>
+                </TouchableOpacity>
               );
             }}
           />

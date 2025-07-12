@@ -155,12 +155,14 @@ class LanguageSelector extends Component {
     const _country = _countries.filter(
       country => country.cca2 == result.toUpperCase(),
     )[0];
-    // var _name = getCountryNameAsync(_country.cca2, 'AR');
-    // console.log(_country.cca2 + ' ================= ' + JSON.stringify(_name));
+
+    const isIsrael = `${result}`.toLocaleLowerCase() === 'il';
+    const _cName = _country.name.common || _country.name;
+
     this.setState(
       {
-        cca2: result == 'il' ? 'PS' : result.toUpperCase(),
-        countryName: _country.name.common || _country.name,
+        cca2: isIsrael ? 'PS' : result.toUpperCase(),
+        countryName: isIsrael ? 'Palestine' : _cName,
         country: _country,
       },
       () => {
@@ -184,10 +186,14 @@ class LanguageSelector extends Component {
   async findCountry() {
     let countries = await getAllCountries();
     let _country = countries.find(i => i.cca2 == this.state.cca2);
+
+    const _cName = _country.name;
+    const isIsrael = _country.cca2?.toLowerCase() === 'il';
+
     this.setState({
       country: _country,
-      countryName: _country.name,
-      loadingCountry: false,
+      countryName: _cName,
+      loadingCountry: isIsrael ? 'Palestine' : _cName,
       selectedLanguage:
         LangaugesList.find(i => i.Prefix == Languages.getLanguage()) ??
         LangaugesList[0],

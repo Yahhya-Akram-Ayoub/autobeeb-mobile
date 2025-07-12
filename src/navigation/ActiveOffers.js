@@ -238,13 +238,13 @@ class ActiveOffers extends Component {
   }
 
   resendCode() {
-    console.log({USer: this.state.User});
+
     this.setState({otp: ''});
     KS.ResendOTP({
       userID: this.state.User.ID,
       otpType: this.state.User?.EmailRegister ? 2 : 1,
     }).then(data => {
-      console.log({USerdata: data});
+   
       if (data.Success == 1) {
         toast(Languages.WeSendUOTP);
       } else {

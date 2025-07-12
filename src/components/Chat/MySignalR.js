@@ -45,9 +45,13 @@ const MySignalR = () => {
     const hub = connection.createHubProxy('ChatHub');
 
     // Clean before attaching
-    hub.off('recieveMessage');
-    hub.off('connected');
-    hub.off('disconnected');
+    try {
+      hub.off('recieveMessage');
+      hub.off('connected');
+      hub.off('disconnected');
+    } catch (err) {
+      __DEV__ && console.log({SiganlRError: err});
+    }
 
     // Message received handler
     hub.on('recieveMessage', (senderId, sessionId, message) => {
@@ -83,7 +87,9 @@ const MySignalR = () => {
         KS.UpdateLastLogin({UserId: userId, AppLangId: Languages.langID});
         const online = await hub.invoke('GetUsersOnline');
         if (online) {
-          const onlineList = online.split(',').filter(id => id && id !== userId);
+          const onlineList = online
+            .split(',')
+            .filter(id => id && id !== userId);
           dispatch({
             type: 'ONLINE_USERS',
             payload: {onlineUsers: [...onlineList, userId]},

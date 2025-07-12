@@ -78,24 +78,16 @@ class NewHeader extends Component {
             <TouchableOpacity
               style={styles.touchableSearchBox}
               onPress={() => {
-                const state = this.props.navigation.getState();
-                console.log({state});
-
-                const isHomeStack = state.routes?.some(
-                  r =>
-                    r.name === 'HomeScreen' || 
-                    (r.state?.routeNames?.includes('Search') &&
-                      r.state?.type?.includes('stack')),
-                );
-    
-                if (isHomeStack) {
+                if (this.props.isHomeStack) {
                   this.props.navigation.navigate('Search', {
                     query: this.props.query,
                   });
                 } else {
                   this.props.navigation.navigate('HomeScreen', {
                     screen: 'Search',
-                    params: {query: this.props.query},
+                    params: {
+                      query: this.props.query,
+                    },
                   });
                 }
               }}>

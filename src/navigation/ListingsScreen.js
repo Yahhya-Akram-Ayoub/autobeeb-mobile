@@ -821,151 +821,163 @@ class ListingsScreen extends Component {
   }
 
   async filterResults(onEndReached = false, asc, sortBy) {
-    if (this.filterController) {
-      this.filterController.abort(); // cancel previous
-    }
-    this.filterController = new AbortController();
-
-    if (!onEndReached) {
-      this.setState({isLoading: true, page: 1, showLoadMore: false});
-      this.onScrollHandler({nativeEvent: {contentOffset: {y: 0}}}); // to re open enaimated header
-    } else {
-      this.setState({footerLoading: true, showLoadMore: false});
-    }
-
-    let _page = onEndReached ? this.state.page : 1;
-    if (!onEndReached) {
-      this.filterModal.close();
-    }
-    const _params = {
-      asc: asc ? (asc == 'false' ? false : true) : false, // if it was sent check the string for true or false because i don want it to resolve to true always
-      sortBy: sortBy ? sortBy : 'date',
-      typeID: this.props.route.params?.ListingType?.ID || '',
-      langid: Languages.langID,
-      PageNum: _page,
-      pagesize: PageSize,
-      makeID:
-        (this.state.selectedMake &&
-          this.state.selectedMake.map(item => item.ID).join(',')) ||
-        '',
-      modelid:
-        (this.state.selectedModel &&
-          this.state.selectedModel.map(item => item.ID) &&
-          this.state.selectedModel.map(item => item.ID).join(',')) != 'NaN'
-          ? this.state.selectedModel &&
-            this.state.selectedModel.map(item => item.ID) &&
-            this.state.selectedModel.map(item => item.ID).join(',')
-          : '',
-      cityID:
-        (this.state.selectedCity &&
-          this.state.selectedCity.map(item => item.ID).join(',')) ||
-        '',
-      color:
-        (this.state.selectedColor &&
-          this.state.selectedColor.map(item => item.ID).join(',')) ||
-        '',
-      categoryid:
-        (this.state.selectedCategory &&
-          this.state.selectedCategory.map(item => item.ID).join(',')) ||
-        '',
-
-      sellType: this.state.sellType.ID || '',
-
-      fuelType:
-        (this.state.selectedFuelType &&
-          this.state.selectedFuelType
-            .map(item => item.ID)
-            .reduce((a, b) => a + b, 0)) ||
-        '',
-
-      minyear: this.state.selectedMinYear || '',
-      maxYear: this.state.selectedMaxYear || '',
-      minPrice: this.state.selectedMinPrice || '',
-      maxPrice: this.state.selectedMaxPrice || '',
-      minConsumption: this.state.selectedMinMileage || '',
-      maxConsumption: this.state.selectedMaxMileage || '',
-      condition:
-        (this.state.selectedStatus &&
-          this.state.selectedStatus
-            .map(item => item.ID)
-            .reduce((a, b) => a + b, 0)) ||
-        '',
-      gearBox:
-        (this.state.selectedGearBox &&
-          this.state.selectedGearBox
-            .map(item => item.ID)
-            .reduce((a, b) => a + b, 0)) ||
-        '',
-      paymentMethod:
-        (this.state.selectedPaymentMethod &&
-          this.state.selectedPaymentMethod
-            .map(item => item.ID)
-            .reduce((a, b) => a + b, 0)) ||
-        '',
-      rentPeriod:
-        (this.state.selectedRentPeriod &&
-          this.state.selectedRentPeriod
-            .map(item => item.ID)
-            .reduce((a, b) => a + b, 0)) ||
-        '',
-
-      section:
-        (this.state.selectedSection && this.state.selectedSection[0].ID) || '',
-      isocode: this.props.ViewingCountry.cca2 || '',
-      cur: this.state.currency?.ID || '',
-      partNumber: this.state.PartNumber,
-    };
-
-    this.props.recentFilterSeach(_params, this.selectedFilters());
-    KS.ListingsGet(_params, null, this.filterController?.signal).then(data => {
-      if (data.Success) {
-        this.countListingsViews(
-          data.Listings.map(x => x.ID),
-          _page,
-          data.Pages,
-        );
-
-        if (onEndReached) {
-          let concattedListings = this.state.Listings;
-          let tempBanners = this.state.Banners || [];
-
-          if (this.state.Banners?.length > 0) {
-            concattedListings.push({
-              AutoBeebBanner: true,
-              BannerDetails: tempBanners.shift(),
-            });
-            this.setState({Banners: tempBanners});
-            concattedListings.push({skipForAutoBeebBanner: true});
-          }
-
-          concattedListings = concattedListings.concat(data.Listings);
-
-          this.setState({
-            Listings: concattedListings,
-            maximumPages: data.Pages,
-            NoRelatedOffers: data.NoRelatedOffers,
-            NumberOfIntrested: data.NumberOfIntrested,
-            isLoading: false,
-            btnloader: false,
-          });
-
-          setTimeout(() => {
-            this.setState({footerLoading: false});
-          }, 1000);
-        } else {
-          this.setState({
-            Listings: data.Listings,
-            ISOCode: data.ISOCode,
-            NoRelatedOffers: data.NoRelatedOffers,
-            NumberOfIntrested: data.NumberOfIntrested,
-            maximumPages: data.Pages,
-            isLoading: false,
-            query: undefined,
-            btnloader: false,
-          });
-        }
+    try {
+      if (this.filterController) {
+        this.filterController.abort(); // cancel previous
       }
-    });
+      this.filterController = new AbortController();
+
+      if (!onEndReached) {
+        this.setState({isLoading: true, page: 1, showLoadMore: false});
+        this.onScrollHandler({nativeEvent: {contentOffset: {y: 0}}}); // to re open enaimated header
+      } else {
+        this.setState({footerLoading: true, showLoadMore: false});
+      }
+
+      let _page = onEndReached ? this.state.page : 1;
+      if (!onEndReached) {
+        this.filterModal.close();
+      }
+      console.log('================');
+      const _params = {
+        asc: asc ? (asc == 'false' ? false : true) : false, // if it was sent check the string for true or false because i don want it to resolve to true always
+        sortBy: sortBy ? sortBy : 'date',
+        typeID: this.props.route.params?.ListingType?.ID || '',
+        langid: Languages.langID,
+        PageNum: _page,
+        pagesize: PageSize,
+        makeID:
+          (this.state.selectedMake &&
+            this.state.selectedMake.map(item => item.ID).join(',')) ||
+          '',
+        modelid:
+          (this.state.selectedModel &&
+            this.state.selectedModel.map(item => item.ID) &&
+            this.state.selectedModel.map(item => item.ID).join(',')) != 'NaN'
+            ? this.state.selectedModel &&
+              this.state.selectedModel.map(item => item.ID) &&
+              this.state.selectedModel.map(item => item.ID).join(',')
+            : '',
+        cityID:
+          (this.state.selectedCity &&
+            this.state.selectedCity.map(item => item.ID).join(',')) ||
+          '',
+        color:
+          (this.state.selectedColor &&
+            this.state.selectedColor.map(item => item.ID).join(',')) ||
+          '',
+        categoryid:
+          (this.state.selectedCategory &&
+            this.state.selectedCategory.map(item => item.ID).join(',')) ||
+          '',
+
+        sellType: this.state.sellType.ID || '',
+
+        fuelType:
+          (this.state.selectedFuelType &&
+            this.state.selectedFuelType
+              .map(item => item.ID)
+              .reduce((a, b) => a + b, 0)) ||
+          '',
+
+        minyear: this.state.selectedMinYear || '',
+        maxYear: this.state.selectedMaxYear || '',
+        minPrice: this.state.selectedMinPrice || '',
+        maxPrice: this.state.selectedMaxPrice || '',
+        minConsumption: this.state.selectedMinMileage || '',
+        maxConsumption: this.state.selectedMaxMileage || '',
+        condition:
+          (this.state.selectedStatus &&
+            this.state.selectedStatus
+              .map(item => item.ID)
+              .reduce((a, b) => a + b, 0)) ||
+          '',
+        gearBox:
+          (this.state.selectedGearBox &&
+            this.state.selectedGearBox
+              .map(item => item.ID)
+              .reduce((a, b) => a + b, 0)) ||
+          '',
+        paymentMethod:
+          (this.state.selectedPaymentMethod &&
+            this.state.selectedPaymentMethod
+              .map(item => item.ID)
+              .reduce((a, b) => a + b, 0)) ||
+          '',
+        rentPeriod:
+          (this.state.selectedRentPeriod &&
+            this.state.selectedRentPeriod
+              .map(item => item.ID)
+              .reduce((a, b) => a + b, 0)) ||
+          '',
+
+        section:
+          (this.state.selectedSection && this.state.selectedSection[0].ID) ||
+          '',
+        isocode: this.props.ViewingCountry.cca2 || '',
+        cur: this.state.currency?.ID || '',
+        partNumber: this.state.PartNumber,
+      };
+      console.log('================');
+      this.props.recentFilterSeach(_params, this.selectedFilters());
+      KS.ListingsGet(_params, null, this.filterController?.signal).then(
+        data => {
+          if (data.Success) {
+            this.countListingsViews(
+              data.Listings.map(x => x.ID),
+              _page,
+              data.Pages,
+            );
+
+            if (onEndReached) {
+              let concattedListings = this.state.Listings;
+              let tempBanners = this.state.Banners || [];
+
+              if (this.state.Banners?.length > 0) {
+                concattedListings.push({
+                  AutoBeebBanner: true,
+                  BannerDetails: tempBanners.shift(),
+                });
+                this.setState({Banners: tempBanners});
+                concattedListings.push({skipForAutoBeebBanner: true});
+              }
+
+              concattedListings = concattedListings.concat(data.Listings);
+
+              this.setState({
+                Listings: concattedListings,
+                maximumPages: data.Pages,
+                NoRelatedOffers: data.NoRelatedOffers,
+                NumberOfIntrested: data.NumberOfIntrested,
+                isLoading: false,
+                btnloader: false,
+              });
+
+              setTimeout(() => {
+                this.setState({footerLoading: false});
+              }, 1000);
+            } else {
+              this.setState({
+                Listings: data.Listings,
+                ISOCode: data.ISOCode,
+                NoRelatedOffers: data.NoRelatedOffers,
+                NumberOfIntrested: data.NumberOfIntrested,
+                maximumPages: data.Pages,
+                isLoading: false,
+                query: undefined,
+                btnloader: false,
+              });
+            }
+          }
+        },
+      );
+    } catch (err) {
+      console.log({err});
+      this.setState({
+        isLoading: false,
+        btnloader: false,
+      });
+    }
   }
 
   renderCatRow({item}) {
@@ -3033,6 +3045,7 @@ class ListingsScreen extends Component {
             blue
             noElevation
             make
+            isHomeStack={true}
             query={this.state.query}
             onCountryChange={item => {
               //  console.log(item);
@@ -3968,7 +3981,7 @@ class ListingsScreen extends Component {
                 this.setState(
                   {btnloader: true, text: '', Makes: this.state.FullMakes},
                   () => {
-                    if (!this.filterModal.isOpen) {
+                    if (!this.filterModal?.isOpen()) {
                       this.filterResults();
                     }
                   },
@@ -4252,7 +4265,7 @@ class ListingsScreen extends Component {
                           } catch (CategorError) {
                             console.log({CategorError});
                           }
-                          if (!this.filterModal.isOpen) {
+                          if (!this.filterModal?.isOpen()) {
                             this.filterResults();
                           }
                         },
@@ -4495,7 +4508,7 @@ class ListingsScreen extends Component {
               () => {
                 this.categoryModal.close();
                 this.setState({btnloader: true});
-                if (!this.filterModal.isOpen) {
+                if (!this.filterModal?.isOpen()) {
                   this.filterResults();
                 }
               },
@@ -4628,7 +4641,7 @@ class ListingsScreen extends Component {
                 () => {
                   this.setState({modelSearch: '', btnloader: true});
                   this.modelModal.close();
-                  if (!this.filterModal.isOpen) {
+                  if (!this.filterModal?.isOpen()) {
                     this.filterResults();
                   }
                 },
@@ -4757,7 +4770,7 @@ class ListingsScreen extends Component {
                     btnloader: true,
                   },
                   () => {
-                    if (!this.filterModal.isOpen) {
+                    if (!this.filterModal?.isOpen()) {
                       this.filterResults();
                     }
                   },
@@ -4913,7 +4926,7 @@ class ListingsScreen extends Component {
                     btnloader: true,
                   },
                   () => {
-                    if (!this.filterModal.isOpen) {
+                    if (!this.filterModal?.isOpen()) {
                       this.filterResults();
                     }
                   },
@@ -5063,7 +5076,7 @@ class ListingsScreen extends Component {
                     btnloader: true,
                   },
                   () => {
-                    if (!this.filterModal.isOpen) {
+                    if (!this.filterModal?.isOpen()) {
                       this.filterResults();
                     }
                   },
@@ -5217,7 +5230,7 @@ class ListingsScreen extends Component {
                     btnloader: true,
                   },
                   () => {
-                    if (!this.filterModal.isOpen) {
+                    if (!this.filterModal?.isOpen()) {
                       this.filterResults();
                     }
                   },
@@ -5410,7 +5423,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     textAlign: I18nManager.isRTL ? 'right' : 'left',
   },
- NoRelatedOffers: {
+  NoRelatedOffers: {
     width: '90%',
     alignSelf: 'center',
     textAlign: 'center',

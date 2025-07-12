@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
   },
   counter2: {
     position: 'absolute',
-    top: 50,
+    top: 20,
     alignSelf: 'center',
     backgroundColor: 'rgba(0,0,0,0.4)',
     paddingHorizontal: 10,
@@ -333,7 +333,8 @@ const styles = StyleSheet.create({
   },
   counterText: {
     color: '#fff',
-    fontSize: 14,
+    fontSize: 15,
+    fontFamily: Constants.fontFamilyBold,
   },
 });
 

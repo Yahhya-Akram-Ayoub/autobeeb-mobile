@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import {AppIcon, Icons} from '../components';
 import {screenHeight, screenWidth} from '../constants/Layout';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {CommonActions, useNavigation, useRoute} from '@react-navigation/native';
 import {recentFreeSeach} from '../../redux/RecentListingsRedux';
 import {useDispatch, useSelector} from 'react-redux';
 import FastImage from 'react-native-fast-image';
@@ -90,7 +90,7 @@ const SearchScreen = () => {
 
   // On mount: handle route param query and truncate recentSeenListings
   useEffect(() => {
-    if (route?.params?.query) {
+    if (false && route?.params?.query) {
       const initialQuery = route.params.query ?? '';
       setQuery(initialQuery);
 
@@ -140,12 +140,25 @@ const SearchScreen = () => {
   const onSubmitEditing = () => {
     if (query) dispatch(recentFreeSeach(query));
 
-    navigation.replace('SearchResult', {
+    navigateToSearchResultScreen({
       submitted: true,
       query,
     });
   };
 
+  const navigateToSearchResultScreen = params => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'SearchResult',
+            params,
+          },
+        ],
+      }),
+    );
+  };
   // Clear search input
   const onClear = () => {
     setQuery('');
@@ -155,22 +168,10 @@ const SearchScreen = () => {
     dispatch(recentFreeSeach(item));
     setIsLoading(true);
     setQuery(item);
-    navigation.replace('SearchResult', {
+    navigateToSearchResultScreen({
       submitted: true,
       query: item,
     });
-    // KS.QuickSearch({
-    //   langid: Languages.langID,
-    //   query: item,
-    // }).then(data => {
-    //   if (data && data.Success) {
-    //     if (data.Suggestions && data.Suggestions.length === 0) {
-    //       searchInputRef.current && searchInputRef.current.focus();
-    //     }
-    //     setSuggestions(data.Suggestions);
-    //   }
-    //   setIsLoading(false);
-    // });
   };
   // Render a suggestion item
   const renderSuggestionItem = ({item}) => {
@@ -180,7 +181,7 @@ const SearchScreen = () => {
         onPress={() => {
           dispatch(recentFreeSeach(item.Label));
 
-          navigation.replace('SearchResult', {
+          navigateToSearchResultScreen({
             query: item.Label,
             MakeID: item.MakeID,
             ModelID: item.ModelID,

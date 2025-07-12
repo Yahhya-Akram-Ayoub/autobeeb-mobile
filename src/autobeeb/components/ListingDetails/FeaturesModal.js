@@ -16,6 +16,8 @@ import KS from '../../../services/KSAPI';
 import {AutobeebModal} from '../../../components';
 import {screenHeight, screenWidth} from '../../constants/Layout';
 import FastImage from 'react-native-fast-image';
+import {arrayOfNull} from '../shared/StaticData';
+import {SkeletonLoader} from '../shared/Skeleton';
 
 const FeaturesModal = ({
   listingId,
@@ -32,43 +34,62 @@ const FeaturesModal = ({
   const {AllowFeature} = useSelector(state => state.menu);
   const [featuresSwitch, setFeaturesSwitch] = useState([]);
   const [featuresDropDown, setFeaturesDropDown] = useState([]);
-  const [featuresLoaded, setFeaturesLoaded] = useState(false);
   const [selectedFeatures, setSelectedFeatures] = useState([]);
   const [selectedDropdownFeatures, setSelectedDropdownFeatures] = useState([]);
   const [formattedDropdownFeatures, setFormattedDropdownFeatures] = useState(
     {},
   );
   const [isLoading, setIsLoading] = useState(false);
-
+  const [isFeaturesLoading, setFeaturesIsLoading] = useState(true);
   const modalRef = useRef();
 
   const onClosed = () => {
     if (isNewUser || isPendingDelete) {
       openOTPModale();
-    } else if (!isSpecial && typeId !== '32' && `${sellType}` !== '4' && AllowFeature) {
+    } else if (
+      !isSpecial &&
+      typeId !== '32' &&
+      `${sellType}` !== '4' &&
+      AllowFeature
+    ) {
       navigation.navigate('SpecialPlans', {listingId});
     }
   };
 
   useEffect(() => {
     if (listingId) {
+      if (
+        typeId &&
+        `${typeId}` !== '32' &&
+        modalRef.current &&
+        !modalRef.current?.isOpen()
+      ) {
+        modalRef.current?.open();
+      }
+      setFeaturesIsLoading(true);
       KS.FeaturesGet({
         langid: Languages.langID,
         selltype: sellType,
         typeID: section || typeId,
-      }).then(data => {
-        if (data?.Success === 1) {
-          if (data.Features?.length > 0) {
-            setFeaturesSwitch(data.FeaturesSwitch || []);
-            setFeaturesDropDown(data.FeaturesDropDown || []);
-            setFeaturesLoaded(true);
+      })
+        .then(data => {
+          if (data?.Success === 1) {
+            if (data.Features?.length > 0) {
+              setFeaturesSwitch(data.FeaturesSwitch || []);
+              setFeaturesDropDown(data.FeaturesDropDown || []);
 
-            modalRef.current?.open();
-          } else {
-            onClosed();
+              if (modalRef.current && !modalRef.current?.isOpen()) {
+                modalRef.current?.open();
+              }
+            } else {
+              modalRef.current?.close();
+              onClosed();
+            }
           }
-        }
-      });
+        })
+        .finally(() => {
+          setFeaturesIsLoading(false);
+        });
     }
   }, [listingId]);
 
@@ -94,6 +115,8 @@ const FeaturesModal = ({
 
   const handleConfirm = () => {
     setIsLoading(true);
+    modalRef.current?.close();
+
     KS.FeatureSetAdd({
       listingID: listingId,
       featureSet: {
@@ -107,7 +130,6 @@ const FeaturesModal = ({
         }
       })
       .finally(() => {
-        modalRef.current?.close();
         setIsLoading(false);
       });
   };
@@ -125,7 +147,7 @@ const FeaturesModal = ({
       <View style={styles.container}>
         <Text style={styles.title}>{Languages.SelectFeatureSet}</Text>
         <ScrollView nestedScrollEnabled>
-          {featuresLoaded ? (
+          {!isFeaturesLoading ? (
             <View>
               <FlatList
                 data={featuresSwitch}
@@ -203,7 +225,21 @@ const FeaturesModal = ({
               />
             </View>
           ) : (
-            <Text>{Languages.Loading}</Text>
+            <FlatList
+              data={arrayOfNull(10)}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({item, index}) => {
+                return (
+                  <SkeletonLoader
+                    key={`skeleton-${index}`}
+                    containerStyle={styles.LoadingSkeleton}
+                    borderRadius={3}
+                    shimmerColors={['#E0E0E0', '#F8F8F8', '#E0E0E0']}
+                    animationDuration={1200}
+                  />
+                );
+              }}
+            />
           )}
         </ScrollView>
 
@@ -242,6 +278,11 @@ const styles = StyleSheet.create({
     maxHeight: screenHeight * 0.85,
     backgroundColor: '#fff',
     borderRadius: 10,
+  },
+  LoadingSkeleton: {
+    height: 60,
+    width: '100%',
+    marginBottom: 10,
   },
   modal: {
     backgroundColor: '#fffff00',

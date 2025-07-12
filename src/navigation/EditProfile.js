@@ -132,20 +132,24 @@ class EditProfile extends Component {
       }
     }
 
+    this.getEmailNeedApproval();
+  }
+
+  getEmailNeedApproval() {
+   
     if (
       this.props.user?.EmailRegister &&
-      this.props.user?.EmailConfirmed &&
+      // this.props.user?.EmailConfirmed &&
       this.props.user?.EmailApproved === false
     ) {
       KS.GetApprovedAccountByPhone({
         phone: this.props.user?.Phone?.replace('+', ''),
+        email: this.props.user?.Email,
       }).then(res => {
-        console.log({res});
         this.setState({ApprovedEmail: res?.Email});
       });
     }
   }
-
   selectCountry(country) {
     if (this.phone) {
       this.phone.selectCountry(country.cca2.toLowerCase());
@@ -333,6 +337,7 @@ class EditProfile extends Component {
           }
         })
         .finally(() => {
+          this.getEmailNeedApproval();
           this.setState({AddLoader: false});
         });
     } else {
@@ -385,6 +390,7 @@ class EditProfile extends Component {
             }
           })
           .finally(() => {
+            this.getEmailNeedApproval();
             this.setState({changeMobileLoading: false});
           });
       }
@@ -414,14 +420,11 @@ class EditProfile extends Component {
         <NewHeader navigation={this.props.navigation} back />
 
         <ScrollView
-          scrollEnabled={false}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{flex: 1}}>
+          contentContainerStyle={{flexGrow: 1}}>
           <KeyboardAvoidingView
-            behavior={Platform.select({ios: 'height', android: ''})}
-            contentContainerStyle={{flex: 1}}
-            //  keyboardVerticalOffset={200}
+            behavior={Platform.select({ios: 'padding', android: undefined})}
             style={{flex: 1}}>
             <AutobeebModal
               //coverScreen
@@ -1970,6 +1973,39 @@ class EditProfile extends Component {
                         (this.state.ApprovedEmail ?? '')}
                   </Animatable.Text>
                 )}
+
+                {country &&
+                  country.EmailRegister &&
+                  !this.props.user.EmailApproved && (
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: Color.secondary,
+                        paddingVertical: 5,
+                        borderRadius: 5,
+                        flexGrow: 0,
+                        marginTop: 15,
+                        paddingHorizontal: 20,
+                        width: '50%',
+                        alignSelf: 'center',
+                        marginBottom: 40,
+                      }}
+                      onPress={() => {
+                        this.ChangePhoneModal.open();
+                      }}>
+                      <Text
+                        style={{
+                          color: '#fff',
+                          fontSize: 20,
+                          textAlign: 'center',
+                        }}>
+                        {this.props.user?.EmailRegister &&
+                        !this.props.user?.EmailConfirmed
+                          ? Languages.ChangeEmail
+                          : Languages.ChangeNumber}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+
                 {!this.props.user.OTPConfirmed &&
                   country &&
                   !country.EmailRegister && (
