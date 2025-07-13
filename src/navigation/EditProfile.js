@@ -136,7 +136,6 @@ class EditProfile extends Component {
   }
 
   getEmailNeedApproval() {
-   
     if (
       this.props.user?.EmailRegister &&
       // this.props.user?.EmailConfirmed &&
@@ -1998,10 +1997,7 @@ class EditProfile extends Component {
                           fontSize: 20,
                           textAlign: 'center',
                         }}>
-                        {this.props.user?.EmailRegister &&
-                        !this.props.user?.EmailConfirmed
-                          ? Languages.ChangeEmail
-                          : Languages.ChangeNumber}
+                        {Languages.ChangeNumber}
                       </Text>
                     </TouchableOpacity>
                   )}

@@ -194,7 +194,7 @@ export const reducer = (state = initialState, action) => {
       };
 
     case types.LOGOUT:
-      return {...state, user: null};
+      return {...state, user: null, tempUser: null};
     case types.LOGIN:
       return {...state, user: user, tempUser: null};
     case types.TEMP_LOGIN:

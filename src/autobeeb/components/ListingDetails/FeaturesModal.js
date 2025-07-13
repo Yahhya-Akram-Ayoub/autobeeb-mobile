@@ -31,7 +31,7 @@ const FeaturesModal = ({
   reloadFeatures,
 }) => {
   const navigation = useNavigation();
-  const {AllowFeature} = useSelector(state => state.menu);
+  const {AllowFeature, Features} = useSelector(state => state.menu);
   const [featuresSwitch, setFeaturesSwitch] = useState([]);
   const [featuresDropDown, setFeaturesDropDown] = useState([]);
   const [selectedFeatures, setSelectedFeatures] = useState([]);
@@ -59,37 +59,43 @@ const FeaturesModal = ({
   useEffect(() => {
     if (listingId) {
       if (
+        Features &&
+        (Features?.FeaturesSwitch?.length ||
+          Features?.FeaturesDropDown?.length) &&
         typeId &&
         `${typeId}` !== '32' &&
         modalRef.current &&
         !modalRef.current?.isOpen()
       ) {
         modalRef.current?.open();
-      }
-      setFeaturesIsLoading(true);
-      KS.FeaturesGet({
-        langid: Languages.langID,
-        selltype: sellType,
-        typeID: section || typeId,
-      })
-        .then(data => {
-          if (data?.Success === 1) {
-            if (data.Features?.length > 0) {
-              setFeaturesSwitch(data.FeaturesSwitch || []);
-              setFeaturesDropDown(data.FeaturesDropDown || []);
-
-              if (modalRef.current && !modalRef.current?.isOpen()) {
-                modalRef.current?.open();
-              }
-            } else {
-              modalRef.current?.close();
-              onClosed();
-            }
-          }
+        setFeaturesSwitch(Features.FeaturesSwitch || []);
+        setFeaturesDropDown(Features.FeaturesDropDown || []);
+      } else {
+        setFeaturesIsLoading(true);
+        KS.FeaturesGet({
+          langid: Languages.langID,
+          selltype: sellType,
+          typeID: section || typeId,
         })
-        .finally(() => {
-          setFeaturesIsLoading(false);
-        });
+          .then(data => {
+            if (data?.Success === 1) {
+              if (data.Features?.length > 0) {
+                setFeaturesSwitch(data.FeaturesSwitch || []);
+                setFeaturesDropDown(data.FeaturesDropDown || []);
+
+                if (modalRef.current && !modalRef.current?.isOpen()) {
+                  modalRef.current?.open();
+                }
+              } else {
+                modalRef.current?.close();
+                onClosed();
+              }
+            }
+          })
+          .finally(() => {
+            setFeaturesIsLoading(false);
+          });
+      }
     }
   }, [listingId]);
 

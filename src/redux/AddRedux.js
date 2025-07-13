@@ -1,5 +1,6 @@
 import KS from '../services/KSAPI';
 import Constants from '../common/Constants';
+import {Languages} from '../common';
 var md5 = require('md5');
 
 const types = {
@@ -25,7 +26,6 @@ const initialState = {
   images: [],
   isUploading: false,
   uploadingResponse: '',
-
   isFetching: false,
 };
 export const actions = {
@@ -34,51 +34,68 @@ export const actions = {
 
     KS.DoAddListing(data)
       .then(responseJson => {
-
         if (callback) callback(responseJson);
         if (responseJson.Success) {
           if (!responseJson.IsUserActive) {
             return;
           } else {
+            console.log({responseJson});
             dispatch({
               type: 'ADD_OFFER_SUCCESS',
               payload: {response: responseJson},
             });
-            if (images && images.length > 0) {
-              images.forEach(async (image, index) => {
-                if (image.uri) {
-                  fetch(
-                    'https://api.autobeeb.com/v2/Services/ListingImageUpload', // https://apiv2.autobeeb.com
-                    {
-                      method: 'POST',
-                      headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify({
-                        pid: responseJson?.ID,
-                        isPrimary: index == 0 ? true : false,
-                        listingType: data?.TypeID ?? '1',
-                        base64: image?.data,
-                        filename: image?.uri
-                          .split('/')
-                          [image.uri.split('/').length - 1].split('.')[0],
-                        fileextension: image.uri
-                          .split('/')
-                          [image.uri.split('/').length - 1].split('.')[1],
-                      }),
-                    },
-                  )
-                    .then(res => res.json())
-                    .then(data => {
-                      setTimeout(() => {
-                        console.log({data});
-                      }, 1000);
-                    })
-                    .catch(err => console.log('error img ', err));
+
+            KS.FeaturesGet({
+              langid: Languages.langID,
+              selltype: responseJson.SellType,
+              typeID: responseJson.Section || responseJson.TypeId,
+            })
+              .then(data => {
+                dispatch({
+                  type: 'LAST_OFFER_FEATURES',
+                  payload: {
+                    FeaturesSwitch: data?.FeaturesSwitch || [],
+                    FeaturesDropDown: data?.FeaturesDropDown || [],
+                  },
+                });
+              })
+              .finally(() => {
+                if (images && images.length > 0) {
+                  images.forEach(async (image, index) => {
+                    if (image.uri) {
+                      fetch(
+                        'https://api.autobeeb.com/v2/Services/ListingImageUploadV2', // https://apiv2.autobeeb.com
+                        {
+                          method: 'POST',
+                          headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify({
+                            pid: responseJson?.ID,
+                            isPrimary: index == 0 ? true : false,
+                            listingType: data?.TypeID ?? '1',
+                            base64: image?.data,
+                            filename: image?.uri
+                              .split('/')
+                              [image.uri.split('/').length - 1].split('.')[0],
+                            fileextension: image.uri
+                              .split('/')
+                              [image.uri.split('/').length - 1].split('.')[1],
+                          }),
+                        },
+                      )
+                        .then(res => res.json())
+                        .then(data => {
+                          setTimeout(() => {
+                            console.log({data});
+                          }, 1000);
+                        })
+                        .catch(err => console.log('error img ', err));
+                    }
+                  });
                 }
               });
-            }
           }
         }
       })

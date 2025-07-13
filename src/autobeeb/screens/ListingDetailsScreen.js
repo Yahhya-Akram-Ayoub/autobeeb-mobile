@@ -158,6 +158,7 @@ const ListingDetailsScreen = () => {
 
   if (
     !loading &&
+    !showFeatures &&
     (!listing?.id || (listing?.status !== 16 && listing?.ownerID !== user?.ID))
   ) {
     return <OfferUnavailable />;

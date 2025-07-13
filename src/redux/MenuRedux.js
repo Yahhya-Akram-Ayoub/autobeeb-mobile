@@ -3,6 +3,7 @@ const types = {
   SET_CURRENCY: 'SET_CURRENCY',
   SEARCH_BARCODE: 'SEARCH_BARCODE',
   SET_ALLOWFEATURE: 'SET_ALLOWFEATURE',
+  LAST_OFFER_FEATURES: 'LAST_OFFER_FEATURES',
 };
 
 export const actions = {
@@ -37,6 +38,7 @@ const initialState = {
   ViewingCountry: undefined,
   ViewingCurrency: undefined,
   AllowFeature: true,
+  Features: [],
 };
 
 export const reducer = (state = initialState, action) => {
@@ -76,6 +78,12 @@ export const reducer = (state = initialState, action) => {
         code: payload.code,
       };
     }
+
+    case types.LAST_OFFER_FEATURES:
+      return {
+        ...state,
+        Features: action.payload,
+      };
     default: {
       return state;
     }
