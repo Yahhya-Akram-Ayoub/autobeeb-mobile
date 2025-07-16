@@ -6,12 +6,13 @@ const ExtractScreenObjFromUrl = async url => {
   let ID = url.split('/').at(-2);
   let TypeID = url.split('/').at(-1);
   let IDarray = url.match(
-    /([a-z0-9A-Z]{8}-[a-z0-9A-Z]{4}-[a-z0-9A-Z]{4}-[a-z0-9A-Z]{4}-[a-z0-9A-Z]{12})/g
+    /([a-z0-9A-Z]{8}-[a-z0-9A-Z]{4}-[a-z0-9A-Z]{4}-[a-z0-9A-Z]{4}-[a-z0-9A-Z]{12})/g,
   );
   let userID = IDarray && IDarray.length > 0 ? IDarray[0] : undefined;
 
   if (ID && TypeID && url.includes('ads')) {
-    return {screen: 'CarDetails', params: {item: {ID: ID, TypeID: TypeID}}};
+    console.log({id: ID});
+    return {screen: 'CarDetails', params: {id: ID}};
   } else if (url.includes('dealer') && userID) {
     return {screen: 'DealerProfileScreen', params: {userid: userID}};
   } else if (url.includes('user') && userID) {
@@ -31,7 +32,7 @@ const ExtractScreenObjFromUrl = async url => {
       selectedPaymentMethod: !filter.paymentMethod
         ? null
         : Constants.FilterPaymentMethods.filter(
-            x => filter.paymentMethod == x.ID
+            x => filter.paymentMethod == x.ID,
           )[0],
       selectedCategory: filter.categoryID,
       selectedFuelType: !filter.fuelType

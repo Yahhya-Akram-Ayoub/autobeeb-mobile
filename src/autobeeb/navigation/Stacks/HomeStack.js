@@ -62,30 +62,6 @@ const HomeStack = ({stackRef}) => {
     return unsubscribe;
   }, [navigation]);
 
-  const handleOpenURL = useCallback(
-    async event => {
-      const url = event.url;
-      const {screen, params} = await ExtractScreenObjFromUrl(url);
-      navigation.navigate(screen, params ?? undefined);
-    },
-    [navigation],
-  );
-
-  useEffect(() => {
-    const checkInitialUrl = async () => {
-      const url = await Linking.getInitialURL();
-      if (url) {
-        handleOpenURL({url});
-      }
-    };
-    checkInitialUrl();
-
-    const _linkHandler = Linking.addEventListener('url', handleOpenURL);
-    return () => {
-      _linkHandler.remove();
-    };
-  }, [handleOpenURL]);
-
   return (
     <Stack.Navigator
       ref={stackRef}

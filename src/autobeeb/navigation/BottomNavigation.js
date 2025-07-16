@@ -1,5 +1,5 @@
-import {useEffect} from 'react';
-import {StyleSheet} from 'react-native';
+import {useCallback, useEffect} from 'react';
+import {Linking, StyleSheet} from 'react-native';
 import {
   useNavigation,
   getFocusedRouteNameFromRoute,
@@ -10,7 +10,7 @@ import messaging from '@react-native-firebase/messaging';
 import {useSelector} from 'react-redux';
 import {ChatStack, OffersStack, ProfileStack, HomeStack} from './Stacks';
 import KS from '../../services/KSAPI';
-import {Languages} from '../../common';
+import {ExtractScreenObjFromUrl, Languages} from '../../common';
 import BottomTabBar from './BottomTabBar';
 
 const Tab = createBottomTabNavigator();
@@ -74,6 +74,30 @@ const BottomNavigation = ({navigationRef}) => {
       }),
     );
   };
+
+  const handleOpenURL = useCallback(
+    async event => {
+      const url = event.url;
+      const {screen, params} = await ExtractScreenObjFromUrl(url);
+      navigationRef.navigate(screen, params ?? undefined);
+    },
+    [navigationRef],
+  );
+
+  useEffect(() => {
+    const checkInitialUrl = async () => {
+      const url = await Linking.getInitialURL();
+      if (url) {
+        handleOpenURL({url});
+      }
+    };
+    checkInitialUrl();
+
+    const _linkHandler = Linking.addEventListener('url', handleOpenURL);
+    return () => {
+      _linkHandler.remove();
+    };
+  }, [handleOpenURL]);
 
   return (
     <Tab.Navigator
