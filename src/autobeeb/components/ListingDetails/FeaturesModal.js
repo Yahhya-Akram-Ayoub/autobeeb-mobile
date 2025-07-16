@@ -29,6 +29,7 @@ const FeaturesModal = ({
   isSpecial,
   openOTPModale,
   reloadFeatures,
+  isNeedRefresh,
 }) => {
   const navigation = useNavigation();
   const {AllowFeature, Features} = useSelector(state => state.menu);
@@ -52,7 +53,7 @@ const FeaturesModal = ({
       `${sellType}` !== '4' &&
       AllowFeature
     ) {
-      navigation.navigate('SpecialPlans', {listingId});
+      navigation.navigate('SpecialPlans', {listingId, isNeedRefresh});
     }
   };
 
@@ -60,16 +61,12 @@ const FeaturesModal = ({
     if (listingId) {
       if (
         Features &&
-        (Features?.FeaturesSwitch?.length ||
-          Features?.FeaturesDropDown?.length) &&
-        typeId &&
-        `${typeId}` !== '32' &&
-        modalRef.current &&
-        !modalRef.current?.isOpen()
+        (Features?.FeaturesSwitch?.length || Features?.FeaturesDropDown?.length)
       ) {
         modalRef.current?.open();
         setFeaturesSwitch(Features.FeaturesSwitch || []);
         setFeaturesDropDown(Features.FeaturesDropDown || []);
+        setFeaturesIsLoading(false);
       } else {
         setFeaturesIsLoading(true);
         KS.FeaturesGet({

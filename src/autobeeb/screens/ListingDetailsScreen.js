@@ -348,6 +348,7 @@ const ListingDetailsScreen = () => {
           isSpecial={listing?.isSpecial}
           openOTPModale={handleOpenOTPModal}
           reloadFeatures={handleReloadFeatures}
+          isNeedRefresh={isNeedRefresh}
         />
       )}
     </View>

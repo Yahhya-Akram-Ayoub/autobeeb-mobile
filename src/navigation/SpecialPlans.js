@@ -279,6 +279,7 @@ const SpecialPlans = ({route, pOffer, pOnClose}) => {
   const plansListRef = useRef(null);
   const Offer = !pOffer ? route?.params?.Offer : pOffer;
   const listingId = route?.params?.listingId ?? Offer.ID;
+  const isNeedRefresh = !!route?.params?.isNeedRefresh;
   const lang = Languages.getLanguage();
   const [InAppPurchases, setInAppPurchases] = useState([]);
 
@@ -712,7 +713,7 @@ const SpecialPlans = ({route, pOffer, pOnClose}) => {
                           },
                         ]}
                         onPress={() => {
-                          console.log('===============');
+                          //console.log('===============');
                           handlePaymentMethod(item);
                         }}>
                         <Image

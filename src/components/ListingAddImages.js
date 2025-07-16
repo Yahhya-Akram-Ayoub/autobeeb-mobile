@@ -4,25 +4,21 @@ import {
   Text,
   FlatList,
   TouchableOpacity,
-  I18nManager,
-  Platform,
-  StyleSheet,
-  Alert,
-  Image,
-  NativeModules,
   ScrollView,
+  ActivityIndicator,
+  Image,
+  StyleSheet,
 } from 'react-native';
 import {Color, Constants, Languages} from '../common';
 import IconFa from 'react-native-vector-icons/FontAwesome';
-import {requestCameraPermission} from '../ultils/Permission';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
 import DialogBox from 'react-native-dialogbox';
 import {screenHeight, screenWidth} from '../autobeeb/constants/Layout';
-import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
-import {toast} from '../Omni';
+import {requestCameraPermission} from '../ultils/Permission';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import KS from '../services/KSAPI';
+import {toast} from '../Omni';
 
-var ImagePicker = NativeModules.ImageCropPicker;
 const ListingAddImages = ({
   onClick,
   listingType,
@@ -32,45 +28,31 @@ const ListingAddImages = ({
   sellType,
 }) => {
   const [images, setImages] = useState(pImages ?? []);
-  const [mainImage, setMainImage] = useState(0); // Store index
+  const [mainImage, setMainImage] = useState(0);
+  const [fetchLoader, setFetchLoader] = useState(false);
+  const [loadingStates, setLoadingStates] = useState(
+    new Array(pImages?.length ?? 0).fill(true),
+  );
+
   const dialogRef = useRef(null);
   const isNeededListing = sellType === 4;
   const maxImages = listingType !== 32 && !isNeededListing ? 15 : 1;
 
   const updateImages = newImages => {
     setImages(newImages.slice(0, maxImages));
+    setLoadingStates(new Array(newImages.length).fill(true));
     if (newImages.length === 0) {
       setMainImage(null);
     } else if (mainImage === null || mainImage >= newImages.length) {
       setMainImage(0);
     }
-  };
-
-  const deleteImageByPath = (fileName, index) => {
-    let isPrimary = mainImage === index;
-
-    KS.ListingImageDelete({
-      id: listingId,
-      fileName: fileName,
-      primary: isPrimary,
-    })
-      .then(result => {
-        dialogRef.current?.close();
-
-        if (result.Success === 1) {
-          cleanupImage(fileName, index, true);
-        } else {
-          toast('Error Delete Image : ' + JSON.stringify(result.Message));
-        }
-      })
-      .finally(() => {
-        dialogRef.current?.close();
-      });
+    setFetchLoader(false);
   };
 
   const pickMultiple = () => {
     dialogRef.current?.close();
     const maxAllowed = maxImages - images.length;
+    setFetchLoader(true);
 
     launchImageLibrary(
       {
@@ -80,28 +62,35 @@ const ListingAddImages = ({
         compressImageQuality: 0.7,
       },
       res => {
-        if (!res || res.didCancel || !res.assets) return;
+        if (!res || res.didCancel || !res.assets) {
+          setFetchLoader(false);
+          return;
+        }
 
-        const newImages = images
-          ? [
-              ...images,
-              ...res.assets.map(image => ({
+        try {
+          const newImages = images
+            ? [
+                ...images,
+                ...res.assets.map(image => ({
+                  uri: image.uri,
+                  width: image.width,
+                  height: image.height,
+                  mime: image.type,
+                  data: image.base64,
+                })),
+              ]
+            : res.assets.map(image => ({
                 uri: image.uri,
                 width: image.width,
                 height: image.height,
                 mime: image.type,
                 data: image.base64,
-              })),
-            ]
-          : res.assets.map(image => ({
-              uri: image.uri,
-              width: image.width,
-              height: image.height,
-              mime: image.type,
-              data: image.base64,
-            }));
+              }));
 
-        updateImages(newImages);
+          updateImages(newImages);
+        } catch (err) {
+          setFetchLoader(false);
+        }
       },
     );
   };
@@ -121,10 +110,9 @@ const ListingAddImages = ({
         compressImageQuality: 0.7,
       },
       res => {
-        if (!res || res.didCancel) {
-          __DEV__ && toast('Operation failed or canceled');
-          return;
-        }
+        if (!res || res.didCancel) return;
+
+        setFetchLoader(true);
 
         try {
           const image = res.assets[0];
@@ -138,29 +126,20 @@ const ListingAddImages = ({
           const newImages = images ? [...images, _image] : [_image];
           updateImages(newImages);
         } catch (err) {
-          console.log({err});
+          setFetchLoader(false);
         }
       },
     );
   };
 
-  const cleanupImage = (image, index, fromArray = false) => {
+  const cleanupImage = (image, index) => {
     if (listingId && images.length === 1) {
       toast('You can not delete all photos');
       return;
     }
 
-    if (typeof image === 'string' && !fromArray) {
-      confirmImageDelete(image, index);
-    } else {
-      const filtered = images.filter(img => img !== image);
-      updateImages(filtered);
-      try {
-        ImagePicker.cleanSingle(image.uri);
-      } catch (err) {
-        console.warn('Clean error:', err);
-      }
-    }
+    const filtered = images.filter((img, i) => i !== index);
+    updateImages(filtered);
   };
 
   const showImageOptions = () => {
@@ -179,15 +158,12 @@ const ListingAddImages = ({
     });
   };
 
-  const confirmImageDelete = (image, index) => {
-    deleteImageByPath(image, index);
-  };
   const moveIndexToStart = index => {
-    if (index < 0 || index >= images.length) return images; // invalid index
+    if (index < 0 || index >= images.length) return;
     const item = images[index];
     const newArr = images.slice(0, index).concat(images.slice(index + 1));
+    updateImages([item, ...newArr]);
     setMainImage(0);
-    setImages([item, ...newArr]);
   };
 
   const renderItem = useCallback(
@@ -214,22 +190,43 @@ const ListingAddImages = ({
         );
 
       return (
-        <View key={index} style={[styles.addBox]}>
-          <TouchableOpacity
-            onPress={() => {
-              moveIndexToStart(index);
-            }}>
-            <Image
-              style={styles.imageBoxSquer}
-              source={
-                typeof item === 'string'
-                  ? {
-                      uri: `https://autobeeb.com/${imageBasePath}${item}_400x400.jpg`,
-                    }
-                  : item
-              }
-            />
-
+        <View key={index} style={styles.addBox}>
+          <TouchableOpacity onPress={() => moveIndexToStart(index)}>
+            <View
+              style={{
+                width: '100%',
+                height: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Image
+                style={styles.imageBoxSquer}
+                source={
+                  typeof item === 'string'
+                    ? {
+                        uri: `https://autobeeb.com/${imageBasePath}${item}_400x400.jpg`,
+                      }
+                    : item
+                }
+                // onLoadStart={() => {
+                //   const updated = [...loadingStates];
+                //   updated[index] = true;
+                //   setLoadingStates(updated);
+                // }}
+                // onLoadEnd={() => {
+                //   const updated = [...loadingStates];
+                //   updated[index] = false;
+                //   setLoadingStates(updated);
+                // }}
+              />
+              {/* {loadingStates[index] && (
+                <ActivityIndicator
+                  size="small"
+                  color={Color.primary}
+                  style={{position: 'absolute'}}
+                />
+              )} */}
+            </View>
             {mainImage === index && (
               <IconFa
                 name="home"
@@ -247,11 +244,9 @@ const ListingAddImages = ({
         </View>
       );
     },
-    [images, mainImage],
+    [images, mainImage, loadingStates],
   );
-  console.log({
-    imageBasePath: `https://autobeeb.com/${imageBasePath}${images[0]}_400x400.jpg`,
-  });
+
   const paddedImages = [...images];
   while (paddedImages.length < maxImages) paddedImages.push(null);
 
@@ -276,25 +271,42 @@ const ListingAddImages = ({
             />
             <Text style={styles.addPhotoText}>{Languages.addPhotos}</Text>
           </TouchableOpacity>
-        ) : maxImages === 1 && images.length < 2 ? (
+        ) : maxImages === 1 && images.length === 1 ? (
           <View key={0} style={styles.addBoxOnImage}>
             <TouchableOpacity onPress={() => setMainImage(0)}>
-              <Image
+              <View
                 style={{
-                  maxWidth: '100%',
-                  maxHeight: '100%',
-                  resizeMode: 'contain',
                   width: screenWidth / 1.3,
                   height: screenWidth / 1.3,
-                }}
-                source={
-                  typeof images[0] === 'string'
-                    ? {
-                        uri: `https://autobeeb.com/${imageBasePath}${images[0]}.png`,
-                      }
-                    : images[0]
-                }
-              />
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  style={{
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    resizeMode: 'contain',
+                    width: screenWidth / 1.3,
+                    height: screenWidth / 1.3,
+                  }}
+                  source={
+                    typeof images[0] === 'string'
+                      ? {
+                          uri: `https://autobeeb.com/${imageBasePath}${images[0]}.png`,
+                        }
+                      : images[0]
+                  }
+                  // onLoadStart={() => setLoadingStates([true])}
+                  // onLoadEnd={() => setLoadingStates([false])}
+                />
+                {/* {loadingStates[0] && (
+                  <ActivityIndicator
+                    size="large"
+                    color={Color.primary}
+                    style={{position: 'absolute'}}
+                  />
+                )} */}
+              </View>
               <IconFa
                 name="home"
                 size={20}
@@ -304,7 +316,7 @@ const ListingAddImages = ({
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.removeButton}
-              onPress={() => cleanupImage(images[0])}>
+              onPress={() => cleanupImage(images[0], 0)}>
               <IconMC name="close" size={20} color="#fff" />
             </TouchableOpacity>
           </View>
@@ -312,7 +324,7 @@ const ListingAddImages = ({
           <FlatList
             data={paddedImages}
             keyExtractor={(_, index) => index.toString()}
-            extraData={mainImage}
+            extraData={[mainImage, loadingStates]}
             numColumns={3}
             renderItem={renderItem}
             scrollEnabled={false}
@@ -321,6 +333,7 @@ const ListingAddImages = ({
           />
         )}
       </ScrollView>
+
       <TouchableOpacity
         onPress={() => onClick({images, mainImage: images[0]})}
         style={{
@@ -347,7 +360,22 @@ const ListingAddImages = ({
           {Languages.Continue}
         </Text>
       </TouchableOpacity>
+
       <DialogBox ref={dialogRef} />
+
+      {fetchLoader && (
+        <View
+          style={{
+            width: screenWidth,
+            height: screenHeight,
+            position: 'absolute',
+            zIndex: 100,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <ActivityIndicator size={'large'} color={Color.primary} />
+        </View>
+      )}
     </View>
   );
 };
@@ -392,9 +420,6 @@ const styles = StyleSheet.create({
     right: 5,
   },
   PlusIcon: {},
-  iconMain: {
-    marginVertical: 5,
-  },
   imageBoxSquer: {
     maxWidth: '100%',
     maxHeight: '100%',
@@ -402,23 +427,12 @@ const styles = StyleSheet.create({
     minWidth: 130,
     height: '100%',
   },
-  iconPlus: {
-    position: 'absolute',
-    top: 12,
-    right: 5,
-  },
   addPhotoText: {
     fontSize: 12,
     color: Color.primary,
   },
   flatListContent: {
     gap: 6,
-  },
-  imageWrapper: {
-    marginHorizontal: 3,
-    overflow: 'visible',
-    paddingVertical: 18,
-    paddingHorizontal: 5,
   },
   removeButton: {
     position: 'absolute',
@@ -432,16 +446,6 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  removeButtonText: {
-    color: '#fff',
-    textAlign: 'center',
-  },
-  limitText: {
-    color: Color.primary,
-    fontSize: 12,
-    fontFamily: Constants.fontFamilySemiBold,
-    paddingVertical: 6,
   },
   mainImageIcon: {position: 'absolute', top: 3, start: 15},
 });

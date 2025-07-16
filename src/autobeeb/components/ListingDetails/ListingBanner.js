@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -15,8 +15,8 @@ import BannersSwiper from './BannersSwiper';
 import {SkeletonLoader} from '../shared/Skeleton';
 import KS from '../../../services/KSAPI';
 import {useSelector} from 'react-redux';
+import {useFocusEffect} from '@react-navigation/native';
 
-let refreshFlag = 0;
 const ListingBanner = ({
   listingId,
   loading,
@@ -25,6 +25,7 @@ const ListingBanner = ({
   imageBasePath,
   isNeedRefresh,
 }) => {
+  const refreshFlag = useRef(0);
   const isEmpty = images?.length === 0;
   const user = useSelector(state => state.user.user ?? state.user.tempUser);
   const [loadingRefersh, setLoadingRefersh] = useState(false);
@@ -38,15 +39,18 @@ const ListingBanner = ({
     }
   }, [images]);
 
-  useEffect(() => {
-    if (isNeedRefresh)
-      setInterval(() => {
-        if (refreshFlag < 5) {
-          refreshImages();
-          refreshFlag++;
-        }
-      }, 5000);
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      if (isNeedRefresh) {
+        setInterval(() => {
+          if (refreshFlag.current < 3) {
+            refreshImages();
+            refreshFlag.current++;
+          }
+        }, 5000);
+      }
+    }, [isNeedRefresh]),
+  );
 
   const refreshImages = () => {
     KS.GetListingCore({
@@ -57,14 +61,14 @@ const ListingBanner = ({
       increaseViews: false,
     })
       .then(res => {
-        setLoadingRefersh(true);
+        if (!photos?.length) setLoadingRefersh(true);
         setPhotos(res.images);
         setHasImages(res?.images?.length > 0);
       })
       .finally(() => {
         setTimeout(() => {
           setLoadingRefersh(false);
-        }, 500);
+        }, 100);
       });
   };
 

@@ -22,7 +22,7 @@ import {toast} from '../Omni';
 import KS from '../services/KSAPI';
 import Svg, {Path} from 'react-native-svg';
 import ShareLib from 'react-native-share';
-import { CommonActions } from '@react-navigation/native';
+import {CommonActions} from '@react-navigation/native';
 
 // create a component
 class BannerListings extends PureComponent {
@@ -872,7 +872,12 @@ class BannerListings extends PureComponent {
               position: 'absolute',
               zIndex: 10,
               right: item.OwnerID === this.props.user?.ID ? 5 : 10,
-              top: 5,
+              top:
+                !!item.Views &&
+                !!this.props.user?.IsDealer &&
+                item.OwnerID == this.props.user?.ID
+                  ? 35
+                  : 5,
               borderRadius: 5,
               backgroundColor: '#fff00',
               flexDirection: 'row-reverse',

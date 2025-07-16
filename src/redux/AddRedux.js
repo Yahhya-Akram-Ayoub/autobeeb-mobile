@@ -1,6 +1,9 @@
 import KS from '../services/KSAPI';
 import Constants from '../common/Constants';
 import {Languages} from '../common';
+import ImageResizer from '@bam.tech/react-native-image-resizer';
+import RNFS from 'react-native-fs';
+
 var md5 = require('md5');
 
 const types = {
@@ -39,7 +42,6 @@ export const actions = {
           if (!responseJson.IsUserActive) {
             return;
           } else {
-            console.log({responseJson});
             dispatch({
               type: 'ADD_OFFER_SUCCESS',
               payload: {response: responseJson},
@@ -48,7 +50,7 @@ export const actions = {
             KS.FeaturesGet({
               langid: Languages.langID,
               selltype: responseJson.SellType,
-              typeID: responseJson.Section || responseJson.TypeId,
+              typeID: responseJson.SectionID || responseJson.TypeID,
             })
               .then(data => {
                 dispatch({
@@ -59,11 +61,15 @@ export const actions = {
                   },
                 });
               })
-              .finally(() => {
+              .finally(async () => {
                 if (images && images.length > 0) {
-                  images.forEach(async (image, index) => {
+                  for (let index = 0; index < images.length; index++) {
+                    const image = images[index];
+
                     if (image.uri) {
-                      fetch(
+                      const resizedBase64 = await resizeImage(image?.data);
+
+                      await fetch(
                         'https://api.autobeeb.com/v2/Services/ListingImageUploadV2', // https://apiv2.autobeeb.com
                         {
                           method: 'POST',
@@ -75,7 +81,7 @@ export const actions = {
                             pid: responseJson?.ID,
                             isPrimary: index == 0 ? true : false,
                             listingType: data?.TypeID ?? '1',
-                            base64: image?.data,
+                            base64: resizedBase64,
                             filename: image?.uri
                               .split('/')
                               [image.uri.split('/').length - 1].split('.')[0],
@@ -84,16 +90,9 @@ export const actions = {
                               [image.uri.split('/').length - 1].split('.')[1],
                           }),
                         },
-                      )
-                        .then(res => res.json())
-                        .then(data => {
-                          setTimeout(() => {
-                            console.log({data});
-                          }, 1000);
-                        })
-                        .catch(err => console.log('error img ', err));
+                      );
                     }
-                  });
+                  }
                 }
               });
           }
@@ -105,6 +104,30 @@ export const actions = {
         }, 1000);
       });
   },
+};
+
+const resizeImage = async (base64Str, maxSize = 1920) => {
+  try {
+    const cleanedBase64 = base64Str.replace(/^data:image\/\w+;base64,/, '');
+    const tempFilePath = `${RNFS.CachesDirectoryPath}/temp_image.jpg`;
+
+    await RNFS.writeFile(tempFilePath, cleanedBase64, 'base64');
+
+    const resizedImage = await ImageResizer.createResizedImage(
+      tempFilePath,
+      maxSize,
+      maxSize,
+      'JPEG',
+      70,
+      0,
+    );
+
+    const resizedBase64 = await RNFS.readFile(resizedImage.uri, 'base64');
+    return `data:image/jpeg;base64,${resizedBase64}`;
+  } catch (error) {
+    console.error('resizeImage error', error);
+    throw error;
+  }
 };
 
 export const reducer = (state = initialState, action) => {

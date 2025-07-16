@@ -14,6 +14,7 @@ import {
   Pressable,
   Animated,
   Modal,
+  BackHandler,
 } from 'react-native';
 import {NewHeader} from '../containers';
 import {
@@ -57,6 +58,7 @@ const FILTER_HEADER_HEIGHT_WITHOUT_TAGS = 50;
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 
 class SearchResult extends Component {
+  backHandler = null;
   constructor(props) {
     super(props);
     this.intrestedFlag = false;
@@ -225,7 +227,27 @@ class SearchResult extends Component {
     let lastItem = tempTypes.splice(5, 1)[0]; // remove spare parts from last
     tempTypes.splice(1, 0, lastItem); //add spare parts to 2nd option per client request
     this.setState({MainTypes: tempTypes});
+
+    this.backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleBackPress,
+    );
   }
+
+  componentWillUnmount() {
+    if (this.backHandler) this.backHandler.remove();
+  }
+  handleBackPress = () => {
+    const {navigation} = this.props;
+
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+      return true;
+    } else {
+      navigation.navigate('HomeScreen');
+      return true;
+    }
+  };
   renderSelectedCityName() {
     if (!this.state.selectedCity?.length || !this.state.selectedCity[0].ID) {
       return Languages.AllCities;

@@ -123,6 +123,11 @@ class ChatScreen extends Component {
   }
 
   componentDidMount = async () => {
+    if (__DEV__) {
+      const routes = this.props.navigation.getState().routes;
+      const allScreens = routes.map(r => r.name);
+      console.log({allScreens});
+    }
     this.setupNotification();
     let userJson = await AsyncStorage.getItem('user');
     let user = JSON.parse(userJson);

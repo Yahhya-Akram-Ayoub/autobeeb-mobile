@@ -136,11 +136,7 @@ class EditProfile extends Component {
   }
 
   getEmailNeedApproval() {
-    if (
-      this.props.user?.EmailRegister &&
-      // this.props.user?.EmailConfirmed &&
-      this.props.user?.EmailApproved === false
-    ) {
+    if (this.props.user?.EmailRegister) {
       KS.GetApprovedAccountByPhone({
         phone: this.props.user?.Phone?.replace('+', ''),
         email: this.props.user?.Email,
@@ -414,6 +410,7 @@ class EditProfile extends Component {
           cntry => cntry?.ID == this.props.user?.Country,
         )
       : null;
+    console.log({User: this.props.user});
     return (
       <View style={styles.container}>
         <NewHeader navigation={this.props.navigation} back />
@@ -1766,10 +1763,16 @@ class EditProfile extends Component {
                     name={'phone'}
                     size={Styles.IconSize.TextInput}
                     color={
-                      this.props.user && this.props.user?.EmailRegister
+                      this.props.user &&
+                      this.props.user?.EmailRegister &&
+                      this.props.user.EmailApproved
                         ? this.props.user?.Phone
                           ? 'green'
                           : '#bbb'
+                        : this.props.user &&
+                          this.props.user?.EmailRegister &&
+                          !this.props.user.EmailApproved
+                        ? 'red'
                         : this.props.user && this.props.user?.Phone == ''
                         ? '#bbb'
                         : this.props.user && this.props.user?.OTPConfirmed
@@ -1792,10 +1795,16 @@ class EditProfile extends Component {
                     <Text
                       style={[
                         styles.textStyle,
-                        this.props.user && this.props.user?.EmailRegister
+                        this.props.user &&
+                        this.props.user?.EmailRegister &&
+                        this.props.user.EmailApproved
                           ? this.props.user?.Phone
                             ? {color: 'green'}
                             : {color: '#bbb'}
+                          : this.props.user &&
+                            this.props.user?.EmailRegister &&
+                            !this.props.user.EmailApproved
+                          ? {color: 'red'}
                           : this.props.user && this.props.user?.Phone == ''
                           ? {color: '#bbb'}
                           : this.props.user && this.props.user?.OTPConfirmed
@@ -1815,7 +1824,6 @@ class EditProfile extends Component {
                       style={{
                         alignItems: 'center',
                         justifyContent: 'center',
-
                         flex: 3,
                       }}>
                       {this.props.user && this.props.user?.Phone && (
@@ -1857,6 +1865,19 @@ class EditProfile extends Component {
                           </Text>
                         </TouchableOpacity>
                       )}
+                    </View>
+                  )}
+
+                {this.props.user?.Phone &&
+                  this.props.user?.EmailRegister &&
+                  !this.props.user?.EmailApproved && (
+                    <View
+                      style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flex: 3,
+                      }}>
+                      <Awesome name={'question'} size={20} color={'red'} />
                     </View>
                   )}
               </View>
@@ -1986,7 +2007,6 @@ class EditProfile extends Component {
                         paddingHorizontal: 20,
                         width: '50%',
                         alignSelf: 'center',
-                        marginBottom: 40,
                       }}
                       onPress={() => {
                         this.ChangePhoneModal.open();
@@ -2039,6 +2059,7 @@ class EditProfile extends Component {
                           borderRadius: 5,
                           flexGrow: 0,
                           marginTop: 15,
+                          marginBottom: 40,
                           paddingHorizontal: 20,
                         }}
                         onPress={() => {
@@ -2072,6 +2093,7 @@ class EditProfile extends Component {
                           borderRadius: 5,
                           flexGrow: 0,
                           marginTop: 15,
+                          marginBottom: 40,
                           paddingHorizontal: 20,
                         }}
                         onPress={() => {
