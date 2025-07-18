@@ -620,14 +620,14 @@ class DealerProfileScreen extends Component {
           }}>
           <View
             style={{
-              flexDirection: 'row-reverse',
+              flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
             }}>
             <TouchableOpacity
               hitSlop={{top: 10, right: 10, bottom: 10, left: 10}}
               style={{
-                marginRight: 15,
+                marginHorizontal: 12,
                 backgroundColor: 'rgba(0,0,0,0.5)',
                 borderRadius: 100,
                 padding: 7,
@@ -636,7 +636,7 @@ class DealerProfileScreen extends Component {
                 this.props.navigation.goBack();
               }}>
               <Ionicons
-                name={I18nManager.isRTL ? 'arrow-back' : 'arrow-forward'}
+                name={!I18nManager.isRTL ? 'arrow-back' : 'arrow-forward'}
                 size={20}
                 color={'white'}
               />

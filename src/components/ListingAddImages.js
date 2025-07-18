@@ -30,17 +30,12 @@ const ListingAddImages = ({
   const [images, setImages] = useState(pImages ?? []);
   const [mainImage, setMainImage] = useState(0);
   const [fetchLoader, setFetchLoader] = useState(false);
-  const [loadingStates, setLoadingStates] = useState(
-    new Array(pImages?.length ?? 0).fill(true),
-  );
-
   const dialogRef = useRef(null);
   const isNeededListing = sellType === 4;
   const maxImages = listingType !== 32 && !isNeededListing ? 15 : 1;
 
   const updateImages = newImages => {
     setImages(newImages.slice(0, maxImages));
-    setLoadingStates(new Array(newImages.length).fill(true));
     if (newImages.length === 0) {
       setMainImage(null);
     } else if (mainImage === null || mainImage >= newImages.length) {
@@ -159,6 +154,10 @@ const ListingAddImages = ({
   };
 
   const moveIndexToStart = index => {
+    setTimeout(() => {
+      setFetchLoader(false);
+    }, 100);
+
     if (index < 0 || index >= images.length) return;
     const item = images[index];
     const newArr = images.slice(0, index).concat(images.slice(index + 1));
@@ -191,7 +190,13 @@ const ListingAddImages = ({
 
       return (
         <View key={index} style={styles.addBox}>
-          <TouchableOpacity onPress={() => moveIndexToStart(index)}>
+          <TouchableOpacity
+            onPress={() => {
+              setFetchLoader(true);
+              setTimeout(() => {
+                moveIndexToStart(index);
+              }, 10);
+            }}>
             <View
               style={{
                 width: '100%',
@@ -208,24 +213,7 @@ const ListingAddImages = ({
                       }
                     : item
                 }
-                // onLoadStart={() => {
-                //   const updated = [...loadingStates];
-                //   updated[index] = true;
-                //   setLoadingStates(updated);
-                // }}
-                // onLoadEnd={() => {
-                //   const updated = [...loadingStates];
-                //   updated[index] = false;
-                //   setLoadingStates(updated);
-                // }}
               />
-              {/* {loadingStates[index] && (
-                <ActivityIndicator
-                  size="small"
-                  color={Color.primary}
-                  style={{position: 'absolute'}}
-                />
-              )} */}
             </View>
             {mainImage === index && (
               <IconFa
@@ -244,7 +232,7 @@ const ListingAddImages = ({
         </View>
       );
     },
-    [images, mainImage, loadingStates],
+    [images, mainImage],
   );
 
   const paddedImages = [...images];
@@ -296,16 +284,7 @@ const ListingAddImages = ({
                         }
                       : images[0]
                   }
-                  // onLoadStart={() => setLoadingStates([true])}
-                  // onLoadEnd={() => setLoadingStates([false])}
                 />
-                {/* {loadingStates[0] && (
-                  <ActivityIndicator
-                    size="large"
-                    color={Color.primary}
-                    style={{position: 'absolute'}}
-                  />
-                )} */}
               </View>
               <IconFa
                 name="home"
@@ -324,7 +303,7 @@ const ListingAddImages = ({
           <FlatList
             data={paddedImages}
             keyExtractor={(_, index) => index.toString()}
-            extraData={[mainImage, loadingStates]}
+            extraData={[mainImage]}
             numColumns={3}
             renderItem={renderItem}
             scrollEnabled={false}
@@ -338,7 +317,9 @@ const ListingAddImages = ({
         onPress={() => onClick({images, mainImage: images[0]})}
         style={{
           backgroundColor:
-            !isNeededListing && (!images.length || images.length > maxImages)
+            (!isNeededListing &&
+              (!images.length || images.length > maxImages)) ||
+            fetchLoader
               ? 'gray'
               : Color.primary,
           width: '97%',
@@ -351,31 +332,21 @@ const ListingAddImages = ({
         disabled={
           !isNeededListing && (!images.length || images.length > maxImages)
         }>
-        <Text
-          style={{
-            color: '#fff',
-            fontFamily: Constants.fontFamilySemiBold,
-            fontSize: 18,
-          }}>
-          {Languages.Continue}
-        </Text>
+        {fetchLoader ? (
+          <ActivityIndicator size={'small'} color={'#fff'} />
+        ) : (
+          <Text
+            style={{
+              color: '#fff',
+              fontFamily: Constants.fontFamilySemiBold,
+              fontSize: 18,
+            }}>
+            {Languages.Continue}
+          </Text>
+        )}
       </TouchableOpacity>
 
       <DialogBox ref={dialogRef} />
-
-      {fetchLoader && (
-        <View
-          style={{
-            width: screenWidth,
-            height: screenHeight,
-            position: 'absolute',
-            zIndex: 100,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <ActivityIndicator size={'large'} color={Color.primary} />
-        </View>
-      )}
     </View>
   );
 };

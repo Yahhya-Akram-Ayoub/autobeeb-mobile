@@ -152,16 +152,19 @@ const BannersSwiper = ({images, imageBasePath}) => {
             keyExtractor={(item, index) => index.toString()}
             contentContainerStyle={styles.imageListContent2}
             style={{height: screenHeight, flex: 1}}
-            renderItem={({item, index}) =>
-              loader ? (
-                <SkeletonLoader
-                  key={`skeleton-${index}`}
-                  containerStyle={styles.skeletonBox}
-                  borderRadius={3}
-                  shimmerColors={['#E0E0E0', '#F8F8F8', '#E0E0E0']}
-                  animationDuration={1200}
-                />
-              ) : (
+            renderItem={({item, index}) => {
+              if (loader)
+                return (
+                  <SkeletonLoader
+                    key={`skeleton-${index}`}
+                    containerStyle={styles.skeletonBox}
+                    borderRadius={3}
+                    shimmerColors={['#E0E0E0', '#F8F8F8', '#E0E0E0']}
+                    animationDuration={1200}
+                  />
+                );
+
+              return (
                 <RenderPopupImage
                   item={item}
                   key={index}
@@ -169,21 +172,17 @@ const BannersSwiper = ({images, imageBasePath}) => {
                   imageBasePath={imageBasePath}
                   onPress={() => {
                     setOpenIndex(index);
-                    // navigation.navigate('ImageZoomViewerScreen', {
-                    //   imagesFullSize,
-                    //   initialIndex: index,
-                    // });
                   }}
                 />
-              )
-            }
+              );
+            }}
             initialNumToRender={1}
             maxToRenderPerBatch={2}
-            getItemLayout={(data, index) => ({
-              length: screenHeight,
-              offset: screenHeight * index,
-              index,
-            })}
+            // getItemLayout={(data, index) => ({
+            //   length: screenHeight,
+            //   offset: screenHeight * index,
+            //   index,
+            // })}
           />
         ) : (
           <View style={{height: screenHeight}}>
@@ -234,7 +233,8 @@ const RenderPopupImage = ({
 
   return (
     <TouchableOpacity activeOpacity={0.9} onPress={onPress}>
-      <View style={[styles.ImageContiner, {height}]}>
+      <View
+        style={[styles.ImageContiner, {height: height || screenHeight / 4}]}>
         {loading && (
           <ActivityIndicator
             size="large"
@@ -316,8 +316,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#eee',
   },
   ImageContiner: {
-    screenWidth,
-    height: screenHeight / 3,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
