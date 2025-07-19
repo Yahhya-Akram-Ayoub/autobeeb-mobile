@@ -34,6 +34,7 @@ const OTPModal = ({
   Username,
   pendingDelete,
   EnterMessage,
+  externalLoading,
 }) => {
   const otpRef = useRef();
   const [resendResetCodeCounter, setResendResetCodeCounter] = useState(
@@ -232,7 +233,7 @@ const OTPModal = ({
                   toast(Languages.EnterFullOTP);
                 }
               }}>
-              {isLoading ? (
+              {externalLoading || isLoading ? (
                 <ActivityIndicator color={'#fff'} size={25} />
               ) : (
                 <Text style={{fontFamily: 'Cairo-Bold', color: '#fff'}}>

@@ -25,7 +25,6 @@ const BlogsScreen = ({navigation}) => {
   };
   const PageSize = 9;
   const [IsLoading, setIsLoading] = useState(true);
-  const [IsFetching, setIsFetching] = useState(false);
   const [Blogs, setBlogs] = useState();
   const [Categories, setCategories] = useState([]);
   const [SelectedMainCateogry, setSelectedMainCateogry] = useState(All);

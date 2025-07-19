@@ -217,7 +217,7 @@ const SpecialPlans = ({route, pOffer, pOnClose}) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const Currency = useSelector(state => state.menu.ViewingCurrency);
-  const User = useSelector(state => state.user.user);
+  const User = useSelector(x => x.user.user ?? x.user.tempUser);
   const [plans, setPlans] = useState([]);
   const itemSkus = Platform.select({
     ios: [

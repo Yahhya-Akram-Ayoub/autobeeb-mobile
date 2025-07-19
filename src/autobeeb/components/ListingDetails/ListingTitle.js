@@ -30,6 +30,7 @@ const ListingTitle = ({
 }) => {
   const user = useSelector(x => x.user.user ?? x.user.tempUser);
   const [openModal, setOpenModal] = useState(false);
+  const [otpLoading, setOtpLoading] = useState(false);
   const [oTP, setOTP] = useState(null);
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -60,58 +61,68 @@ const ListingTitle = ({
     let username = '';
     if (EmailRegister) username = email ? email : Email;
     else username = phone ? phone : Phone;
+    setOtpLoading(true);
 
     KS.UserVerifyOTP({
       otpcode: oTP,
       userid: ID,
       username: username,
-    }).then(data => {
-      if (data.OTPVerified === true || data.EmailConfirmed === true) {
-        if (isPendingDelete)
-          KS.TransferListing({
-            userid: ID,
-            listingID: listingId,
-          });
+    })
+      .then(data => {
+        if (data.OTPVerified === true || data.EmailConfirmed === true) {
+          if (isPendingDelete)
+            KS.TransferListing({
+              userid: ID,
+              listingID: listingId,
+            });
 
-        if (
-          (data.User.EmailApproved !== false &&
-            data.EmailConfirmed === true &&
-            data.EmailRegister === true) ||
-          !data.EmailRegister
-        )
-          toast(Languages.PublishSuccess, 3500);
+          if (
+            (data.User.EmailApproved !== false &&
+              data.EmailConfirmed === true &&
+              data.EmailRegister === true) ||
+            !data.EmailRegister
+          )
+            toast(Languages.PublishSuccess, 3500);
 
-        if (data.User) {
-          actions.storeUserData(dispatch, data.User);
-          setOpenModal(false);
+          if (data.User) {
+            actions.storeUserData(dispatch, data.User);
+            setOpenModal(false);
+            setTimeout(() => {
+              navigation.navigate('SpecialPlans', {listingId});
+            }, 1000);
+          }
+        } else {
+          toast(Languages.WrongOTP);
           setTimeout(() => {
-            navigation.navigate('SpecialPlans', {listingId});
+            setOTP('');
           }, 1000);
         }
-      } else {
-        toast(Languages.WrongOTP);
-        setTimeout(() => {
-          setOTP('');
-        }, 1000);
-      }
-    });
+      })
+      .finally(() => {
+        setOtpLoading(false);
+      });
   };
 
   const resendCode = () => {
     let username = '';
     if (EmailRegister) username = email ? email : Email;
     else username = phone ? phone : Phone;
-
+    setOtpLoading(true);
     setOTP('');
+
     KS.ResendOTP({
       userID: ID,
       otpType: EmailRegister ? 2 : 1,
       username: username,
-    }).then(data => {
-      if (data.Success === 1) {
-        toast(Languages.WeSendUOTP);
-      } else toast(Languages.SomethingWentWrong);
-    });
+    })
+      .then(data => {
+        if (data.Success === 1) {
+          toast(Languages.WeSendUOTP);
+        } else toast(Languages.SomethingWentWrong);
+      })
+      .finally(() => {
+        setOtpLoading(false);
+      });
   };
 
   if (loading)
@@ -196,6 +207,7 @@ const ListingTitle = ({
       {openModal && (
         <OTPModal
           isOpen={openModal}
+          externalLoading={otpLoading}
           onClosed={() => {
             setOpenModal(false);
           }}
