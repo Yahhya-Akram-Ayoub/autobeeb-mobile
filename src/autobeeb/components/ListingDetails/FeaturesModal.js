@@ -30,6 +30,7 @@ const FeaturesModal = ({
   openOTPModale,
   reloadFeatures,
   isNeedRefresh,
+  handleOpenFeature,
 }) => {
   const navigation = useNavigation();
   const {AllowFeature, Features} = useSelector(state => state.menu);
@@ -53,7 +54,9 @@ const FeaturesModal = ({
       `${sellType}` !== '4' &&
       AllowFeature
     ) {
-      navigation.navigate('SpecialPlans', {listingId, isNeedRefresh});
+      setTimeout(() => {
+        handleOpenFeature();
+      }, 500);
     }
   };
 
@@ -63,10 +66,12 @@ const FeaturesModal = ({
         Features &&
         (Features?.FeaturesSwitch?.length || Features?.FeaturesDropDown?.length)
       ) {
-        modalRef.current?.open();
         setFeaturesSwitch(Features.FeaturesSwitch || []);
         setFeaturesDropDown(Features.FeaturesDropDown || []);
         setFeaturesIsLoading(false);
+        setTimeout(() => {
+          modalRef.current?.open();
+        }, 1500);
       } else {
         setFeaturesIsLoading(true);
         KS.FeaturesGet({

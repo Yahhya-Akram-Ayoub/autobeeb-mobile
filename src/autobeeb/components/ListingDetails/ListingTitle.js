@@ -28,6 +28,9 @@ const ListingTitle = ({
   isNewUser,
   email,
   phone,
+  isOpenSpecialPlans = true,
+  isNeedRefresh,
+  openFeatureModal,
 }) => {
   const user = useSelector(x => x.user.user ?? x.user.tempUser);
   const [openModal, setOpenModal] = useState(false);
@@ -51,10 +54,9 @@ const ListingTitle = ({
   };
 
   useEffect(() => {
-    featureModalRef.current?.open();
-
+    if (openFeatureModal) featureModalRef.current?.open();
     if (openOTPModal) setOpenModal(true);
-  }, [openOTPModal]);
+  }, [openOTPModal, openFeatureModal]);
 
   const notOtpConfirmed =
     OTPConfirmed === false && !EmailRegister && (ownerId === ID || isNewUser);
@@ -91,9 +93,11 @@ const ListingTitle = ({
           if (data.User) {
             actions.storeUserData(dispatch, data.User);
             setOpenModal(false);
-            setTimeout(() => {
-              featureModalRef.current?.open();
-            }, 1000);
+            if (isOpenSpecialPlans) {
+              setTimeout(() => {
+                featureModalRef.current?.open();
+              }, 1000);
+            }
           }
         } else {
           toast(Languages.WrongOTP);
@@ -242,39 +246,59 @@ const ListingTitle = ({
       <AutobeebModal
         ref={featureModalRef}
         style={[styles.modelModal]}
-        position="center"
         onClosed={() => {}}
         backButtonClose
+        animationDuration={300}
+        exitDuration={200}
+        position="center"
         entry="bottom"
+        moveType="slide"
         swipeToClose={true}
         backdropPressToClose
-        backdropOpacity={0.9}>
+        backdropOpacity={0.7}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
+            <TouchableOpacity
+              hitSlop={{top: 25, bottom: 25, left: 25, right: 25}}
+              style={styles.cancelButton}
+              onPress={() => featureModalRef.current?.close()}>
+              <AppIcon
+                type={Icons.Ionicons}
+                name="close"
+                size={22}
+                color={'#fff'}
+              />
+            </TouchableOpacity>
             <View style={styles.iconWrapper}>
-              <SpecialSVG width={48} height={48} />
+              <View style={styles.iconWrapper2}>
+                <SpecialSVG color="#e5e82c" width={25} height={26} />
+              </View>
+              <Text style={styles.titleText}>
+                {Languages.SpecialYourOfferTitle}
+              </Text>
             </View>
-            <Text style={styles.titleText}>
-              {Languages.SpecialYourOfferTitle}
-            </Text>
-            <Text style={styles.descriptionText}>
-              {Languages.SpecialYourOfferAction}
-            </Text>
-            <View style={styles.buttonRow}>
-              <TouchableOpacity
-                style={styles.okButton}
-                onPress={() => {
-                  featureModalRef.current?.close();
-                  navigation.navigate('SpecialPlans', {listingId});
-                }}>
-                <Text style={styles.okText}>{Languages.OK}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.cancelButton}
-                onPress={() => featureModalRef.current?.close()}>
-                <Text style={styles.cancelText}>{Languages.CANCEL}</Text>
-              </TouchableOpacity>
+            <View style={styles.sellFastBox}>
+              <Text style={styles.sellFastTitle}>
+                {Languages.SpecialYourOfferAction}
+              </Text>
             </View>
+            <TouchableOpacity
+              onPress={() => {
+                featureModalRef.current?.close();
+                navigation.navigate('SpecialPlans', {listingId, isNeedRefresh});
+              }}>
+              <View style={styles.sellFastButton}>
+                <AppIcon
+                  type={Icons.Entypo}
+                  name="rocket"
+                  size={20}
+                  color={Color.primary}
+                />
+                <Text style={styles.sellFastButtonText}>
+                  {Languages.SpecialYourOfferTitle}
+                </Text>
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
       </AutobeebModal>
@@ -371,19 +395,24 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   modalContent: {
-    backgroundColor: '#fff',
+    backgroundColor: Color.primary,
     borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
     padding: 24,
+    paddingTop: 30,
   },
   iconWrapper: {
+    flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    gap: 8,
+  },
+  iconWrapper2: {
+    marginTop: -10,
   },
   titleText: {
     fontSize: 20,
-    color: Color.primary,
+    color: '#fff',
     marginBottom: 12,
     textAlign: 'center',
     fontFamily: Constants.fontFamilyBold,
@@ -391,9 +420,9 @@ const styles = StyleSheet.create({
   descriptionText: {
     fontSize: 16,
     color: Color.primary,
-    marginBottom: 32,
     textAlign: 'center',
     fontFamily: Constants.fontFamilySemiBold,
+    marginRight: 6,
   },
   buttonRow: {
     flexDirection: 'row',
@@ -407,6 +436,9 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: 8,
     alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 5,
   },
   okText: {
     color: '#fff',
@@ -414,18 +446,47 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   cancelButton: {
-    flex: 1,
-    marginLeft: 8,
-    backgroundColor: '#fff',
-    padding: 14,
-    borderRadius: 8,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: Color.primary,
+    position: 'absolute',
+    top: 15,
+    start: 20,
   },
   cancelText: {
     color: Color.primary,
     fontFamily: Constants.fontFamilySemiBold,
     fontSize: 16,
+  },
+  //new for special listing button
+  sellFastTitle: {
+    color: '#ffffff',
+    textAlign: 'center',
+    fontSize: 17,
+    fontFamily: Constants.fontFamilyBold,
+  },
+  sellFastButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    borderRadius: 5,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    justifyContent: 'center',
+    height: 40,
+    marginTop: 20,
+    minWidth: '100%',
+    alignSelf: 'center',
+  },
+  sellFastButtonText: {
+    color: Color.primary,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    fontSize: 18,
+    fontFamily: Constants.fontFamilyBold,
+    marginHorizontal: 2,
+  },
+
+  sellFastBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

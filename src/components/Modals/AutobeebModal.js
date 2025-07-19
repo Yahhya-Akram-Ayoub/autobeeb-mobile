@@ -28,6 +28,10 @@ const AutobeebModal = forwardRef((props, ref) => {
     keyboardResponsive = false,
     backButtonClose = true,
     onRequestClose = null,
+    entry = 'bottom', // new
+    animationDuration = 300, // new
+    exitDuration = 150, // new
+    moveType,
   } = props;
 
   const [visible, setVisible] = useState(false);
@@ -38,7 +42,7 @@ const AutobeebModal = forwardRef((props, ref) => {
       setVisible(true);
       Animated.timing(animatedValue, {
         toValue: 1,
-        duration: 300,
+        duration: animationDuration,
         useNativeDriver: true,
       }).start(() => {
         if (onOpened) onOpened();
@@ -47,7 +51,7 @@ const AutobeebModal = forwardRef((props, ref) => {
     close: () => {
       Animated.timing(animatedValue, {
         toValue: 0,
-        duration: 100,
+        duration: exitDuration,
         useNativeDriver: true,
       }).start(() => {
         setVisible(false);
@@ -58,6 +62,70 @@ const AutobeebModal = forwardRef((props, ref) => {
       return visible;
     },
   }));
+
+  const getAnimatedStyle = () => {
+    if (!moveType) {
+      return {};
+    }
+    if (moveType === 'fade') {
+      return {
+        opacity: animatedValue,
+      };
+    }
+
+    if (moveType === 'scale') {
+      return {
+        transform: [
+          {
+            scale: animatedValue.interpolate({
+              inputRange: [0, 1],
+              outputRange: [0.8, 1],
+            }),
+          },
+        ],
+        opacity: animatedValue,
+      };
+    }
+
+    // Default is 'slide'
+    switch (entry) {
+      case 'top':
+        return {
+          transform: [
+            {
+              translateY: animatedValue.interpolate({
+                inputRange: [0, 1],
+                outputRange: [-SCREEN_HEIGHT, 0],
+              }),
+            },
+          ],
+        };
+      case 'center':
+        return {
+          opacity: animatedValue,
+          transform: [
+            {
+              scale: animatedValue.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0.9, 1],
+              }),
+            },
+          ],
+        };
+      case 'bottom':
+      default:
+        return {
+          transform: [
+            {
+              translateY: animatedValue.interpolate({
+                inputRange: [0, 1],
+                outputRange: [SCREEN_HEIGHT, 0],
+              }),
+            },
+          ],
+        };
+    }
+  };
 
   return (
     <Modal
@@ -82,7 +150,7 @@ const AutobeebModal = forwardRef((props, ref) => {
         }
       }}
       backButtonClose={backButtonClose}
-      entry="bottom"
+      entry={entry}
       backdropPressToClose
       swipeToClose={false}>
       {
@@ -97,6 +165,7 @@ const AutobeebModal = forwardRef((props, ref) => {
           !!keyboardResponsive && styles.modalContainerStiky,
           style,
           fullScreen && {maxHeight: SCREEN_HEIGHT},
+          getAnimatedStyle(),
         ]}>
         {children}
       </Animated.View>

@@ -62,12 +62,17 @@ const ListingDetailsScreen = () => {
   const [loading, setLoading] = useState(true);
   const [refreshFeatures, setRefreshFeatures] = useState(false);
   const [openOTPModal, setOpenOTPModal] = useState(false);
+  const [openFeatureModal, setOpenFeatureModal] = useState(false);
 
   const handleOpenOTPModal = () => {
     setOpenOTPModal(true);
     setTimeout(() => {
       setOpenOTPModal(false);
     }, 1500);
+  };
+
+  const handleOpenFeature = () => {
+    setOpenFeatureModal(true);
   };
 
   const handleReloadFeatures = () => {
@@ -201,6 +206,14 @@ const ListingDetailsScreen = () => {
           email={listing?.email}
           openOTPModal={openOTPModal}
           isNewUser={isNewUser}
+          isOpenSpecialPlans={
+            !listing?.isSpecial &&
+            listing?.sellType !== 4 &&
+            listing?.typeID !== 32 &&
+            AllowFeature
+          }
+          isNeedRefresh={isNeedRefresh}
+          openFeatureModal={openFeatureModal}
         />
         <ListingInfoBox
           loading={loading}
@@ -348,6 +361,7 @@ const ListingDetailsScreen = () => {
           isSpecial={listing?.isSpecial}
           openOTPModale={handleOpenOTPModal}
           reloadFeatures={handleReloadFeatures}
+          handleOpenFeature={handleOpenFeature}
           isNeedRefresh={isNeedRefresh}
         />
       )}
