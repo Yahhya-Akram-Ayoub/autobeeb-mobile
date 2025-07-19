@@ -2,14 +2,15 @@ import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {Color, Constants, Languages} from '../../../common';
 import SpecialSVG from './SpecialSVG';
 import {useDispatch, useSelector} from 'react-redux';
-import {OTPModal} from '../../../components';
-import {useEffect, useState} from 'react';
+import {OTPModal, AutobeebModal} from '../../../components';
+import {useEffect, useState, useRef} from 'react';
 import KS from '../../../services/KSAPI';
 import {toast} from '../../../Omni';
 import {actions} from '../../../redux/UserRedux';
 import {SkeletonLoader} from '../shared/Skeleton';
 import {AppIcon, Icons} from '../shared/AppIcon';
 import {useNavigation} from '@react-navigation/native';
+import {screenHeight, screenWidth} from '../../constants/Layout';
 
 const ListingTitle = ({
   loading,
@@ -32,6 +33,7 @@ const ListingTitle = ({
   const [openModal, setOpenModal] = useState(false);
   const [otpLoading, setOtpLoading] = useState(false);
   const [oTP, setOTP] = useState(null);
+  const featureModalRef = useRef();
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const {EmailRegister, OTPConfirmed, EmailConfirmed, ID, Email, Phone} =
@@ -49,6 +51,8 @@ const ListingTitle = ({
   };
 
   useEffect(() => {
+    featureModalRef.current?.open();
+
     if (openOTPModal) setOpenModal(true);
   }, [openOTPModal]);
 
@@ -88,7 +92,7 @@ const ListingTitle = ({
             actions.storeUserData(dispatch, data.User);
             setOpenModal(false);
             setTimeout(() => {
-              navigation.navigate('SpecialPlans', {listingId});
+              featureModalRef.current?.open();
             }, 1000);
           }
         } else {
@@ -234,6 +238,46 @@ const ListingTitle = ({
           }}
         />
       )}
+
+      <AutobeebModal
+        ref={featureModalRef}
+        style={[styles.modelModal]}
+        position="center"
+        onClosed={() => {}}
+        backButtonClose
+        entry="bottom"
+        swipeToClose={true}
+        backdropPressToClose
+        backdropOpacity={0.9}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <View style={styles.iconWrapper}>
+              <SpecialSVG width={48} height={48} />
+            </View>
+            <Text style={styles.titleText}>
+              {Languages.SpecialYourOfferTitle}
+            </Text>
+            <Text style={styles.descriptionText}>
+              {Languages.SpecialYourOfferAction}
+            </Text>
+            <View style={styles.buttonRow}>
+              <TouchableOpacity
+                style={styles.okButton}
+                onPress={() => {
+                  featureModalRef.current?.close();
+                  navigation.navigate('SpecialPlans', {listingId});
+                }}>
+                <Text style={styles.okText}>{Languages.OK}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={() => featureModalRef.current?.close()}>
+                <Text style={styles.cancelText}>{Languages.CANCEL}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </AutobeebModal>
     </View>
   );
 };
@@ -308,6 +352,80 @@ const styles = StyleSheet.create({
   locationText: {
     color: 'gray',
     marginHorizontal: 10,
+    fontSize: 16,
+  },
+  modelModal: {
+    zIndex: 550,
+    flex: 1,
+    backgroundColor: 'transparent',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    height: screenHeight,
+  },
+  modalContainer: {
+    height: '50%',
+    width: screenWidth,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 24,
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 24,
+  },
+  iconWrapper: {
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  titleText: {
+    fontSize: 20,
+    color: Color.primary,
+    marginBottom: 12,
+    textAlign: 'center',
+    fontFamily: Constants.fontFamilyBold,
+  },
+  descriptionText: {
+    fontSize: 16,
+    color: Color.primary,
+    marginBottom: 32,
+    textAlign: 'center',
+    fontFamily: Constants.fontFamilySemiBold,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  okButton: {
+    flex: 1,
+    marginRight: 8,
+    backgroundColor: Color.primary,
+    padding: 14,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  okText: {
+    color: '#fff',
+    fontFamily: Constants.fontFamilySemiBold,
+    fontSize: 16,
+  },
+  cancelButton: {
+    flex: 1,
+    marginLeft: 8,
+    backgroundColor: '#fff',
+    padding: 14,
+    borderRadius: 8,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: Color.primary,
+  },
+  cancelText: {
+    color: Color.primary,
+    fontFamily: Constants.fontFamilySemiBold,
     fontSize: 16,
   },
 });
