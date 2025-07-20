@@ -54,30 +54,33 @@ const DeaweHeader = ({data}) => {
         styles.headerContainer,
         {height: isDealer ? bannerHeight : 85},
       ])}>
-      {!!totalViews && (
-        <View style={styles.ViewsBanner}>
-          <AppIcon
-            type={Icons.FontAwesome5}
-            name={'eye'}
-            size={19}
-            color={'#fff'}
-          />
-          <Text style={styles.phoneBannerText}>{totalViews}</Text>
+      {isDealer && (
+        <View style={styles.Banners}>
+          {!!totalViews && (
+            <View style={styles.ViewsBanner}>
+              <AppIcon
+                type={Icons.FontAwesome5}
+                name={'eye'}
+                size={19}
+                color={'#fff'}
+              />
+              <Text style={styles.phoneBannerText}>{totalViews}</Text>
+            </View>
+          )}
+
+          {!!phoneClicks && (
+            <View style={styles.phoneBanner}>
+              <AppIcon
+                type={Icons.Entypo}
+                name={'phone'}
+                size={19}
+                color={'#fff'}
+              />
+              <Text style={styles.phoneBannerText}>{phoneClicks}</Text>
+            </View>
+          )}
         </View>
       )}
-
-      {isDealer && !!phoneClicks && (
-        <View style={styles.phoneBanner}>
-          <AppIcon
-            type={Icons.Entypo}
-            name={'phone'}
-            size={19}
-            color={'#fff'}
-          />
-          <Text style={styles.phoneBannerText}>{phoneClicks}</Text>
-        </View>
-      )}
-
       {isDealer && (
         <TouchableOpacity
           onPress={handleEdit}
@@ -221,29 +224,32 @@ const styles = StyleSheet.create({
   phoneBanner: {
     width: 'auto',
     padding: 5,
-    position: 'absolute',
-    zIndex: 10,
-    right: 5,
-    top: 40,
     borderRadius: 5,
-    backgroundColor: Color.primary,
+    backgroundColor: Color.secondary,
     flexDirection: 'row-reverse',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 3,
+    height: 28,
   },
   ViewsBanner: {
     width: 'auto',
     padding: 5,
-    position: 'absolute',
-    zIndex: 10,
-    right: 5,
-    top: 5,
     borderRadius: 5,
     backgroundColor: Color.primary,
     flexDirection: 'row-reverse',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 3,
+    height: 28,
+  },
+  Banners: {
+    position: 'absolute',
+    zIndex: 10,
+    right: 5,
+    top: 5,
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    gap: 5,
   },
 });

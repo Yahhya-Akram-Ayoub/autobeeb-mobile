@@ -167,7 +167,8 @@ class ActiveOffers extends Component {
       Year: item.year,
       FullImagePath: item.fullImagePath,
       ImageBasePath: item.imageBasePath,
-      Views: item.views,// handlephone
+      Views: item.views,
+      PhoneClicks: item.phoneClicks,
       DateAdded: item.dateAdded,
       RenewalDate: item.renewalDate,
       SpecialExpiryDate: item.specialExpiryDate,
@@ -238,13 +239,11 @@ class ActiveOffers extends Component {
   }
 
   resendCode() {
-
     this.setState({otp: ''});
     KS.ResendOTP({
       userID: this.state.User.ID,
       otpType: this.state.User?.EmailRegister ? 2 : 1,
     }).then(data => {
-   
       if (data.Success == 1) {
         toast(Languages.WeSendUOTP);
       } else {

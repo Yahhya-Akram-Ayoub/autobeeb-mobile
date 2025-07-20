@@ -832,52 +832,96 @@ class BannerListings extends PureComponent {
             </Pressable>
           )}
 
-          {!!item.Views && item.OwnerID == this.props.user?.ID && (// handlephone
+          {!!item.Views && item.OwnerID == this.props.user?.ID && (
             <View
               style={{
-                width: 'auto',
-                padding: 5,
                 position: 'absolute',
                 zIndex: 10,
                 right: 5,
                 top: 5,
-                borderRadius: 5,
-                backgroundColor: Color.primary,
                 flexDirection: 'row-reverse',
                 alignItems: 'center',
-                justifyContent: 'center',
-                gap: 3,
+                gap: 5,
               }}>
-              <IconFa5 name={'eye'} size={15} color={'#fff'} />
-              <Text
+              <View
                 style={{
-                  color: '#fff',
-                  fontWeight: '700',
-                  fontSize: 13,
-                  textAlign: 'center',
+                  width: 'auto',
+                  padding: 5,
+                  borderRadius: 5,
+                  backgroundColor: Color.primary,
+                  flexDirection: 'row-reverse',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 3,
+                  height: 28,
                 }}>
-                {item.Views}
-              </Text>
+                <IconFa5 name={'eye'} size={15} color={'#fff'} />
+                <Text
+                  style={{
+                    color: '#fff',
+                    fontWeight: '700',
+                    fontSize: 13,
+                    textAlign: 'center',
+                  }}>
+                  {item.Views}
+                </Text>
+              </View>
+
+              {!!item.PhoneClicks && this.props.user?.IsDealer && (
+                <View
+                  style={{
+                    width: 'auto',
+                    padding: 5,
+                    borderRadius: 5,
+                    backgroundColor: Color.secondary,
+                    flexDirection: 'row-reverse',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 3,
+                    height: 28,
+                  }}>
+                  <IconEn name={'phone'} size={15} color={'#fff'} />
+                  <Text
+                    style={{
+                      color: '#fff',
+                      fontWeight: '700',
+                      fontSize: 14,
+                      textAlign: 'center',
+                    }}>
+                    {item.PhoneClicks}
+                  </Text>
+                </View>
+              )}
             </View>
           )}
           <Pressable
             onPress={() => {
               this.shareOnSocial(item);
             }}
-            style={{
-              width: 'auto',
-              padding: 5,
-              position: 'absolute',
-              zIndex: 10,
-              right: item.OwnerID === this.props.user?.ID ? 5 : 10,
-              top: !!item.Views && item.OwnerID == this.props.user?.ID ? 35 : 5,
-              borderRadius: 5,
-              backgroundColor: '#fff00',
-              flexDirection: 'row-reverse',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 3,
-            }}>
+            style={[
+              {
+                width: 'auto',
+                padding: 5,
+                position: 'absolute',
+                zIndex: 10,
+                right: item.OwnerID === this.props.user?.ID ? 5 : 10,
+
+                borderRadius: 5,
+                backgroundColor: '#fff00',
+                flexDirection: 'row-reverse',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 3,
+              },
+              this.props.activeOffers
+                ? {bottom: 5}
+                : {
+                    top:
+                      !!item.Views && item.OwnerID == this.props.user?.ID
+                        ? 35
+                        : 5,
+                  },
+            ]}>
             <FacebookIcon size={32} />
           </Pressable>
         </View>

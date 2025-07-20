@@ -27,7 +27,17 @@ class NewHeader extends Component {
       countryPickerShown: false,
     };
   }
+  handleBackPress = () => {
+    const {navigation} = this.props;
 
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+      return true;
+    } else {
+      navigation.navigate('HomeScreen');
+      return true;
+    }
+  };
   render() {
     return (
       <View
@@ -41,7 +51,7 @@ class NewHeader extends Component {
             {this.props.back ? (
               <TouchableOpacity
                 hitSlop={{top: 10, right: 10, bottom: 10, left: 10}}
-                onPress={() => this.props.navigation.goBack()}>
+                onPress={() => this.handleBackPress()}>
                 <Ionicons
                   name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'}
                   size={25}

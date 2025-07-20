@@ -799,7 +799,6 @@ class Drawer extends Component {
                     color: Color.primary,
                     fontSize: 20,
                   }}>
-                    {/* // handlephone */}
                   {(this.state.Statistic?.ViewsClicks ?? 0) +
                     (this.state.Statistic?.ScViews ?? 0)}
                 </Text>

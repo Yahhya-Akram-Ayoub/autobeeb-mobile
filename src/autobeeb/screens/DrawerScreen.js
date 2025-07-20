@@ -34,13 +34,15 @@ const DrawerScreen = () => {
 
   useEffect(() => {
     // YAHHYA : Need APIs Enhancments
-    KS.UserGet({
-      userID: user.ID,
-      langid: Languages.langID,
-    }).then(res => {
-      setData(res);
-    });
-  }, []);
+    if (user) {
+      KS.UserGet({
+        userID: user.ID,
+        langid: Languages.langID,
+      }).then(res => {
+        setData(res);
+      });
+    }
+  }, [user]);
 
   return (
     <View
