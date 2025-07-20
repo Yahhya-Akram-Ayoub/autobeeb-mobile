@@ -167,7 +167,7 @@ class ActiveOffers extends Component {
       Year: item.year,
       FullImagePath: item.fullImagePath,
       ImageBasePath: item.imageBasePath,
-      Views: item.views,
+      Views: item.views,// handlephone
       DateAdded: item.dateAdded,
       RenewalDate: item.renewalDate,
       SpecialExpiryDate: item.specialExpiryDate,

@@ -17,7 +17,7 @@ import {Color, Languages} from '../../../common';
 import {AppIcon, Icons} from '../shared/AppIcon';
 import KS from '../../../services/KSAPI';
 
-const UserOptions = () => {
+const UserOptions = ({data}) => {
   const navigation = useNavigation();
   const user = useSelector(state => state.user.user);
   const userCountry = useSelector(state => state.user.userCountry);
@@ -34,20 +34,19 @@ const UserOptions = () => {
     if (!!user) LoadData();
   }, [user]);
 
-  const LoadData = () => {
-    // YAHHYA : Need APIs Enhancments
-    KS.UserGet({
-      userID: user.ID,
-      langid: Languages.langID,
-    }).then(data => {
-      setStatistics(data.Statistic);
-      setInactiveListings(data.InActiveListings);
-      setActiveListings(data.ActiveListings);
+  useEffect(() => {
+    if (data) {
+      setStatistics(data?.Statistic);
+    
+      setInactiveListings(data?.InActiveListings);
+      setActiveListings(data?.ActiveListings);
       setUserLimit(
-        user?.IsDealer ? data.User.DealerLimit : data.User.UserLimit,
+        user?.IsDealer ? data.User?.DealerLimit : data.User?.UserLimit,
       );
-    });
+    }
+  }, [data]);
 
+  const LoadData = () => {
     KS.WatchlistGet({
       langid: Languages.langID,
       userid: user.ID,
@@ -201,7 +200,7 @@ const UserOptions = () => {
       iconType: Icons.FontAwesome5,
       iconSize: 18,
       onPress: null,
-      isDisplay: isDealer,
+      isDisplay: !isDealer,
       extraRight: (statistics?.ViewsClicks ?? 0) + (statistics?.ScViews ?? 0),
     },
     {

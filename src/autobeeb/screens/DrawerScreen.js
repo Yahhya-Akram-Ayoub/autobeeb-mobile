@@ -9,16 +9,17 @@ import Layout from '../constants/Layout';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Languages} from '../../common';
 import {actions} from '../../redux/HomeRedux';
+import KS from '../../services/KSAPI';
 
 const DrawerScreen = () => {
   const insets = useSafeAreaInsets();
   const dispatch = useDispatch();
   const user = useSelector(state => state.user.user);
   const {ViewingCountry, ViewingCurrency} = useSelector(state => state.menu);
-
+  const [data, setData] = useState(null);
   const refreshScreen = () => {
     actions.HomeScreenGet(
       dispatch,
@@ -31,6 +32,16 @@ const DrawerScreen = () => {
     );
   };
 
+  useEffect(() => {
+    // YAHHYA : Need APIs Enhancments
+    KS.UserGet({
+      userID: user.ID,
+      langid: Languages.langID,
+    }).then(res => {
+      setData(res);
+    });
+  }, []);
+
   return (
     <View
       style={{
@@ -40,8 +51,8 @@ const DrawerScreen = () => {
       }}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <AppHeader back={true} onCountryChange={refreshScreen} />
-        <DeaweHeader />
-        <UserOptions />
+        <DeaweHeader data={data} />
+        <UserOptions data={data} />
         <GeneralOptions />
         <View style={{height: 10}} />
       </ScrollView>

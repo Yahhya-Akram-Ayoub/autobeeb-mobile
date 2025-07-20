@@ -773,38 +773,39 @@ class Drawer extends Component {
                   )}
               </View>
             </TouchableOpacity>
-            {this.state.isDealer && (
-              <View style={styles.rowStyle}>
-                <View
-                  style={{
-                    width: 40,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                  <IconFa5 name={'eye'} size={18} color={Color.secondary} />
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    flexGrow: 1,
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}>
-                  <Text style={{color: '#000', fontSize: 17}}>
-                    {Languages.NumberViewsMyAds}
-                  </Text>
-                  <Text
-                    style={{
-                      textAlign: 'center',
-                      color: Color.primary,
-                      fontSize: 20,
-                    }}>
-                    {(this.state.Statistic?.ViewsClicks ?? 0) +
-                      (this.state.Statistic?.ScViews ?? 0)}
-                  </Text>
-                </View>
+            {/* {this.state.isDealer && ( */}
+            <View style={styles.rowStyle}>
+              <View
+                style={{
+                  width: 40,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <IconFa5 name={'eye'} size={18} color={Color.secondary} />
               </View>
-            )}
+              <View
+                style={{
+                  flexDirection: 'row',
+                  flexGrow: 1,
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={{color: '#000', fontSize: 17}}>
+                  {Languages.NumberViewsMyAds}
+                </Text>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    color: Color.primary,
+                    fontSize: 20,
+                  }}>
+                    {/* // handlephone */}
+                  {(this.state.Statistic?.ViewsClicks ?? 0) +
+                    (this.state.Statistic?.ScViews ?? 0)}
+                </Text>
+              </View>
+            </View>
+            {/*  )} */}
             <TouchableOpacity
               //hide
               style={[styles.rowStyle, {justifyContent: 'space-between'}]}

@@ -832,36 +832,34 @@ class BannerListings extends PureComponent {
             </Pressable>
           )}
 
-          {!!item.Views &&
-            !!this.props.user?.IsDealer &&
-            item.OwnerID == this.props.user?.ID && (
-              <View
+          {!!item.Views && item.OwnerID == this.props.user?.ID && (// handlephone
+            <View
+              style={{
+                width: 'auto',
+                padding: 5,
+                position: 'absolute',
+                zIndex: 10,
+                right: 5,
+                top: 5,
+                borderRadius: 5,
+                backgroundColor: Color.primary,
+                flexDirection: 'row-reverse',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 3,
+              }}>
+              <IconFa5 name={'eye'} size={15} color={'#fff'} />
+              <Text
                 style={{
-                  width: 'auto',
-                  padding: 5,
-                  position: 'absolute',
-                  zIndex: 10,
-                  right: 5,
-                  top: 5,
-                  borderRadius: 5,
-                  backgroundColor: Color.primary,
-                  flexDirection: 'row-reverse',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 3,
+                  color: '#fff',
+                  fontWeight: '700',
+                  fontSize: 13,
+                  textAlign: 'center',
                 }}>
-                <IconFa5 name={'eye'} size={15} color={'#fff'} />
-                <Text
-                  style={{
-                    color: '#fff',
-                    fontWeight: '700',
-                    fontSize: 13,
-                    textAlign: 'center',
-                  }}>
-                  {item.Views}
-                </Text>
-              </View>
-            )}
+                {item.Views}
+              </Text>
+            </View>
+          )}
           <Pressable
             onPress={() => {
               this.shareOnSocial(item);
@@ -872,12 +870,7 @@ class BannerListings extends PureComponent {
               position: 'absolute',
               zIndex: 10,
               right: item.OwnerID === this.props.user?.ID ? 5 : 10,
-              top:
-                !!item.Views &&
-                !!this.props.user?.IsDealer &&
-                item.OwnerID == this.props.user?.ID
-                  ? 35
-                  : 5,
+              top: !!item.Views && item.OwnerID == this.props.user?.ID ? 35 : 5,
               borderRadius: 5,
               backgroundColor: '#fff00',
               flexDirection: 'row-reverse',

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Platform,
   Text,
@@ -11,21 +11,36 @@ import LinearGradient from 'react-native-linear-gradient';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {isIphoneX} from 'react-native-iphone-x-helper';
-import {Languages} from '../../../common';
+import {Color, Constants, Languages} from '../../../common';
 import Layout from '../../constants/Layout';
 import {AppIcon, Icons} from '../shared/AppIcon';
 
-const DeaweHeader = () => {
+const DeaweHeader = ({data}) => {
   const navigation = useNavigation();
   const user = useSelector(state => state.user.user);
   const isDealer = !!user?.IsDealer;
   const [hasBanner, setHasBanner] = useState(true);
   const [hasImage, setHasImage] = useState(true);
+  const [phoneClicks, setPhoneClicks] = useState(0);
+  const [totalViews, setTotalViews] = useState(0);
+
   const handleEdit = () => {
     navigation.navigate(isDealer ? 'DealerSignUp' : 'EditProfile', {
       Edit: true,
     });
   };
+
+  useEffect(() => {
+    if (data) {
+      setPhoneClicks(
+        (data?.Statistic?.TotalClicks ?? 0) +
+          (data?.Statistic?.ProfileClicks ?? 0),
+      );
+      setTotalViews(
+        (data?.Statistic?.ViewsClicks ?? 0) + (data?.Statistic?.ScViews ?? 0),
+      );
+    }
+  }, [data]);
 
   if (!user) {
     return <View />;
@@ -39,6 +54,30 @@ const DeaweHeader = () => {
         styles.headerContainer,
         {height: isDealer ? bannerHeight : 85},
       ])}>
+      {!!totalViews && (
+        <View style={styles.ViewsBanner}>
+          <AppIcon
+            type={Icons.FontAwesome5}
+            name={'eye'}
+            size={19}
+            color={'#fff'}
+          />
+          <Text style={styles.phoneBannerText}>{totalViews}</Text>
+        </View>
+      )}
+
+      {isDealer && !!phoneClicks && (
+        <View style={styles.phoneBanner}>
+          <AppIcon
+            type={Icons.Entypo}
+            name={'phone'}
+            size={19}
+            color={'#fff'}
+          />
+          <Text style={styles.phoneBannerText}>{phoneClicks}</Text>
+        </View>
+      )}
+
       {isDealer && (
         <TouchableOpacity
           onPress={handleEdit}
@@ -171,5 +210,40 @@ const styles = StyleSheet.create({
   editText: {
     fontSize: 16,
     textAlign: 'left',
+  },
+  phoneBannerText: {
+    color: '#fff',
+    fontWeight: '700',
+    fontSize: 14,
+    textAlign: 'center',
+    fontFamily: Constants.fontFamilyBold,
+  },
+  phoneBanner: {
+    width: 'auto',
+    padding: 5,
+    position: 'absolute',
+    zIndex: 10,
+    right: 5,
+    top: 40,
+    borderRadius: 5,
+    backgroundColor: Color.primary,
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 3,
+  },
+  ViewsBanner: {
+    width: 'auto',
+    padding: 5,
+    position: 'absolute',
+    zIndex: 10,
+    right: 5,
+    top: 5,
+    borderRadius: 5,
+    backgroundColor: Color.primary,
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 3,
   },
 });
