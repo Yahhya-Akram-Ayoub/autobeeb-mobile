@@ -62,7 +62,10 @@ const GeneralOptions = () => {
       icon: 'eye',
       iconType: Icons.MaterialCommunityIcons,
       onPress: () =>
-        navigation.navigate('HomeScreen', {screen: 'RecentlyViewedScreen'}),
+        navigation.navigate('HomeScreen', {
+          screen: 'RecentlyViewedScreen',
+          params: {isFromDrawer: true},
+        }),
       isDisplay: true,
     },
     {

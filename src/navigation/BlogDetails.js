@@ -8,6 +8,7 @@ import {
   StatusBar,
   ScrollView,
   FlatList,
+  StyleSheet,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {HeaderBackButton} from '@react-navigation/stack';
@@ -20,6 +21,11 @@ import {I18nManager} from 'react-native';
 import KS from '../services/KSAPI';
 import {Languages, Constants} from '../common';
 import AutoHeightWebView from 'react-native-autoheight-webview';
+import {AppHeader, AppIcon, Icons} from '../autobeeb/components';
+import {NewHeader} from '../containers';
+import {useNavigation} from '@react-navigation/native';
+import {screenWidth} from '../autobeeb/constants/Layout';
+import {SkeletonLoader} from '../autobeeb/components/shared/Skeleton';
 let htmlStyle =
   `<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Cairo">
   <style>
@@ -148,6 +154,7 @@ const BlogDetails = props => {
   const [Blog, setBlog] = useState(props.route.params?.Blog || {});
   const [ImageIndex, setImageIndex] = useState(0);
   const [webheight, setwebHeight] = useState(200);
+  const navigation = useNavigation();
 
   useEffect(() => {
     KS.ArticleGet({
@@ -159,17 +166,32 @@ const BlogDetails = props => {
       }
     });
   }, []);
+
   return (
     <View style={{flex: 1}}>
-      <StatusBar
-        backgroundColor={'#111'}
-        barStyle={'light-content'}></StatusBar>
-      {/* <Header {...props} /> */}
-      {Blog && Blog.Name && (
-        <ScrollView
-          style={{backgroundColor: '#fff', flex: 1}}
-          //  contentContainerStyle={{ flexGrow: 1 }}
-        >
+      <View style={styles.wrapper}>
+        <View style={styles.headerContainer}>
+          <View style={styles.row}>
+            <View />
+            <TouchableOpacity
+              hitSlop={{top: 10, right: 10, bottom: 10, left: 10}}
+              style={styles.closeButton}
+              onPress={() => {
+                navigation.goBack();
+              }}>
+              <AppIcon
+                type={Icons.Ionicons}
+                name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'}
+                size={20}
+                color={'white'}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+
+      {Blog && Blog.Name ? (
+        <ScrollView style={{backgroundColor: '#fff', flex: 1}}>
           <View
             style={{width: '100%', height: Dimensions.get('screen').width / 2}}>
             <Images
@@ -249,9 +271,59 @@ const BlogDetails = props => {
             />
           </View>
         </ScrollView>
+      ) : (
+        <>
+          <SkeletonLoader
+            containerStyle={styles.skeletonBox}
+            borderRadius={3}
+            shimmerColors={['#E0E0E0', '#F8F8F8', '#E0E0E0']}
+            animationDuration={1200}
+          />
+          <SkeletonLoader
+            containerStyle={styles.skeletonBox2}
+            borderRadius={3}
+            shimmerColors={['#E0E0E0', '#F8F8F8', '#E0E0E0']}
+            animationDuration={1200}
+          />
+        </>
       )}
     </View>
   );
 };
 
 export default BlogDetails;
+const styles = StyleSheet.create({
+  headerContainer: {
+    position: 'absolute',
+    top: 0,
+    zIndex: 200,
+    minHeight: 70,
+    paddingTop: 15,
+    width: screenWidth,
+  },
+  row: {
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  closeButton: {
+    marginLeft: 10,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    borderRadius: 100,
+    padding: 7,
+  },
+  shareButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
+  },
+  skeletonBox: {
+    height: 150,
+    marginBottom: 10,
+    backgroundColor: '#e0e0e0',
+  },
+  skeletonBox2: {
+    flex: 1,
+    backgroundColor: '#e0e0e0',
+  },
+});

@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   I18nManager,
   TextInput,
   StyleSheet,
+  BackHandler,
 } from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {Languages, Constants, Color} from '../../../common';
@@ -39,6 +40,16 @@ const AppHeader = ({
     }
   };
 
+  const handleBackPress = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+      return true;
+    } else {
+      navigation.navigate('HomeScreen');
+      return true;
+    }
+  };
+
   return (
     <View
       style={[
@@ -51,9 +62,9 @@ const AppHeader = ({
             style={styles.backButton}
             onPress={() => {
               if (back) {
-                navigation.goBack();
+                handleBackPress();
               } else {
-               // navigation.navigate('DrawerStack');
+                // navigation.navigate('DrawerStack');
                 navigation.dispatch(
                   CommonActions.reset({
                     index: 0,

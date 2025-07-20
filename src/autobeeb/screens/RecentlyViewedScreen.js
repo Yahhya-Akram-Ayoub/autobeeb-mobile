@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Animated,
   Easing,
+  BackHandler,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {Constants, Languages} from '../../common';
@@ -16,9 +17,12 @@ import FastImage from 'react-native-fast-image';
 import {AddAdvButtonSquare, AppHeader} from '../components';
 import {actions} from '../../redux/HomeRedux';
 import {SkeletonLoader} from '../components/shared/Skeleton';
+import {useRoute} from '@react-navigation/native';
 
 let pageNumber = 1;
 const RecentlyViewedScreen = ({navigation}) => {
+  const route = useRoute();
+  const {isFromDrawer} = route.params;
   const contactBoxTranslate = useRef(new Animated.Value(100)).current;
   const lastScrollY = useRef(0);
   const currentDirection = useRef(null);
@@ -71,6 +75,15 @@ const RecentlyViewedScreen = ({navigation}) => {
     loadListings();
   }, [recentIds]);
 
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      handleBackPress,
+    );
+
+    return () => backHandler.remove(); // Cleanup on unmount
+  }, []);
+
   const handleScroll = event => {
     const currentY = event?.nativeEvent?.contentOffset?.y;
     const direction =
@@ -107,7 +120,16 @@ const RecentlyViewedScreen = ({navigation}) => {
       user?.ID,
     );
   };
-
+  const handleBackPress = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+      return true;
+    } else {
+      if (isFromDrawer) navigation.navigate('DrawerStack');
+      else navigation.navigate('HomeScreen');
+      return true;
+    }
+  };
   const renderSkeletons = () =>
     Array.from({length: 2}).map((_, i) => (
       <SkeletonLoader
