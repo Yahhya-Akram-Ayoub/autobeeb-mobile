@@ -371,6 +371,12 @@ const Constants = {
         return Languages.Yearly;
       },
     },
+    {
+      ID: 15,
+      get Name() {
+        return Languages.AnyPeriod;
+      },
+    },
   ],
   FilterOfferCondition: [
     {
