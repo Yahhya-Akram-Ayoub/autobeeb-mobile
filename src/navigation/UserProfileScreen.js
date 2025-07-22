@@ -32,6 +32,7 @@ class UserProfileScreen extends Component {
   static navigationOptions = ({navigation}) => ({
     tabBarVisible: true,
   });
+
   componentDidMount() {
     try {
       KS.UserGet({
@@ -93,11 +94,6 @@ class UserProfileScreen extends Component {
       <ScrollView
         contentContainerStyle={{flex: 1}}
         style={{backgroundColor: '#eee'}}>
-        <StatusBar
-          backgroundColor="#fff"
-          barStyle="dark-content"
-          translucent={false}
-        />
 
         <NewHeader
           navigation={this.props.navigation}

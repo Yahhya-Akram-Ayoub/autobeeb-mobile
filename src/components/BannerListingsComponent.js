@@ -114,7 +114,77 @@ class BannerListings extends PureComponent {
         return '';
     }
   }
+  renderViews(item) {
+    if (
+      !!item.Views &&
+      item.OwnerID == this.props.user?.ID &&
+      this.props.user?.IsDealer
+    )
+      return (
+        <View
+          style={{
+            position: 'absolute',
+            zIndex: 10,
+            right: 5,
+            top: 5,
+            flexDirection: 'row-reverse',
+            alignItems: 'center',
+            gap: 5,
+          }}>
+          <View
+            style={{
+              width: 'auto',
+              padding: 5,
+              borderRadius: 5,
+              backgroundColor: Color.primary,
+              flexDirection: 'row-reverse',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 3,
+              height: 28,
+            }}>
+            <IconFa5 name={'eye'} size={15} color={'#fff'} />
+            <Text
+              style={{
+                color: '#fff',
+                fontWeight: '700',
+                fontSize: 13,
+                textAlign: 'center',
+              }}>
+              {item.Views}
+            </Text>
+          </View>
 
+          {!!item.PhoneClicks && (
+            <View
+              style={{
+                width: 'auto',
+                padding: 5,
+                borderRadius: 5,
+                backgroundColor: Color.secondary,
+                flexDirection: 'row-reverse',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 3,
+                height: 28,
+              }}>
+              <IconEn name={'phone'} size={15} color={'#fff'} />
+              <Text
+                style={{
+                  color: '#fff',
+                  fontWeight: '700',
+                  fontSize: 14,
+                  textAlign: 'center',
+                }}>
+                {item.PhoneClicks}
+              </Text>
+            </View>
+          )}
+        </View>
+      );
+
+    return <></>;
+  }
   render() {
     const item = this.props.item?.item?.m_Item2 || this.props.item;
     this.sellTypes = [
@@ -636,6 +706,7 @@ class BannerListings extends PureComponent {
                     />
                   </TouchableOpacity>
                 )}
+                {this.renderViews(item)}
 
                 {!!item.SellType && (
                   <Text
@@ -831,69 +902,7 @@ class BannerListings extends PureComponent {
               </View>
             </Pressable>
           )}
-
-          {!!item.Views && item.OwnerID == this.props.user?.ID && (
-            <View
-              style={{
-                position: 'absolute',
-                zIndex: 10,
-                right: 5,
-                top: 5,
-                flexDirection: 'row-reverse',
-                alignItems: 'center',
-                gap: 5,
-              }}>
-              <View
-                style={{
-                  width: 'auto',
-                  padding: 5,
-                  borderRadius: 5,
-                  backgroundColor: Color.primary,
-                  flexDirection: 'row-reverse',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 3,
-                  height: 28,
-                }}>
-                <IconFa5 name={'eye'} size={15} color={'#fff'} />
-                <Text
-                  style={{
-                    color: '#fff',
-                    fontWeight: '700',
-                    fontSize: 13,
-                    textAlign: 'center',
-                  }}>
-                  {item.Views}
-                </Text>
-              </View>
-
-              {!!item.PhoneClicks && this.props.user?.IsDealer && (
-                <View
-                  style={{
-                    width: 'auto',
-                    padding: 5,
-                    borderRadius: 5,
-                    backgroundColor: Color.secondary,
-                    flexDirection: 'row-reverse',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 3,
-                    height: 28,
-                  }}>
-                  <IconEn name={'phone'} size={15} color={'#fff'} />
-                  <Text
-                    style={{
-                      color: '#fff',
-                      fontWeight: '700',
-                      fontSize: 14,
-                      textAlign: 'center',
-                    }}>
-                    {item.PhoneClicks}
-                  </Text>
-                </View>
-              )}
-            </View>
-          )}
+          {this.renderViews(item)}
           <Pressable
             onPress={() => {
               this.shareOnSocial(item);

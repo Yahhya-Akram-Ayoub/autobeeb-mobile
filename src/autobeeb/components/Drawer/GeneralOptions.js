@@ -47,7 +47,11 @@ const GeneralOptions = () => {
       label: Languages.Blog,
       icon: 'newsletter',
       iconType: Icons.Entypo,
-      onPress: () => navigation.navigate('HomeScreen', {screen: 'BlogsScreen'}),
+      onPress: () =>
+        navigation.navigate('HomeScreen', {
+          screen: 'BlogsScreen',
+          params: {isFromDrawer: true},
+        }),
       isDisplay: true,
     },
     {

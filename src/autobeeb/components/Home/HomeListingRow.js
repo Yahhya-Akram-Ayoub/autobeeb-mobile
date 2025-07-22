@@ -329,7 +329,7 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   showMore: {
-    fontSize: 12,
+    fontSize: 14,
     fontFamily: Constants.fontFamilyBold,
     color: Color.secondary,
   },

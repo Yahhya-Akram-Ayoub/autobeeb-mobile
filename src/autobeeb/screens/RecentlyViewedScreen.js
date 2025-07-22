@@ -144,7 +144,11 @@ const RecentlyViewedScreen = ({navigation}) => {
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-      <AppHeader back={true} onCountryChange={refreshScreen} />
+      <AppHeader
+        back={true}
+        onCountryChange={refreshScreen}
+        isFromDrawer={isFromDrawer}
+      />
       <FlatList
         data={listings}
         renderItem={({item}) => (

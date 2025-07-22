@@ -1,3 +1,5 @@
+import {Languages} from '../common';
+
 const types = {
   SET_COUNTRY: 'SET_COUNTRY',
   SET_CURRENCY: 'SET_CURRENCY',
@@ -60,7 +62,9 @@ export const reducer = (state = initialState, action) => {
     case types.SET_CURRENCY: {
       return {
         ...state,
-        ViewingCurrency: payload.Currency,
+        ViewingCurrency: payload.Currency
+          ? {...payload.Currency, LangId: Languages.langID}
+          : payload.Currency,
       };
     }
 

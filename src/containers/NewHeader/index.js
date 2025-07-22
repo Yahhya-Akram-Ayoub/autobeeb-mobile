@@ -33,6 +33,9 @@ class NewHeader extends Component {
     if (navigation.canGoBack()) {
       navigation.goBack();
       return true;
+    } else if (this.props.isFromDrawer) {
+      navigation.navigate('DrawerStack');
+      return true;
     } else {
       navigation.navigate('HomeScreen');
       return true;

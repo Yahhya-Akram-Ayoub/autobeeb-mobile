@@ -459,7 +459,7 @@ const styles = StyleSheet.create({
   sellFastTitle: {
     color: '#ffffff',
     textAlign: 'center',
-    fontSize: 17,
+    fontSize: 18,
     fontFamily: Constants.fontFamilyBold,
   },
   sellFastButton: {

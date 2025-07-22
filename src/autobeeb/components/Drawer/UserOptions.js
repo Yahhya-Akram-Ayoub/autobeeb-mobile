@@ -37,7 +37,7 @@ const UserOptions = ({data}) => {
   useEffect(() => {
     if (data) {
       setStatistics(data?.Statistic);
-    
+
       setInactiveListings(data?.InActiveListings);
       setActiveListings(data?.ActiveListings);
       setUserLimit(
@@ -200,7 +200,7 @@ const UserOptions = ({data}) => {
       iconType: Icons.FontAwesome5,
       iconSize: 18,
       onPress: null,
-      isDisplay: !isDealer,
+      isDisplay: !isDealer && false, // This option is not currently displayed
       extraRight: (statistics?.ViewsClicks ?? 0) + (statistics?.ScViews ?? 0),
     },
     {

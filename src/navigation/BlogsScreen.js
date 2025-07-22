@@ -8,6 +8,7 @@ import {
   Dimensions,
   ActivityIndicator,
   ScrollView,
+  BackHandler,
 } from 'react-native';
 import NewHeader from '../containers/NewHeader';
 import KS from '../services/KSAPI';
@@ -16,6 +17,7 @@ import Colors from '../common/Color';
 import Constants from '../common/Constants';
 import * as Animatable from 'react-native-animatable';
 import {useAsyncSetState, useGetState} from '../ultils/use-async-setState';
+import {useRoute} from '@react-navigation/native';
 
 const BlogsScreen = ({navigation}) => {
   const All = {
@@ -23,6 +25,8 @@ const BlogsScreen = ({navigation}) => {
     ID: 2,
     isAll: true,
   };
+  const route = useRoute();
+  const {isFromDrawer} = route.params;
   const PageSize = 9;
   const [IsLoading, setIsLoading] = useState(true);
   const [Blogs, setBlogs] = useState();
@@ -62,6 +66,26 @@ const BlogsScreen = ({navigation}) => {
       }
     });
   }, []);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      handleBackPress,
+    );
+
+    return () => backHandler.remove(); // Cleanup on unmount
+  }, []);
+
+  const handleBackPress = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+      return true;
+    } else {
+      if (isFromDrawer) navigation.navigate('DrawerStack');
+      else navigation.navigate('HomeScreen');
+      return true;
+    }
+  };
 
   function getArticles(categoryID, onEndReached = false, search = '') {
     if (!onEndReached) {
@@ -359,6 +383,7 @@ const BlogsScreen = ({navigation}) => {
       <NewHeader
         navigation={navigation}
         back
+        isFromDrawer={isFromDrawer}
         CustomSearchComponent
         onChangeText={search => {
           setSearchText(search);

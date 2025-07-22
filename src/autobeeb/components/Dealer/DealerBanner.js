@@ -15,7 +15,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import Layout from '../../constants/Layout';
 import KS from '../../../services/KSAPI';
-import { Color, Languages } from '../../../common';
+import {Color, Constants, Languages} from '../../../common';
 
 const DealerBanner = ({
   item,
@@ -225,6 +225,7 @@ const styles = StyleSheet.create({
   adsText: {
     color: '#fff',
     textAlign: 'center',
+
   },
   gradient: {
     width: '100%',

@@ -1259,6 +1259,15 @@ KensoftApi.prototype.GetCountryCore = function (data, callback) {
   return this._request(_requestUrl, callback);
 };
 
+KensoftApi.prototype.GetCurrencyCore = function (data, callback) {
+  let _requestUrl = `${this.coreApiV1}Lookups/Get/CurrencyAsync?`;
+  data = Object.fromEntries(
+    Object.entries(data).filter(([_, v]) => v !== null),
+  );
+  _requestUrl += this.join(data, '&');
+  return this._request(_requestUrl, callback);
+};
+
 KensoftApi.prototype.FreeSearchCore = function (data, callback) {
   let _requestUrl = `${this.coreApiV1}Listings/List/FreeSearchAsync?`;
   data = Object.fromEntries(

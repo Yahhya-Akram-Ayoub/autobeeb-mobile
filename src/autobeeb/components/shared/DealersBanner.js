@@ -196,8 +196,9 @@ const styles = StyleSheet.create({
   }),
   adsText: {
     color: '#fff',
-    fontSize: 12,
-    fontFamily: Constants.fontFamilySemiBold,
+    textAlign: 'center',
+    fontSize: 14,
+    fontFamily: Constants.fontFamilyBold,
   },
   gradientOverlay: {
     flex: 1,

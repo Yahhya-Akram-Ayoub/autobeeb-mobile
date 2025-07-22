@@ -132,7 +132,7 @@ class RowListingsComponent extends PureComponent {
                     uri:
                       'https://autobeeb.com/' +
                       item.FullImagePath +
-                      '_635x811.jpg',
+                      '_1024x853.jpg',
                     cache: FastImage.cacheControl.immutable,
                   }}
                   resizeMode={FastImage.resizeMode.cover}

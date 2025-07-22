@@ -53,6 +53,7 @@ class SplashScreen extends Component {
         global.ViewingCurrency = this.props.ViewingCurrency;
       }
     }, 500);
+
     AsyncStorage.getItem('cca2', (error, data) => {
       if (data) {
         KS.CurrencyGetByISOCode({
@@ -62,6 +63,26 @@ class SplashScreen extends Component {
           if (!global.ViewingCurrency?.ID) {
             global.ViewingCurrency = curr.currency;
             this.props.setViewingCurrency(curr.currency);
+          }
+          if (global.ViewingCurrency?.LangId !== Languages.langID) {
+            KS.GetCurrencyCore({
+              Id: global.ViewingCurrency?.ID,
+              LangId: Languages.langID,
+            }).then(res => {
+              const _currency = {
+                ID: res.id,
+                Ratio: res.ratio,
+                Standard: res.standard,
+                Name: res.name,
+                Format: res.format,
+                Rank: res.rank,
+                NumberFormat: res.numberFormat,
+                ShortName: res.shortName,
+                Primary: res.primary,
+              };
+              global.ViewingCurrency = _currency;
+              this.props.setViewingCurrency(_currency);
+            });
           }
 
           AsyncStorage.getItem('user', (error, result) => {
@@ -92,7 +113,6 @@ class SplashScreen extends Component {
         });
       } else {
         this.setState({finishedLoadingHomescreen: true});
-
         Timer.setTimeout(this.prepareData, minDisplayTime);
       }
     });
