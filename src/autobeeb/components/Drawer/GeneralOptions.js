@@ -47,11 +47,7 @@ const GeneralOptions = () => {
       label: Languages.Blog,
       icon: 'newsletter',
       iconType: Icons.Entypo,
-      onPress: () =>
-        navigation.navigate('HomeScreen', {
-          screen: 'BlogsScreen',
-          params: {isFromDrawer: true},
-        }),
+      onPress: () => navigation.navigate('BlogsScreen'),
       isDisplay: true,
     },
     {
@@ -65,11 +61,7 @@ const GeneralOptions = () => {
       label: Languages.RecentlyViewed,
       icon: 'eye',
       iconType: Icons.MaterialCommunityIcons,
-      onPress: () =>
-        navigation.navigate('HomeScreen', {
-          screen: 'RecentlyViewedScreen',
-          params: {isFromDrawer: true},
-        }),
+      onPress: () => navigation.navigate('RecentlyViewedScreen'),
       isDisplay: true,
     },
     {
@@ -115,7 +107,8 @@ const GeneralOptions = () => {
       {options
         .filter(item => item.isDisplay)
         .map((option, index) => {
-          if (option.isLine) return <View style={styles.rowsContainer} />;
+          if (option.isLine)
+            return <View key={index} style={styles.rowsContainer} />;
           return (
             <TouchableOpacity
               key={index}

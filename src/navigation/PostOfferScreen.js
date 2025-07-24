@@ -296,9 +296,9 @@ class PostOfferScreen extends Component {
     if (this.focusListener) {
       this.focusListener();
     }
+    this.backHandler?.remove();
   }
   async handleOnFocus() {
-  
     if (
       this.props.user &&
       this.props.user?.EmailConfirmed &&
@@ -308,7 +308,7 @@ class PostOfferScreen extends Component {
         userID: this.props.user?.ID,
         langid: Languages.langID,
       });
-   
+
       if (UserData.User && UserData.User?.EmailApproved === false) {
         let userCountry = this.state.CountriesData?.find(
           country => country.ISOCode == this.props.user?.ISOCode,
@@ -337,7 +337,7 @@ class PostOfferScreen extends Component {
         email: this.props.user?.Email,
       }).then(res => {
         this.setState({ApprovedEmail: res?.Email}, () => {
-         // console.log({showEmailNotApproved: this.state.showEmailNotApproved});
+          // console.log({showEmailNotApproved: this.state.showEmailNotApproved});
         });
       });
     }
@@ -2008,9 +2008,6 @@ class PostOfferScreen extends Component {
   }
 
   render() {
-    // console.log('====================================');
-    // console.log(this.props.route.params.step);
-    // console.log('====================================');
     this.sellTypes = [
       {
         ID: 1,

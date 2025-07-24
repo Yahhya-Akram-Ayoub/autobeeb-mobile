@@ -28,13 +28,11 @@ class NewHeader extends Component {
     };
   }
   handleBackPress = () => {
+    console.log('==============');
     const {navigation} = this.props;
 
     if (navigation.canGoBack()) {
       navigation.goBack();
-      return true;
-    } else if (this.props.isFromDrawer) {
-      navigation.navigate('DrawerStack');
       return true;
     } else {
       navigation.navigate('HomeScreen');

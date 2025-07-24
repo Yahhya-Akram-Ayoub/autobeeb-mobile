@@ -838,7 +838,7 @@ class ListingsScreen extends Component {
       if (!onEndReached) {
         this.filterModal.close();
       }
-      console.log('================');
+   
       const _params = {
         asc: asc ? (asc == 'false' ? false : true) : false, // if it was sent check the string for true or false because i don want it to resolve to true always
         sortBy: sortBy ? sortBy : 'date',
@@ -918,7 +918,7 @@ class ListingsScreen extends Component {
         cur: this.state.currency?.ID || '',
         partNumber: this.state.PartNumber,
       };
-      console.log('================');
+     
       this.props.recentFilterSeach(_params, this.selectedFilters());
       KS.ListingsGet(_params, null, this.filterController?.signal).then(
         data => {

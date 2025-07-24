@@ -91,10 +91,7 @@ class UserProfileScreen extends Component {
       );
     }
     return (
-      <ScrollView
-        contentContainerStyle={{flex: 1}}
-        style={{backgroundColor: '#eee'}}>
-
+      <View style={{flex: 1, backgroundColor: '#eee'}}>
         <NewHeader
           navigation={this.props.navigation}
           back
@@ -270,7 +267,7 @@ class UserProfileScreen extends Component {
             )
           }
         />
-      </ScrollView>
+      </View>
     );
   }
 }

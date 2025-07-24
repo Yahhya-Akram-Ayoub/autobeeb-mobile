@@ -8,7 +8,12 @@ import DealersScreen from '../../../navigation/DealersScreen';
 import UserProfileScreen from '../../../navigation/UserProfileScreen';
 import DealerProfileScreen from '../../../navigation/DealerProfileScreen';
 import {TranstionSettings} from './Transtion';
-import {ListingDetailsScreen} from '../../screens';
+import {
+  ListingDetailsScreen,
+  RecentlyViewedScreen,
+  SearchScreen,
+} from '../../screens';
+import SearchResult from '../../../navigation/SearchResult';
 
 const Stack = createNativeStackNavigator();
 
@@ -43,6 +48,12 @@ const ChatStack = ({stackRef}) => {
       <Stack.Screen
         name="DealerProfileScreen"
         component={DealerProfileScreen}
+      />
+      <Stack.Screen name="SearchResult" component={SearchResult} />
+      <Stack.Screen name="Search" component={SearchScreen} />
+      <Stack.Screen
+        name="RecentlyViewedScreen"
+        component={RecentlyViewedScreen}
       />
     </Stack.Navigator>
   );

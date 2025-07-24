@@ -21,8 +21,6 @@ import {useRoute} from '@react-navigation/native';
 
 let pageNumber = 1;
 const RecentlyViewedScreen = ({navigation}) => {
-  const route = useRoute();
-  const {isFromDrawer} = route.params;
   const contactBoxTranslate = useRef(new Animated.Value(100)).current;
   const lastScrollY = useRef(0);
   const currentDirection = useRef(null);
@@ -125,8 +123,7 @@ const RecentlyViewedScreen = ({navigation}) => {
       navigation.goBack();
       return true;
     } else {
-      if (isFromDrawer) navigation.navigate('DrawerStack');
-      else navigation.navigate('HomeScreen');
+      navigation.navigate('HomeScreen');
       return true;
     }
   };
@@ -147,7 +144,6 @@ const RecentlyViewedScreen = ({navigation}) => {
       <AppHeader
         back={true}
         onCountryChange={refreshScreen}
-        isFromDrawer={isFromDrawer}
       />
       <FlatList
         data={listings}

@@ -18,8 +18,7 @@ const BlockButton = ({UserId, BlockedId, IsBlocked, onDone}) => {
     })
       .then(onDone)
       .catch(err => {
-
-        console.log({err})
+        console.log({err});
         alert('error when try to block user');
       })
       .finally(() => {
@@ -33,7 +32,7 @@ const BlockButton = ({UserId, BlockedId, IsBlocked, onDone}) => {
         width: 25,
         alignItems: 'center',
         justifyContent: 'center',
-        marginLeft: 10,
+        marginEnd: 10,
       }}>
       <Pressable
         onPress={() => {
@@ -49,7 +48,7 @@ const BlockButton = ({UserId, BlockedId, IsBlocked, onDone}) => {
             paddingVertical: 20,
             backgroundColor: '#fff',
             borderColor: '#e6ebf2',
-            left: 0,
+            end: 0,
             top: 35,
             padding: 8,
             borderWidth: 1,

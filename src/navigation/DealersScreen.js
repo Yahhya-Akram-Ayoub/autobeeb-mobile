@@ -34,7 +34,7 @@ class DealersScreen extends Component {
       userCountryData: null,
       countryName:
         this.userCountryData ?? null
-          ? userCountryData.name[Languages.translation]
+          ? this.props.userCountryData.name[Languages.translation]
           : props.ViewingCountry.name,
       dealersLoading: true,
       seed: Math.floor(Math.random() * 10),
@@ -44,7 +44,7 @@ class DealersScreen extends Component {
 
   xx = async () => {
     const da = await getAllCountries().find(
-      country => country.cca2 == props?.ViewingCountry.cca2,
+      country => country.cca2 == this.props?.ViewingCountry.cca2,
     );
     this.setState({userCountryData: da});
   };

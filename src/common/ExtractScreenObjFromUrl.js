@@ -11,7 +11,6 @@ const ExtractScreenObjFromUrl = async url => {
   let userID = IDarray && IDarray.length > 0 ? IDarray[0] : undefined;
 
   if (ID && TypeID && url.includes('ads')) {
-    console.log({id: ID});
     return {screen: 'CarDetails', params: {id: ID}};
   } else if (url.includes('dealer') && userID) {
     return {screen: 'DealerProfileScreen', params: {userid: userID}};

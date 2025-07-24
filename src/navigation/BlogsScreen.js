@@ -25,8 +25,6 @@ const BlogsScreen = ({navigation}) => {
     ID: 2,
     isAll: true,
   };
-  const route = useRoute();
-  const {isFromDrawer} = route.params;
   const PageSize = 9;
   const [IsLoading, setIsLoading] = useState(true);
   const [Blogs, setBlogs] = useState();
@@ -81,8 +79,7 @@ const BlogsScreen = ({navigation}) => {
       navigation.goBack();
       return true;
     } else {
-      if (isFromDrawer) navigation.navigate('DrawerStack');
-      else navigation.navigate('HomeScreen');
+      navigation.navigate('HomeScreen');
       return true;
     }
   };
@@ -263,67 +260,6 @@ const BlogsScreen = ({navigation}) => {
           }}
         />
 
-        {false && (
-          <FlatList //subcategories
-            style={{
-              //  marginTop: 10,
-              alignSelf: 'flex-start',
-            }}
-            keyExtractor={(item, index) => index.toString()}
-            horizontal
-            contentContainerStyle={{
-              alignItems: 'flex-start',
-              justifyContent: 'flex-start',
-            }}
-            showsHorizontalScrollIndicator={false}
-            data={SubCategories}
-            renderItem={({item, index}) => {
-              return (
-                <TouchableOpacity
-                  onPress={async () => {
-                    if (!IsLoading) {
-                      await setStateAsync(s => ({...s, Page: 1}));
-                      setSelectedSubCategory(item);
-                      getArticles(item.ID);
-                    }
-                  }}>
-                  <Animatable.View
-                    animation="pulse"
-                    style={[
-                      {
-                        backgroundColor: '#fff',
-                        borderRadius: 5,
-                        overflow: 'hidden',
-                        paddingHorizontal: 10,
-                        //  elevation: 2,
-                        paddingVertical: 4,
-                        borderWidth: 1,
-                        borderColor: '#ddd',
-                        marginRight: 5,
-                        marginBottom: 10,
-                      },
-                      SelectedSubCategory?.ID == item.ID && {
-                        backgroundColor: Colors.secondary,
-                      },
-                    ]}>
-                    <Text
-                      style={[
-                        SelectedSubCategory?.ID == item.ID
-                          ? {
-                              color: '#fff',
-                            }
-                          : {
-                              color: '#000',
-                            },
-                      ]}>
-                      {item.Name}
-                    </Text>
-                  </Animatable.View>
-                </TouchableOpacity>
-              );
-            }}
-          />
-        )}
         <ScrollView
           ref={scrolling}
           showsHorizontalScrollIndicator={false}
@@ -383,7 +319,6 @@ const BlogsScreen = ({navigation}) => {
       <NewHeader
         navigation={navigation}
         back
-        isFromDrawer={isFromDrawer}
         CustomSearchComponent
         onChangeText={search => {
           setSearchText(search);

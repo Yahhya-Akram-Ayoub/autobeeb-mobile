@@ -35,7 +35,8 @@ import {
 } from '@invertase/react-native-apple-authentication';
 
 GoogleSignin.configure({
-  iosClientId: '409836146565-eam3sed7de7uiqn3lprnb4bfov685502.apps.googleusercontent.com',
+  iosClientId:
+    '409836146565-eam3sed7de7uiqn3lprnb4bfov685502.apps.googleusercontent.com',
   webClientId:
     //  '409836146565-fdcfrv5dfv460thftop83ae2o9i01vgg.apps.googleusercontent.com',
     '409836146565-6vk84khr54jnui21u6pbo6v1umk6mg6t.apps.googleusercontent.com',
@@ -753,117 +754,80 @@ class LoginScreen extends Component {
                 />
               )}
               {!this.state.emailShown && (
-                <CountryPicker
-                  filterPlaceholder={Languages.Search}
-                  hideAlphabetFilter
-                  onChange={value => this.selectCountry(value)}
-                  translation={Languages.translation}
-                  filterable
-                  autoFocusFilter={false}
-                  closeable
-                  styles={{
-                    header: {
-                      paddingVertical: 15,
-                      borderBottomWidth: 1,
-                      borderBottomColor: Color.secondary,
-                    },
-                  }}
-                  transparent
-                  cca2={this.state.cca2}>
-                  <View
-                    style={{
-                      borderWidth: 1,
-                      borderColor:
-                        this.phone && this.phone.isValidNumber()
-                          ? 'green'
-                          : '#eee',
-                      backgroundColor:
-                        this.phone && this.phone.isValidNumber()
-                          ? 'rgba(0,255,0,0.2)'
-                          : '#fff',
-                      paddingHorizontal: 5,
-                      borderRadius: 5,
-                      paddingVertical: 7,
-                      alignItems: 'center',
-                    }}>
-                    {this.state.cca2 && (
-                      <PhoneInput
-                        ref={ref => {
-                          this.phone = ref;
-                        }}
-                        offset={10}
-                        autoFocus
-                        allowZeroAfterCountryCode={false}
-                        initialCountry={
-                          this.state.cca2 ? this.state.cca2.toLowerCase() : '+'
-                        }
-                        onPressFlag={() => {}}
-                        value={this.state.username}
-                        onChangePhoneNumber={username => {
-                          if (
-                            this.state.cca2 &&
-                            this.phone.getISOCode() !=
-                              this.state.cca2.toLowerCase()
-                          ) {
-                            this.phone.selectCountry(
-                              this.state.cca2.toLowerCase(),
-                            );
-                            if (Platform.OS == 'ios') {
-                              Keyboard.dismiss();
+                <View
+                  style={{
+                    borderWidth: 1,
+                    borderColor:
+                      this.phone && this.phone.isValidNumber()
+                        ? 'green'
+                        : '#eee',
+                    backgroundColor:
+                      this.phone && this.phone.isValidNumber()
+                        ? 'rgba(0,255,0,0.2)'
+                        : '#fff',
+                    paddingHorizontal: 5,
+                    borderRadius: 5,
+                    paddingVertical: 7,
+                    alignItems: 'center',
+                  }}>
+                  {this.state.cca2 && (
+                    <PhoneInput
+                      ref={ref => {
+                        this.phone = ref;
+                      }}
+                      offset={10}
+                      autoFocus
+                      allowZeroAfterCountryCode={false}
+                      initialCountry={
+                        this.state.cca2 ? this.state.cca2.toLowerCase() : '+'
+                      }
+                      onPressFlag={() => {}}
+                      value={this.state.username}
+                      onChangePhoneNumber={username => {
+                        if (
+                          this.state.cca2 &&
+                          this.phone.getISOCode() !=
+                            this.state.cca2.toLowerCase()
+                        ) {
+                          this.phone.selectCountry(
+                            this.state.cca2.toLowerCase(),
+                          );
+                          if (Platform.OS == 'ios') {
+                            Keyboard.dismiss();
 
-                              setTimeout(() => {
-                                this.phone.focus();
-                              }, 200);
-                            }
-                          } else {
-                            if (username.length == 0) {
-                              this.setState({initialCountry: '+'});
-                            }
-                            this.setState({username});
+                            setTimeout(() => {
+                              this.phone.focus();
+                            }, 200);
                           }
-                        }}
-                        textStyle={{height: 40, color: '#000'}}
-                        style={{
-                          paddingVertical: 0,
-                          gap: 5,
-                          flexDirection: I18nManager.isRTL
-                            ? 'row-reverse'
-                            : 'row',
-                          color: '#000',
-                        }}
-                        textProps={{
-                          placeholder: Languages.EnterMobileOrEmail,
-
-                          // keyboardType: "default",
-                          maxLength: 16,
-                        }}
-                        flagStyle={{
-                          resizeMode: 'contain',
-                          borderRadius: 15,
-                          backgroundColor: 'transparent',
-                          borderWidth: 0,
-                        }}
-                      />
-                    )}
-                    {this.state.cca2 && (
-                      <CountryPicker
-                        filterPlaceholder={Languages.Search}
-                        hideAlphabetFilter
-                        ref={ref => {
-                          this.countryPicker = ref;
-                        }}
-                        onChange={value => this.selectCountry(value)}
-                        translation={Languages.translation}
-                        filterable
-                        autoFocusFilter={false}
-                        closeable
-                        transparent
-                        cca2={this.state.cca2}>
-                        <View />
-                      </CountryPicker>
-                    )}
-                  </View>
-                </CountryPicker>
+                        } else {
+                          if (username.length == 0) {
+                            this.setState({initialCountry: '+'});
+                          }
+                          this.setState({username});
+                        }
+                      }}
+                      textStyle={{height: 40, color: '#000'}}
+                      style={{
+                        paddingVertical: 0,
+                        gap: 5,
+                        flexDirection: I18nManager.isRTL
+                          ? 'row-reverse'
+                          : 'row',
+                        color: '#000',
+                      }}
+                      textProps={{
+                        placeholder: Languages.EnterMobileOrEmail,
+                        maxLength: 16,
+                      }}
+                      flagStyle={{
+                        resizeMode: 'contain',
+                        borderRadius: 15,
+                        backgroundColor: 'transparent',
+                        borderWidth: 0,
+                      }}
+                    />
+                  )}
+                </View>
               )}
               <ButtonIndex
                 text={Languages.Continue}
@@ -919,7 +883,7 @@ class LoginScreen extends Component {
                         deviceID: deviceID,
                       }).then(data => {
                         this.setState({ButtonDisabled: false});
-                   
+
                         if (data && data.Success == 1) {
                           this.props.navigation.navigate('RegisterScreen', {
                             AuthData: data,

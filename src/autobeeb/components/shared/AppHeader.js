@@ -27,7 +27,6 @@ const AppHeader = ({
   onSubmitEditing,
   query,
   onCountryChange,
-  isFromDrawer,
 }) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -44,9 +43,6 @@ const AppHeader = ({
   const handleBackPress = () => {
     if (navigation.canGoBack()) {
       navigation.goBack();
-      return true;
-    } else if (isFromDrawer) {
-      navigation.navigate('DrawerStack');
       return true;
     } else {
       navigation.navigate('HomeScreen');

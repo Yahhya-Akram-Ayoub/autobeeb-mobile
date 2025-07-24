@@ -27,6 +27,7 @@ import NewHeader from '../containers/NewHeader';
 import {toast} from '../Omni';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
 import AddAdvButton from '../components/AddAdvButton';
+import {screenHeight} from '../autobeeb/constants/Layout';
 
 var md5 = require('md5');
 
@@ -378,15 +379,11 @@ class ActiveOffers extends Component {
         {this.state.active && (
           <AddAdvButton navigation={this.props.navigation} />
         )}
-        <ScrollView
-          contentContainerStyle={{flex: 1}}
-          style={{backgroundColor: '#eee'}}>
-          <StatusBar
-            backgroundColor="#fff"
-            barStyle="dark-content"
-            translucent={false}
-          />
-
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: '#eee',
+          }}>
           <NewHeader
             back={true}
             navigation={this.props.navigation}
@@ -528,7 +525,7 @@ class ActiveOffers extends Component {
               contentContainerStyle={{
                 alignItems: 'center',
                 paddingTop: 10,
-                paddingBottom: 60,
+                paddingBottom: 20,
               }}
               refreshing={this.state.refreshing}
               data={this.state.Listings}
@@ -710,7 +707,7 @@ class ActiveOffers extends Component {
               }
             />
           )}
-        </ScrollView>
+        </View>
       </View>
     );
   }

@@ -553,21 +553,18 @@ class ChatScreen extends Component {
               width: Dimensions.get('screen').width,
               position: 'relative',
             }}>
-            {!this.state.isSystem && !this.state.isUnAvailable && (
-              <BlockButton
-                UserId={this.props.user.ID}
-                BlockedId={this.props.route.params.targetID}
-                IsBlocked={this.state.isBlocked}
-                onDone={res => {
-                  this.setState({isBlocked: !this.state.isBlocked});
-                  this.state.signalRChat.invoke(
-                    'doBlockUser',
-                    this.props.user.ID,
-                    this.props.route.params.targetID,
-                  );
-                }}
+            <TouchableOpacity
+              style={{marginHorizontal: 10}}
+              onPress={() => {
+                this.props.navigation.goBack();
+              }}>
+              <IconEn
+                name={I18nManager.isRTL ? 'arrow-right' : 'arrow-left'}
+                size={25}
+                color={Color.secondary}
               />
-            )}
+            </TouchableOpacity>
+
             {this.state.isOninle && <View style={styles.greenPoint} />}
             <Image
               style={{
@@ -606,6 +603,7 @@ class ChatScreen extends Component {
                       TypeID: this.state.RelatedEntity?.TypeID,
                       id: this.state.RelatedEntity?.ID,
                     },
+                    id: this.state.RelatedEntity?.ID,
                   });
                 } else {
                   KS.UserGet({
@@ -656,17 +654,21 @@ class ChatScreen extends Component {
               )}
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={{marginHorizontal: 10}}
-              onPress={() => {
-                this.props.navigation.goBack();
-              }}>
-              <IconEn
-                name={!I18nManager.isRTL ? 'arrow-right' : 'arrow-left'}
-                size={25}
-                color={Color.secondary}
+            {!this.state.isSystem && !this.state.isUnAvailable && (
+              <BlockButton
+                UserId={this.props.user.ID}
+                BlockedId={this.props.route.params.targetID}
+                IsBlocked={this.state.isBlocked}
+                onDone={res => {
+                  this.setState({isBlocked: !this.state.isBlocked});
+                  this.state.signalRChat.invoke(
+                    'doBlockUser',
+                    this.props.user.ID,
+                    this.props.route.params.targetID,
+                  );
+                }}
               />
-            </TouchableOpacity>
+            )}
           </View>
         </View>
 
@@ -940,7 +942,7 @@ const styles = StyleSheet.create({
     borderRadius: 55,
     backgroundColor: 'green',
     position: 'absolute',
-    left: 50,
+    start: 60,
     bottom: 2,
     zIndex: 1,
   },

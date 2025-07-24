@@ -975,11 +975,6 @@ KensoftApi.prototype.CurrencyGetByISOCode = function (data, callback, noEmbed) {
 
   var requestUrl = this.url + '/services/CurrencyGetByISOCode?';
   requestUrl += this.join(data, '&');
-  // console.log('====================================');
-  // console.log(requestUrl);
-  // console.log('====================================');
-  // requestUrl += "&kensoftware=" + ConvertURL(data);
-
   return this._request(requestUrl, callback);
 };
 

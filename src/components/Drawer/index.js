@@ -874,9 +874,7 @@ class Drawer extends Component {
             <TouchableOpacity
               style={styles.rowStyle}
               onPress={() => {
-                this.props.navigation.navigate('HomeScreen', {
-                  screen: 'BlogsScreen',
-                });
+                this.props.navigation.navigate('BlogsScreen');
               }}>
               <View
                 style={{
@@ -926,9 +924,7 @@ class Drawer extends Component {
               <TouchableOpacity
                 style={styles.rowStyle}
                 onPress={() => {
-                  this.props.navigation.navigate('HomeScreen', {
-                    screen: 'RecentlyViewedScreen',
-                  });
+                  this.props.navigation.navigate('RecentlyViewedScreen');
                 }}>
                 <View
                   style={{

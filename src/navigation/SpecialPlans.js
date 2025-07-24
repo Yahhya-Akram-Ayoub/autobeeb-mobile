@@ -698,6 +698,7 @@ const SpecialPlans = ({route, pOffer, pOnClose}) => {
                   renderItem={({item, index}) => {
                     return (
                       <TouchableOpacity
+                        key={index}
                         style={[
                           {
                             backgroundColor: '#fff',

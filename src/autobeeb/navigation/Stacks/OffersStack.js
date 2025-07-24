@@ -5,6 +5,8 @@ import {
   ListingDetailsScreen,
   ListingReportScreen,
   OffersScreen,
+  RecentlyViewedScreen,
+  SearchScreen,
 } from '../../screens';
 import {CardStyleInterpolators} from '@react-navigation/stack';
 import ActiveOffers from '../../../navigation/ActiveOffers';
@@ -19,6 +21,7 @@ import UserProfileScreen from '../../../navigation/UserProfileScreen';
 import DealerProfileScreen from '../../../navigation/DealerProfileScreen';
 import {TranstionSettings} from './Transtion';
 import PaymentDetailsAutobeeb from '../../../navigation/PaymentDetailsAutobeeb';
+import SearchResult from '../../../navigation/SearchResult';
 
 const Stack = createNativeStackNavigator();
 
@@ -64,6 +67,12 @@ const OffersStack = ({stackRef}) => {
       <Stack.Screen
         name="PaymentDetailsAutobeeb"
         component={PaymentDetailsAutobeeb}
+      />
+      <Stack.Screen name="SearchResult" component={SearchResult} />
+      <Stack.Screen name="Search" component={SearchScreen} />
+      <Stack.Screen
+        name="RecentlyViewedScreen"
+        component={RecentlyViewedScreen}
       />
     </Stack.Navigator>
   );

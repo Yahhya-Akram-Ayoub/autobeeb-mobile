@@ -26,7 +26,15 @@ import PrivacyPolicy from '../../../navigation/PrivacyPolicy';
 import SearchResult from '../../../navigation/SearchResult';
 import FavoriteScreen from '../../../navigation/FavoriteScreen';
 import SubscriptionsScreen from '../../../navigation/SubscriptionsScreen';
-import {DrawerScreen, ListingDetailsScreen} from '../../screens';
+import BlogDetails from '../../../navigation/BlogDetails';
+import BlogsScreen from '../../../navigation/BlogsScreen';
+import {
+  DrawerScreen,
+  ListingDetailsScreen,
+  ListingReportScreen,
+  RecentlyViewedScreen,
+  SearchScreen,
+} from '../../screens';
 import {TranstionSettings} from './Transtion';
 
 const Stack = createNativeStackNavigator();
@@ -58,7 +66,6 @@ const ProfileStack = ({stackRef}) => {
       <Stack.Screen name="Drawer" component={DrawerScreen} />
       <Stack.Screen name="SettingScreen" component={SettingScreen} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
-
       <Stack.Screen
         name="PaymentDetailsAutobeeb"
         component={PaymentDetailsAutobeeb}
@@ -66,7 +73,6 @@ const ProfileStack = ({stackRef}) => {
       <Stack.Screen name="RecentListings" component={RecentListings} />
       <Stack.Screen name="SpecialPlans" component={SpecialPlans} />
       <Stack.Screen name="CliQScreen" component={CliQScreen} />
-
       {!user && (
         <>
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
@@ -89,11 +95,22 @@ const ProfileStack = ({stackRef}) => {
         component={DealerProfileScreen}
       />
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
-      <Stack.Screen name="SearchResult" component={SearchResult} />
       <Stack.Screen name="FavoriteScreen" component={FavoriteScreen} />
       <Stack.Screen
         name="SubscriptionsScreen"
         component={SubscriptionsScreen}
+      />
+      <Stack.Screen name="BlogDetails" component={BlogDetails} />
+      <Stack.Screen name="BlogsScreen" component={BlogsScreen} />
+      <Stack.Screen name="SearchResult" component={SearchResult} />
+      <Stack.Screen name="Search" component={SearchScreen} />
+      <Stack.Screen
+        name="RecentlyViewedScreen"
+        component={RecentlyViewedScreen}
+      />
+      <Stack.Screen
+        name="ListingReportScreen"
+        component={ListingReportScreen}
       />
     </Stack.Navigator>
   );
