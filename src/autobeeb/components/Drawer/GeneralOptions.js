@@ -3,6 +3,7 @@ import {Color, Languages} from '../../../common';
 import {AppIcon, Icons} from '../index';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
+import KS from '../../../services/KSAPI';
 
 const GeneralOptions = () => {
   const navigation = useNavigation();
@@ -25,6 +26,7 @@ const GeneralOptions = () => {
   };
 
   const ShareFc = () => {
+    KS.RandomizeDealersCore({});
     Share.share({
       message: `${Languages.DownloadAutobeeb}\n\n${AppLink()}`,
     });

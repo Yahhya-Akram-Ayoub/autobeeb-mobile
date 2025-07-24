@@ -193,6 +193,13 @@ class Drawer extends Component {
   }
 
   share() {
+    KS.RandomizeDealersCore({})
+      .then(res => {
+        console.log({res});
+      })
+      .catch(err => {
+        console.log({err});
+      });
     Share.share({
       message: Languages.DownloadAutobeeb + '\n \n' + this.AppLink(),
     });
