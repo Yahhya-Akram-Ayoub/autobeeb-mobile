@@ -206,10 +206,17 @@ export const RenderSectionItem = ({item, onPress}) => {
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={[styles.Section, item.id === 64 && {borderColor: Color.primary}]}>
+      style={[
+        styles.Section,
+        item.id === 64 && {
+          borderColor: Color.primary,
+          backgroundColor: Color.primary,
+        },
+      ]}>
       {item.fullImagePath && (
         <FastImage
           style={styles.SectionImage}
+          tintColor={item.id === 64 ? '#FFFFFF' : ''}
           resizeMode="contain"
           source={{
             uri: `https://autobeeb.com/${item.fullImagePath}_300x150.png`,
@@ -217,7 +224,9 @@ export const RenderSectionItem = ({item, onPress}) => {
         />
       )}
       {Languages.langID === 2 && (
-        <Text numberOfLines={1} style={styles.MakeText}>
+        <Text
+          numberOfLines={1}
+          style={[styles.MakeText, item.id === 64 && {color: '#FFFFFF'}]}>
           {`${item.name}`.replace('قطع غيار', '')}
         </Text>
       )}

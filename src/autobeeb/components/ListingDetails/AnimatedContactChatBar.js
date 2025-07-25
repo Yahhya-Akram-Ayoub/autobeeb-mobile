@@ -1,4 +1,4 @@
-import {Text, TouchableOpacity, Linking, StyleSheet} from 'react-native';
+import {Text, TouchableOpacity, Linking, StyleSheet, Alert} from 'react-native';
 import IconFa from 'react-native-vector-icons/FontAwesome5';
 import IconIon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
@@ -23,7 +23,7 @@ const AnimatedContactChatBar = ({listing, ownerId, ownerName}) => {
       navigation.navigate('ChatScreen', {
         targetID: ownerId,
         ownerName: ownerName,
-        description: listing?.isSparePart ? listing?.title : listing?.name,
+        description: listing?.name,
         entityID: listing.id,
         sessionID: data.SessionID,
       });
@@ -39,11 +39,41 @@ const AnimatedContactChatBar = ({listing, ownerId, ownerName}) => {
       ListingId: listing.id,
     });
   };
+  const handleWhatsapp = () => {
+    const link = `https://autobeeb.com/${Languages.prefix}/ads/${listing?.name
+      ?.trim()
+      ?.replace(/\s+/g, '-')
+      ?.replace(/[^a-zA-Z0-9\u0600-\u06FF\-]/g, '')}/${listing.id}/${
+      listing.typeID
+    }`;
+
+    console.log(link);
+    const message =
+      Languages.langID === 2
+        ? `شاهدت إعلانك (${listing.name?.trim()}) على اوتوبيب \n ${link} \n`
+        : `${listing.name?.trim()}\n${link} \n`;
+
+    Linking.openURL(`https://wa.me/${listing.phone}?text=${message}`).catch(
+      () => {
+        Alert.alert('خطأ', 'لا يمكن فتح واتساب');
+      },
+    );
+    KS.UpdateMobileClick({
+      UserId: listing.ownerID,
+      ListingId: listing.id,
+    });
+  };
 
   const shouldShowChat = !user || user.ID !== ownerId;
 
   return (
     <>
+      <TouchableOpacity
+        onPress={handleWhatsapp}
+        style={[styles.bottomBox, styles.whatsappBtn]}>
+        <IconFa name="whatsapp" size={24} color={'green'} />
+      </TouchableOpacity>
+
       <TouchableOpacity
         onPress={handleCall}
         style={[styles.bottomBox, styles.phoneBtn]}>
@@ -101,12 +131,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#2B9531',
+    height: 40,
     borderRadius: 5,
   },
   phoneBtn: {
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: Color.secondary,
+    height: 40,
     borderRadius: 5,
+  },
+  whatsappBtn: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: 'green',
+    borderRadius: 5,
+    maxWidth: '25%',
+    height: 40,
   },
 });
