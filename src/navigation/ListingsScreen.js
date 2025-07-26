@@ -201,6 +201,22 @@ class ListingsScreen extends Component {
     };
   };
 
+  sortedMakes = () => {
+    const {Makes = [], selectedMake = []} = this.state;
+    if (!Makes.length) return [];
+
+    // Create a Set of selected IDs for fast lookup
+    const selectedIds = new Set(selectedMake.map(make => make.ID));
+
+    // Sort: selected makes first (in order of selection), then the rest
+    const sortedMakes = [
+      Makes[0],
+      ...selectedMake,
+      ...Makes.filter(make => !selectedIds.has(make.ID) && make.ID !== ''),
+    ];
+
+    return sortedMakes;
+  };
   Filters = () => {
     return [
       {
@@ -838,7 +854,7 @@ class ListingsScreen extends Component {
       if (!onEndReached) {
         this.filterModal.close();
       }
-   
+
       const _params = {
         asc: asc ? (asc == 'false' ? false : true) : false, // if it was sent check the string for true or false because i don want it to resolve to true always
         sortBy: sortBy ? sortBy : 'date',
@@ -918,7 +934,7 @@ class ListingsScreen extends Component {
         cur: this.state.currency?.ID || '',
         partNumber: this.state.PartNumber,
       };
-     
+
       this.props.recentFilterSeach(_params, this.selectedFilters());
       KS.ListingsGet(_params, null, this.filterController?.signal).then(
         data => {
@@ -3856,15 +3872,15 @@ class ListingsScreen extends Component {
               />
 
               <FlatList
-                keyExtractor={(item, index) => index.toString()}
+                keyExtractor={(item, index) => item?.ID?.toString()}
                 showsVerticalScrollIndicator={false}
-                data={this.state.Makes || []}
+                data={this.sortedMakes()}
                 style={{height: Dimensions.get('screen').height * 0.52}}
                 extraData={this.state}
                 renderItem={({item, index}) => {
                   return (
                     <TouchableOpacity
-                      key={index}
+                      key={item?.ID?.toString()}
                       style={styles.modalRowContainer}
                       onPress={() => {
                         if (item.AllMake) {
