@@ -1,13 +1,16 @@
 import {useEffect, useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Alert} from 'react-native';
 import KS from '../../../services/KSAPI';
 import {Color, Constants, Languages} from '../../../common';
 import {screenWidth} from '../../constants/Layout';
 import DealerBanner from '../shared/DealerBanner';
 import UserBanner from '../shared/UserBanner';
 import DealerMapSection from './DealerMapSection';
+import {AppIcon, Icons} from '../shared/AppIcon';
+import {TouchableOpacity} from 'react-native';
+import {Linking} from 'react-native';
 
-const SellerDetailsSection = ({listingId, userId}) => {
+const SellerDetailsSection = ({listingId, userId, name, typeId, phone}) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -18,6 +21,26 @@ const SellerDetailsSection = ({listingId, userId}) => {
   }, [userId]);
 
   if (!user) return <View />;
+
+  const handleWhatsapp = () => {
+    const link = `https://autobeeb.com/${Languages.prefix}/ads/${name
+      ?.trim()
+      ?.replace(/\s+/g, '-')
+      ?.replace(/[^a-zA-Z0-9\u0600-\u06FF\-]/g, '')}/${listingId}/${typeId}`;
+
+    const message =
+      Languages.langID === 2
+        ? `شاهدت إعلانك (${name?.trim()}) على اوتوبيب \n ${link} \n`
+        : `${name?.trim()}\n${link} \n`;
+
+    Linking.openURL(`https://wa.me/${phone}?text=${message}`).catch(() => {
+      Alert.alert('خطأ', 'لا يمكن فتح واتساب');
+    });
+    KS.UpdateMobileClick({
+      UserId: userId,
+      ListingId: listingId,
+    });
+  };
 
   return (
     <>
@@ -30,6 +53,21 @@ const SellerDetailsSection = ({listingId, userId}) => {
         ) : (
           <UserBanner user={user} listingId={listingId} />
         )}
+      </View>
+      <View style={styles.cardContainer}>
+        <TouchableOpacity
+          onPress={handleWhatsapp}
+          style={styles.whatsAppButton}>
+          <Text style={styles.whatsAppText}>
+            {Languages.whatsAppContactSeller}
+          </Text>
+          <AppIcon
+            type={Icons.FontAwesome}
+            name="whatsapp"
+            size={30}
+            color={'green'}
+          />
+        </TouchableOpacity>
       </View>
 
       {!!user?.latLng && <DealerMapSection latLng={user?.latLng} />}
@@ -67,6 +105,25 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 18,
     marginBottom: 5,
+    fontFamily: Constants.fontFamilyBold,
+  },
+  whatsAppButton: {
+    width: '100%',
+    height: 50,
+    backgroundColor: '#fff',
+    borderRadius: 3,
+    borderWidth: 1,
+    borderColor: 'green',
+    marginVertical: 8,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 10,
+  },
+  whatsAppText: {
+    color: 'green',
+    fontSize: 15,
     fontFamily: Constants.fontFamilyBold,
   },
 });

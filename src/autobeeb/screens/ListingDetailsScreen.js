@@ -287,12 +287,15 @@ const ListingDetailsScreen = () => {
               loading={loading}
               listingId={listing?.id}
               typeId={listing?.typeID}
-              name={listing?.isSparePart ? listing?.title : listing?.name}
+              name={listing?.name}
             />
             <SellerDetailsSection
               listingId={listing?.id}
               loading={loading}
               userId={listing?.ownerID}
+              name={listing?.name}
+              typeId={listing?.typeID}
+              phone={listing?.phone}
             />
             <ListingAutobeebBanner />
 

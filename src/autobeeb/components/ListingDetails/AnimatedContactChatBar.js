@@ -39,6 +39,7 @@ const AnimatedContactChatBar = ({listing, ownerId, ownerName}) => {
       ListingId: listing.id,
     });
   };
+  
   const handleWhatsapp = () => {
     const link = `https://autobeeb.com/${Languages.prefix}/ads/${listing?.name
       ?.trim()
@@ -47,7 +48,6 @@ const AnimatedContactChatBar = ({listing, ownerId, ownerName}) => {
       listing.typeID
     }`;
 
-    console.log(link);
     const message =
       Languages.langID === 2
         ? `شاهدت إعلانك (${listing.name?.trim()}) على اوتوبيب \n ${link} \n`

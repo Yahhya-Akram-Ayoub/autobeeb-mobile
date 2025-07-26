@@ -12,7 +12,7 @@ import {useSelector} from 'react-redux';
 import ShareLib from 'react-native-share';
 import {AutobeebModal} from '../../../components';
 import {AppIcon, Icons} from '../shared/AppIcon';
-import {Color, Languages} from '../../../common';
+import {Color, Constants, Languages} from '../../../common';
 import Svg, {Path} from 'react-native-svg';
 import {screenHeight, screenWidth} from '../../constants/Layout';
 
@@ -118,7 +118,7 @@ const ListingPopupHandler = ({
               type={Icons.MaterialCommunityIcons}
               name="close"
               size={25}
-              color={Color.primary}
+              color={'#fff'}
             />
           </TouchableOpacity>
 
@@ -148,10 +148,10 @@ const ListingPopupHandler = ({
                   isSharePopupRef.current?.close();
                 }}>
                 <AppIcon
-                  type={Icons.Entypo}
+                  type={Icons.Fontisto}
                   name="facebook"
-                  size={28}
-                  color="#3b5998"
+                  size={32}
+                  color="#3b5998" // "#3b5998"
                 />
               </Pressable>
               <Pressable
@@ -160,7 +160,7 @@ const ListingPopupHandler = ({
                   shareOnSocial('twitter');
                   isSharePopupRef.current?.close();
                 }}>
-                {XIconSVG({size: 24, color: 'black'})}
+                {XIconSVG({size: 30, color: 'black'})}
               </Pressable>
             </View>
           )}
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   innerModal: {
-    backgroundColor: '#fff',
+    backgroundColor: Color.secondary, // '#fff',
     width: '95%',
     paddingTop: 15,
   },
@@ -248,14 +248,14 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 10,
-    marginTop: 12,
+    marginTop: 16,
     marginBottom: 6,
     textAlign: 'center',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: Constants.fontFamilyBold,
   },
   titleStyle: {
-    // Add custom title style here if needed
+    color: '#fff',
   },
   buttonRow: {
     flexDirection: 'row',
@@ -263,14 +263,16 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
   },
   fullPrimaryButton: {
-    backgroundColor: Color.primary,
+    backgroundColor: '#fff',
     width: '90%',
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 5,
   },
   buttonText: {
-    color: '#fff',
+    color: Color.secondary,
+    fontFamily: Constants.fontFamilyBold,
+    fontSize: 16,
   },
   iconRow: {
     flexDirection: 'row',
@@ -281,7 +283,9 @@ const styles = StyleSheet.create({
   iconButton: {
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 5,
+    backgroundColor: '#fff',
+    width: 30,
+    height: 30,
   },
   copyToast: {
     backgroundColor: 'gray',

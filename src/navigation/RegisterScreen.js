@@ -225,16 +225,15 @@ class RegisterScreen extends Component {
         />
 
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : null}
-          // keyboardVerticalOffset={-100}
+          behavior={'padding'}
           style={styles.containerTopLevel}>
           <ScrollView
             //  scrollEnabled={false}
             showsVerticalScrollIndicator={false}
             style={{width: '100%', flex: 1}}
             bounces={false}
-            //  keyboardShouldPersistTaps={'handled'}
-          >
+            keyboardShouldPersistTaps={'handled'}
+            >
             <TouchableOpacity
               style={{
                 position: 'absolute',
@@ -482,6 +481,8 @@ class RegisterScreen extends Component {
                       },
                     ]}
                     onPress={() => {
+                      if (!this.state.password) return;
+
                       if (AuthData?.IsNewUser && this.state.name?.length < 3) {
                         toast(Languages.nameTooShort);
                       } else if (

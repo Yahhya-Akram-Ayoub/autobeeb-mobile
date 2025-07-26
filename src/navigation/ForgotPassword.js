@@ -28,7 +28,10 @@ import {toast} from '../Omni';
 import CountryPicker from '../components/CountryModal/CountryPickerModal';
 import IconEn from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 
 //GoogleSignin.configure ();
 
@@ -121,7 +124,7 @@ class ForgotPassword extends Component {
 
     const {username, password, loading} = this.state;
     if (loading) return;
-  
+
     this.setState({loading: true});
     KS.AutobeebLogin({
       name: username,
@@ -234,7 +237,7 @@ class ForgotPassword extends Component {
       langid: Languages.langID,
     }).then(data => {
       if (data.Status == 1) {
-        this.setState({Username: data.Username , openOTPModal: false});
+        this.setState({Username: data.Username, openOTPModal: false});
         this.props.navigation.navigate('ChangePasswordScreen', {
           user: data.User,
           Username: data.Username,
@@ -508,25 +511,27 @@ class ForgotPassword extends Component {
                     },
                 ]}
                 onPress={() => {
-                  this.setState({loading: true});
-                  KS.ForgotPasswordInit({
-                    langid: Languages.langID,
-                    username: this.state.emailShown
-                      ? this.state.email
-                      : this.phone && this.phone.getValue(),
-                  })
-                    .then(data => {
-                      if (data && data.Success == 1) {
-                        if (data.Status == 1) {
-                          this.setState({openOTPModal: true});
-                        } else {
-                          toast(Languages.PleaseCheckYourInput);
-                        }
-                      }
+                  if (this.state.username) {
+                    this.setState({loading: true});
+                    KS.ForgotPasswordInit({
+                      langid: Languages.langID,
+                      username: this.state.emailShown
+                        ? this.state.email
+                        : this.phone && this.phone.getValue(),
                     })
-                    .finally(() => {
-                      this.setState({loading: false});
-                    });
+                      .then(data => {
+                        if (data && data.Success == 1) {
+                          if (data.Status == 1) {
+                            this.setState({openOTPModal: true});
+                          } else {
+                            toast(Languages.PleaseCheckYourInput);
+                          }
+                        }
+                      })
+                      .finally(() => {
+                        this.setState({loading: false});
+                      });
+                  }
                 }}
                 textStyle={{
                   fontFamily: Constants.fontFamily,

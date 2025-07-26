@@ -577,6 +577,7 @@ export default new LocalizedStrings({
     suggested_ads: 'Suggested ads',
     featured_ads: 'Featured Ads',
     GoBack: 'Go back',
+    whatsAppContactSeller: 'Contact the seller via WhatsApp',
   },
   ar: {
     //Arabic
@@ -1289,7 +1290,7 @@ export default new LocalizedStrings({
     Accessories: 'اكسسوارات',
     AddToFavourites: 'اضافة للمفضلة',
     passwordChanged: 'تم تغيير كلمة المرور الخاصة بك',
-    DidUNeedShareYourOffer: 'هل ترغب بمشاركة إعلانك هذا على صفحتك الفيس بوك؟',
+    DidUNeedShareYourOffer: 'هل ترغب بمشاركة إعلانك هذا على صفحتك الفيسبوك؟',
     DidUNeedShareYourOffer2:
       'هل ترغب بمشاركة إعلانك هذا على احدى وسائل التواصل الاجتماعي التالية الخاصة بك؟',
     SubscDealerPlus: 'اشتراك التاجر المميز',
@@ -1301,6 +1302,7 @@ export default new LocalizedStrings({
     suggested_ads: 'إعلانات مقترحه',
     featured_ads: 'الإعلانات المميزه',
     GoBack: 'العودة',
+    whatsAppContactSeller: 'تواصل مع البائع من خلال الواتس اب',
   },
   de: {
     langID: 3,
@@ -1858,6 +1860,7 @@ export default new LocalizedStrings({
     last_search: 'Letzte Suche',
     suggested_ads: 'Vorgeschlagene',
     featured_ads: 'Premium-Anzeigen',
+    whatsAppContactSeller: 'Kontaktieren Sie den Verkäufer per WhatsApp',
   },
   es: {
     langID: 4,
@@ -2412,6 +2415,7 @@ export default new LocalizedStrings({
     last_search: 'Última búsqueda',
     suggested_ads: 'Sugeridos',
     featured_ads: 'Destacados',
+    whatsAppContactSeller: 'Contacta con el vendedor vía WhatsApp',
   },
   tr: {
     langID: 5,
@@ -2961,6 +2965,7 @@ export default new LocalizedStrings({
     last_search: 'Son arama',
     suggested_ads: 'Önerilen',
     featured_ads: 'Öne çıkan',
+    whatsAppContactSeller: 'Satıcıyla WhatsApp üzerinden iletişime geçin',
   },
   fr: {
     langID: 6,
@@ -3518,6 +3523,7 @@ export default new LocalizedStrings({
     last_search: 'Dernière recherche',
     suggested_ads: 'Suggérées',
     featured_ads: 'En vedette',
+    whatsAppContactSeller: 'Contacter le vendeur via WhatsApp',
   },
   pl: {
     langID: 7,
@@ -4066,6 +4072,7 @@ export default new LocalizedStrings({
     last_search: 'Ostatnie wyszukiwanie',
     suggested_ads: 'Sugerowane',
     featured_ads: 'Wyróżniony',
+    whatsAppContactSeller: 'Skontaktuj się ze sprzedawcą przez WhatsApp',
   },
   zh: {
     //English
@@ -4586,5 +4593,6 @@ export default new LocalizedStrings({
     last_search: '上次搜索',
     suggested_ads: '推荐广告',
     featured_ads: '精选广告',
+    whatsAppContactSeller: '通过 WhatsApp 联系卖家',
   },
 });

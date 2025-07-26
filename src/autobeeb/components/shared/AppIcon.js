@@ -11,6 +11,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
 import Foundation from 'react-native-vector-icons/Foundation';
+import Fontisto from 'react-native-vector-icons/Fontisto';
 
 const Icons = {
   MaterialCommunityIcons: 'MaterialCommunityIcons',
@@ -25,6 +26,7 @@ const Icons = {
   SimpleLineIcons: 'SimpleLineIcons',
   Octicons: 'Octicons',
   Foundation: 'Foundation',
+  Fontisto: 'Fontisto',
 };
 
 const AppIcon = props => {
@@ -121,6 +123,14 @@ const AppIcon = props => {
       )}
       {props.type === Icons.Foundation && (
         <Foundation
+          name={props.name}
+          size={props.size || fontSize}
+          color={props.color}
+          style={props.style}
+        />
+      )}
+      {props.type === Icons.Fontisto && (
+        <Fontisto
           name={props.name}
           size={props.size || fontSize}
           color={props.color}
