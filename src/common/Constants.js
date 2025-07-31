@@ -39,7 +39,7 @@ const Constants = {
     Platform.OS === 'ios'
       ? isIphoneX()
         ? 90
-        : Platform.select({ios: 80, android: 60})
+        : Platform.select({ios: 60, android: 60})
       : 60,
   EmitCode: {
     SideMenuOpen: 'emit.side.open',

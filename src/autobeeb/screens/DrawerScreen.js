@@ -5,7 +5,7 @@ import {
   GeneralOptions,
   UserOptions,
 } from '../components';
-import Layout from '../constants/Layout';
+import Layout, {isIOS} from '../constants/Layout';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
@@ -49,7 +49,7 @@ const DrawerScreen = () => {
       style={{
         backgroundColor: '#fff',
         flex: 1,
-        paddingBottom: insets.bottom,
+        paddingBottom: isIOS ? 0 : insets.bottom,
       }}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <AppHeader back={true} onCountryChange={refreshScreen} />

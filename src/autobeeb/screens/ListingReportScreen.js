@@ -1,6 +1,6 @@
 import {ScrollView, View} from 'react-native';
 import {AppHeader, ReportListingForm, useKeyboard} from '../components';
-import {screenWidth} from '../constants/Layout';
+import {isIOS, screenWidth} from '../constants/Layout';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Languages} from '../../common';
 import {useDispatch, useSelector} from 'react-redux';
@@ -34,7 +34,7 @@ const ListingReportScreen = () => {
       style={{
         minWidth: screenWidth,
         flex: 1,
-        paddingBottom: insets.bottom,
+        paddingBottom: isIOS ? 0 : insets.bottom,
       }}>
       <AppHeader back={true} onCountryChange={refreshScreen} />
       <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={false}>

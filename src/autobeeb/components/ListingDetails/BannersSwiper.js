@@ -95,6 +95,7 @@ const BannersSwiper = ({images, imageBasePath}) => {
                     ? require('../../../images/placeholder.png') // Replace if needed
                     : {
                         uri: `https://autobeeb.com/${imageBasePath}${item}_1024x853.jpg`,
+                        cache: FastImage.cacheControl.web,
                       }
                 }
                 onError={() => {
@@ -242,23 +243,26 @@ const RenderPopupImage = ({
             style={{position: 'absolute', zIndex: 1}}
           />
         )}
-        <FastImage
-          style={{
-            width: width,
-            height: height,
-            alignSelf: 'center',
-          }}
-          resizeMode={FastImage.resizeMode.contain}
-          source={
-            isFailOver
-              ? require('../../../images/placeholder.png')
-              : {
-                  uri: imageUri,
-                }
-          }
-          onLoadEnd={() => setLoading(false)}
-          onError={() => setLoading(false)}
-        />
+        {width && height && (
+          <FastImage
+            style={{
+              width: width,
+              height: height,
+              alignSelf: 'center',
+            }}
+            resizeMode={FastImage.resizeMode.contain}
+            source={
+              isFailOver
+                ? require('../../../images/placeholder.png')
+                : {
+                    uri: imageUri,
+                    cache: FastImage.cacheControl.web,
+                  }
+            }
+            onLoadEnd={() => setLoading(false)}
+            onError={() => setLoading(false)}
+          />
+        )}
       </View>
     </TouchableOpacity>
   );

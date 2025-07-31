@@ -29,6 +29,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {actions} from '../redux/MenuRedux';
+import {isIOS} from '../autobeeb/constants/Layout';
 
 const screenWidth = Dimensions.get('screen').width;
 const DurationType = {
@@ -481,7 +482,7 @@ const SpecialPlans = ({route, pOffer, pOnClose}) => {
   return (
     <View
       style={{
-        paddingBottom: insets.bottom,
+        paddingBottom: isIOS ? 0 : insets.bottom,
       }}>
       <ScrollView
         nestedScrollEnabled={true}

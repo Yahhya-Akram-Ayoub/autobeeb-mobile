@@ -8,7 +8,7 @@ import {
   HomeListingRow,
   HomeTabs,
 } from '../components';
-import Layout from '../constants/Layout';
+import Layout, {isIOS} from '../constants/Layout';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {actions} from '../../redux/HomeRedux';
 import {Languages} from '../../common';
@@ -42,7 +42,7 @@ const HomeScreen = () => {
       style={{
         minWidth: Layout.screenWidth,
         flex: 1,
-        paddingBottom: insets.bottom,
+        paddingBottom: isIOS ? 0 : insets.bottom,
       }}>
       <AppHeader onCountryChange={refreshScreen} />
       <ScrollView
