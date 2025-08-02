@@ -3,7 +3,7 @@ import Languages from './Languages';
 import {isIphoneX} from 'react-native-iphone-x-helper';
 
 const urls = __DEV__
-  ? __DEV__
+  ? !__DEV__
     ? {
         Url: 'http://localhost:44300/v2/',
         HubUrl: 'http://localhost:44300',

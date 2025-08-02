@@ -12,7 +12,7 @@ const ListingAutobeebBanner = () => {
   const [banner, setbBanner] = useState();
   const ViewingCountry = useSelector(state => state.menu.ViewingCountry);
   const {cca2} = ViewingCountry;
-  const getRandomInt = max => Math.floor(Math.random() * Math.floor(max));
+  const getRandomInt = max => Math.floor(Math.random() * max);
 
   useEffect(() => {
     KS.BannersGet({
@@ -21,7 +21,7 @@ const ListingAutobeebBanner = () => {
       placementID: 9,
     }).then(data => {
       if (`${data?.Success}` === '1' && data.Banners?.length > 0) {
-        const _banner = data.Banners[getRandomInt(data.Banners.length - 1)];
+        const _banner = data.Banners[getRandomInt(data.Banners.length)];
         setbBanner(_banner);
         KS.BannerViewed(_banner.ID);
       }

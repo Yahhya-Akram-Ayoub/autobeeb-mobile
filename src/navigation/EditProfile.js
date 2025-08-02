@@ -85,7 +85,6 @@ class EditProfile extends Component {
         userID: this.props.user.ID,
         langid: Languages.langID,
       }).then(data => {
-        __DEV__ && console.log('UserGet data: ', data);
         if (data && data.Success == 1) {
           this.setState({cca2: data.User.ISOCode}, () => {
             if (!this.state.cca2) {

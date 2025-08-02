@@ -797,6 +797,7 @@ class ListingsScreen extends Component {
       placementID: 2,
       selltype: (this.props.route.params?.SellType || {ID: 1}).ID,
     }).then(data => {
+      console.log({Banners: data.Banners?.[0]});
       if (data && data.Success == '1' && data.Banners?.length > 0) {
         this.setState(
           {

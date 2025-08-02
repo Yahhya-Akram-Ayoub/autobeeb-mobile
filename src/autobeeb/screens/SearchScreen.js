@@ -90,7 +90,7 @@ const SearchScreen = () => {
 
   // On mount: handle route param query and truncate recentSeenListings
   useEffect(() => {
-    if (false && route?.params?.query) {
+    if (route?.params?.query) {
       const initialQuery = route.params.query ?? '';
       setQuery(initialQuery);
 
