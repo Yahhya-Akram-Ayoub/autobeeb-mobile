@@ -39,8 +39,17 @@ const ListingTitle = ({
   const featureModalRef = useRef();
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const {EmailRegister, OTPConfirmed, EmailConfirmed, ID, Email, Phone} =
-    user ?? {};
+  const {
+    EmailRegister,
+    OTPConfirmed,
+    EmailConfirmed,
+    EmailApproved,
+    ID,
+    Email,
+    Phone,
+  } = user ?? {};
+  const _isOpenSpecialPlans =
+    isOpenSpecialPlans && (!EmailRegister || (EmailRegister && EmailApproved));
   const renderPaymentMethod = method => {
     switch (`${method}`) {
       case '2':
@@ -93,7 +102,7 @@ const ListingTitle = ({
           if (data.User) {
             actions.storeUserData(dispatch, data.User);
             setOpenModal(false);
-            if (isOpenSpecialPlans) {
+            if (_isOpenSpecialPlans) {
               setTimeout(() => {
                 featureModalRef.current?.open();
               }, 1000);

@@ -337,7 +337,6 @@ class PostOfferScreen extends Component {
         email: this.props.user?.Email,
       }).then(res => {
         this.setState({ApprovedEmail: res?.Email}, () => {
-          // console.log({showEmailNotApproved: this.state.showEmailNotApproved});
         });
       });
     }

@@ -75,12 +75,6 @@ class EditProfile extends Component {
       toast(Languages.AccountBlocked, 3500);
       this.props.navigation.replace('App');
     } else {
-      AsyncStorage.getItem('cca2', (error, data) => {
-        if (data) {
-          this.setState({cca2: data});
-        }
-      });
-
       KS.CountriesGet({langid: Languages.langID}).then(CountriesData => {
         if (CountriesData && CountriesData.Success == '1') {
           this.setState({CountriesData: CountriesData.Countries});
@@ -91,9 +85,21 @@ class EditProfile extends Component {
         userID: this.props.user.ID,
         langid: Languages.langID,
       }).then(data => {
-        //   alert(JSON.stringify(data));
+        __DEV__ && console.log('UserGet data: ', data);
         if (data && data.Success == 1) {
-          this.props.storeUserData(data.User);
+          this.setState({cca2: data.User.ISOCode}, () => {
+            if (!this.state.cca2) {
+              AsyncStorage.getItem('cca2', (error, data) => {
+                if (data) {
+                  this.setState({cca2: data}, () => {
+                    this.props.storeUserData(data.User);
+                  });
+                }
+              });
+            } else {
+              this.props.storeUserData(data.User);
+            }
+          });
         }
       });
 
@@ -396,11 +402,10 @@ class EditProfile extends Component {
   }
 
   render() {
-    const {navigate} = this.props.navigation;
     const isEmailPendingApproval =
       this.props.user &&
       ((this.props.user.EmailRegister &&
-        (this.props.user.EmailConfirmed == false ||
+        (this.props.user.EmailConfirmed == true &&
           this.props.user.EmailApproved == false)) ||
         (!this.props.user.OTPConfirmed &&
           this.props.user.EmailRegister == false)) &&
@@ -410,7 +415,7 @@ class EditProfile extends Component {
           cntry => cntry?.ID == this.props.user?.Country,
         )
       : null;
-    console.log({User: this.props.user});
+
     return (
       <View style={styles.container}>
         <NewHeader navigation={this.props.navigation} back />
@@ -860,7 +865,6 @@ class EditProfile extends Component {
               </View>
             </AutobeebModal>
             <AutobeebModal
-              //coverScreen
               style={[styles.modalbox]}
               fullScreen={true}
               backdropOpacity={0.8}
@@ -1870,6 +1874,7 @@ class EditProfile extends Component {
 
                 {this.props.user?.Phone &&
                   this.props.user?.EmailRegister &&
+                  this.props.user?.EmailConfirmed &&
                   !this.props.user?.EmailApproved && (
                     <View
                       style={{

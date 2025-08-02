@@ -111,7 +111,6 @@ const ListingDetailsScreen = () => {
       increaseViews: true,
     })
       .then(res => {
-        // __DEV__ && console.log({res});
         if (!res) {
           setTimeout(() => {
             toast(Languages.ThisOfferUnavalable);

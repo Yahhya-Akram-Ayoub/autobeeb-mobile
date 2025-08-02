@@ -26,7 +26,7 @@ import SpecialSVG from '../components/SpecialSVG';
 import IconFa from 'react-native-vector-icons/FontAwesome';
 // import RNIap, {purchaseErrorListener} from 'react-native-iap';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
+import {CommonActions, useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {actions} from '../redux/MenuRedux';
 import {isIOS} from '../autobeeb/constants/Layout';
@@ -283,6 +283,7 @@ const SpecialPlans = ({route, pOffer, pOnClose}) => {
   const isNeedRefresh = !!route?.params?.isNeedRefresh;
   const lang = Languages.getLanguage();
   const [InAppPurchases, setInAppPurchases] = useState([]);
+  const [approvedEmail, setApprovedEmail] = useState('');
 
   useEffect(() => {
     ks.GetSpecialPlans({
@@ -311,7 +312,7 @@ const SpecialPlans = ({route, pOffer, pOnClose}) => {
       .finally(() => {
         setLoader(false);
       });
-
+    getApprvedEmailForNumber();
     // if (false) {
     //   // stop in app payment
     //   RNIap?.getProducts?.(itemSkus)
@@ -465,6 +466,47 @@ const SpecialPlans = ({route, pOffer, pOnClose}) => {
     }
   }
 
+  const navigateToDrawerScreen = (screen, params) => {
+    if (!screen) return;
+
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'App',
+            state: {
+              routes: [
+                {
+                  name: 'DrawerStack',
+                  state: {
+                    routes: [
+                      {
+                        name: screen,
+                        params,
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      }),
+    );
+  };
+
+  const getApprvedEmailForNumber = () => {
+    if (User?.EmailRegister && User?.EmailApproved === false) {
+      ks.GetApprovedAccountByPhone({
+        phone: User?.Phone?.replace('+', ''),
+        email: User?.Email,
+      }).then(res => {
+        setApprovedEmail(res?.Email);
+      });
+    }
+  };
+
   async function handleHyperPay(gateway, cardType, payssionpmid) {
     setSelectedGateway(gateway);
     PaymentModal.current.open();
@@ -479,6 +521,40 @@ const SpecialPlans = ({route, pOffer, pOnClose}) => {
   const webViewScript = `setTimeout(function() {     window.ReactNativeWebView.postMessage(document.documentElement.scrollHeight);   }, 500);  true; `; // note: this is required, or you'll sometimes get silent failures
 
   if (loader) return <LogoSpinner fullStretch={true} />;
+  if (User.EmailRegister && !User.EmailApproved) {
+    return (
+      <View style={styles.containerMessage}>
+        <Text style={styles.messageText}>
+          {Languages.EmailPendingApproval + (approvedEmail ?? '')}
+        </Text>
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.okButton}
+            onPress={() => navigation.goBack()}>
+            <Text style={styles.okButtonText}>{Languages.Ok}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={() => {
+              navigateToDrawerScreen('EditProfile', {
+                ChangePhone:
+                  User?.EmailRegister && !User?.EmailConfirmed ? false : true,
+                ChangeEmail: User?.EmailRegister && !User?.EmailConfirmed,
+              });
+            }}>
+            <Text style={styles.editButtonText}>
+              {User.EmailRegister && !User.EmailConfirmed
+                ? Languages.ChangeEmail
+                : Languages.ChangeNumber}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View
       style={{
@@ -1085,6 +1161,50 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     justifyContent: 'center',
+  },
+  containerMessage: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  messageText: {
+    color: '#000',
+    textAlign: 'center',
+    fontSize: 21,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: Dimensions.get('screen').width,
+    justifyContent: 'space-around',
+  },
+  okButton: {
+    backgroundColor: 'green',
+    paddingVertical: 5,
+    borderRadius: 5,
+    flexGrow: 0,
+    marginTop: 15,
+    paddingHorizontal: 20,
+  },
+  okButtonText: {
+    color: '#fff',
+    fontSize: 20,
+    paddingHorizontal: 20,
+    textAlign: 'center',
+  },
+  editButton: {
+    backgroundColor: Color.secondary,
+    paddingVertical: 5,
+    borderRadius: 5,
+    flexGrow: 0,
+    marginTop: 15,
+    paddingHorizontal: 20,
+  },
+  editButtonText: {
+    color: '#fff',
+    fontSize: 20,
   },
 });
 

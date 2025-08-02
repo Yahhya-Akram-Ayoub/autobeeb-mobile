@@ -144,34 +144,39 @@ class RegisterScreen extends Component {
   checkOTP() {
     const _this = this;
     const otp = this.state.otp;
+
     KS.UserVerifyOTP({
       otpcode: otp,
       userid: this.props.user.ID,
       username: this.props.route.params?.AuthData?.Username,
-    }).then(data => {
-      if (data.OTPVerified == true || data.EmailConfirmed == true) {
-        if (data.User) {
-          _this.props.storeUserData(data.User, () => {
-            //   _this.props.navigation.pop(2);
-            //  this.props.navigation.navigate("HomeScreen");
-            // this.refs.OTPModal?.close();
-            this.props.navigation.dispatch(
-              CommonActions.reset({
-                index: 0,
-                routes: [{name: 'DrawerStack'}], // Replace 'DrawerStack' with the name of your desired screen
-              }),
-            );
-          });
+    })
+      .then(data => {
+        if (data.OTPVerified == true || data.EmailConfirmed == true) {
+          if (data.User) {
+            _this.props.storeUserData(data.User, () => {
+              //   _this.props.navigation.pop(2);
+              //  this.props.navigation.navigate("HomeScreen");
+              // this.refs.OTPModal?.close();
+              this.props.navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{name: 'DrawerStack'}], // Replace 'DrawerStack' with the name of your desired screen
+                }),
+              );
+            });
+          }
+          //
+        } else {
+          toast(Languages.WrongOTP);
+          //   alert(Languages.WrongOTP);
+          setTimeout(() => {
+            this.setState({otp: ''});
+          }, 1800);
         }
-        //
-      } else {
-        toast(Languages.WrongOTP);
-        //   alert(Languages.WrongOTP);
-        setTimeout(() => {
-          this.setState({otp: ''});
-        }, 1800);
-      }
-    });
+      })
+      .finally(() => {
+        this.setState({otpLoading: false});
+      });
   }
 
   resendCode() {
@@ -210,7 +215,9 @@ class RegisterScreen extends Component {
           onChange={otp => {
             this.setState({otp});
           }}
+          externalLoading={this.state.otpLoading}
           checkOTP={() => {
+            this.setState({otpLoading: true});
             this.checkOTP();
           }}
           toast={msg => {
@@ -232,8 +239,7 @@ class RegisterScreen extends Component {
             showsVerticalScrollIndicator={false}
             style={{width: '100%', flex: 1}}
             bounces={false}
-            keyboardShouldPersistTaps={'handled'}
-            >
+            keyboardShouldPersistTaps={'handled'}>
             <TouchableOpacity
               style={{
                 position: 'absolute',
